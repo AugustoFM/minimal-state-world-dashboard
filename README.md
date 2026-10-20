@@ -7,8 +7,10 @@ Companion to the report "O Estado Mínimo: conceito, história e peso da iniciat
 ## Quick start
 ```
 pip install pandas requests
-python scripts/fetch_worldbank.py      # World Bank indicators -> data/raw/worldbank_long.csv
-python scripts/build_dataset.py        # merge everything -> data/processed/countries.csv
+pip install openpyxl pycountry
+python scripts/fetch_worldbank.py      # World Bank WDI + WGI -> data/raw/worldbank_long.csv
+python scripts/build_dataset.py        # merge all sources -> data/processed/countries.csv
 python scripts/build_score.py          # minimal-state score -> data/processed/countries_scored.csv
+python scripts/build_dashboard.py      # -> dashboard/data.js
 ```
-Then open `dashboard/` (see PLAN.md, task T6). See `PLAN.md` for the full task list and `AGENTS.md` for rules for Codex.
+Then open `dashboard/index.html` in a browser (Leaflet map; needs internet for the Leaflet library and map tiles). See `PLAN.md` for the full task list and `AGENTS.md` for rules for Codex.

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Minimal State World Explorer</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{--bg:#f6f5f1;--panel:#fff;--ink:#1d1d1b;--mut:#6b6a63;--line:#e3e1d9;--acc:#0b5d6b}
+*{box-sizing:border-box}html,body{margin:0;height:100%;font:14px/1.4 system-ui,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+header{display:flex;align-items:baseline;gap:16px;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
+header h1{font:400 22px Georgia,serif;margin:0}header span{color:var(--mut);font-size:12px}
+main{display:grid;grid-template-columns:minmax(0,1fr) 400px;height:calc(100% - 52px)}
+#map{height:100%;background:#cfd8dc}
+aside{overflow:auto;background:var(--panel);border-left:1px solid var(--line);padding:12px 14px;display:flex;flex-direction:column;gap:14px}
+label{font-size:12px;color:var(--mut);display:block;margin-bottom:3px}
+select,input[type=text]{width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:6px;font:inherit;background:#fff}
+.row{display:grid;grid-template-columns:1fr 44px;gap:8px;align-items:center;font-size:12px}
+h3{margin:0 0 6px;font-size:13px;font-weight:600}
+.card{border:1px solid var(--line);border-radius:8px;padding:10px}
+table{width:100%;border-collapse:collapse;font-size:12px}td,th{padding:3px 4px;border-bottom:1px solid var(--line);text-align:left}td.n{text-align:right;font-variant-numeric:tabular-nums}
+tr.c{cursor:pointer}tr.c:hover{background:#f1efe8}
+.legend{background:#fffe;padding:8px 10px;border-radius:6px;font-size:11px;line-height:1.5;box-shadow:0 1px 4px #0003}
+.legend i{display:inline-block;width:14px;height:10px;margin-right:6px;vertical-align:middle}
+.note{font-size:11px;color:var(--mut)}
+.tip{font-size:12px}
+svg text{font-size:10px;fill:#6b6a63}
+@media(max-width:900px){main{grid-template-columns:1fr;grid-template-rows:55vh auto;height:auto}aside{border-left:0}}
+</style></head><body>
+<header><h1>Minimal State World Explorer</h1><span>How close is each country to a "minimal state", and how does it relate to development outcomes? Proxy-based score; see notes.</span></header>
+<main><div id="map"></div>
+<aside>
+ <div><label for="metric">Colour the map by</label><select id="metric"></select></div>
+ <div class="card"><h3>Score weights <span class="note">(minimal-state score)</span></h3>
+  <div class="row"><label>Fiscal burden (spending, taxes)</label><input type="range" id="w1" min="0" max="10" value="5"></div>
+  <div class="row"><label>State ownership of economy</label><input type="range" id="w2" min="0" max="10" value="5"></div>
+  <div class="row"><label>Transfers & public investment</label><input type="range" id="w3" min="0" max="10" value="5"></div>
+  <div class="note">100 = most minimal. Countries with fewer than 3 dimensions are flagged low/medium confidence.</div></div>
+ <div><label for="min_hdi">Show only countries with HDI of at least <b id="hv">0.00</b></label><input type="range" id="min_hdi" min="0" max="0.9" step="0.05" value="0" style="width:100%"></div>
+ <div><input type="text" id="q" placeholder="Search country…" list="cl"><datalist id="cl"></datalist></div>
+ <div class="card" id="detail"><h3>Click a country</h3><div class="note">Select a country on the map or in the tables to see all indicators.</div></div>
+ <div class="card"><h3>Score vs outcome</h3><select id="ymetric"></select><div id="sc"></div><div class="note">Each dot is a country; click to select. Correlation is not causation.</div></div>
+ <div class="card"><h3>Most minimal</h3><table id="top"></table></div>
+ <div class="card"><h3>Least minimal</h3><table id="bot"></table></div>
+ <div class="note">Sources: Fraser EFW 2026 · Heritage 2026 · World Bank WDI/WGI · UNDP HDR · UBS Global Wealth Report 2026 (≈34 countries only). Low spending can reflect weak state capacity rather than a deliberate minimal state, so read with HDI and confidence. Missing = no data, not zero.</div>
+</aside></main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="world.js"></script><script src="data.js"></script>
+<script>
+const M={
+ minimal_state_score:{l:"Minimal-state score (0-100)",f:v=>v.toFixed(1)},
+ dim_budget:{l:"Fiscal burden dimension",f:v=>v.toFixed(1)},
+ dim_footprint:{l:"State-ownership dimension",f:v=>v.toFixed(1)},
+ dim_scope:{l:"Transfers & investment dimension",f:v=>v.toFixed(1)},
+ gov_expense_pct_gdp:{l:"Government expense, % GDP",f:v=>v.toFixed(1)+"%"},
+ gdp_pc_ppp:{l:"GDP per capita (PPP $)",f:v=>Math.round(v).toLocaleString(),log:1},
+ gdp_usd:{l:"GDP (US$)",f:v=>(v/1e9>=1000?(v/1e12).toFixed(2)+" tn":(v/1e9).toFixed(1)+" bn"),log:1},
+ unemployment:{l:"Unemployment, %",f:v=>v.toFixed(1)+"%"},
+ hdi:{l:"Human Development Index",f:v=>v.toFixed(3)},
+ life_expectancy:{l:"Life expectancy (years)",f:v=>v.toFixed(1)},
+ physicians_per_1000:{l:"Physicians per 1,000",f:v=>v.toFixed(2)},
+ hospital_beds_per_1000:{l:"Hospital beds per 1,000",f:v=>v.toFixed(1)},
+ health_spend_pct_gdp:{l:"Health spending, % GDP",f:v=>v.toFixed(1)+"%"},
+ voice_accountability:{l:"Voice & accountability (WGI, civil rights proxy)",f:v=>v.toFixed(2)},
+ rule_of_law:{l:"Rule of law (WGI)",f:v=>v.toFixed(2)},
+ gini:{l:"Income Gini (World Bank)",f:v=>v.toFixed(1)},
+ income_top10:{l:"Income share of top 10%",f:v=>v.toFixed(1)+"%"},
+ wealth_gini:{l:"Wealth Gini (UBS, ~32 countries)",f:v=>v.toFixed(2)},
+ millionaires_thousand:{l:"USD millionaires, thousands (UBS, ~34 countries)",f:v=>v.toLocaleString(),log:1},
+ efw_overall:{l:"Fraser economic freedom (0-10)",f:v=>v.toFixed(2)},
+ heritage_overall:{l:"Heritage economic freedom (0-100)",f:v=>v.toFixed(1)}
+};
+Object.keys(M).forEach(k=>{if(!DATA.some(d=>d[k]!=null))delete M[k]});
+const byIso={};DATA.forEach(d=>byIso[d.iso3]=d);
+const W=()=>[+w1.value,+w2.value,+w3.value];
+function recompute(){
+  const w=W(),k=["dim_budget","dim_footprint","dim_scope"];
+  DATA.forEach(d=>{let s=0,t=0;k.forEach((c,i)=>{if(d[c]!=null&&w[i]>0){s+=d[c]*w[i];t+=w[i]}});d.minimal_state_score=t?s/t:null;});
+}
+const ramp=["#f7f4d9","#cfe5b5","#8fcab0","#4aa3a3","#1b6f86","#0c3d5c"];
+let sel=null,metric="minimal_state_score",ymetric="hdi",breaks=[];
+const map=L.map("map",{worldCopyJump:true,minZoom:2,maxBounds:[[-85,-200],[85,200]]}).setView([25,10],2);
+L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png",{attribution:"© OpenStreetMap, © CARTO",maxZoom:7}).addTo(map);
+const visible=d=>d&&(d.hdi==null?+min_hdi.value===0:d.hdi>=+min_hdi.value);
+function computeBreaks(){
+  const vals=DATA.filter(visible).map(d=>d[metric]).filter(v=>v!=null).sort((a,b)=>a-b);
+  breaks=[];for(let i=1;i<ramp.length;i++)breaks.push(vals[Math.floor(vals.length*i/ramp.length)]);
+}
+const colour=v=>{if(v==null)return"#d9d7cf";let i=0;while(i<breaks.length&&v>breaks[i])i++;return ramp[i]};
+const style=f=>{const d=byIso[f.properties.iso3];const ok=visible(d);const v=d&&ok?d[metric]:null;
+ return{fillColor:colour(v),weight:f.properties.iso3===sel?2.5:0.5,color:f.properties.iso3===sel?"#000":"#fff",fillOpacity:ok?0.9:0.35}};
+const layer=L.geoJSON(WORLD,{style,onEachFeature:(f,l)=>{
+  l.on({mouseover:e=>{e.target.setStyle({weight:2,color:"#333"});l.bindTooltip(tip(f),{sticky:true}).openTooltip()},
+        mouseout:()=>layer.resetStyle(l),click:()=>select(f.properties.iso3)});
+}}).addTo(map);
+function tip(f){const d=byIso[f.properties.iso3];const m=M[metric];
+ return `<div class="tip"><b>${d?d.country:f.properties.name}</b><br>${m.l}: ${d&&d[metric]!=null?m.f(d[metric]):"no data"}</div>`}
+const leg=L.control({position:"bottomleft"});
+leg.onAdd=()=>{const e=L.DomUtil.create("div","legend");e.id="leg";return e};leg.addTo(map);
+function legend(){
+ const m=M[metric];let h=`<b>${m.l}</b><br>`;const e=[-Infinity,...breaks,Infinity];
+ for(let i=0;i<ramp.length;i++){const a=e[i],b=e[i+1];h+=`<i style="background:${ramp[i]}"></i>${a===-Infinity?"< "+m.f(b):b===Infinity?"≥ "+m.f(a):m.f(a)+" – "+m.f(b)}<br>`}
+ h+=`<i style="background:#d9d7cf"></i>No data / filtered`;document.getElementById("leg").innerHTML=h}
+function table(el,rows){
+ document.getElementById(el).innerHTML="<tr><th>Country</th><th class=n>Score</th><th class=n>HDI</th><th>Conf.</th></tr>"+rows.map(d=>`<tr class=c data-i="${d.iso3}"><td>${d.country}</td><td class=n>${d.minimal_state_score.toFixed(1)}</td><td class=n>${d.hdi!=null?d.hdi.toFixed(2):"–"}</td><td>${d.confidence||""}</td></tr>`).join("")}
+function lists(){
+ const r=DATA.filter(d=>visible(d)&&d.minimal_state_score!=null&&d.confidence!=="low").sort((a,b)=>b.minimal_state_score-a.minimal_state_score);
+ table("top",r.slice(0,10));table("bot",r.slice(-10).reverse())}
+function pctRank(d,key){const v=DATA.map(x=>x[key]).filter(x=>x!=null).sort((a,b)=>a-b);if(d[key]==null)return null;let i=v.findIndex(x=>x>=d[key]);return Math.round(100*i/(v.length-1))}
+function detail(){
+ const d=byIso[sel];const el=document.getElementById("detail");if(!d){return}
+ const keys=Object.keys(M);
+ el.innerHTML=`<h3>${d.country}</h3><div class="note">Score confidence: ${d.confidence||"n/a"} · ${d.dims_used||0}/3 dimensions${d.efw_rank?` · Fraser rank ${d.efw_rank}`:""}</div>`+
+ "<table>"+keys.map(k=>{const v=d[k];const p=v!=null?pctRank(d,k):null;
+  return`<tr><td>${M[k].l}</td><td class=n>${v!=null?M[k].f(v):"–"}</td><td style="width:70px">${p!=null?`<div style="height:6px;background:#eee;border-radius:3px"><div style="height:6px;width:${p}%;background:var(--acc);border-radius:3px"></div></div>`:""}</td></tr>`}).join("")+
+ `</table><div class="note">Bar = percentile among countries with data (not good/bad).</div>`}
+function select(iso){if(!byIso[iso])return;sel=iso;layer.setStyle(style);detail();scatter()}
+function scatter(){
+ const X="minimal_state_score",Y=ymetric,my=M[Y];
+ const pts=DATA.filter(d=>visible(d)&&d[X]!=null&&d[Y]!=null&&d.confidence!=="low");
+ const W0=360,H0=230,p={l:44,r:8,t:8,b:30};
+ const ys=pts.map(d=>my.log?Math.log10(d[Y]):d[Y]);
+ const y0=Math.min(...ys),y1=Math.max(...ys);
+ const sx=v=>p.l+(v/100)*(W0-p.l-p.r),sy=v=>H0-p.b-((v-y0)/(y1-y0||1))*(H0-p.t-p.b);
+ let s=`<svg viewBox="0 0 ${W0} ${H0}" width="100%"><line x1="${p.l}" y1="${H0-p.b}" x2="${W0-p.r}" y2="${H0-p.b}" stroke="#bbb"/><line x1="${p.l}" y1="${p.t}" x2="${p.l}" y2="${H0-p.b}" stroke="#bbb"/>`;
+ [0,25,50,75,100].forEach(t=>s+=`<text x="${sx(t)}" y="${H0-p.b+12}" text-anchor="middle">${t}</text>`);
+ s+=`<text x="${(W0+p.l)/2}" y="${H0-4}" text-anchor="middle">Minimal-state score →</text>`;
+ for(let i=0;i<=3;i++){const v=y0+(y1-y0)*i/3,lab=my.log?Math.pow(10,v):v;s+=`<text x="${p.l-4}" y="${sy(v)+3}" text-anchor="end">${my.log?(lab>=1e9?(lab/1e9).toFixed(0)+"bn":lab>=1e4?(lab/1e3).toFixed(0)+"k":lab.toFixed(0)):lab.toFixed(Math.abs(lab)<10?1:0)}</text>`}
+ pts.forEach((d,i)=>{const on=d.iso3===sel;s+=`<circle data-i="${d.iso3}" cx="${sx(d[X])}" cy="${sy(ys[i])}" r="${on?6:3.2}" fill="${on?"#d1495b":"#1b6f86"}" fill-opacity="${on?1:.6}" stroke="${on?"#000":"none"}"><title>${d.country}: ${d[X].toFixed(1)} / ${my.f(d[Y])}</title></circle>`});
+ document.getElementById("sc").innerHTML=s+"</svg>"}
+function refresh(){recompute();computeBreaks();layer.setStyle(style);legend();lists();scatter();if(sel)detail()}
+const ms=document.getElementById("metric"),ys_=document.getElementById("ymetric");
+Object.keys(M).forEach(k=>{ms.add(new Option(M[k].l,k));if(k!=="minimal_state_score")ys_.add(new Option(M[k].l,k))});
+ys_.value="hdi";
+ms.onchange=()=>{metric=ms.value;refresh()};ys_.onchange=()=>{ymetric=ys_.value;scatter()};
+["w1","w2","w3"].forEach(i=>document.getElementById(i).oninput=refresh);
+min_hdi.oninput=()=>{hv.textContent=(+min_hdi.value).toFixed(2);refresh()};
+const cl=document.getElementById("cl");DATA.forEach(d=>cl.appendChild(new Option(d.country)));
+q.onchange=()=>{const d=DATA.find(x=>x.country.toLowerCase()===q.value.toLowerCase());if(d){select(d.iso3);const f=WORLD.features.find(f=>f.properties.iso3===d.iso3);if(f)map.fitBounds(L.geoJSON(f).getBounds(),{maxZoom:5})}};
+document.addEventListener("click",e=>{const t=e.target.closest("[data-i]");if(t)select(t.dataset.i)});
+refresh();
+</script></body></html>
