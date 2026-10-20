@@ -1,7 +1,15 @@
-# PLACEHOLDERS until task B1 calibrates them from observed episodes
-status_quo: {id: S0, description: current rules, ageing drift}
-constant_size: {id: S1, description: primary spending/GDP held at today's share}
-reductions:
-  horizons_years: [5, 10, 15, 20]
-  target_points_of_gdp_vs_S1: [-2, -4, -6, -8]   # placeholder grid
-composition_variants: [pension_first, subsidies_first, investment_cut, efficiency_gains, partial_privatisation, compensating_transfers]
+# v1 DEFAULTS (applied 2026-10-20). Starting assumptions, not findings. Task B1 may tighten them.
+state_definition: general_government_primary_spending_pct_gdp   # federal + state + municipal; SOEs later as variant
+horizons_years: [5, 10, 15, 20]
+validate_first_horizon: 10
+scenarios:
+  S0:  {name: status_quo, description: "current rules; pension+health rise with ageing; revenue unchanged; debt drifts up"}
+  S1:  {name: constant_size, optional: true, description: "spending/GDP held at today's share (cost of offsetting ageing drift)"}
+  R_mod: {name: moderate_reduction, pace_pp_gdp_per_year_below_S0: 0.2, by_year: {5: 1, 10: 2, 15: 3, 20: 4}}
+  R_amb: {name: ambitious_reduction, pace_pp_gdp_per_year_below_S0: 0.4, by_year: {5: 2, 10: 4, 15: 6, 20: 8}, cap: "limited by B1 to observed episodes"}
+reduction_is_measured_against: S0        # not against today; part of the effort offsets ageing drift
+package_shares: {pension_and_indexation: 0.40, subsidies_and_tax_expenditures: 0.25, efficiency_health_education_admin: 0.20, other_current: 0.15}
+protected: [public_investment, means_tested_transfers]
+variants: [pension_only, efficiency_only, investment_also_cut_stress, compensating_transfers]
+outputs: [gdp_per_capita, debt_gdp, unemployment, gini, top1_share, top10_share, poverty, life_expectancy, schooling, health_access, hdi_components]
+percentiles: [10, 50, 90]

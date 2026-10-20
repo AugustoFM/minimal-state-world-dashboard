@@ -5,10 +5,16 @@ Full literature review (20 papers), methods comparison and rationale: Claude Doc
 ## Question
 Compare, for 5, 10, 15 and 20 years, (S0) status-quo policy with population ageing, (S1) constant state size, and (R5/R10/R15/R20) gradual reductions in the state, on GDP per capita, debt, unemployment, Gini, top income shares, poverty, wealth concentration, and social indicators (health, education, HDI components).
 
+## Default design (v1, applied 2026-10-20; see `config/scenarios.yaml`)
+- State = general-government primary spending, % GDP. Compare S0 (status quo, ageing drift) with R_mod (0.2 pp GDP/yr below S0) and R_amb (0.4 pp/yr, capped by B1); S1 constant size is an optional reference.
+- Reductions are measured against S0 because ageing raises pension/health spending on its own.
+- Package: 40% pension/indexation, 25% subsidies/tax expenditures, 20% efficiency, 15% other; public investment and means-tested transfers protected.
+- Validate the 10-year case first.
+
 ## Principles
 - Ranges, not point forecasts; every output shows 10th/50th/90th percentile.
 - Composition of the reduction matters more than size: test pension-first, subsidies-first, investment cut, efficiency gains, privatisation, compensating transfers.
-- "Realistic reduction" is calibrated from observed episodes (B1), not from opinion. Reduction sizes in this repo before B1 are placeholders.
+- "Realistic reduction" is calibrated from observed episodes (B1), not from opinion. Pace and package shares are v1 defaults until B1.
 - Cutting and keeping the state are held to the same evidence standard.
 
 ## Chain
