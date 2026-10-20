@@ -1,0 +1,115 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import pytest
+
+from src import montecarlo as mc
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+@pytest.fixture(scope="module")
+def context() -> dict:
+    return mc.load_context(variants=["default", "pension_only", "efficiency_only",
+                                     "investment_also_cut_stress", "compensating_transfers"])
+
+
+@pytest.fixture(scope="module")
+def central(context) -> pd.DataFrame:
+    draw = mc.central_draw(context["parameters"], context["inputs"])
+    return mc.evaluate_draw(draw, context)
+
+
+def test_central_draw_reproduces_published_c2_central(central) -> None:
+    published = pd.read_csv(ROOT / "data/brazil/macro.csv")
+    published = published.loc[published["variant"].eq("central")]
+    default = central.loc[central["variant"].eq("default")]
+    checked = 0
+    for indicator in ("gdp_level_vs_s0_pct", "gdp_per_capita", "debt_gdp", "unemployment_change_pp", "primary_balance_gdp"):
+        merged = default.merge(
+            published.loc[published["indicator"].eq(indicator)],
+            on=["year", "scenario", "persistence"], validate="one_to_one",
+        )
+        assert len(merged) == len(default)
+        np.testing.assert_allclose(merged[indicator], merged["value"], rtol=1e-9, atol=1e-6)
+        checked += len(merged)
+    assert checked > 0
+
+
+def test_central_draw_reproduces_published_c4_central(central) -> None:
+    published = pd.read_csv(ROOT / "data/brazil/social.csv")
+    published = published.loc[published["variant"].eq("central") & published["value"].notna()]
+    default = central.loc[central["variant"].eq("default") & central["persistence"].eq("transitory")]
+    for indicator in ("real_public_health_spending_pc_change_vs_s0_pct", "infant_mortality_difference_vs_s0",
+                      "life_expectancy_difference_vs_s0_years", "hdi_health_index_difference_vs_s0"):
+        merged = default.merge(
+            published.loc[published["indicator"].eq(indicator)], on=["year", "scenario"], validate="one_to_one",
+        )
+        assert len(merged) == len(default)
+        np.testing.assert_allclose(merged[indicator], merged["value"], rtol=1e-9, atol=1e-9)
+
+
+def test_s0_differences_are_zero_in_every_draw(central) -> None:
+    s0 = central.loc[central["scenario"].eq("S0")]
+    for column in ("gdp_level_vs_s0_pct", "gdp_per_capita_vs_s0_pct", "debt_gdp_vs_s0_pp",
+                   "infant_mortality_difference_vs_s0", "life_expectancy_difference_vs_s0_years"):
+        assert np.allclose(s0[column], 0.0)
+
+
+def test_variant_shares_follow_definitions(context) -> None:
+    configs = context["variant_configs"]
+    for name, config in configs.items():
+        assert sum(config["package_shares"].values()) == pytest.approx(1.0)
+    assert configs["pension_only"]["package_shares"] == {"pension_and_indexation": 1.0}
+    comp = configs["compensating_transfers"]["package_shares"]
+    assert comp["means_tested_transfers"] == pytest.approx(-0.1)
+    assert comp["pension_and_indexation"] == pytest.approx(0.44)
+    assert "public_investment" not in configs["investment_also_cut_stress"]["protected"]
+    assert configs["default"]["protected"] == context["scenarios"]["protected"]
+
+
+def test_pension_only_has_no_health_effect(central) -> None:
+    pension = central.loc[central["variant"].eq("pension_only") & central["scenario"].isin(["R_mod", "R_amb"])]
+    # Health spending per capita still moves with GDP, but no cut lands on health services.
+    efficiency = central.loc[central["variant"].eq("efficiency_only") & central["scenario"].isin(["R_mod", "R_amb"])]
+    assert (pension["real_public_health_spending_pc_change_vs_s0_pct"].abs()
+            < efficiency["real_public_health_spending_pc_change_vs_s0_pct"].abs().to_numpy()).all()
+
+
+def test_sampling_is_reproducible_and_percentiles_ordered(context) -> None:
+    small = dict(context)
+    small["variant_configs"] = {"default": context["variant_configs"]["default"]}
+    first, draws_a, _ = mc.run(6, seed=7, context=small)
+    second, draws_b, _ = mc.run(6, seed=7, context=small)
+    pd.testing.assert_frame_equal(first, second)
+    pd.testing.assert_frame_equal(draws_a, draws_b)
+    summary = mc.summarise(first, 6)
+    modelled = summary.loc[summary["status"].str.startswith("modelled")]
+    assert (modelled["p10"] <= modelled["p50"] + 1e-12).all()
+    assert (modelled["p50"] <= modelled["p90"] + 1e-12).all()
+    gaps = summary.loc[summary["status"].str.startswith("not_modelled")]
+    assert set(gaps["indicator"]) == set(mc.NOT_MODELLED)
+    assert gaps[["p10", "p50", "p90"]].isna().all().all()
+
+
+def test_samples_stay_inside_configured_ranges(context) -> None:
+    rng = np.random.default_rng(1)
+    params, inputs = context["parameters"], context["inputs"]
+    for _ in range(200):
+        draw = mc.sample_draw(rng, params, inputs)
+        acc = params["fiscal_multipliers_brazil"]["accumulated"]
+        for category in mc.MULTIPLIER_CATEGORIES:
+            assert acc[category]["low"] <= draw[f"multiplier_{category}"] <= acc[category]["high"]
+        for name in mc.MACRO_RANGED:
+            entry = inputs["macro"][name]
+            assert entry["low"] <= draw[name] <= entry["high"]
+        assert (draw["profile_year"], draw["pension_gdp_per_worker_weight"]) in context["grid"]
+
+
+def test_degenerate_triangular_returns_central() -> None:
+    assert mc.triangular(np.random.default_rng(0), 2.0, 2.0, 2.0) == 2.0
+    with pytest.raises(ValueError):
+        mc.triangular(np.random.default_rng(0), 3.0, 1.0, 2.0)

@@ -6,3 +6,6 @@ data/raw/brazil/microdata/
 data/raw/brazil/Dados_*.zip
 data/raw/brazil/PNADC_*.zip
 data/processed/brazil/microdata/
+
+# Monte Carlo draw-level files are large and reproducible from the seed; only summaries are versioned.
+outputs/runs/draws/

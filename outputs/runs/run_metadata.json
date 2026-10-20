@@ -1,0 +1,59 @@
+{
+  "seed": 20261020,
+  "n_draws": 1000,
+  "variants": [
+    "default",
+    "pension_only",
+    "efficiency_only",
+    "investment_also_cut_stress",
+    "compensating_transfers"
+  ],
+  "persistence": [
+    "transitory",
+    "persistent"
+  ],
+  "horizons": [
+    5,
+    10,
+    15,
+    20
+  ],
+  "base_year": 2025,
+  "sampled": {
+    "multiplier_public_investment": "triangular(low, central, high) from fiscal_multipliers_brazil.accumulated",
+    "multiplier_social_benefits": "triangular(low, central, high) from fiscal_multipliers_brazil.accumulated",
+    "multiplier_subsidies": "triangular(low, central, high) from fiscal_multipliers_brazil.accumulated",
+    "multiplier_other_expenditures": "triangular(low, central, high) from fiscal_multipliers_brazil.accumulated",
+    "effective_real_interest_rate": "triangular(low, central, high) from parameters.yaml macro inputs (C2)",
+    "gdp_deflator_growth": "triangular(low, central, high) from parameters.yaml macro inputs (C2)",
+    "tfp_growth": "triangular(low, central, high) from parameters.yaml macro inputs (C2)",
+    "human_capital_growth": "triangular(low, central, high) from parameters.yaml macro inputs (C2)",
+    "investment_rate": "triangular(low, central, high) from parameters.yaml macro inputs (C2)",
+    "okun_coefficient": "triangular(low, central, high) from parameters.yaml macro inputs (C2)",
+    "efficiency_output_effect": "triangular(low, central, high) from macro_modelling_choices",
+    "service_cut_fraction": "triangular(low, central, high) from social_modelling_choices",
+    "imr_elasticity": "triangular(low, central, high) from social_outcome_elasticities",
+    "pension_gdp_per_worker_weight": "uniform(low, high), snapped to a 0.025 grid",
+    "profile_year": "discrete, equal probability over profile_years.values"
+  },
+  "fixed": {
+    "life_expectancy_elasticity": "central only (point estimate)",
+    "point_inputs": "every macro input with low = central = high (initial debt, revenue/GDP, capital share, K/Y, depreciation, GDP anchors)",
+    "c1_category_shares": "point values (COFOG 2024)"
+  },
+  "choices": [
+    "triangular sampling for ranges is a modelling choice (fiscal_multipliers_brazil.sampling_rule), not a sourced distribution",
+    "parameters are sampled independently: no sourced correlations",
+    "persistence (transitory/persistent) is reported as a dimension, not sampled",
+    "percentiles describe parameter uncertainty only, not forecast error or external shocks"
+  ],
+  "not_modelled": {
+    "gini": "C3 pending",
+    "top1_share": "C3 pending",
+    "top10_share": "C3 pending",
+    "poverty_rate": "C3 pending"
+  },
+  "inputs_commit": "fd733419ad9d41e9ef8ed473b79d5b326bc2938b",
+  "created_utc": "2026-10-20T18:36:06+00:00",
+  "runtime_seconds": 309.0
+}
