@@ -206,3 +206,43 @@ social_outcome_elasticities:
   # health-access measures with respect to public spending. C4 must not invent these; it can model only
   # infant mortality and life expectancy until they are added.
   missing: [education_spending_to_mean_years_schooling, education_spending_to_expected_years_schooling, health_spending_to_physicians_per_1000]
+
+# C1 age-profile baseline inputs. All values below are sourced or explicitly
+# marked as modelling assumptions; this is the sole runtime parameter source.
+baseline:
+  pension_gdp_share:
+    low: 11.65005863811359
+    central: 11.65005863811359
+    high: 11.65005863811359
+    source: "Tesouro Nacional, COFOG_GG_2024.xlsx, sheet '1.5.a': Q4=2024, Q77 (COFOG 10.2 Old age)=8.86420230043415% of GDP plus Q78 (COFOG 10.3 Survivors)=2.7858563376794394%; carried to model base year 2025."
+  health_gdp_share:
+    low: 5.031903317955291
+    central: 5.031903317955291
+    high: 5.031903317955291
+    source: "Tesouro Nacional, COFOG_GG_2024.xlsx, sheet '1.5.a': Q4=2024 and Q52 (COFOG 07 Health)=5.031903317955291% of GDP; carried to model base year 2025."
+  education_gdp_share:
+    low: 5.101686126613569
+    central: 5.101686126613569
+    high: 5.101686126613569
+    source: "Tesouro Nacional, COFOG_GG_2024.xlsx, sheet '1.5.a': Q4=2024 and Q66 (COFOG 09 Education)=5.101686126613569% of GDP; carried to model base year 2025."
+  profile_years:
+    values: [2003, 2018]
+    source: "NTA_Brasil.xlsx, sheet 'Per capita Normalized'; single-age profiles for 2003 and 2018 define the sensitivity envelope."
+  central_profile_year:
+    value: 2018
+    source: "NTA_Brasil.xlsx, sheet 'Per capita Normalized'; 2018 is the latest available vintage and is central."
+  pension_gdp_per_worker_weight:
+    low: 0.0
+    central: 0.5
+    high: 1.0
+    source: "C1 sensitivity assumption: weight 0 uses GDP-per-capita indexation; weight 1 uses GDP-per-working-age-person indexation; 0.5 is the geometric midpoint. Not an empirical estimate."
+  working_age_min:
+    low: 15
+    central: 15
+    high: 15
+    source: "Correa, Gutierrez and Turra (2023), Contas Nacionais de Transferência: working age is 15–64."
+  working_age_max:
+    low: 64
+    central: 64
+    high: 64
+    source: "Correa, Gutierrez and Turra (2023), Contas Nacionais de Transferência: working age is 15–64."

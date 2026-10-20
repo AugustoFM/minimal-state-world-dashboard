@@ -193,7 +193,7 @@ def test_real_data_smoke() -> None:
         "fiscal": Path("data/brazil/fiscal.csv"),
         "population": Path("data/brazil/population.csv"),
         "profiles": Path("data/brazil/age_profiles.csv"),
-        "inputs": Path("config/c1_inputs_proposed.yaml"),
+        "inputs": Path("config/parameters.yaml"),
     }
     if not all(path.exists() for path in paths.values()):
         pytest.skip("C1 real-data files are absent")

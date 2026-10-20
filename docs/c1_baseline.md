@@ -10,6 +10,10 @@ sensitivity bounds, not forecasts or statistical percentiles.
 
 ## Base-year category shares
 
+Runtime values and source notes are stored in `config/parameters.yaml` under
+`baseline`; the proposed task-specific parameter file has been consolidated
+there so all model parameters use the repository's single parameter registry.
+
 All category shares come from the official 2024 general-government COFOG table
 and are carried one year to the 2025 model base:
 
