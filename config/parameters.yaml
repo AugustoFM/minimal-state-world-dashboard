@@ -1,0 +1,12 @@
+# Each value needs low/central/high and a source. Filled in task B2.
+# Seed values from reviewed papers (verify against the source before use):
+multipliers_brazil_cumulative:        # Sanches, Santos, Martins (2026), SVAR
+  public_investment: {central: 2.6, source: "Sanches et al. 2026"}
+  social_benefits:   {central: 2.15, source: "Sanches et al. 2026"}
+  subsidies:         {central: null, note: "low; value to extract", source: "Sanches et al. 2026"}
+growth_threshold_government_consumption_pct_gdp:
+  developing_countries: {central: 19.12, source: "Asimakopoulos & Karavias 2015"}
+ageing_pension_health_pct_gdp_no_reform:
+  y2015: 16
+  y2025: 21
+  y2050: 40

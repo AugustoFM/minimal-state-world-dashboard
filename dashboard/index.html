@@ -77,8 +77,9 @@ function recompute(){
 }
 const ramp=["#f7f4d9","#cfe5b5","#8fcab0","#4aa3a3","#1b6f86","#0c3d5c"];
 let sel=null,metric="minimal_state_score",ymetric="hdi",breaks=[];
-const map=L.map("map",{worldCopyJump:true,minZoom:2,maxBounds:[[-85,-200],[85,200]]}).setView([25,10],2);
-L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png",{attribution:"© OpenStreetMap, © CARTO",maxZoom:7}).addTo(map);
+const map=L.map("map",{worldCopyJump:true,minZoom:2,maxZoom:8,maxBounds:[[-85,-200],[85,200]]}).setView([25,10],2);
+// No online basemap: country polygons on a plain ocean colour, so nothing needs an API key or internet tiles.
+map.attributionControl.addAttribution("Boundaries: Natural Earth via world-atlas");
 const visible=d=>d&&(d.hdi==null?+min_hdi.value===0:d.hdi>=+min_hdi.value);
 function computeBreaks(){
   const vals=DATA.filter(visible).map(d=>d[metric]).filter(v=>v!=null).sort((a,b)=>a-b);
