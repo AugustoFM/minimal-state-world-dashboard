@@ -36,6 +36,7 @@ demographics (A2) -> fiscal baseline (C1) -> macro (C2) -> microsimulation (C3) 
 | C5 | Long-run feedback: human capital, health, public capital, risk premium, inequality | Claude sources, Codex builds | C2, C4 (C3) | `src/feedback.py` |
 | C6 | External block: terms of trade, exchange rate, pass-through | Claude sources, Codex builds | C2 (C5) | `src/external.py` |
 | P1 | 2026 runoff programme scenarios (Lula, Flávio Bolsonaro) with shared machinery | Claude maps, Codex builds | C1-C6, D1, D2 gate | `config/programs_2026.yaml`, `src/programs.py` |
+| F1 | Fiscal delivery ratio: LDO primary targets vs outturns 1999-2025, by government and pooled | Claude sources, Codex assembles | - | `data/brazil/fiscal_delivery.csv` |
 | D1 | Monte Carlo runs | Codex | C1-C4 | `outputs/runs/` |
 | D2 | Back-tests | Codex runs, Claude interprets | C1-C3, C6 | `outputs/backtest.md` |
 | E1 | Brazil dashboard | Claude | D1 | `dashboard/brazil.html` |
