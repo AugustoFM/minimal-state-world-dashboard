@@ -1,0 +1,34 @@
+# C3 inputs that are not behavioural estimates. This file is proposed for
+# lead-developer review; C3 never embeds these monetary values in Python.
+base_year: 2025
+nominal_gdp_brl_million:
+  value: 12738566
+  year: 2025
+  source: "IBGE SIDRA table 1846, variable 585, quarterly current-price GDP summed to calendar 2025"
+  url: "https://sidra.ibge.gov.br/tabela/1846"
+  licence: "Official public data"
+minimum_wage_brl_month:
+  value: 1518
+  year: 2025
+  source: "Decree 12,342/2024, article 1"
+  url: "https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2024/decreto/d12342.htm"
+  licence: "Brazilian federal legislation; public domain"
+poverty_lines_brl_month_per_capita:
+  bolsa_familia:
+    value: 218
+    year: 2023
+    price_basis: "nominal statutory amount, used unchanged in 2025"
+    source: "Law 14,601/2023, article 5(II)"
+    url: "https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14601.htm"
+    licence: "Brazilian federal legislation; public domain"
+  half_minimum_wage_2025:
+    value: 759
+    year: 2025
+    price_basis: "one half of the R$1,518 statutory 2025 minimum wage"
+    source: "Decree 12,342/2024, article 1; arithmetic half"
+    url: "https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2024/decreto/d12342.htm"
+    licence: "Brazilian federal legislation; public domain"
+defaults:
+  random_seed: 20261020
+  consumption_like_exponent: 0.8
+  status: "lead-developer modelling choices; passed explicitly to functions"
