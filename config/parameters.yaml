@@ -7,7 +7,7 @@
 #   secondary  - taken from the literature review doc, not yet re-checked against the source
 # Literature review: Claude Doc "Brazil: state-size reform scenarios - literature review and execution plan".
 # Checked: 2026-10-20. Source registry (URL, retrieval date, licence) for these papers goes in
-# data/raw/SOURCES.md under "B2 parameter sources" once task C1 (which also appends there) is merged.
+# data/raw/SOURCES.md under "B2 parameter sources".
 
 # --- Macro block (C2) ---------------------------------------------------------------------------
 fiscal_multipliers_brazil:

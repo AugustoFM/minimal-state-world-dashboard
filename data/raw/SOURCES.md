@@ -21,3 +21,17 @@
 | `brazil/age_profiles/correa_2023_cadernos.pdf` | [Correa, Gutierrez and Turra (2023), Cadernos de Finanças Públicas](https://publicacoes.tesouro.gov.br/index.php/cadernos/article/download/202/210/833) | 2026-10-20 (downloaded by Claude) | Published by Tesouro Nacional; no explicit article licence located | Untouched PDF; SHA-256 `3578cfcdaccc13b20cd71917b0f491e7b440a49ef8646fabd029456b94847b2e`. Background and definitions for the NTA profiles. |
 | `brazil/age_profiles/NTA_Brasil.xlsx` | [Authors' National Transfer Accounts repository](https://github.com/charlescodigos/National-Transfer-Accounts/raw/main/NTA_Brasil.xlsx) | 2026-10-20 (downloaded by Claude) | No repository licence found; workbook citation instructions name the associated 2025 article | Untouched workbook; SHA-256 `ec6500c680f7f36e0bc7ef26f629a4993d8f02b9fdb774ea1b0e7f6735750970`. Sheet `Per capita Normalized` supplies ages 0–90+ for 2003 and 2018. |
 | `brazil/age_profiles/COFOG_GG_2024.xlsx` | [Tesouro Nacional COFOG 2024 annex](https://cdn.tesouro.gov.br/sistemas-internos/apex/producao/sistemas/thot/arquivos/publicacoes/53401_1725040/anexos/27169_866411/COFOG%20GG.xlsx) | 2026-10-20 (downloaded by Claude) | Tesouro portal states CC BY-ND 3.0; dataset-specific terms not verified | Untouched official workbook; SHA-256 `440403f80d408c383259032ac52612bbf7a0d765549d2ac0132d8b42bf3e507b`. Sheet `1.5.a` cells Q52, Q66, Q77 and Q78 supply the 2024 C1 shares. |
+
+## B2 parameter sources (config/parameters.yaml)
+
+Papers are cited, not stored; no files saved under `data/raw/`. "Verified" matches the `verified` field in the YAML.
+
+| Paper | URL / DOI | Retrieved | Licence / terms | Verified | Used for |
+|---|---|---|---|---|---|
+| Sanches, Santos & Martins (2026), Estudos Econômicos 56(1) | [SciELO](https://www.scielo.br/j/ee/a/pjHsgbX5bB3Zms7hxsK6txg/?lang=en), DOI 10.1590/1980-53575612mhg | 2026-10-20 | SciELO open access (CC BY) | full text, Tables 2, C1, D1, E1, F1; footnote 7 | `fiscal_multipliers_brazil` |
+| Ball, Furceri, Leigh & Loungani (2013), IMF WP 13/151 | [IMF PDF](https://www.imf.org/external/pubs/ft/wp/2013/wp13151.pdf) | 2026-10-20 | IMF copyright; free to read | full text, section IV, Figures 5-6 | `consolidation_gini_effect` |
+| Szklo, Clarke & Rocha (2024), IZA DP 16829 | [IZA PDF](https://docs.iza.org/dp16829.pdf) | 2026-10-20 | IZA DP; free to read | full text, Table B.2, section 5.2.3 | `social_outcome_elasticities.infant_mortality_*` |
+| Arnold (2022), AEJ: Applied 14(4) | [AEA](https://www.aeaweb.org/doi/10.1257/app.20190428) | 2026-10-20 | AEA copyright | abstract (+ 2019 Princeton WP abstract) | `privatisation_wage_effects` |
+| Gallet & Doucouliagos (2017), Soc Sci Med 179 | [RePEc](https://ideas.repec.org/a/eee/socmed/v179y2017icp9-17.html) | 2026-10-20 | Elsevier copyright | abstract | `social_outcome_elasticities.life_expectancy_*`, `mortality_*_meta` |
+| IMF Western Hemisphere REO, May 2018, ch. 4 | [IMF](https://www.imf.org/-/media/files/publications/reo/whd/2018/may/wreo0518-chp4.pdf.md) | 2026-10-20 | IMF copyright; free to read | abstract/summary | `fiscal_multipliers_lac_benchmark` |
+| Alesina, Favero & Giavazzi (2018), NBER WP 24246; Asimakopoulos & Karavias (2015); Tourinho & Brum (2020); Cuevas et al. (2017), IMF WP 17/99; Freitas & Paes (2023); Higgins & Pereira (2013), CEQ WP 7; Souza & Medeiros (2015); Gagliardi, Marinho & de Paula (2023) | see Claude Doc literature review | 2026-10-20 | various | secondary (literature review, not re-checked) | context and cross-check entries |

@@ -7,8 +7,8 @@
 | A3 | in progress | `codex/brazil-a1-a4` | PNAD list expanded with official per-capita income candidate (`VD5002`), source-income candidates, and household size computed using a temporary key dropped before output. Official PNAD layout files and POF documentation/read programs are saved; source-benefit codes and all POF mappings still need exact dictionary transcription/review. Loader supports temporary grouping but no survey microdata has been downloaded. Raw microdata paths are git-ignored. |
 | A4 | done (fallback) | `codex/brazil-a1-a4` | Refetched WDI `GC.XPN.TOTL.GD.ZS` for 1990–2025 and rebuilt exact endpoint episodes. Central-government expense only, **not general-government expenditure**; no interpolation. Middle-income sample now has 598 15-year and 386 20-year episodes. Brazil itself has no exact 15/20-year pairs in the returned series (Brazil observations begin in 2010). |
 | B1 | todo | | |
-| B2 | todo | | |
-| C1 | PR open | `task/c1` | Revised to reproducible NTA single-age profiles (ages 0–90+, 2003/2018) and exact 2024 COFOG shares/cells. Bounds envelope sourced profile vintage and pension-indexation combinations; RGPS remains a labelled proxy for RPPS-inclusive pensions, and 2024 shares are carried to 2025. Committed by Claude after review. |
+| B2 | done | `task/b2` (merged) | Multipliers (Sanches et al. 2026), Gini effects (Ball et al. 2013) and infant-mortality elasticity (Szklo et al. 2024) checked in full text; ranges are spread across specifications, not CIs. Reviewed by Codex. Gaps: schooling and physician elasticities (C4 limited to mortality/life expectancy). |
+| C1 | done | `task/c1` (merged) | Revised to reproducible NTA single-age profiles (ages 0–90+, 2003/2018) and exact 2024 COFOG shares/cells. Bounds envelope sourced profile vintage and pension-indexation combinations; RGPS remains a labelled proxy for RPPS-inclusive pensions, and 2024 shares are carried to 2025. Committed by Claude after review. |
 | C2 | todo | | |
 | C3 | todo | | |
 | C4 | todo | | |
