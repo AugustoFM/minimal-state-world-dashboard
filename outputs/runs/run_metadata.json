@@ -42,6 +42,7 @@
     "point_inputs": "every macro input with low = central = high (initial debt, revenue/GDP, capital share, K/Y, depreciation, GDP anchors)",
     "c1_category_shares": "point values (COFOG 2024)"
   },
+  "external": "C6 block bootstrap (3-year blocks) of joint observed 2006-2024 terms-of-trade and BRL/USD changes, same path for every scenario in a draw; separate random stream [seed, 1]",
   "choices": [
     "triangular sampling for ranges is a modelling choice (fiscal_multipliers_brazil.sampling_rule), not a sourced distribution",
     "parameters are sampled independently: no sourced correlations",
@@ -54,7 +55,7 @@
     "top10_share": "C3 pending",
     "poverty_rate": "C3 pending"
   },
-  "inputs_commit": "3207f7cead7cf01bdafbe2078166ca0fb14380d8",
-  "created_utc": "2026-10-20T18:50:21+00:00",
-  "runtime_seconds": 311.3
+  "inputs_commit": "47a36059404dccadd6f22c9bd440af5b62b2e772",
+  "created_utc": "2026-10-20T19:01:14+00:00",
+  "runtime_seconds": 388.9
 }

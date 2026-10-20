@@ -1,0 +1,137 @@
+"""External block (task C6): terms of trade and exchange rate as exogenous paths.
+
+The external environment is not a policy choice, so every scenario in a draw
+receives the same external path and differences between scenarios stay
+attributable to policy. Paths are built from observed annual changes only:
+
+- stochastic paths: block bootstrap of joint (terms of trade, BRL/USD) annual
+  log changes, keeping their observed co-movement;
+- reference paths: the observed 2005-2011 boom, the 2011-2016 bust, neutral.
+
+Terms of trade move GDP through `external_block.gdp_wrt_commodity_prices`;
+part of the effect is permanent (potential output, per
+`potential_vs_actual_output`) and the rest is cyclical and fades. Depreciation
+raises inflation through `exchange_rate_pass_through`. Debt is re-run with
+`src.macro.debt_step`, keeping the nominal rate Fisher-consistent with the
+real rate, so inflation alone does not erode debt (the FX-linked debt share is
+a recorded gap).
+"""
+
+from __future__ import annotations
+
+import math
+from pathlib import Path
+from typing import Mapping
+
+import numpy as np
+import pandas as pd
+
+from src.macro import debt_step, macro_input, nominal_rate_from_real
+
+
+TOT = "net_barter_terms_of_trade"
+FX = "brl_per_usd"
+BLOCK_YEARS = 3                 # choice: keeps short-run persistence of commodity cycles
+POTENTIAL_SHARE = 0.5           # actual output co-moves twice as strongly as potential (IMF WEO 2015)
+CYCLICAL_HALF_LIFE_YEARS = 2.0  # choice: cyclical part fades; documented as an assumption
+REFERENCE_PERIODS = {"boom": (2005, 2011), "bust": (2011, 2016)}
+
+
+def historical_changes(path: str | Path = "data/brazil/backtest_observed.csv") -> pd.DataFrame:
+    """Joint annual log changes (x100) of terms of trade and BRL/USD, observed years only."""
+    table = pd.read_csv(path)
+    wide = table.pivot(index="year", columns="indicator", values="value")[[TOT, FX]].dropna()
+    changes = np.log(wide).diff().dropna() * 100.0
+    changes.columns = ["tot_change_pct", "fx_change_pct"]
+    return changes
+
+
+def bootstrap_path(
+    rng: np.random.Generator, changes: pd.DataFrame, years: int, block: int = BLOCK_YEARS
+) -> pd.DataFrame:
+    """Moving-block bootstrap of joint changes for `years` projection years."""
+    if len(changes) < block:
+        raise ValueError("Not enough observed years for the block length")
+    rows: list[np.ndarray] = []
+    values = changes.to_numpy()
+    while len(rows) < years:
+        start = int(rng.integers(0, len(values) - block + 1))
+        rows.extend(values[start:start + block])
+    path = pd.DataFrame(rows[:years], columns=changes.columns)
+    path.insert(0, "step", range(1, years + 1))
+    return path
+
+
+def reference_path(name: str, changes: pd.DataFrame, years: int) -> pd.DataFrame:
+    """Observed boom/bust sequence, then zero change; or all-zero neutral path."""
+    path = pd.DataFrame({"step": range(1, years + 1), "tot_change_pct": 0.0, "fx_change_pct": 0.0})
+    if name == "neutral":
+        return path
+    start, end = REFERENCE_PERIODS[name]
+    observed = changes.loc[(changes.index > start) & (changes.index <= end)].to_numpy()
+    n = min(len(observed), years)
+    path.loc[: n - 1, ["tot_change_pct", "fx_change_pct"]] = observed[:n]
+    return path
+
+
+def gdp_and_inflation_effects(path: pd.DataFrame, parameters: Mapping, elasticity: float | None = None) -> pd.DataFrame:
+    """GDP level effect (%) and extra inflation (pp) by projection step."""
+    block = parameters["external_block"]
+    beta = float(block["gdp_wrt_commodity_prices"]["central"] if elasticity is None else elasticity)
+    pass_12 = float(block["exchange_rate_pass_through"]["horizon_12m"]["central"])
+    pass_24 = float(block["exchange_rate_pass_through"]["horizon_24m"]["central"])
+    decay = 0.5 ** (1.0 / CYCLICAL_HALF_LIFE_YEARS)
+    permanent, cyclical, previous_fx = 0.0, 0.0, 0.0
+    records = []
+    for row in path.itertuples(index=False):
+        impulse = beta * row.tot_change_pct
+        permanent += POTENTIAL_SHARE * impulse
+        cyclical = cyclical * decay + (1.0 - POTENTIAL_SHARE) * impulse
+        # 12-month pass-through in the year of the depreciation, the rest of the
+        # 24-month cumulative effect the following year.
+        extra_inflation = pass_12 * row.fx_change_pct + (pass_24 - pass_12) * previous_fx
+        previous_fx = row.fx_change_pct
+        records.append({
+            "step": int(row.step),
+            "external_gdp_level_pct": permanent + cyclical,
+            "external_potential_level_pct": permanent,
+            "external_extra_inflation_pp": extra_inflation,
+        })
+    return pd.DataFrame(records)
+
+
+def apply_external(corner: pd.DataFrame, effects: pd.DataFrame, inputs: Mapping, variant: str = "central") -> pd.DataFrame:
+    """Add external effects to an annual C2 corner and re-run its debt path.
+
+    `corner` is the frame returned by `src.macro.run_corner` (all years, all
+    scenarios). Returns it with gdp_per_capita_with_external,
+    debt_gdp_with_external and inflation_with_external_pct.
+    """
+    frame = corner.copy()
+    start_year = int(frame["year"].min())
+    steps = effects.set_index("step")
+    level = frame["year"].map(lambda y: 0.0 if y == start_year else float(steps.loc[y - start_year, "external_gdp_level_pct"]))
+    extra = frame["year"].map(lambda y: 0.0 if y == start_year else float(steps.loc[y - start_year, "external_extra_inflation_pp"]))
+    frame["external_gdp_level_pct"] = level
+    frame["gdp_per_capita_with_external"] = frame["gdp_per_capita"] * (1.0 + level / 100.0)
+    base_inflation = macro_input(inputs, "gdp_deflator_growth", variant)
+    real_rate = macro_input(inputs, "effective_real_interest_rate", variant)
+    frame["inflation_with_external_pct"] = base_inflation + extra
+    initial_debt = macro_input(inputs, "initial_debt_gdp", variant) / 100.0
+    debt = {}
+    for scenario, group in frame.groupby("scenario", sort=False):
+        ordered = group.sort_values("year")
+        previous_debt, previous_nominal, price = initial_debt, None, 1.0
+        for row in ordered.itertuples():
+            if row.year > start_year:
+                price *= 1.0 + row.inflation_with_external_pct / 100.0
+            nominal = row.real_gdp * price * (1 + row.gdp_level_vs_s0_pct / 100) * (1 + row.external_gdp_level_pct / 100)
+            if previous_nominal is not None:
+                interest = nominal_rate_from_real(real_rate, row.inflation_with_external_pct) / 100.0
+                previous_debt = debt_step(previous_debt, interest, nominal / previous_nominal - 1.0, row.primary_balance_gdp / 100.0)
+            debt[(row.year, scenario)] = previous_debt * 100.0
+            previous_nominal = nominal
+    frame["debt_gdp_with_external"] = [debt[(y, s)] for y, s in zip(frame["year"], frame["scenario"])]
+    if not math.isfinite(frame["debt_gdp_with_external"].sum()):
+        raise ValueError("Non-finite debt path with external effects")
+    return frame

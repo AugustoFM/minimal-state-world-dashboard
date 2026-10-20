@@ -26,7 +26,7 @@ from typing import Iterable, Mapping
 import numpy as np
 import pandas as pd
 
-from src import social
+from src import external, social
 from src.baseline import project_baseline, read_yaml
 from src.macro import PERSISTENCE_VARIANTS, load_macro_inputs, run_corner
 
@@ -56,6 +56,12 @@ MACRO_OUTPUTS = {
     "debt_gdp_vs_s0_pp": "pp_gdp",
     "unemployment_change_pp": "pp",
     "primary_balance_gdp": "pct_gdp",
+    # C6: same external path for every scenario in a draw (src/external.py)
+    "external_gdp_level_pct": "percent",
+    "gdp_per_capita_with_external_vs_s0_pct": "percent",
+    "debt_gdp_with_external": "pct_gdp",
+    "debt_gdp_with_external_vs_s0_pp": "pp_gdp",
+    "inflation_with_external_pct": "percent",
 }
 SOCIAL_OUTPUTS = {
     "real_public_health_spending_pc_change_vs_s0_pct": "percent",
@@ -301,11 +307,12 @@ def load_context(
         "grid": grid,
         "base_year": base_year,
         "target_years": [base_year + h for h in horizons],
+        "external_changes": external.historical_changes(data / "backtest_observed.csv"),
     }
 
 
-def evaluate_draw(draw: Mapping, context: Mapping) -> pd.DataFrame:
-    """Run C1 -> C2 -> C4 for one draw, every variant and persistence setting."""
+def evaluate_draw(draw: Mapping, context: Mapping, external_effects: pd.DataFrame | None = None) -> pd.DataFrame:
+    """Run C1 -> C2 -> C4 (+ C6 external path) for one draw, every variant and persistence setting."""
     annual = context["grid"][(draw["profile_year"], draw["pension_gdp_per_worker_weight"])]
     draw_parameters = parameters_for_draw(context["parameters"], draw)
     draw_inputs = inputs_for_draw(context["inputs"], draw)
@@ -316,12 +323,25 @@ def evaluate_draw(draw: Mapping, context: Mapping) -> pd.DataFrame:
             corner = run_corner(
                 annual, context["population"], variant_scenarios, draw_parameters, draw_inputs, "central", persistence
             )
+            effects = external_effects
+            if effects is None:
+                neutral = external.reference_path(
+                    "neutral", context["external_changes"], int(corner["year"].max() - corner["year"].min())
+                )
+                effects = external.gdp_and_inflation_effects(neutral, context["parameters"])
+            corner = external.apply_external(corner, effects, draw_inputs)
             corner = corner.loc[corner["year"].isin(target_years)].copy()
             s0 = corner.loc[corner["scenario"].eq("S0")].set_index("year")
             corner["gdp_per_capita_vs_s0_pct"] = (
                 corner["gdp_per_capita"] / corner["year"].map(s0["gdp_per_capita"]) - 1.0
             ) * 100.0
             corner["debt_gdp_vs_s0_pp"] = corner["debt_gdp"] - corner["year"].map(s0["debt_gdp"])
+            corner["gdp_per_capita_with_external_vs_s0_pct"] = (
+                corner["gdp_per_capita_with_external"] / corner["year"].map(s0["gdp_per_capita_with_external"]) - 1.0
+            ) * 100.0
+            corner["debt_gdp_with_external_vs_s0_pp"] = (
+                corner["debt_gdp_with_external"] - corner["year"].map(s0["debt_gdp_with_external"])
+            )
             outcomes = social_for_draw(
                 corner, annual, variant_scenarios, context["parameters"], context["base_inputs"], draw, target_years
             )
@@ -344,12 +364,19 @@ def run(
     variant_names = list(context["variant_configs"])
     horizons, base_year = context["horizons"], context["base_year"]
     rng = np.random.default_rng(seed)
+    # Separate stream so adding the external block leaves parameter draws unchanged.
+    external_rng = np.random.default_rng([seed, 1])
+    steps = max(context["target_years"]) - base_year
     draws, results = [], []
     for index in range(n_draws):
         draw = sample_draw(rng, parameters, inputs)
         draw["draw"] = index
+        path = external.bootstrap_path(external_rng, context["external_changes"], steps)
+        effects = external.gdp_and_inflation_effects(path, parameters)
+        draw["external_tot_cumulative_change_pct"] = float(path["tot_change_pct"].sum())
+        draw["external_fx_cumulative_change_pct"] = float(path["fx_change_pct"].sum())
         draws.append(draw)
-        results.append(evaluate_draw(draw, context))
+        results.append(evaluate_draw(draw, context, effects))
     draw_results = pd.concat(results, ignore_index=True)
     metadata = {
         "seed": seed, "n_draws": n_draws, "variants": variant_names,
@@ -369,6 +396,7 @@ def run(
             "point_inputs": "every macro input with low = central = high (initial debt, revenue/GDP, capital share, K/Y, depreciation, GDP anchors)",
             "c1_category_shares": "point values (COFOG 2024)",
         },
+        "external": "C6 block bootstrap (3-year blocks) of joint observed 2006-2024 terms-of-trade and BRL/USD changes, same path for every scenario in a draw; separate random stream [seed, 1]",
         "choices": [
             "triangular sampling for ranges is a modelling choice (fiscal_multipliers_brazil.sampling_rule), not a sourced distribution",
             "parameters are sampled independently: no sourced correlations",
@@ -401,6 +429,20 @@ def summarise(draw_results: pd.DataFrame, n_draws: int) -> pd.DataFrame:
     return pd.concat([summary, pd.DataFrame(gaps)], ignore_index=True)[order]
 
 
+def reference_paths(context: Mapping) -> pd.DataFrame:
+    """Central-parameter results under the fixed boom / neutral / bust external paths."""
+    draw = central_draw(context["parameters"], context["inputs"])
+    steps = max(context["target_years"]) - context["base_year"]
+    frames = []
+    for name in ("boom", "neutral", "bust"):
+        path = external.reference_path(name, context["external_changes"], steps)
+        effects = external.gdp_and_inflation_effects(path, context["parameters"])
+        frame = evaluate_draw(draw, context, effects)
+        frame.insert(0, "external_path", name)
+        frames.append(frame.drop(columns="draw"))
+    return pd.concat(frames, ignore_index=True)
+
+
 def _git_commit() -> str | None:
     try:
         return subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True).stdout.strip()
@@ -415,13 +457,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output-dir", default="outputs/runs")
     args = parser.parse_args(argv)
     started = time.time()
-    draw_results, draws, metadata = run(args.draws, args.seed)
+    context = load_context()
+    draw_results, draws, metadata = run(args.draws, args.seed, context=context)
     summary = summarise(draw_results, args.draws)
     output = Path(args.output_dir)
     (output / "draws").mkdir(parents=True, exist_ok=True)
     summary.to_csv(output / "summary_percentiles.csv", index=False, float_format="%.6f")
     draw_results.to_csv(output / "draws" / "draw_results.csv.gz", index=False, float_format="%.6f")
     draws.to_csv(output / "draws" / "sampled_parameters.csv", index=False, float_format="%.8f")
+    reference_paths(context).to_csv(output / "external_reference_paths.csv", index=False, float_format="%.6f")
     metadata.update({
         "inputs_commit": _git_commit(),
         "created_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
