@@ -45,3 +45,10 @@ def test_classify_uses_conservative_then_central_bound() -> None:
     assert b1.classify(3.0, conservative=3.5, central=4.0) == "inside"
     assert b1.classify(3.8, conservative=3.5, central=4.0) == "borderline"
     assert b1.classify(4.5, conservative=3.5, central=4.0) == "outside"
+
+
+def test_one_year_withholding_is_not_subtracted_from_multi_year_reductions() -> None:
+    # Only the full discretionary stock (1.6 pp) bounds what can avoid mandatory rules;
+    # the 25% one-year withholding limit must not shrink the mandatory requirement.
+    assert b1.mandatory_lower_bound(1.0) == 0.0
+    assert b1.mandatory_lower_bound(4.0) == 4.0 - b1.DISCRETIONARY_PCT_GDP

@@ -33,12 +33,14 @@ b1_calibration:   # task B1, 2026-10-20; reproduce with scripts/calibrate_b1.py 
     classification: {R_mod: "inside at all horizons", R_amb: "inside at 5/10/15y (15y margin 0.1 pp); 8 pp at 20y was borderline, so capped to 7.0"}
     caveat: "Cap assumes the C1 ageing drift happens; a lower drift (e.g. pension-reform transition) lowers the cap one-for-one."
   implementability_bound:
-    no_legislation_max_pp: 0.4   # 25% of federal discretionary spending (1.6% GDP)
-    sources: ["LC 200/2023 art. 7 para 2: discretionary floor 75% of authorised (quoted in IFI RAF 103, Aug 2025, fn. 20)", "IFI RAF 101 (Jun 2025) Table 6: federal discretionary 1.6% GDP, 8.4% of federal primary spending, 2024"]
-    legislation_needed_pp: {R_mod: {5: 0.6, 10: 1.6, 15: 2.6, 20: 3.6}, R_amb: {5: 1.6, 10: 3.6, 15: 5.6, 20: 6.6}}
-    reading: "Every R path except R_mod's first years needs new law on mandatory spending (pensions/indexation, subsidies/tax expenditures). Withholding discretionary spending is a one-year budget tool, not a permanent cut."
+    federal_discretionary_2024_pct_gdp: 1.6   # IFI RAF 101 (Jun 2025) Table 6; 8.4% of federal primary spending
+    mandatory_rules_min_pp:   # reduction minus ALL federal discretionary spending: the least that must change mandatory rules
+      R_mod: {5: 0.0, 10: 0.4, 15: 1.4, 20: 2.4}
+      R_amb: {5: 0.4, 10: 2.4, 15: 4.4, 20: 5.4}
+    one_year_max_withholding_pp: 0.4   # 25% of authorised discretionary (LC 200/2023 art. 7 para 2, quoted in IFI RAF 103 fn. 20); single-year budget tool, NOT a multi-year allowance
+    reading: "Lower bounds only: they assume all federal discretionary spending could be eliminated, which is not realistic. From 10 years on, both R paths require changes to mandatory-spending rules (pensions/indexation, subsidies/tax expenditures), which the default package already targets (65%)."
     precedent_for_legislation: "EC 103/2019 pension reform: estimated 10-year savings R$ 855-870 bn (government / IFI, Sept-Nov 2019; secondary, not yet converted to % GDP)"
-    status: "no sourced reform-timing envelope yet; implementability is reported, not used to resize paths"
+    status: "federal only, 2024 level held constant; no sourced reform-timing envelope yet, so implementability is reported, not used to resize paths"
   proxies: ["episodes use central-government expense (WDI), not general-government primary spending", "discretionary share is federal only; states and municipalities not covered"]
   data_issues: ["WDI expense has series breaks (e.g. Nicaragua 65% in 1990 to 11% in 1994); screened here, still present in A4 episodes_summary.csv"]
   changed_defaults: "R_amb 20y 8 -> 7.0 (conservative precedent cap); added optional R_max. R_mod unchanged."

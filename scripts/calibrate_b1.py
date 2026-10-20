@@ -42,11 +42,20 @@ BREAK_GRID = (5.0, 10.0, 15.0, None)
 PERCENTILE_GRID = (0.05, 0.10, 0.25)
 BOOTSTRAP_DRAWS = 1000
 BOOTSTRAP_SEED = 20261020
-# Without new legislation the executive can withhold at most 25% of authorised
-# discretionary spending (LC 200/2023 art. 7 para 2: floor of 75%), and federal
-# discretionary spending was 1.6% of GDP in 2024 (IFI RAF 101, Table 6).
+# Federal discretionary spending was 1.6% of GDP in 2024 (IFI RAF 101, Table 6).
+# A reduction larger than all of it cannot come from discretionary spending alone,
+# so the excess is a lower bound on the part that must change mandatory-spending
+# rules (federal only, 2024 level). Within a single year the executive may also
+# withhold up to 25% of authorised discretionary spending (LC 200/2023 art. 7
+# para 2); that is a one-year budget-execution tool and is never subtracted from
+# multi-year reductions.
 DISCRETIONARY_PCT_GDP = 1.6
 DISCRETIONARY_MAX_WITHHELD = 0.25
+
+
+def mandatory_lower_bound(reduction: float) -> float:
+    """Minimum part of a reduction (pp GDP) that must come from mandatory rules."""
+    return max(0.0, reduction - DISCRETIONARY_PCT_GDP)
 
 
 def annual_series() -> pd.DataFrame:
@@ -251,7 +260,8 @@ def main() -> int:
         calibration["drift_low"] - calibration["p10_bootstrap_q90"]
     ).where(screened)
     calibration["precedent_cap_central"] = calibration["cap_below_s0_low"].where(screened)
-    calibration["no_legislation_max_pp"] = DISCRETIONARY_PCT_GDP * DISCRETIONARY_MAX_WITHHELD
+    calibration["federal_discretionary_2024_pct_gdp"] = DISCRETIONARY_PCT_GDP
+    calibration["one_year_max_withholding_pp"] = DISCRETIONARY_PCT_GDP * DISCRETIONARY_MAX_WITHHELD
     with SCENARIOS.open(encoding="utf-8") as handle:
         scenarios = yaml.safe_load(handle)["scenarios"]
     for name in ("R_mod", "R_amb"):
@@ -266,9 +276,7 @@ def main() -> int:
                 screened,
             )
         ]
-        calibration[f"{name}_needs_legislation_pp"] = (
-            sizes - calibration["no_legislation_max_pp"]
-        ).clip(lower=0)
+        calibration[f"{name}_mandatory_min_pp"] = sizes.map(mandatory_lower_bound)
     calibration["government_scope"] = "central government only (WDI GC.XPN.TOTL.GD.ZS); proxy"
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     calibration.to_csv(OUTPUT, index=False, float_format="%.4f")
@@ -278,7 +286,7 @@ def main() -> int:
         "p10_loo_min", "p10_loo_max", "p10_grid_min", "p10_grid_max", "drift_low",
         "precedent_cap_conservative", "precedent_cap_central",
         "R_mod_pp", "R_mod_precedent", "R_amb_pp", "R_amb_precedent",
-        "R_amb_needs_legislation_pp",
+        "R_mod_mandatory_min_pp", "R_amb_mandatory_min_pp",
     ]]
     print(view.T.to_string(float_format=lambda v: f"{v:.2f}"))
     return 0
