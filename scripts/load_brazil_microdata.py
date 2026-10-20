@@ -27,7 +27,9 @@ ALLOWED_CANONICAL = {
     "labor_income_nominal_brl", "labor_income_real_brl", "household_income_brl",
     "household_income_per_capita_brl", "consumption_expenditure_brl", "survey_weight",
     "retirement_pension_income_brl", "bpc_income_brl", "bolsa_familia_income_brl",
-    "other_program_income_brl", "household_size",
+    "other_program_income_brl", "household_size", "household_condition",
+    "other_sources_income_brl", "unemployment_insurance_income_brl",
+    "private_transfer_income_brl", "rent_income_brl", "financial_and_other_income_brl",
 }
 
 

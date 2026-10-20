@@ -1,0 +1,38 @@
+{
+  "dataset": "pnadc",
+  "edition": "PNAD Continua 2025, annual visit 1 (PNADC_2025_visita1_20260923.zip)",
+  "layout": "data/raw/brazil/layouts/pnadc_2025_visita1_input.txt; dictionary pnadc_2025_visita1_dictionary.xls",
+  "approved": "2026-10-20, Claude (lead), codes checked against the official 2025 dictionary",
+  "columns": {
+    "Ano": "year",
+    "UF": "state_code",
+    "V1022": "urban_rural",
+    "V1032": "survey_weight",
+    "V2001": "household_size",
+    "V2005": "household_condition",
+    "V2007": "sex",
+    "V2009": "age",
+    "VD3004": "education_level",
+    "VD4001": "labor_force_status",
+    "VD4002": "employment_status",
+    "VD4019": "labor_income_nominal_brl",
+    "VD4048": "other_sources_income_brl",
+    "VD5007": "household_income_brl",
+    "VD5008": "household_income_per_capita_brl",
+    "V5001A2": "bpc_income_brl",
+    "V5002A2": "bolsa_familia_income_brl",
+    "V5003A2": "other_program_income_brl",
+    "V5004A2": "retirement_pension_income_brl",
+    "V5005A2": "unemployment_insurance_income_brl",
+    "V5006A2": "private_transfer_income_brl",
+    "V5007A2": "rent_income_brl",
+    "V5008A2": "financial_and_other_income_brl"
+  },
+  "household_key_columns": [],
+  "notes": {
+    "survey_weight": "V1032 = annual visit-1 weight with calibration (V1028 is the quarterly-file weight and does not exist in this file)",
+    "household_income_per_capita_brl": "VD5008 (habitual from all jobs + effective from other sources; excludes pensionistas, domestic workers and their relatives). Reproduces IBGE SIDRA 7435 Gini 2025 = 0.511 (computed 0.5112). VD5002 (all effective) gives 0.5226 and is not the published concept.",
+    "household_size": "V2001 official number of persons in the household; no household keys are read",
+    "amounts": "nominal R$ per month of the reference month; no deflator applied"
+  }
+}
