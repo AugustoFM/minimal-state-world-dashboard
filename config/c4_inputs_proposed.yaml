@@ -1,0 +1,21 @@
+# C4 raw-data input locators. Values and years are selected at runtime; they
+# are not copied into this file.
+infant_mortality:
+  path: data/raw/brazil/social/worldbank_bra_infant_mortality.json
+  provider: World Bank WDI / UN IGME
+  country_iso3: BRA
+  indicator_code: SP.DYN.IMRT.IN
+  year_field: date
+  value_field: value
+  selection: latest non-null observation
+  unit: per 1,000 live births
+
+life_expectancy:
+  path: data/raw/hdr-data.json
+  provider: UNDP Human Development Report Data Center
+  country_iso3: BRA
+  indicator_code: le
+  year_field: year
+  value_field: actualValue
+  selection: latest non-null observation
+  unit: years at birth
