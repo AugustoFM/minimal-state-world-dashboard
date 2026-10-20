@@ -165,7 +165,7 @@ and 4 percentage points of GDP below S0 in year 10. Values below are
 ## Input register
 
 Exact URLs, file paths, locators and range rules are in
-`config/c2_inputs_proposed.yaml`; raw-file hashes and licences are in
+`config/parameters.yaml` (C2 sections: `fiscal_calibration`, `interest_rate_calibration`, `growth_calibration`, `macro`, `published_potential_growth_benchmark`); raw-file hashes and licences are in
 `data/raw/SOURCES.md`.
 
 | Input | Low / central / high | Vintage or period | Range basis |

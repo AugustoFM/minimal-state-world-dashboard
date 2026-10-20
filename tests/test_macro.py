@@ -235,13 +235,13 @@ def test_workbook_primary_balance_reproduces_reported_row_33():
 
 
 def test_sgs_json_supplies_exact_2025_debt_anchor():
-    inputs = load_macro_inputs("config/c2_inputs_proposed.yaml")
+    inputs = load_macro_inputs("config/parameters.yaml")
     assert inputs["derived"]["gross_debt_gdp_history"][2025] == pytest.approx(78.64)
     assert inputs["macro"]["initial_debt_gdp"]["central"] == pytest.approx(78.64)
 
 
 def test_historical_real_rate_range_uses_same_year_deflators():
-    inputs = load_macro_inputs("config/c2_inputs_proposed.yaml")
+    inputs = load_macro_inputs("config/parameters.yaml")
     nominal = inputs["derived"]["implicit_nominal_interest_rate_history"]
     inflation = inputs["derived"]["gdp_deflator_history"]
     real = inputs["derived"]["implicit_real_interest_rate_history"]
@@ -263,7 +263,7 @@ def test_pwt_backcast_reproduces_average_growth_within_quarter_point():
 def test_projected_first_year_capital_growth_is_within_pwt_calibration_range():
     pwt = read_pwt_brazil_growth("data/raw/brazil/macro/pwt1001.dta")
     rates = pwt_implied_investment_rates(pwt).set_index("year")
-    inputs = load_macro_inputs("config/c2_inputs_proposed.yaml")
+    inputs = load_macro_inputs("config/parameters.yaml")
     projected = (
         inputs["macro"]["investment_rate"]["central"]
         / inputs["macro"]["capital_output_ratio"]["central"]
@@ -280,7 +280,7 @@ def test_projected_first_year_capital_growth_is_within_pwt_calibration_range():
 
 
 def test_projection_investment_and_capital_stock_share_price_basis():
-    inputs = load_macro_inputs("config/c2_inputs_proposed.yaml")
+    inputs = load_macro_inputs("config/parameters.yaml")
     assert inputs["macro"]["investment_rate"]["source"]["name"] == "Penn World Table 10.01"
     assert inputs["macro"]["capital_output_ratio"]["source"]["name"] == "Penn World Table 10.01"
     validate_capital_price_basis(inputs)
@@ -299,7 +299,7 @@ def test_s0_debt_path_equals_textbook_recursion_with_sourced_inputs():
         read_yaml("config/parameters.yaml"),
         range(1, max(scenarios["horizons_years"]) + 1),
     )
-    inputs = load_macro_inputs("config/c2_inputs_proposed.yaml")
+    inputs = load_macro_inputs("config/parameters.yaml")
     result = run_corner(
         annual,
         pd.read_csv("data/brazil/population.csv"),

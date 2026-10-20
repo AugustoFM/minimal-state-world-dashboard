@@ -48,7 +48,7 @@ Papers are cited, not stored; no files saved under `data/raw/`. "Verified" match
 The Tesouro workbook and the two raw macro files listed below are read directly
 by `src/macro.py`. Other sources were read through official publication
 pages/full text on 2026-10-20. Exact locators are recorded in
-`config/c2_inputs_proposed.yaml`.
+`config/parameters.yaml` (C2 sections).
 
 | Source | URL | Accessed | Licence / terms | Inputs |
 |---|---|---:|---|---|

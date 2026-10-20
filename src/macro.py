@@ -840,7 +840,7 @@ def _annual_c1_baseline(args: argparse.Namespace, scenarios: Mapping) -> pd.Data
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--parameters", default="config/parameters.yaml")
-    parser.add_argument("--inputs", default="config/c2_inputs_proposed.yaml")
+    parser.add_argument("--inputs", default="config/parameters.yaml")
     parser.add_argument("--scenarios", default="config/scenarios.yaml")
     parser.add_argument("--baseline", default="data/brazil/baseline.csv")
     parser.add_argument("--population", default="data/brazil/population.csv")
