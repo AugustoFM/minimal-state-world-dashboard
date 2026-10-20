@@ -55,3 +55,11 @@ Transcribed codes (approved mapping `mappings/pof_2017_2018_morador.json`): Mora
 ## Fields excluded from all exports
 
 Names, CPF/CNPJ, addresses, phone numbers, email addresses, direct person/household identifiers, and raw free-text responses. The loader rejects identifier-like mapped fields and keeps only explicitly mapped columns.
+
+## Tax-return centiles (Receita Federal, calendar year 2024)
+
+`tax_centiles_2024.csv` (built by `scripts/build_brazil_tax_centiles.py` from `data/raw/brazil/tax/centis-br-ac2024.xlsx`): one row per table (I-XI, each ranking declarants by a different income concept) and published row; one column per published field, values in R$ exactly as published.
+
+- Rows overlap: 1-100 are centiles of declarants (row 100 = whole top 1%), 101-110 split the top 1% into tenths, 111-120 split the top 0.1% into tenths. Use `partition == True` (rows 1-99, 101-109, 111-120) to sum without double counting; `p_low`/`p_high` give each row's bounds in % of declarants.
+- Broadest income concept: Table V, RB4 = taxable + exempt (incl. dividends) + exclusively taxed income, minus inheritances and gifts. 2024 total RB4 R$ 5,839.7 bn over 41.68 m declarants.
+- Shares are among **declarants**, not adults: top 1% of declarants hold 25.1% of declarants' RB4, top 0.1% 13.1%. Converting to adult-population top shares needs an external income total (national accounts) and adult population; that is a C3 method choice, not done here.
