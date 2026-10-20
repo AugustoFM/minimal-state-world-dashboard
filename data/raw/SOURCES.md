@@ -35,3 +35,9 @@ Papers are cited, not stored; no files saved under `data/raw/`. "Verified" match
 | Gallet & Doucouliagos (2017), Soc Sci Med 179 | [RePEc](https://ideas.repec.org/a/eee/socmed/v179y2017icp9-17.html) | 2026-10-20 | Elsevier copyright | abstract | `social_outcome_elasticities.life_expectancy_*`, `mortality_*_meta` |
 | IMF Western Hemisphere REO, May 2018, ch. 4 | [IMF](https://www.imf.org/-/media/files/publications/reo/whd/2018/may/wreo0518-chp4.pdf.md) | 2026-10-20 | IMF copyright; free to read | abstract/summary | `fiscal_multipliers_lac_benchmark` |
 | Alesina, Favero & Giavazzi (2018), NBER WP 24246; Asimakopoulos & Karavias (2015); Tourinho & Brum (2020); Cuevas et al. (2017), IMF WP 17/99; Freitas & Paes (2023); Higgins & Pereira (2013), CEQ WP 7; Souza & Medeiros (2015); Gagliardi, Marinho & de Paula (2023) | see Claude Doc literature review | 2026-10-20 | various | secondary (literature review, not re-checked) | context and cross-check entries |
+
+## B1 calibration sources
+
+| File | Source URL | Retrieved | Licence / terms | Notes |
+|---|---|---|---|---|
+| `brazil/b1/raf101_jun2025.pdf` | [IFI, Relatório de Acompanhamento Fiscal nº 101, June 2025](https://www12.senado.leg.br/ifi/pdf/raf101_jun2025.pdf) | 2026-10-20 (Claude) | Senado Federal / IFI publication; free reuse with citation | Untouched PDF; SHA-256 `d4c205df012d5f1b61351ef3f1c6b1f3a7a0a890c47cc44f2e07e33b975dc76f`. Table 6: federal discretionary spending R$ 183.7 bn = 1.6% of GDP, 8.4% of federal primary spending (2024 realised). |

@@ -6,10 +6,22 @@ scenarios:
   S0:  {name: status_quo, description: "current rules; pension+health rise with ageing; revenue unchanged; debt drifts up"}
   S1:  {name: constant_size, optional: true, description: "spending/GDP held at today's share (cost of offsetting ageing drift)"}
   R_mod: {name: moderate_reduction, pace_pp_gdp_per_year_below_S0: 0.2, by_year: {5: 1, 10: 2, 15: 3, 20: 4}}
-  R_amb: {name: ambitious_reduction, pace_pp_gdp_per_year_below_S0: 0.4, by_year: {5: 2, 10: 4, 15: 6, 20: 8}, cap: "limited by B1 to observed episodes"}
+  R_amb: {name: ambitious_reduction, pace_pp_gdp_per_year_below_S0: 0.4, by_year: {5: 2, 10: 4, 15: 6, 20: 8}, cap: "within B1 cap at every horizon; nearly binding at 20y (8 vs 8.5)"}
+  R_max: {name: edge_of_experience, optional: true, by_year: {5: 4.2, 10: 5.5, 15: 7.3, 20: 8.5}, description: "B1 cap: largest reduction vs S0 that keeps the change from today within the 10th percentile of observed middle-income declines; stress/upper-bound case, not a recommendation"}
 reduction_is_measured_against: S0        # not against today; part of the effort offsets ageing drift
 package_shares: {pension_and_indexation: 0.40, subsidies_and_tax_expenditures: 0.25, efficiency_health_education_admin: 0.20, other_current: 0.15}
 protected: [public_investment, means_tested_transfers]
 variants: [pension_only, efficiency_only, investment_also_cut_stress, compensating_transfers]
 outputs: [gdp_per_capita, debt_gdp, unemployment, gini, top1_share, top10_share, poverty, life_expectancy, schooling, health_access, hdi_components]
 percentiles: [10, 50, 90]
+
+b1_calibration:   # task B1, 2026-10-20; reproduce with scripts/calibrate_b1.py -> data/brazil/b1_calibration.csv
+  method: "cap_below_S0(h) = C1 drift_low(h) + |country-weighted p10 of observed change(h)|, middle-income episodes excluding spike starts and windows with a >10 pp year-on-year jump (series breaks/crises)"
+  observed_change_p10_pp: {5: -2.8, 10: -2.6, 15: -3.0, 20: -2.7}   # screened sample: 82/74/64/46 countries
+  c1_drift_low_pp: {5: 1.4, 10: 2.9, 15: 4.3, 20: 5.8}
+  cap_below_S0_pp: {5: 4.2, 10: 5.5, 15: 7.3, 20: 8.5}
+  result: "R_mod and R_amb are inside the cap at all horizons; R_amb nearly binds at 20y. Cap assumes the C1 ageing drift materialises: if pension-reform transition lowers the drift, the cap falls one-for-one."
+  binding_constraint: "legal: federal discretionary spending is 1.6% of GDP (2024, IFI RAF 101 Table 6), 8.4% of federal primary spending. R_amb at 5y (2 pp) exceeds all federal discretionary spending, so it requires changes to mandatory spending rules (pensions/indexation, subsidies/tax expenditures) passed within the first years."
+  proxies: ["episodes use central-government expense (WDI), not general-government primary spending", "discretionary share is federal (central government) only; states and municipalities not covered"]
+  data_issues: ["WDI expense has series breaks (e.g. Nicaragua 65% in 1990 to 11% in 1994); screened out here by the >10 pp jump rule - A4 summary percentiles still include them"]
+  changed_defaults: "none to R_mod/R_amb sizes; added optional R_max"
