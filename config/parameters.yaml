@@ -660,3 +660,34 @@ external_block_choices:
   run_as: "dimension 'external' in D1: historical-bootstrap paths sampled per draw, plus fixed 'boom' / 'neutral' / 'bust' reference paths reported separately"
   symmetry: "the same external paths apply to every policy scenario, so external luck is not credited to or blamed on a policy"
   back_test: "D2 must feed observed 2003-2015 and 2017-2022 external paths and report whether the model reproduces actual GDP growth, debt and inflation before any projection is published"
+
+# --- Governance / corruption (added 2026-10-20, Claude) ------------------------------------------
+# Party-neutral: corruption enters as leakage of public spending before it becomes services, applied
+# identically to every scenario and programme. Perception indices by government period are context
+# only (data/brazil/governance_brazil.csv): they mix actual corruption with its exposure (e.g. Lava
+# Jato 2014-17) and differences between recent governments are within their error bands.
+governance:
+  leakage_share_of_spending:
+    unit: "share of social-service spending that does not become services (diverted)"
+    low: 0.028
+    central: null
+    high: 0.13
+    sampling: "uniform[low, high] (choice; the two bounds come from different measures, no central is defensible)"
+    range_basis: "low = Ferraz, Finan & Moreira (2012): corruption in education detected in 35% of audited municipalities, 8% of audited education resources diverted there -> 0.35 x 0.08 = 0.028 expected (our multiplication); high = lower end of Transparência Brasil (2005) estimate that 13-55% of FUNDEF 2001-03 was lost to fraud, as cited in the same paper (fn. 13, secondary)"
+    source: "Ferraz, Finan & Moreira (2012), J. Public Economics 96; NBER WP 18150, section 3.1 and fn. 13"
+    url: "https://www.nber.org/system/files/working_papers/w18150/w18150.pdf"
+    verified: full_text
+    scope: "municipal education transfers 2001-2005; applied to health and education as a proxy"
+    model_effect: "scales services per real spent in every scenario; cancels out of scenario-vs-S0 comparisons unless a policy changes it"
+  leakage_reduction_sensitivity:
+    fraction_of_leakage_removed: 0.5
+    status: "choice: illustrative 'leakage halved' sensitivity available to any scenario; neither 2026 programme quantifies its anti-fraud measures"
+  corruption_learning_association:
+    value_sd: -0.35
+    se: 0.076
+    source: "Ferraz, Finan & Moreira (2012), Table 4 col. 1: students in municipalities with detected education corruption score 0.35 SD lower (association, not causal)"
+    use: "context only; not wired into C4"
+  perception_indices:
+    wgi_control_of_corruption: "World Bank WGI, GOV_WGI_CC.EST (-2.5 to 2.5), Brazil 1996-2025"
+    cpi: "Transparency International CPI 2012-2025 (0-100), with standard errors"
+    use: "context only; not a model input"

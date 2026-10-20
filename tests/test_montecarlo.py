@@ -113,3 +113,18 @@ def test_degenerate_triangular_returns_central() -> None:
     assert mc.triangular(np.random.default_rng(0), 2.0, 2.0, 2.0) == 2.0
     with pytest.raises(ValueError):
         mc.triangular(np.random.default_rng(0), 3.0, 1.0, 2.0)
+
+
+def test_uniform_leakage_cancels_out_of_comparisons(context) -> None:
+    draw = mc.central_draw(context["parameters"], context["inputs"])
+    low = mc.evaluate_draw({**draw, "leakage_share": 0.0}, context)
+    high = mc.evaluate_draw({**draw, "leakage_share": 0.3}, context)
+    for column in ("real_public_health_spending_pc_change_vs_s0_pct", "infant_mortality_difference_vs_s0",
+                   "life_expectancy_difference_vs_s0_years", "debt_gdp_vs_s0_pp"):
+        np.testing.assert_allclose(low[column], high[column], atol=1e-10)
+    # The sensitivity is zero without leakage and favourable (lower IMR) when leakage exists.
+    np.testing.assert_allclose(
+        low["infant_mortality_difference_vs_s0_leakage_halved"], low["infant_mortality_difference_vs_s0"], atol=1e-10
+    )
+    s0 = high.loc[high["scenario"].eq("S0")]
+    assert (s0["infant_mortality_difference_vs_s0_leakage_halved"] < 0).all()

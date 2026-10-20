@@ -34,6 +34,7 @@
     "service_cut_fraction": "triangular(low, central, high) from social_modelling_choices",
     "imr_elasticity": "triangular(low, central, high) from social_outcome_elasticities",
     "pension_gdp_per_worker_weight": "uniform(low, high), snapped to a 0.025 grid",
+    "leakage_share": "uniform(low, high) from governance.leakage_share_of_spending (cancels in scenario-vs-S0 comparisons; drives the leakage_halved sensitivity)",
     "profile_year": "discrete, equal probability over profile_years.values"
   },
   "fixed": {
@@ -53,7 +54,7 @@
     "top10_share": "C3 pending",
     "poverty_rate": "C3 pending"
   },
-  "inputs_commit": "fd733419ad9d41e9ef8ed473b79d5b326bc2938b",
-  "created_utc": "2026-10-20T18:36:06+00:00",
-  "runtime_seconds": 309.0
+  "inputs_commit": "3207f7cead7cf01bdafbe2078166ca0fb14380d8",
+  "created_utc": "2026-10-20T18:50:21+00:00",
+  "runtime_seconds": 311.3
 }

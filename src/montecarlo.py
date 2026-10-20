@@ -63,6 +63,11 @@ SOCIAL_OUTPUTS = {
     "infant_mortality_difference_vs_s0": "per_1000_live_births",
     "life_expectancy_difference_vs_s0_years": "years",
     "hdi_health_index_difference_vs_s0": "index_0_to_1",
+    # Governance sensitivity: the scenario also removes part of the leakage
+    # (governance.leakage_reduction_sensitivity), compared with S0 as is.
+    "effective_health_services_pc_change_vs_s0_pct_leakage_halved": "percent",
+    "infant_mortality_difference_vs_s0_leakage_halved": "per_1000_live_births",
+    "life_expectancy_difference_vs_s0_years_leakage_halved": "years",
 }
 
 
@@ -89,6 +94,7 @@ def sample_draw(rng: np.random.Generator, parameters: Mapping, inputs: Mapping) 
     efficiency = parameters["macro_modelling_choices"]["efficiency_output_effect"]
     social_choices = parameters["social_modelling_choices"]["reduction_hitting_health_education"]
     imr = parameters["social_outcome_elasticities"]["infant_mortality_wrt_public_health_spending"]
+    leakage = parameters["governance"]["leakage_share_of_spending"]
     draw = {
         "profile_year": int(rng.choice(vintages)),
         "pension_gdp_per_worker_weight": snap(rng.uniform(weight["low"], weight["high"])),
@@ -98,6 +104,7 @@ def sample_draw(rng: np.random.Generator, parameters: Mapping, inputs: Mapping) 
             social_choices["service_cut_fraction"]["central"], social_choices["service_cut_fraction"]["high"],
         ),
         "imr_elasticity": triangular(rng, imr["low"], imr["central"], imr["high"]),
+        "leakage_share": float(rng.uniform(leakage["low"], leakage["high"])),
     }
     for category in MULTIPLIER_CATEGORIES:
         entry = accumulated[category]
@@ -121,6 +128,12 @@ def central_draw(parameters: Mapping, inputs: Mapping) -> dict:
         ),
         "imr_elasticity": float(
             parameters["social_outcome_elasticities"]["infant_mortality_wrt_public_health_spending"]["central"]
+        ),
+        # Leakage has no central value by design; its midpoint is used here and
+        # it cancels out of every scenario-vs-S0 indicator except the sensitivity.
+        "leakage_share": 0.5 * (
+            parameters["governance"]["leakage_share_of_spending"]["low"]
+            + parameters["governance"]["leakage_share_of_spending"]["high"]
         ),
     }
     for category in MULTIPLIER_CATEGORIES:
@@ -216,13 +229,17 @@ def social_for_draw(
     efficiency_share = float(variant_scenarios["package_shares"].get("efficiency_health_education_admin", 0.0))
     base_imr = float(base_inputs["infant_mortality"]["value"])
     base_le = float(base_inputs["life_expectancy"]["value"])
+    leakage = float(draw["leakage_share"])
+    removed = float(parameters["governance"]["leakage_reduction_sensitivity"]["fraction_of_leakage_removed"])
     health = annual.loc[annual["category"].eq("health")].set_index(["year", "scenario"])["spending_pct_gdp"]
     gdp = corner.set_index(["year", "scenario"])["gdp_per_capita"]
     gaps = corner.set_index(["year", "scenario"])["gap_below_s0_pp"]
     records = []
     for year in years:
         horizon = year - base_year
-        s0_spending = social.health_spending_per_capita(health[(year, "S0")], gdp[(year, "S0")])
+        # Services per capita = spending x (1 - leakage). With the same leakage in
+        # every scenario the factor cancels in the change vs S0.
+        s0_services = social.health_spending_per_capita(health[(year, "S0")], gdp[(year, "S0")]) * (1.0 - leakage)
         for scenario in corner.loc[corner["year"].eq(year), "scenario"]:
             if scenario == "S1":
                 share, reduction = health[(year, "S1")], 0.0
@@ -232,9 +249,12 @@ def social_for_draw(
                 share, gdp[(year, scenario)], reduction, efficiency_share,
                 health_allocation, draw["service_cut_fraction"],
             )
-            change = (spending / s0_spending - 1.0) * 100.0
+            change = (spending * (1.0 - leakage) / s0_services - 1.0) * 100.0
             imr = social.apply_spending_elasticity(base_imr, change, draw["imr_elasticity"], horizon, build_up)
             le = social.apply_spending_elasticity(base_le, change, le_elasticity, horizon, build_up)
+            change_g = (spending * (1.0 - leakage * (1.0 - removed)) / s0_services - 1.0) * 100.0
+            imr_g = social.apply_spending_elasticity(base_imr, change_g, draw["imr_elasticity"], horizon, build_up)
+            le_g = social.apply_spending_elasticity(base_le, change_g, le_elasticity, horizon, build_up)
             records.append({
                 "year": year, "scenario": scenario,
                 "real_public_health_spending_pc_change_vs_s0_pct": change,
@@ -244,6 +264,9 @@ def social_for_draw(
                 "hdi_health_index_difference_vs_s0": (
                     social.hdi_health_index(le, lower, upper) - social.hdi_health_index(base_le, lower, upper)
                 ),
+                "effective_health_services_pc_change_vs_s0_pct_leakage_halved": change_g,
+                "infant_mortality_difference_vs_s0_leakage_halved": imr_g - base_imr,
+                "life_expectancy_difference_vs_s0_years_leakage_halved": le_g - base_le,
             })
     return pd.DataFrame(records)
 
@@ -338,6 +361,7 @@ def run(
             "service_cut_fraction": "triangular(low, central, high) from social_modelling_choices",
             "imr_elasticity": "triangular(low, central, high) from social_outcome_elasticities",
             "pension_gdp_per_worker_weight": f"uniform(low, high), snapped to a {WEIGHT_GRID_STEP} grid",
+            "leakage_share": "uniform(low, high) from governance.leakage_share_of_spending (cancels in scenario-vs-S0 comparisons; drives the leakage_halved sensitivity)",
             "profile_year": "discrete, equal probability over profile_years.values",
         },
         "fixed": {

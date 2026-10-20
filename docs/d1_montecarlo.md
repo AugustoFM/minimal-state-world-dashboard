@@ -25,6 +25,7 @@
 | NTA profile vintage | 2003 or 2018, equal probability | C1 |
 | Service-cut fraction | triangular(0, 0.5, 1) | `social_modelling_choices` (choice) |
 | Infant-mortality elasticity | triangular(-0.206, -0.126, -0.071) | Szklo, Clarke & Rocha (2024) |
+| Leakage of social spending (corruption) | uniform(0.028, 0.13) | Ferraz, Finan & Moreira (2012); see docs/governance.md. Cancels in scenario-vs-S0 comparisons; drives the `_leakage_halved` sensitivity columns |
 
 Fixed: life-expectancy elasticity (point estimate), initial debt, revenue/GDP, capital share, K/Y, depreciation, GDP anchors, C1 category shares.
 
