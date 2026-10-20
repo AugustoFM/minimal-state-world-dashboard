@@ -1,0 +1,137 @@
+# 2026 runoff government programmes -> model scenarios (task P1). Prepared 2026-10-20 by Claude.
+#
+# Sources: programmes filed with the TSE (open data bundle proposta_governo_2026_BR.zip), copies in
+# data/raw/brazil/programs_2026/ (hashes in data/raw/SOURCES.md). Both candidates reached the second
+# round (consulta_cand_2026_BR.csv, DS_SIT_TOT_TURNO = "2º TURNO").
+#
+# Neutrality rules (apply identically to both):
+#  1. A programme item enters the model only through a mechanism the model has, with the programme
+#     section cited. No item is scored as good or bad here; outcomes come from the shared model.
+#  2. Where a programme states a number, that number is used. Where it states a direction without a
+#     number, the size is a RANGE labelled `size_source: assumption` and reported as such, or is derived
+#     from a stated rule (e.g. the primary balance that stabilises debt).
+#  3. Anything a programme does not mention stays at CURRENT LAW. Silence is not read as a cut or an increase.
+#  4. Claims about past performance in the programmes are not inputs.
+#  5. Both scenarios share the same parameter draws and the same external paths (C6) in each Monte Carlo draw.
+
+current_law:   # baseline both programmes start from (S0 uses these)
+  fiscal_rule:
+    name: "Regime Fiscal Sustentável (LC 200/2023)"
+    real_primary_spending_growth: "70% of real revenue growth (50% if the primary target was missed), bounded to [0.6%, 2.5%] per year"
+    status: "parameters set for 2024-2027 in transitory provisions; may be reset by the next government's PLDO"
+    source: "LC 200/2023 as summarised by Câmara NT 08/2023 and Instituto Millenium note (secondary; check the consolidated law text)"
+    verified: secondary
+  minimum_wage_rule:
+    rule: "INPC (12 months to November) + real GDP growth two years earlier, real gain bounded to [0.6%, 2.5%] per year, 2025-2030"
+    links: "indexes most RGPS pensions, BPC, abono and unemployment insurance floors (C1 pension path)"
+    source: "2024 law limiting minimum-wage real gains (news summaries; law number to confirm on Planalto)"
+    verified: secondary
+  health_education_floors: "constitutional minimums tied to revenue (restored 2023); spending in these areas rises with revenue"
+
+programmes:
+  lula_pt:
+    candidate: "LULA (PT), SQ_CANDIDATO 280002542548"
+    file: "data/raw/brazil/programs_2026/lula_pt_280002542548.pdf"
+    items:
+      - id: L1_fiscal_rule
+        programme: "keep the new fiscal framework; control primary spending growth; fiscal result from growth, spending control, efficiency and tax justice (section 8, economy)"
+        model: "S0 spending path replaced by the LC 200/2023 rule: real primary spending growth = 70% of real revenue growth in [0.6%, 2.5%]"
+        mechanism: rule_based_spending_path
+        size_source: current_law
+      - id: L2_minimum_wage
+        programme: "continue the real minimum-wage valorisation policy (section 2, inequalities; section 12, work)"
+        model: "C1 pension and benefit indexation follows the current minimum-wage rule (real gain 0.6-2.5%/yr), i.e. as current law"
+        mechanism: pension_indexation
+        size_source: current_law
+      - id: L3_transfers
+        programme: "maintain and expand Bolsa Família, Pé-de-Meia, Farmácia Popular, Gás do Povo (sections 2, 4, 5, 10)"
+        model: "means-tested transfers protected (no cut); expansion size not stated -> 0 to +0.2 pp GDP over the term"
+        mechanism: means_tested_transfers
+        size_source: assumption
+        range_pp_gdp: [0.0, 0.2]
+      - id: L4_public_investment
+        programme: "second edition of Novo PAC; continue concessions (sections 7, 8, 10)"
+        model: "public investment protected at its current share; concessions are private investment (not general-government spending)"
+        mechanism: public_investment
+        size_source: current_share
+      - id: L5_tax
+        programme: "tax justice: more tax on top incomes, fewer tax expenditures, IR exemption up to R$5,000 (done), consumption-tax reform as legislated (sections 2, 8)"
+        model: "revenue measures not quantified in the programme -> revenue/GDP change 0 to +0.5 pp, with the Sanches et al. revenue multiplier"
+        mechanism: revenue_path
+        size_source: assumption
+        range_pp_gdp: [0.0, 0.5]
+      - id: L6_pensions
+        programme: "no benefit cuts; diversify pension financing; more flexible contributory mechanisms (section 12)"
+        model: "pension rules as current law; financing changes not quantified (no effect)"
+        mechanism: none
+        size_source: current_law
+      - id: L7_floors
+        programme: "keep constitutional health and education floors (introduction; sections 4, 5)"
+        model: "health and education spending rise with revenue inside the fiscal rule (C4 uses the resulting spending path)"
+        mechanism: social_spending_floors
+        size_source: current_law
+      - id: L8_labour
+        programme: "end the 6x1 schedule, 40-hour week without pay cut (section 12)"
+        model: "not modelled (labour-market regulation is outside the model); listed as a gap"
+        mechanism: not_modelled
+  flavio_bolsonaro_pl:
+    candidate: "FLAVIO BOLSONARO (PL), SQ_CANDIDATO 280002551544"
+    file: "data/raw/brazil/programs_2026/flavio_bolsonaro_pl_280002551544.pdf"
+    items:
+      - id: F1_fiscal_rule
+        programme: "reformulate fiscal rules around stabilising then reducing debt/GDP; primary surpluses; rule for discretionary spending of the three Powers (Brasil que Não Volta Atrás: Contas em ordem)"
+        model: "spending path set so the primary balance reaches the model's debt-stabilising level within T years; T not stated -> 2 to 6 years"
+        mechanism: debt_target_spending_path
+        size_source: derived_from_rule
+        timing_years: [2, 6]
+      - id: F2_spending_cuts
+        programme: "'Tesourão': administrative reform, cut at least 10 ministries, fewer commissioned posts and administrative expenses, end supersalaries; limit Treasury-subsidised credit (Enxugar a máquina; Contas em ordem)"
+        model: "composition of cuts: personnel/administration (efficiency and other_current) and subsidies (subsidised credit); no pension-rule cut stated"
+        mechanism: package_composition
+        composition: {efficiency_health_education_admin: 0.5, other_current: 0.25, subsidies_and_tax_expenditures: 0.25}
+        composition_source: assumption
+      - id: F3_tax_cuts
+        programme: "revise the consumption-tax reform to lower the VAT rate; cut taxes on energy and fuels; reduce payroll cost; exempt exports and investment (Brasil Mais Barato; Menos impostos)"
+        model: "revenue/GDP change not quantified in the programme -> 0 to -1.0 pp, with the Sanches et al. revenue multiplier"
+        mechanism: revenue_path
+        size_source: assumption
+        range_pp_gdp: [-1.0, 0.0]
+      - id: F4_infrastructure
+        programme: "R$ 900 bn over four years in transport infrastructure via PPPs, concessions, BNDES and a fund backed by securitised Union assets (Brasil que Cresce: infraestrutura)"
+        model: "mostly off-budget: treated as private investment; any budget share not stated -> public investment unchanged; BNDES/guarantee fiscal costs not modelled (gap)"
+        mechanism: public_investment
+        size_source: current_share
+      - id: F5_privatisation
+        programme: "resume the National Privatisation Programme case by case (Profissionalização: estatais)"
+        model: "asset sales: one-off debt reduction 0 to 2 pp GDP over the term (assumption); privatisation wage effects from parameters.yaml privatisation_wage_effects; lost dividends not modelled"
+        mechanism: privatisation
+        size_source: assumption
+        range_pp_gdp: [0.0, 2.0]
+      - id: F6_pensions
+        programme: "anti-fraud package in INSS, professional management, end the INSS queue (Brasil sem Fila; O lado dos aposentados)"
+        model: "pension rules as current law; fraud savings not quantified (no effect)"
+        mechanism: none
+        size_source: current_law
+      - id: F7_minimum_wage_and_transfers
+        programme: "not mentioned (minimum wage rule, Bolsa Família, BPC)"
+        model: "current law (rule 3)"
+        mechanism: pension_indexation
+        size_source: current_law
+      - id: F8_new_programmes
+        programme: "childcare vouchers, Casa Verde e Amarela (2.5 million homes), SUS fee-table correction, internet packages (Brasil por Elas; Brasil que Prospera; Brasil que Prepara)"
+        model: "spending increases with no stated cost -> 0 to +0.3 pp GDP, financed inside the spending path"
+        mechanism: package_composition
+        size_source: assumption
+        range_pp_gdp: [0.0, 0.3]
+      - id: F9_labour
+        programme: "reduce payroll cost gradually; negotiated over legislated (Brasil que Prospera: trabalho)"
+        model: "payroll-cost cut counted in F3 revenue; labour regulation not modelled (gap)"
+        mechanism: not_modelled
+
+model_gaps_found:   # what the model must add to cover both programmes (task P1)
+  - "revenue path dimension: both programmes change taxes; the model holds revenue/GDP fixed (C2 revenue_to_gdp rule)"
+  - "rule-based spending paths: LC 200/2023 band rule and a debt-target rule, instead of fixed by_year reductions"
+  - "explicit minimum-wage rule in C1 pension indexation (currently a GDP-per-worker weight proxy)"
+  - "privatisation: asset sales reduce gross debt; wage effects exist in parameters.yaml, dividends and efficiency do not"
+  - "off-budget investment (concessions, PPPs, BNDES) and its contingent fiscal costs"
+  - "labour-market regulation (6x1, negotiated over legislated): out of scope, reported as not modelled"

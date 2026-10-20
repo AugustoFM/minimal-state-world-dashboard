@@ -122,3 +122,11 @@ pages/full text on 2026-10-20. Exact locators are recorded in
 | Gruss (2014), IMF WP 14/154 | [IMF PDF](https://www.imf.org/external/pubs/ft/wp/2014/wp14154.pdf) | 2026-10-20 (Claude) | IMF, free to read | full text | `external_block.gdp_wrt_commodity_prices` (derived 0.033) |
 | IMF WEO October 2015, ch. 2 | [tralac mirror](https://www.tralac.org/images/docs/8180/weo2015-chapter-2-where-are-commodity-exporters-headed-october-2015.pdf) | 2026-10-20 (Claude) | IMF, free to read | abstract/summary (PDF not retrievable) | `external_block.potential_vs_actual_output` |
 | BCB Monetary Policy Report, March 2026, pass-through box | [BCB PDF](https://www.bcb.gov.br/content/ri/inflationreport/202603/rpm202603b8i.pdf) | 2026-10-20 (Claude) | Official publication | full text | `external_block.exchange_rate_pass_through` |
+
+## P1 2026 runoff programmes (TSE open data)
+
+| File | Source URL | Retrieved | Licence / terms | Notes |
+|---|---|---|---|---|
+| `brazil/programs_2026/lula_pt_280002542548.pdf` | [TSE open data, proposta_governo_2026_BR.zip](https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_BR.zip) (member BR/2026BR280002542548_01.pdf) | 2026-10-20 (Claude) | Public electoral record | Untouched PDF; SHA-256 `e1c162c20c81dafadf69b10bab230b5a6dc48f6b6c27c2cfce853b131a8bcc36`. Bundle SHA-256 `4a22f9c7cec2f274056143307244d456e84924c9d89c3edb10e1447159cf0c39` (all 14 programmes; not versioned). |
+| `brazil/programs_2026/flavio_bolsonaro_pl_280002551544.pdf` | same bundle (member BR/2026BR280002551544_01.pdf) | 2026-10-20 (Claude) | Public electoral record | Untouched PDF; SHA-256 `7d1d95075e11e3c4113e8dcd502438049a34f5147a84cb0f746bf59046e477a4`. |
+| (not versioned) consulta_cand_2026_BR.csv | [TSE open data, consulta_cand_2026.zip](https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand/consulta_cand_2026.zip) | 2026-10-20 (Claude) | Public electoral record | Used only to match programme files to candidates and confirm both are in the second round; not versioned because it contains candidates' personal data (CPF, e-mail, voter ID). CSV SHA-256 `e86a4cd7e44d14f7aef909db3f6e2cf8160d177060fa5172d894f7c659b44766`. |
