@@ -7,3 +7,5 @@
 - FIW2026 PDF (Freedom House): narrative report only; no country score table, so not used. Civil rights come from World Bank WGI Voice & Accountability (see fetch script) until the Freedom House country scores Excel is added.
 - freedom_house_country_scores.xlsx: Freedom House, Country and Territory Ratings and Statuses. Latest column = Freedom in the World 2025 edition (year under review 2024). PR and CL are 1-7 (1 = freest); the dashboard's "rights index" is derived: ((7-PR)+(7-CL))/12*100.
 - World Bank WGI (Voice & Accountability, Rule of Law): fetched via GOV_WGI_* codes in scripts/fetch_worldbank.py.
+
+| `brazil/ibge_projecoes_2024_tab1_idade_simples.xlsx` | [IBGE FTP directory](https://ftp.ibge.gov.br/Projecao_da_Populacao/Projecao_da_Populacao_2024/) (`projecoes_2024_tab1_idade_simples.xlsx`) | 2026-10-20 | Public download; no explicit licence found in FTP directory | Untouched workbook; population by sex and single age, 2000–2070, Brazil and federative units. UN WPP cross-check not yet included. |
