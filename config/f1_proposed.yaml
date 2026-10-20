@@ -1,0 +1,18 @@
+# Proposed only; do not consume as a model parameter before review.
+fiscal_delivery:
+  status: proposed
+  concept: consolidated_public_sector
+  sign_convention: surplus_positive_deficit_negative
+  miss_definition: outturn_pct_gdp_minus_target_pct_gdp
+  includes_pandemic_2020: true
+  n: 14
+  miss_vs_original_pp_gdp:
+    p10: -2.9732
+    p50: -0.0164
+    p90: 3.2700
+  miss_vs_final_pp_gdp:
+    p10: -1.6300
+    p50: 0.0740
+    p90: 3.2700
+  source: data/brazil/fiscal_delivery.csv
+  note: Empirical archived-year distribution; missing years are not filled or interpolated.
