@@ -12,7 +12,14 @@ scenarios:
 reduction_is_measured_against: S0        # not against today; part of the effort offsets ageing drift
 package_shares: {pension_and_indexation: 0.40, subsidies_and_tax_expenditures: 0.25, efficiency_health_education_admin: 0.20, other_current: 0.15}
 protected: [public_investment, means_tested_transfers]
-variants: [pension_only, efficiency_only, investment_also_cut_stress, compensating_transfers]
+variants: [default, pension_only, efficiency_only, investment_also_cut_stress, compensating_transfers]
+variant_definitions:   # lead-developer choices for D1 (2026-10-20); shares of the reduction R(h), each set sums to 1 unless noted
+  default: "package_shares above"
+  pension_only: {pension_and_indexation: 1.0}
+  efficiency_only: {efficiency_health_education_admin: 1.0}
+  investment_also_cut_stress: {pension_and_indexation: 0.32, subsidies_and_tax_expenditures: 0.20, efficiency_health_education_admin: 0.16, other_current: 0.12, public_investment: 0.20}   # default x 0.8 + 20% investment
+  compensating_transfers: {gross_cut_multiple_of_R: 1.1, gross_cut_shares: "package_shares", means_tested_transfers_increase_share_of_R: 0.1, note: "cut 1.1 R with default shares, return 0.1 R as means-tested transfers (social_benefits multiplier); net reduction stays R"}
+  status: choice
 outputs: [gdp_per_capita, debt_gdp, unemployment, gini, top1_share, top10_share, poverty, life_expectancy, schooling, health_access, hdi_components]
 percentiles: [10, 50, 90]
 
