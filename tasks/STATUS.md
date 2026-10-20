@@ -9,7 +9,7 @@
 | B1 | todo | | |
 | B2 | done | `task/b2` (merged) | Multipliers (Sanches et al. 2026), Gini effects (Ball et al. 2013) and infant-mortality elasticity (Szklo et al. 2024) checked in full text; ranges are spread across specifications, not CIs. Reviewed by Codex. Gaps: schooling and physician elasticities (C4 limited to mortality/life expectancy). |
 | C1 | done | `task/c1` (merged) | Revised to reproducible NTA single-age profiles (ages 0–90+, 2003/2018) and exact 2024 COFOG shares/cells. Bounds envelope sourced profile vintage and pension-indexation combinations; RGPS remains a labelled proxy for RPPS-inclusive pensions, and 2024 shares are carried to 2025. Committed by Claude after review. |
-| C2 | todo | | |
+| C2 | PR open | `task/c2` | Lead-review debt-rate fix applied: 2021-25 nominal implicit rates are Fisher-converted with same-year IBGE GDP-deflator inflation (13.0/8.6/5.2/3.8/5.73%). Real-rate history is -2.0422/2.3877/5.0501/7.1968/6.9379%, range -2.0422/5.0501/7.1968%; projected nominal corners are 0.8966/8.2016/11.2703%. Old nominal behavior is behind an explicit false-by-default legacy flag. Central S0 potential growth is 1.122/0.936/0.659/0.348% and debt is 104.46/145.49/207.48/298.94% at 5/10/15/20 years. The 10-year 66.85 pp rise decomposes into 25.97 pp primary (including C1 ageing) and 40.88 pp interest-growth; the latter explains most of the remaining 20.49 pp gap above the secondary ~125% IFI benchmark. IBGE SIDRA sources for 2025 GDP and 2021-2025 deflators archived and checked by Claude (2025 deflator derived 5.71 vs 5.73 used, rounding). CLI writes 504 rows. Exact pytest command: 27 passed. Reviewed and committed by Claude. |
 | C3 | todo | | |
 | C4 | todo | | |
 | D1 | todo | | |
