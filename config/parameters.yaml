@@ -168,6 +168,32 @@ state_spending_efficiency_dea:
   note: "Relative efficiency; an upper bound on savings without output loss, not a forecast of achievable savings."
 
 # --- Social block (C4) --------------------------------------------------------------------------
+social_modelling_choices:
+  # Lead-developer decisions for C4 (2026-10-20). Choices, not estimates; outputs must label them.
+  health_spending_measure: "real public health spending per capita = health share of GDP (C1 path minus the health part of any reduction) x real GDP per capita (C2)"
+  reduction_hitting_health_education:
+    # The scenarios.yaml package puts 20% of each reduction on 'efficiency_health_education_admin'.
+    # Split between health and education in proportion to their 2024 COFOG shares (5.03 / 5.10% GDP);
+    # administration is ignored, which over-allocates to services (conservative for outcomes).
+    allocation: cofog_2024_proportional
+    service_cut_fraction: {low: 0.0, central: 0.5, high: 1.0, status: choice,
+      range_basis: "0 = pure efficiency (same services, less money, no outcome effect, consistent with C2 efficiency_output_effect central 0); 1 = the cut removes services one-for-one"}
+  elasticity_build_up:
+    rule: "effect of a sustained spending change ramps linearly from 0 to the full elasticity over 10 years, then stays"
+    status: choice
+    basis: "Szklo, Clarke & Rocha 2024: elasticity near 0 just after the reform, about -0.2 after 10 years"
+  cuts_vs_increases:
+    rule: "apply the same elasticity to cuts as to increases"
+    status: choice
+    caveat: "Szklo et al. find mortality more sensitive to increases than to declines (noisy); symmetric use may overstate harm from cuts. Must be shown in outputs."
+  life_expectancy_to_hdi:
+    rule: "UNDP HDI health index = (LE - 20) / (85 - 20)"
+    source: "UNDP HDR technical notes (goalposts 20 and 85 years)"
+  not_modelled:
+    - "schooling (mean and expected years): no sourced elasticity (see social_outcome_elasticities.missing)"
+    - "physicians per 1,000 and other health-access measures: no sourced elasticity"
+    - "HDI education index and overall HDI: depend on schooling, so only the health index is produced"
+
 social_outcome_elasticities:
   # Not in the original 20 papers; added in B2 (2026-10-20). Elasticity = % change in outcome per 1% change
   # in public health spending per capita.

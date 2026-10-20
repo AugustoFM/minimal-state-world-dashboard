@@ -63,3 +63,9 @@ pages/full text on 2026-10-20. Exact locators are recorded in
 | `brazil/macro/ibge_sidra_6784.json` | [IBGE SIDRA table 6784](https://apisidra.ibge.gov.br/values/t/6784/n1/all/v/all/p/2020,2021,2022,2023,2024?formato=json) | 2026-10-20 (Claude) | Official public data | Untouched API response; SHA-256 `3d72b9dc368717e1cc509552e9f91bff02616b8b70b2e9cd4ca963e66bd1c953`. GDP deflator annual change 2020-2023 (2024 not yet published in this table). |
 | `brazil/macro/ibge_sidra_1846_gdp_current_2024.json`, `ibge_sidra_1846_gdp_current_2025.json` | [IBGE SIDRA table 1846](https://sidra.ibge.gov.br/tabela/1846), v585, c11255/90707 (GDP at market prices, current R$ million) | 2026-10-20 (Claude) | Official public data | Untouched API responses; SHA-256 `c668015a25e5a607c39bfb22004d1e53a42dcb63cc16a5197964b542c1bd26e4`, `cafe03d26ee0c5458dffbe563a1f4fd9ec024f0ca8cc142034f889dd06870d6b`. Quarterly sums: 2024 R$11,779,251 m; 2025 R$12,738,566 m. |
 | `brazil/macro/ibge_sidra_5932_gdp_real_growth_2025.json` | [IBGE SIDRA table 5932](https://sidra.ibge.gov.br/tabela/5932), v6563, 2025 Q4 | 2026-10-20 (Claude) | Official public data | Untouched API response; SHA-256 `ce9a02dc7d63b146d5a831705f1d2f54aae4614f6d0e4a2faf432ce43798048a`. 2025 real GDP growth 2.3%; with table 1846 gives 2025 deflator 5.71%. |
+
+## C4 social sources
+
+| File | Source URL | Retrieved | Licence / terms | Notes |
+|---|---|---|---|---|
+| `brazil/social/worldbank_bra_infant_mortality.json` | [World Bank WDI API, `SP.DYN.IMRT.IN`, Brazil](https://api.worldbank.org/v2/country/BRA/indicator/SP.DYN.IMRT.IN?format=json&per_page=100) | 2026-10-20 (Claude) | CC BY 4.0 | Untouched API response; SHA-256 `a573f536bb6c5df8ccabb0561c076868936cd11b691b5427f523df66d361322b`. Infant mortality per 1,000 live births (UN IGME estimates); 2024 = 12.3. |
