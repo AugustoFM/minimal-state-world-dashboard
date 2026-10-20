@@ -59,6 +59,7 @@ const M={
  hospital_beds_per_1000:{l:"Hospital beds per 1,000",f:v=>v.toFixed(1)},
  health_spend_pct_gdp:{l:"Health spending, % GDP",f:v=>v.toFixed(1)+"%"},
  voice_accountability:{l:"Voice & accountability (WGI, civil rights proxy)",f:v=>v.toFixed(2)},
+ fh_rights_index:{l:"Freedom House rights index (0-100, derived from PR/CL 1-7)",f:v=>v.toFixed(0)},
  rule_of_law:{l:"Rule of law (WGI)",f:v=>v.toFixed(2)},
  gini:{l:"Income Gini (World Bank)",f:v=>v.toFixed(1)},
  income_top10:{l:"Income share of top 10%",f:v=>v.toFixed(1)+"%"},
@@ -107,7 +108,7 @@ function pctRank(d,key){const v=DATA.map(x=>x[key]).filter(x=>x!=null).sort((a,b
 function detail(){
  const d=byIso[sel];const el=document.getElementById("detail");if(!d){return}
  const keys=Object.keys(M);
- el.innerHTML=`<h3>${d.country}</h3><div class="note">Score confidence: ${d.confidence||"n/a"} · ${d.dims_used||0}/3 dimensions${d.efw_rank?` · Fraser rank ${d.efw_rank}`:""}</div>`+
+ el.innerHTML=`<h3>${d.country}</h3><div class="note">Score confidence: ${d.confidence||"n/a"} · ${d.dims_used||0}/3 dimensions${d.efw_rank?` · Fraser rank ${d.efw_rank}`:""}${d.fh_status?` · Freedom House: ${{F:"Free",PF:"Partly free",NF:"Not free"}[d.fh_status]||d.fh_status}`:""}</div>`+
  "<table>"+keys.map(k=>{const v=d[k];const p=v!=null?pctRank(d,k):null;
   return`<tr><td>${M[k].l}</td><td class=n>${v!=null?M[k].f(v):"–"}</td><td style="width:70px">${p!=null?`<div style="height:6px;background:#eee;border-radius:3px"><div style="height:6px;width:${p}%;background:var(--acc);border-radius:3px"></div></div>`:""}</td></tr>`}).join("")+
  `</table><div class="note">Bar = percentile among countries with data (not good/bad).</div>`}

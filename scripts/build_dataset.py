@@ -27,7 +27,7 @@ alias = {"Korea, South": "KOR", "Korea, North": "PRK", "Russia": "RUS", "Taiwan"
          "Burma": "MMR", "Congo, Democratic Republic of the Congo": "COD", "Congo, Republic of": "COG", "Cabo Verde": "CPV",
          "Czech Republic": "CZE", "Czechia": "CZE", "Cote d'Ivoire": "CIV", "Côte d'Ivoire": "CIV", "Gambia, The": "GMB",
          "Bahamas, The": "BHS", "Kyrgyz Republic": "KGZ", "Slovak Republic": "SVK", "Turkey": "TUR", "Vietnam": "VNM", "Laos": "LAO",
-         "Eswatini": "SWZ", "Democratic Republic of Congo": "COD", "Republic of Congo": "COG", "São Tomé and Príncipe": "STP", "The Bahamas": "BHS", "The Gambia": "GMB", "The Philippines": "PHL", "Brunei": "BRN", "Iran": "IRN", "Syria": "SYR", "Venezuela": "VEN", "Bolivia": "BOL", "Tanzania": "TZA",
+         "Eswatini": "SWZ", "Democratic Republic of Congo": "COD", "Republic of Congo": "COG", "São Tomé and Príncipe": "STP", "The Bahamas": "BHS", "The Gambia": "GMB", "The Philippines": "PHL", "Brunei": "BRN", "Hong Kong": "HKG", "Puerto Rico": "PRI", "Macao": "MAC", "Macau": "MAC", "West Bank": "PSE", "Palestine": "PSE", "Iran": "IRN", "Syria": "SYR", "Venezuela": "VEN", "Bolivia": "BOL", "Tanzania": "TZA",
          "Micronesia": "FSM", "Sao Tome and Principe": "STP", "Timor-Leste": "TLS", "Kosovo": "XKX", "North Macedonia": "MKD"}
 def iso(n):
     n = str(n).strip()
@@ -48,6 +48,25 @@ hd = j[j.indicatorCode.isin(["hdi", "eys", "mys"])].dropna(subset=["value"]).sor
 hd = hd.pivot(index="countryIsoCode", columns="indicatorCode", values="value").rename(columns={"hdi": "hdi", "eys": "expected_schooling", "mys": "mean_schooling"})
 hy = j[j.indicatorCode == "hdi"].dropna(subset=["value"]).groupby("countryIsoCode")["year"].max().rename("hdi_year")
 df = df.merge(hd.join(hy).reset_index().rename(columns={"countryIsoCode": "iso3"}), on="iso3", how="outer")
+
+
+# ---- Freedom House ratings (PR/CL 1-7, 1 = freest; latest edition in the file = FIW 2025, covering 2024)
+fh = pd.concat([pd.read_excel(R + "freedom_house_country_scores.xlsx", sheet_name=i, header=None).iloc[3:, [0, -3, -2, -1]] for i in (1, 2)])  # countries + territories
+fh.columns = ["name", "fh_pr", "fh_cl", "fh_status"]
+fh_alias = {"Brunei": "BRN", "Hong Kong": "HKG", "Puerto Rico": "PRI", "Macao": "MAC", "Macau": "MAC", "West Bank": "PSE", "Palestine": "PSE", "Congo (Brazzaville)": "COG", "Congo (Kinshasa)": "COD", "Cote d'Ivoire": "CIV", "Kosovo": "XKX",
+            "Micronesia": "FSM", "Russia": "RUS", "St. Kitts and Nevis": "KNA", "St. Lucia": "LCA",
+            "St. Vincent and the Grenadines": "VCT", "The Gambia": "GMB", "Turkey": "TUR"}
+def fh_iso(n):
+    n = str(n).strip()
+    if n in fh_alias: return fh_alias[n]
+    try: return pycountry.countries.lookup(n).alpha_3
+    except LookupError: return None
+fh["iso3"] = fh["name"].map(fh_iso)
+fh = fh.dropna(subset=["iso3"])
+for c in ("fh_pr", "fh_cl"): fh[c] = pd.to_numeric(fh[c], errors="coerce")
+fh = fh.dropna(subset=["fh_pr", "fh_cl"])
+fh["fh_rights_index"] = ((7 - fh["fh_pr"]) + (7 - fh["fh_cl"])) / 12 * 100   # derived 0-100, 100 = freest
+df = df.merge(fh[["iso3", "fh_pr", "fh_cl", "fh_status", "fh_rights_index"]], on="iso3", how="left")
 
 # ---- UBS Global Wealth Report 2026 (partial: ~34 countries)
 df = df.merge(pd.read_csv(R + "ubs_gwr2026_extracted.csv"), on="iso3", how="left")
