@@ -1,0 +1,30 @@
+# C5 inputs that must be downloaded and archived before the public-capital
+# channel is enabled. Nulls are deliberate: src.feedback fails closed unless
+# allow_missing=True.
+public_capital:
+  initial_stock_gdp:
+    central: null
+    unit: ratio_of_gdp
+    country: BRA
+    year: null
+    source:
+      name: IMF Investment and Capital Stock Dataset (ICSD)
+      url: https://infrastructuregovern.imf.org/content/PIMA/Home/PimaTool/Investment-and-Capital-Stock-Database-Portal.html
+    status: download_required
+  depreciation_rate:
+    central: null
+    unit: share_per_year
+    country: BRA
+    year: null
+    source:
+      name: IMF Investment and Capital Stock Dataset (ICSD)
+      url: https://infrastructuregovern.imf.org/content/PIMA/Home/PimaTool/Investment-and-Capital-Stock-Database-Portal.html
+    status: download_required
+
+downloads_needed:
+  - dataset: IMF Investment and Capital Stock Dataset (ICSD)
+    url: https://infrastructuregovern.imf.org/content/PIMA/Home/PimaTool/Investment-and-Capital-Stock-Database-Portal.html
+    required_fields: [country_code, year, public_capital_stock_percent_gdp, public_capital_depreciation_rate]
+    selection: latest non-null Brazil observation; preserve its year
+    licence: verify on download
+    reason: Required to activate C5 public-capital accumulation; no value is inferred or filled.
