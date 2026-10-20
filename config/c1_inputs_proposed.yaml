@@ -1,0 +1,37 @@
+baseline:
+  pension_gdp_share:
+    low: 11.65005863811359
+    central: 11.65005863811359
+    high: 11.65005863811359
+    source: "Tesouro Nacional, COFOG_GG_2024.xlsx, sheet '1.5.a': Q4=2024, Q77 (COFOG 10.2 Terceira idade)=8.86420230043415% of GDP plus Q78 (COFOG 10.3 Sobreviventes)=2.7858563376794394%; sum=11.65005863811359%. Carried to the 2025 model base year."
+  health_gdp_share:
+    low: 5.031903317955291
+    central: 5.031903317955291
+    high: 5.031903317955291
+    source: "Tesouro Nacional, COFOG_GG_2024.xlsx, sheet '1.5.a': Q4=2024 and Q52 (COFOG 07 Saúde)=5.031903317955291% of GDP. Carried to the 2025 model base year."
+  education_gdp_share:
+    low: 5.101686126613569
+    central: 5.101686126613569
+    high: 5.101686126613569
+    source: "Tesouro Nacional, COFOG_GG_2024.xlsx, sheet '1.5.a': Q4=2024 and Q66 (COFOG 09 Educação)=5.101686126613569% of GDP. Carried to the 2025 model base year."
+  profile_years:
+    values: [2003, 2018]
+    source: "NTA_Brasil.xlsx, sheet 'Per capita Normalized'; the workbook supplies single-age profiles for 2003 and 2018. Both observed vintages define the envelope."
+  central_profile_year:
+    value: 2018
+    source: "NTA_Brasil.xlsx, sheet 'Per capita Normalized'; 2018 is the latest available vintage and is central. The 2003 vintage predates the 2019 pension reform by longer and is used as a sourced shape sensitivity."
+  pension_gdp_per_worker_weight:
+    low: 0.0
+    central: 0.5
+    high: 1.0
+    source: "Proposed C1 sensitivity bracket. Weight 0 indexes the fixed pension age profile to GDP per capita; weight 1 indexes it to GDP per working-age person; 0.5 is the geometric midpoint. This is a scenario assumption, not an estimate."
+  working_age_min:
+    low: 15
+    central: 15
+    high: 15
+    source: "Correa, Gutierrez and Turra (2023), Contas Nacionais de Transferência: working age is 15-64."
+  working_age_max:
+    low: 64
+    central: 64
+    high: 64
+    source: "Correa, Gutierrez and Turra (2023), Contas Nacionais de Transferência: working age is 15-64."

@@ -8,7 +8,7 @@
 | A4 | done (fallback) | `codex/brazil-a1-a4` | Refetched WDI `GC.XPN.TOTL.GD.ZS` for 1990–2025 and rebuilt exact endpoint episodes. Central-government expense only, **not general-government expenditure**; no interpolation. Middle-income sample now has 598 15-year and 386 20-year episodes. Brazil itself has no exact 15/20-year pairs in the returned series (Brazil observations begin in 2010). |
 | B1 | todo | | |
 | B2 | todo | | |
-| C1 | todo | | |
+| C1 | PR open | `task/c1` | Revised to reproducible NTA single-age profiles (ages 0–90+, 2003/2018) and exact 2024 COFOG shares/cells. Bounds envelope sourced profile vintage and pension-indexation combinations; RGPS remains a labelled proxy for RPPS-inclusive pensions, and 2024 shares are carried to 2025. Committed by Claude after review. |
 | C2 | todo | | |
 | C3 | todo | | |
 | C4 | todo | | |
