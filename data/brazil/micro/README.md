@@ -1,6 +1,16 @@
 # Household microdata intake (A3)
 
-This directory contains the proposed ingestion contract and variable list only. Full PNAD Contínua and POF microdata have **not** been downloaded. That download is deferred until the source-to-canonical variable mapping in `DATA_DICTIONARY.md` is agreed.
+PNAD Contínua 2025 (annual visit 1) is downloaded, mapped and validated; POF 2017-2018 codes are transcribed but its microdata is not downloaded yet. Raw microdata and person-level exports are git-ignored; only mappings and aggregate validation are versioned.
+
+## Pipeline (run from repo root)
+
+```
+python scripts/read_ibge_fwf.py data/raw/brazil/microdata/PNADC_2025_visita1_20260923.zip data/raw/brazil/layouts/pnadc_2025_visita1_input.txt data/processed/brazil/microdata/pnadc_2025_visita1_selected.csv --mapping data/brazil/micro/mappings/pnadc_2025_visita1.json
+python scripts/load_brazil_microdata.py pnadc data/processed/brazil/microdata/pnadc_2025_visita1_selected.csv data/brazil/micro/mappings/pnadc_2025_visita1.json data/processed/brazil/microdata/pnadc_2025_visita1_canonical.csv
+python scripts/validate_brazil_microdata.py
+```
+
+Download the zip first from the IBGE FTP (URL and SHA-256 in `data/raw/SOURCES.md`) into `data/raw/brazil/microdata/`. Validation (2025): Gini of household per-capita income 0.5112 vs IBGE published 0.511; weighted population within 0.35% of the IBGE projection.
 
 ## Sources
 

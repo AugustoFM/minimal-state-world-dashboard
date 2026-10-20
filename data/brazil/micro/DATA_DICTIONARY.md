@@ -1,4 +1,4 @@
-# Proposed A3 dictionary for review
+# A3 dictionary (PNAD mapping approved and validated 2026-10-20)
 
 This is the source-variable shortlist for discussion before any full microdata download. Keep nominal/real amounts and their reference years explicit. The loader only writes variables listed in an approved JSON mapping.
 
@@ -16,15 +16,22 @@ This is the source-variable shortlist for discussion before any full microdata d
 | `employment_status` | `VD4002` | Employment status; verify edition-specific layout. |
 | `labor_income_nominal_brl` | `VD4019` | Habitual earnings from all jobs, age 14+; nominal BRL and reference year. |
 | `labor_income_real_brl` | `VD4019` × official annual deflator | Derive only with matching official deflator and documented price base; keep nominal field too. |
-| `household_income_per_capita_brl` | `VD5002` | Official effective household per-capita income measure. Respect its exclusions (benefits in kind/tickets and income of lodgers, domestic workers and their relatives); retain edition/reference period. |
+| `household_income_per_capita_brl` | `VD5008` | Household per-capita income, habitual from all jobs + effective from other sources (excludes pensionistas, domestic workers and their relatives). **This is the concept of IBGE's published Gini** (SIDRA 7435): computed 0.5112 vs published 0.511 for 2025. `VD5002` (all effective) gives 0.5226 and is not used. |
 | `retirement_pension_income_brl` | `V5004A2` | Amount from retirement/pension source in annual all-sources visit layout; verify edition-specific names and reference period. |
 | `bpc_income_brl` | `V5001A2` | Amount from BPC/LOAS source in annual all-sources visit layout. |
 | `bolsa_familia_income_brl` | `V5002A2` | Amount from Bolsa Família/Auxílio Brasil source in annual all-sources visit layout. |
 | `other_program_income_brl` | `V5003A2` | Amount from other government social programs; keep distinct from BPC and Bolsa Família. |
-| `household_size` | derived with temporary household grouping | Number of resident person records in each dwelling, computed internally and exported as a count only. Grouping key is dropped before output. |
-| `survey_weight` | `V1028` | Expansion weight; check interview/annual release layout. |
+| `household_size` | `V2001` | Official number of persons in the household; no household keys are read. |
+| `household_condition` | `V2005` | Condition in the household (17-19 = pensionista, domestic worker, relative of domestic worker; excluded from per-capita income). |
+| `household_income_brl` | `VD5007` | Household income (habitual work + effective other sources). |
+| `other_sources_income_brl` | `VD4048` | Effective income from all non-work sources. |
+| `unemployment_insurance_income_brl` | `V5005A2` | Unemployment insurance / seguro-defeso. |
+| `private_transfer_income_brl` | `V5006A2` | Alimony, donations, allowances from non-residents. |
+| `rent_income_brl` | `V5007A2` | Rent or lease income. |
+| `financial_and_other_income_brl` | `V5008A2` | Scholarships, savings and financial income, other. |
+| `survey_weight` | `V1032` | Annual visit-1 weight with calibration. (`V1028` is the quarterly-file weight and does not exist in the annual visit file.) |
 
-The official 2025 visit-1 dictionary/input layout and IBGE derived-variable documentation have been downloaded. `VD5002` is identified in IBGE's derived-variable documentation as effective household per-capita income. The source-income codes shown are candidate codes from the all-sources annual layout and still require transcription against the official dictionary before a year-specific mapping is approved. Retain source visit and reference period; do not combine first- and fifth-visit records without an explicit survey design decision. Use temporary household grouping only to calculate household size or a separately requested derived value, not to replace the official per-capita measure.
+Approved mapping: `mappings/pnadc_2025_visita1.json`. Source-income codes V5001A2-V5008A2 checked against the question texts in the official 2025 dictionary (V5001 BPC, V5002 Auxilio Brasil/Bolsa Familia, V5003 other government programs, V5004 public and private pensions, V5005 unemployment insurance, V5006 private transfers, V5007 rent, V5008 financial/other). Validation: `validation_pnadc_2025.csv`. The official 2025 visit-1 dictionary/input layout and IBGE derived-variable documentation have been downloaded. `VD5002` is identified in IBGE's derived-variable documentation as effective household per-capita income. The source-income codes shown are candidate codes from the all-sources annual layout and still require transcription against the official dictionary before a year-specific mapping is approved. Retain source visit and reference period; do not combine first- and fifth-visit records without an explicit survey design decision. Use temporary household grouping only to calculate household size or a separately requested derived value, not to replace the official per-capita measure.
 
 ## POF 2017–2018 (resident, household/unit-of-consumption and income tables)
 
@@ -40,6 +47,8 @@ The POF is distributed as multiple linked files with distinct record levels. The
 | `household_income_per_capita_brl` | documented total divided by unit size, or official field | Use official derived field where available; otherwise derive only from documented income and roster definitions. |
 | `consumption_expenditure_brl` | expenditure-table value | Preserve table's expenditure reference period and monetary unit. |
 | `survey_weight` | official unit/person weight | Keep table-level weight and sampling design metadata; exact variable is record-level specific. |
+
+Transcribed codes (approved mapping `mappings/pof_2017_2018_morador.json`): Morador table `UF`, `TIPO_SITUACAO_REG`, `V0403` (age), `V0404` (sex), `NIVEL_INSTRUCAO`, `ANOS_ESTUDO`, `PESO_FINAL`, `RENDA_TOTAL` (UC gross monthly income); keys `COD_UPA`, `NUM_DOM`, `NUM_UC`, `COD_INFORMANTE`. Income tables: `V9001` (income type, see Cadastro de Produtos), `V8500` and `V8500_DEFLA`. POF microdata still not downloaded.
 
 **Internal-only grouping:** household, dwelling, unit-of-consumption and person keys may be read temporarily from official layouts to calculate household size or per-capita measures, but must be dropped before the analysis export. The exact POF key structure and all POF variable codes remain unapproved until transcribed and checked against the downloaded official POF dictionary and reading programs. No POF microdata download is authorized by this dictionary.
 

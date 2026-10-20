@@ -70,3 +70,10 @@ pages/full text on 2026-10-20. Exact locators are recorded in
 |---|---|---|---|---|
 | `brazil/social/worldbank_bra_infant_mortality.json` | [World Bank WDI API, `SP.DYN.IMRT.IN`, Brazil](https://api.worldbank.org/v2/country/BRA/indicator/SP.DYN.IMRT.IN?format=json&per_page=100) | 2026-10-20 (Claude) | CC BY 4.0 | Untouched API response; SHA-256 `a573f536bb6c5df8ccabb0561c076868936cd11b691b5427f523df66d361322b`. Infant mortality per 1,000 live births (UN IGME estimates); 2024 = 12.3. |
 | `hdr-data.json` | [UNDP Human Development Report Data Center](https://hdr.undp.org/data-center) | present before C4; inspected 2026-10-20 (Codex) | No explicit file licence recorded; verify before redistribution | Untouched repository input. C4 selects Brazil (`countryIsoCode=BRA`), life expectancy (`indicatorCode=le`), latest non-null `actualValue`; 2023 = 75.848 years. |
+
+## A3 household microdata
+
+| File | Source URL | Retrieved | Licence / terms | Notes |
+|---|---|---|---|---|
+| `brazil/microdata/PNADC_2025_visita1_20260923.zip` (git-ignored, not in repo) | [IBGE FTP, PNAD Contínua annual visit 1](https://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Anual/Microdados/Visita/Visita_1/Dados/PNADC_2025_visita1_20260923.zip) | 2026-10-20 (Claude) | Official public microdata; no explicit licence located | 189,290,721 bytes; SHA-256 `fb16d47ddfd439a20e31af3e5a176ccdf4717cbd952255dfcaa097e289cb64d9`. 408,364 person records. Never versioned. |
+| `brazil/micro_validation/ibge_sidra_7435_gini.json` | [IBGE SIDRA table 7435](https://apisidra.ibge.gov.br/values/t/7435/n1/all/v/all/p/all?formato=json) | 2026-10-20 (Claude) | Official public data | Untouched API response; SHA-256 `4e1649bdc0835bdee1784906ec242b05c945ea4f45c00b5fcfa5b97795ffdc1a`. Published Gini of household per-capita income 2012-2025 (2025 = 0.511). |

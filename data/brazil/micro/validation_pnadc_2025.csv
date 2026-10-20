@@ -1,0 +1,7 @@
+year,check,computed,published,difference,tolerance,source,passed
+2025,gini_household_income_per_capita,0.511190,0.511000,0.000190,0.005000,"IBGE SIDRA 7435, variable 10681",True
+2025,weighted_population_relative,212682957.005774,213421037.000000,-0.003458,0.010000,IBGE projections 2024 revision (data/brazil/population.csv),True
+2025,annualised_total_retirement_pension_income_brl,943167811815.177612,,,,context only: survey totals understate administrative totals,
+2025,annualised_total_bolsa_familia_income_brl,109595875773.652496,,,,context only: survey totals understate administrative totals,
+2025,annualised_total_bpc_income_brl,81919257466.083939,,,,context only: survey totals understate administrative totals,
+2025,annualised_total_unemployment_insurance_income_brl,25467511467.462364,,,,context only: survey totals understate administrative totals,
