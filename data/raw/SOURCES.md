@@ -69,3 +69,4 @@ pages/full text on 2026-10-20. Exact locators are recorded in
 | File | Source URL | Retrieved | Licence / terms | Notes |
 |---|---|---|---|---|
 | `brazil/social/worldbank_bra_infant_mortality.json` | [World Bank WDI API, `SP.DYN.IMRT.IN`, Brazil](https://api.worldbank.org/v2/country/BRA/indicator/SP.DYN.IMRT.IN?format=json&per_page=100) | 2026-10-20 (Claude) | CC BY 4.0 | Untouched API response; SHA-256 `a573f536bb6c5df8ccabb0561c076868936cd11b691b5427f523df66d361322b`. Infant mortality per 1,000 live births (UN IGME estimates); 2024 = 12.3. |
+| `hdr-data.json` | [UNDP Human Development Report Data Center](https://hdr.undp.org/data-center) | present before C4; inspected 2026-10-20 (Codex) | No explicit file licence recorded; verify before redistribution | Untouched repository input. C4 selects Brazil (`countryIsoCode=BRA`), life expectancy (`indicatorCode=le`), latest non-null `actualValue`; 2023 = 75.848 years. |

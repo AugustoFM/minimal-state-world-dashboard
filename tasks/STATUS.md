@@ -11,7 +11,7 @@
 | C1 | done | `task/c1` (merged) | Codex revision moved all runtime C1 inputs and source notes into `config/parameters.yaml` and changed the default builder path; removed the duplicate proposed-parameter file. C1 uses reproducible NTA profiles (ages 0–90+, 2003/2018) and 2024 COFOG shares; bounds are sensitivity envelopes, RGPS is a labelled proxy for RPPS-inclusive pensions, and 2024 shares carry to 2025. |
 | C2 | done | `task/c2` (merged) | Multiplier GDP effects (transitory/persistent), debt dynamics on the Tesouro GFSM primary balance with same-year Fisher-adjusted implicit rates, PWT 10.01 growth accounting with dynamic 2000-2019 backcast. Central S0 potential growth ~0.9%/yr at 10y (IMF 2.5%: gap from PWT's negative TFP trend); central S0 debt 145% GDP at 10y vs IFI ~125% (gap mostly r-g). R paths read from scenarios.yaml by_year (R_amb 20y = 7.0 after B1). Built by Codex over five review rounds; sources archived and verified by Claude. Inputs consolidated into config/parameters.yaml (task/c2-registry). |
 | C3 | todo | | |
-| C4 | todo | | |
+| C4 | PR open | `task/c4` | Social block produces 5/10/15/20y sensitivity envelopes for S0, S1, R_mod, R_amb and optional R_max from C1 health shares and C2 GDP per capita; reviewed and committed by Claude (Codex run ended at usage limit after outputs were complete); IMR and LE anchors are read from raw files, S0 has no assumed trend, and every configured gap is emitted as `not_modelled`. LE uses its central-only elasticity; bound combinations are recorded. `40 passed`; CLI wrote 660 rows. No upstream-file change requested. |
 | D1 | todo | | |
 | D2 | todo | | |
 | E1 | todo | | |
