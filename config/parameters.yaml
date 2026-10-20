@@ -134,7 +134,40 @@ state_spending_efficiency_dea:
 
 # --- Social block (C4) --------------------------------------------------------------------------
 social_outcome_elasticities:
-  # GAP: none of the 20 reviewed papers gives elasticities of life expectancy, schooling or health access
-  # to health/education spending for Brazil. C4 is blocked until a sourced set is added here.
-  status: missing
-  needed: [health_spending_to_life_expectancy, health_spending_to_physicians_per_1000, education_spending_to_mean_years_schooling, education_spending_to_expected_years_schooling]
+  # Not in the original 20 papers; added in B2 (2026-10-20). Elasticity = % change in outcome per 1% change
+  # in public health spending per capita.
+  infant_mortality_wrt_public_health_spending:
+    # Szklo, Clarke & Rocha (2024), IZA DP 16829; EC 29/2000 as natural experiment, Brazilian municipalities
+    # 2000-2010, 64,481 municipality-year cells. Back-of-envelope elasticity (eq. 4), block-bootstrap CIs.
+    source: "Szklo, Clarke & Rocha 2024, IZA DP 16829, Table B.2 and section 5.2.3"
+    url: "https://docs.iza.org/dp16829.pdf"
+    verified: full_text
+    low: -0.206
+    central: -0.126
+    high: -0.071
+    range_basis: "min/max across Table B.2 specifications (FINBRA cols 1-4, SIOPS cols 5-8); central = col 7 cited by authors"
+    bounds_from_text: "near 0 just after reform to about -0.2 after 10 years; CIs rule out values beyond -0.5 at 10 years"
+    asymmetry: "paper finds mortality more sensitive to spending increases than declines (Figure B.5, noisy). Applying this to cuts is an extrapolation; C4 must flag it."
+    horizon: "effect builds over ~10 years"
+  life_expectancy_wrt_health_spending:
+    # Gallet & Doucouliagos (2017), Social Science & Medicine 179: 9-17; meta-regression of 65 studies 1969-2014.
+    # Mostly cross-country, total (not only public) health spending.
+    source: "Gallet & Doucouliagos 2017, Soc Sci Med 179"
+    url: "https://ideas.repec.org/a/eee/socmed/v179y2017icp9-17.html"
+    verified: abstract
+    low: null
+    central: 0.04
+    high: null
+    range_basis: "point estimate only (abstract: 'near to +0.04'); sensitive to age at which LE is measured and to endogeneity controls"
+  mortality_wrt_health_spending_meta:
+    source: "Gallet & Doucouliagos 2017, Soc Sci Med 179"
+    verified: abstract
+    low: null
+    central: -0.13
+    high: null
+    range_basis: "point estimate only (abstract)"
+    note: "Consistent with Szklo et al. 2024 central -0.126 for Brazil"
+  # GAP: no sourced elasticity yet for schooling (mean or expected years), physicians per 1,000 or other
+  # health-access measures with respect to public spending. C4 must not invent these; it can model only
+  # infant mortality and life expectancy until they are added.
+  missing: [education_spending_to_mean_years_schooling, education_spending_to_expected_years_schooling, health_spending_to_physicians_per_1000]
