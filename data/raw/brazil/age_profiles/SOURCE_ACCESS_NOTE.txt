@@ -1,0 +1,18 @@
+Source files downloaded by Claude on 2026-10-20
+================================================
+
+1. correa_2023_cadernos.pdf
+   Correa, C.; Gutierrez, C.; Turra, C. "Contas Nacionais de Transferencia: o equilibrio fiscal da economia geracional brasileira".
+   https://publicacoes.tesouro.gov.br/index.php/cadernos/article/download/202/210/833
+   SHA-256: 3578cfcdaccc13b20cd71917b0f491e7b440a49ef8646fabd029456b94847b2e
+
+2. NTA_Brasil.xlsx
+   https://github.com/charlescodigos/National-Transfer-Accounts/raw/main/NTA_Brasil.xlsx
+   SHA-256: ec6500c680f7f36e0bc7ef26f629a4993d8f02b9fdb774ea1b0e7f6735750970
+
+3. COFOG_GG_2024.xlsx
+   https://cdn.tesouro.gov.br/sistemas-internos/apex/producao/sistemas/thot/arquivos/publicacoes/53401_1725040/anexos/27169_866411/COFOG%20GG.xlsx
+   SHA-256: 440403f80d408c383259032ac52612bbf7a0d765549d2ac0132d8b42bf3e507b
+
+These are archived raw inputs and must remain untouched. The derived
+data/brazil/age_profiles.csv is built by scripts/build_brazil_age_profiles.py.
