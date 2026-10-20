@@ -93,6 +93,12 @@ pages/full text on 2026-10-20. Exact locators are recorded in
 | Baldacci & Kumar (2010), IMF WP 10/184 | [IMF PDF](https://www.imf.org/external/pubs/ft/wp/2010/wp10184.pdf) | 2026-10-20 (Claude) | IMF, free to read | full text | `long_run_feedback.sovereign_risk_premium` |
 | Ostry, Berg & Tsangarides (2014), IMF SDN 14/02 | [IMF PDF](https://www.imf.org/external/pubs/ft/sdn/2014/sdn1402.pdf) | 2026-10-20 (Claude) | IMF, free to read | full text | `long_run_feedback.inequality_to_growth` |
 
+### C5 download gap (not yet archived)
+
+| Dataset | URL | Retrieved | Licence / terms | Needed for |
+|---|---|---|---|---|
+| IMF Investment and Capital Stock Dataset (ICSD), Brazil | [IMF portal](https://infrastructuregovern.imf.org/content/PIMA/Home/PimaTool/Investment-and-Capital-Stock-Database-Portal.html) | **not downloaded (offline C5 environment)** | verify on download | Initial public capital/GDP and public depreciation; both remain null and channel is fail-closed |
+
 ## D2 back-test observed series (scripts/fetch_brazil_backtest.py)
 
 | File | Source URL | Retrieved | Licence / terms | Notes |

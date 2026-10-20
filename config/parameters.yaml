@@ -597,7 +597,8 @@ long_run_feedback:
     url: "https://www.imf.org/external/pubs/ft/wp/2010/wp10184.pdf"
     verified: full_text
     deficit_channel_note: "Same paper: +1 pp GDP deficit -> +20 (nominal) to +30 (real) bp; up to 50 bp with high initial deficits/debt or low saving. Use the debt channel only, to avoid double counting; report the deficit channel as a sensitivity."
-    applies_to: "deviation of debt/GDP from S0, added to the real implicit rate in C2 debt dynamics"
+    applies_to: "deviation of debt/GDP from its base-year level (all scenarios, S0 included), added to the real implicit rate in the debt recursion"
+    deviation_cap_pp: 50   # choice (2026-10-20): out-of-sample guard; the estimate comes from much smaller debt changes. Uncapped run reported as sensitivity.
   inequality_to_growth:
     # Effect of net (after taxes and transfers) Gini on growth. Needs C3; switched off until C3 exists.
     unit: "pp of annual GDP growth per +1 net Gini point (0-100 scale)"
