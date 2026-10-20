@@ -6,38 +6,43 @@
 #   abstract   - read in the abstract or an author/publisher summary only
 #   secondary  - taken from the literature review doc, not yet re-checked against the source
 # Literature review: Claude Doc "Brazil: state-size reform scenarios - literature review and execution plan".
-# Checked: 2026-10-20.
+# Checked: 2026-10-20. Source registry (URL, retrieval date, licence) for these papers goes in
+# data/raw/SOURCES.md under "B2 parameter sources" once task C1 (which also appends there) is merged.
 
 # --- Macro block (C2) ---------------------------------------------------------------------------
 fiscal_multipliers_brazil:
   # Sanches, Santos, Martins (2026), Estudos Economicos 56(1), DOI 10.1590/1980-53575612mhg.
-  # SVAR (Blanchard-Perotti), federal accounts, monthly, baseline 1997-2023 excl. 2020-21.
-  # central = Table 2 accumulated multiplier (15 or 25 months, depending on persistence).
-  # low/high = min/max of the same accumulated multiplier across the paper's own robustness tables:
-  #   C1 full sample, D1 1997-2019, E1 quarterly, F1 with controls. Spread across specifications,
-  #   not a confidence interval (the paper reports no standard errors, only 5% significance stars).
+  # SVAR (Blanchard-Perotti), federal accounts, baseline monthly 1997-2023 excl. 2020-21.
   # Federal government only; applying to general government is an assumption to state in outputs.
-  unit: "R$ change in GDP per R$ of spending change, cumulative"
-  horizon_months: "15 or 25"
-  source: "Sanches, Santos & Martins 2026, Table 2 (central); Tables C1, D1, E1, F1 (range)"
+  # Horizons (footnote 7): 25 months for public investment and social benefits (higher persistence),
+  # 15 months for all other components and revenue. Quarterly spec E1 uses 8 / 5 quarters (~24 / ~15 months).
+  # `specs` keeps every published estimate with its specification. The paper reports no standard errors
+  # (only 5% significance stars), so low/high are the min/max across specifications at the SAME horizon:
+  # specification uncertainty, NOT a confidence interval.
+  source: "Sanches, Santos & Martins 2026, Table 2 (baseline); Tables C1 (full sample), D1 (1997-2019), E1 (quarterly), F1 (controls)"
   url: "https://www.scielo.br/j/ee/a/pjHsgbX5bB3Zms7hxsK6txg/?lang=en"
   verified: full_text
-  range_basis: "min/max across specifications"
-  public_investment:   {low: 1.9,   central: 2.6,  high: 3.5,  significant_5pct: true,  note: "F1 value 1.9 significant at 10% only"}
-  social_benefits:     {low: 1.75,  central: 2.15, high: 3.1,  significant_5pct: true}
-  subsidies:           {low: -1.87, central: 0.52, high: 1.5,  significant_5pct: false, note: "not significant in any specification; treat as ~0 with wide range"}
-  personnel:           {low: -2.0,  central: -1.18, high: 0.38, significant_5pct: false, note: "not significant; negative sign implausible as structural - C2 should not rely on it"}
-  other_expenditures:  {low: -0.4,  central: 0.28, high: 0.28, significant_5pct: false}
-  total_expenditure:   {low: 0.16,  central: 0.5,  high: 0.76, significant_5pct: false}
-  total_revenue:       {low: -0.7,  central: -0.55, high: -0.33, significant_5pct: false, note: "impact multiplier -0.43 significant"}
-  accumulated_12_months:   # Table 2 last column, used by the paper for one-year simulations; no range given
-    public_investment: 2.4
-    social_benefits: 1.81
-    subsidies: 0.5
-    personnel: -1.14
-    other_expenditures: 0.27
-    total_expenditure: 0.47
-    total_revenue: -0.53
+  unit: "R$ change in GDP per R$ of spending change, accumulated"
+  sampling_rule: "triangular(low, central, high) - modelling choice by Claude (B2), not from the source; D1 must report it"
+  accumulated:
+    public_investment:  {horizon_months: 25, low: 1.9,   central: 2.6,   high: 3.5,  range_basis: "min/max across specs", specs: {baseline: 2.6, C1: 2.43, D1: 2.7, E1_q8: 3.5, F1: 1.9}, significant_5pct: {baseline: true, F1: false}, note: "F1 significant at 10% only"}
+    social_benefits:    {horizon_months: 25, low: 1.75,  central: 2.15,  high: 3.1,  range_basis: "min/max across specs", specs: {baseline: 2.15, C1: 2.1, D1: 2.25, E1_q8: 3.1, F1: 1.75}, significant_5pct: {baseline: true}}
+    subsidies:          {horizon_months: 15, low: -1.87, central: 0.52,  high: 1.5,  range_basis: "min/max across specs", specs: {baseline: 0.52, C1: -0.06, D1: 0.02, E1_q5: -1.87, F1: 1.5}, significant_5pct: {baseline: false}, note: "not significant in any spec"}
+    personnel:          {horizon_months: 15, low: -2.0,  central: -1.18, high: 0.38, range_basis: "min/max across specs", specs: {baseline: -1.18, C1: -0.51, D1: -1.23, E1_q5: 0.38, F1: -2.0}, significant_5pct: {baseline: false}, note: "not significant; negative sign implausible as structural - C2 must not rely on it"}
+    other_expenditures: {horizon_months: 15, low: -0.4,  central: 0.28,  high: 0.28, range_basis: "min/max across specs", specs: {baseline: 0.28, C1: 0.12, D1: -0.4, E1_q5: -0.18, F1: -0.3}, significant_5pct: {baseline: false}}
+    total_expenditure:  {horizon_months: 15, low: 0.16,  central: 0.5,   high: 0.76, range_basis: "min/max across specs", specs: {baseline: 0.5, C1: 0.16, D1: 0.22, E1_q5: 0.76, F1: 0.3}, significant_5pct: {baseline: false}}
+    total_revenue:      {horizon_months: 15, low: -0.7,  central: -0.55, high: -0.33, range_basis: "min/max across specs", specs: {baseline: -0.55, C1: -0.7, D1: -0.6, E1_q5: -0.38, F1: -0.33}, significant_5pct: {baseline: false}, note: "impact multiplier -0.43 significant"}
+  accumulated_12_months:
+    # Table 2 last column; the paper uses these for its one-year simulations. Baseline spec only:
+    # no robustness table reports a 12-month value, so low/high are null. C2 must not draw these
+    # deterministically; use the `accumulated` ranges scaled by (value_12m / central) or treat as central only.
+    public_investment:  {horizon_months: 12, low: null, central: 2.4,   high: null, range_basis: "baseline only"}
+    social_benefits:    {horizon_months: 12, low: null, central: 1.81,  high: null, range_basis: "baseline only"}
+    subsidies:          {horizon_months: 12, low: null, central: 0.5,   high: null, range_basis: "baseline only"}
+    personnel:          {horizon_months: 12, low: null, central: -1.14, high: null, range_basis: "baseline only"}
+    other_expenditures: {horizon_months: 12, low: null, central: 0.27,  high: null, range_basis: "baseline only"}
+    total_expenditure:  {horizon_months: 12, low: null, central: 0.47,  high: null, range_basis: "baseline only"}
+    total_revenue:      {horizon_months: 12, low: null, central: -0.53, high: null, range_basis: "baseline only"}
 
 fiscal_multipliers_lac_benchmark:
   # Cross-check only, not used directly.
@@ -84,8 +89,15 @@ consolidation_gini_effect:
   unit: "Gini points (0-100) per ~1% GDP consolidation"
   year_1: {low: null, central: 0.1, high: null, range_basis: "point estimate only"}
   year_8: {low: 0.8, central: 0.9, high: 1.0, range_basis: "lag-length robustness (5 lags to 0 lags), Figure 5"}
-  year_8_spending_based: {low: null, central: 1.0, high: null, range_basis: "point estimate only"}
-  year_8_tax_based: {low: null, central: 0.6, high: null, range_basis: "point estimate only"}
+  # Composition: the paper gives two specifications that disagree; keep both.
+  #  (a) Figure 6, separate start-date dummies: spending- and tax-based effects "similar" in short and
+  #      medium term (no numbers in text; figure not digitised). Paper cautions most episodes are mixed.
+  #  (b) Section IV text, episodes split by which component was larger (Guajardo et al. 2011 method):
+  #      ~1.0 pp spending-based vs ~0.6 pp tax-based at year 8.
+  # C3 default: use year_8 for both compositions (spec a); spec (b) only as a sensitivity variant.
+  year_8_by_composition_spec_a: {spending_based: "similar to year_8", tax_based: "similar to year_8", source_locator: "Figure 6 and text"}
+  year_8_spending_based_spec_b: {low: null, central: 1.0, high: null, range_basis: "point estimate only", source_locator: "Section IV.A text"}
+  year_8_tax_based_spec_b: {low: null, central: 0.6, high: null, range_basis: "point estimate only", source_locator: "Section IV.A text"}
   wage_income_share_pp_gdp: {low: null, central: -0.8, high: null, range_basis: "point estimate only"}
   long_term_unemployment_pct: {low: null, central: 0.5, high: null, range_basis: "point estimate only", note: "'about 0.5 percent over the medium term'"}
   note: "Effect fades after year 8; insignificant by year 10 (footnote 9). OECD sample."
