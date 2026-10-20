@@ -1,0 +1,410 @@
+year,indicator,value,label,series_code,source
+2000,brl_per_usd,1.82942312207561,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2001,brl_per_usd,2.34963170932244,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2002,brl_per_usd,2.92036301775519,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2003,brl_per_usd,3.07747511847801,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2004,brl_per_usd,2.92511944951586,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2005,brl_per_usd,2.43439003623188,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2006,brl_per_usd,2.17532666666666,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2007,brl_per_usd,1.94705833333333,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2008,brl_per_usd,1.83376666666666,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2009,brl_per_usd,1.99942817314425,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2010,brl_per_usd,1.75922671058717,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2011,brl_per_usd,1.67282875525659,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2012,brl_per_usd,1.95306861112486,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2013,brl_per_usd,2.15608915126311,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2014,brl_per_usd,2.35295196276668,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2015,brl_per_usd,3.32690438276879,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2016,brl_per_usd,3.4913134215727,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2017,brl_per_usd,3.19138944630048,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2018,brl_per_usd,3.65382536145755,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2019,brl_per_usd,3.9444710972507,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2020,brl_per_usd,5.1551787875128,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2021,brl_per_usd,5.39440078962503,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2022,brl_per_usd,5.16397029102111,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2023,brl_per_usd,4.99437976287199,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2024,brl_per_usd,5.38893490570959,"Official exchange rate, period average",PA.NUS.FCRF,World Bank WDI API
+2000,cpi_inflation_pct,7.04414105947265,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2001,cpi_inflation_pct,6.84035902487523,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2002,cpi_inflation_pct,8.45016437708331,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2003,cpi_inflation_pct,14.7149197228147,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2004,cpi_inflation_pct,6.59718509985963,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2005,cpi_inflation_pct,6.86953720898964,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2006,cpi_inflation_pct,4.18356812896909,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2007,cpi_inflation_pct,3.64127299102652,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2008,cpi_inflation_pct,5.67859390284168,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2009,cpi_inflation_pct,4.88803479876798,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2010,cpi_inflation_pct,5.03872690108074,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2011,cpi_inflation_pct,6.6364496221309,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2012,cpi_inflation_pct,5.40349914036997,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2013,cpi_inflation_pct,6.204310666401,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2014,cpi_inflation_pct,6.32904015516138,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2015,cpi_inflation_pct,9.02990102416136,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2016,cpi_inflation_pct,8.73914352329393,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2017,cpi_inflation_pct,3.44637335032669,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2018,cpi_inflation_pct,3.66485028376728,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2019,cpi_inflation_pct,3.73297621216893,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2020,cpi_inflation_pct,3.21176803803376,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2021,cpi_inflation_pct,8.30165975585673,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2022,cpi_inflation_pct,9.28010608956872,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2023,cpi_inflation_pct,4.59356282283203,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2024,cpi_inflation_pct,4.36746407652336,"Inflation, consumer prices (%)",FP.CPI.TOTL.ZG,World Bank WDI API
+2000,exports_usd,66777380518.3383,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2001,exports_usd,69279555096.2874,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2002,exports_usd,72546876638.2809,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2003,exports_usd,84744257516.308,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2004,exports_usd,110739032053.055,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2005,exports_usd,135919140236.363,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2006,exports_usd,159213742531.583,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2007,exports_usd,186202879575.236,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2008,exports_usd,229517035697.556,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2009,exports_usd,180891970353.521,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2010,exports_usd,240003137741.747,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2011,exports_usd,303016626325.823,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2012,exports_usd,292808395453.514,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2013,exports_usd,290364173324.942,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2014,exports_usd,270458130850.098,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2015,exports_usd,232488824444.589,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2016,exports_usd,223863343103.297,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2017,exports_usd,258330777006.501,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2018,exports_usd,280543266303.121,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2019,exports_usd,264562979421.068,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2020,exports_usd,242872071018.291,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2021,exports_usd,319251201403.084,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2022,exports_usd,383177602116.201,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2023,exports_usd,393731572887.926,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2024,exports_usd,392105346047.039,Exports of goods and services (current US$),NE.EXP.GNFS.CD,World Bank WDI API
+2000,external_debt_pct_gni,38.096473476996,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2001,external_debt_pct_gni,42.4435005758245,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2002,external_debt_pct_gni,47.0768538372546,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2003,external_debt_pct_gni,43.6447539570516,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2004,external_debt_pct_gni,33.9781537953332,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2005,external_debt_pct_gni,21.7546275711234,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2006,external_debt_pct_gni,17.9925275401458,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2007,external_debt_pct_gni,17.4373059288235,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2008,external_debt_pct_gni,15.8956462087501,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2009,external_debt_pct_gni,17.2780448195865,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2010,external_debt_pct_gni,16.4609633891935,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2011,external_debt_pct_gni,15.8516033318801,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2012,external_debt_pct_gni,18.3256247191339,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2013,external_debt_pct_gni,19.8377244708135,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2014,external_debt_pct_gni,23.1060429665359,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2015,external_debt_pct_gni,30.7299282835538,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2016,external_debt_pct_gni,30.9090873467642,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2017,external_debt_pct_gni,26.8156664558868,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2018,external_debt_pct_gni,29.9289604206331,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2019,external_debt_pct_gni,31.1964144613097,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2020,external_debt_pct_gni,38.0076646022397,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2021,external_debt_pct_gni,35.2910131878973,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2022,external_debt_pct_gni,30.5621181630478,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2023,external_debt_pct_gni,28.628650184641,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2024,external_debt_pct_gni,28.6612661075538,External debt stocks (% of GNI),DT.DOD.DECT.GN.ZS,World Bank WDI API
+2000,external_debt_usd,242511685521.8,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2001,external_debt_usd,229959717402.1,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2002,external_debt_usd,231944181034.5,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2003,external_debt_usd,235907984168.4,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2004,external_debt_usd,220693592600.6,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2005,external_debt_usd,188364545589.9,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2006,external_debt_usd,194303018016.9,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2007,external_debt_usd,238444452622.6,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2008,external_debt_usd,262957236462.6,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2009,external_debt_usd,281651138432.4,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2010,external_debt_usd,352364412862.6,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2011,external_debt_usd,404046105342.1,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2012,external_debt_usd,440496598192.8,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2013,external_debt_usd,483734834011.9,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2014,external_debt_usd,556919631071.7,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2015,external_debt_usd,543397356309.8,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2016,external_debt_usd,543257228545.3,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2017,external_debt_usd,543000470110.9,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2018,external_debt_usd,557765380774.6,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2019,external_debt_usd,568708887352.2,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2020,external_debt_usd,549329010779.0,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2021,external_debt_usd,571193915507.8,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2022,external_debt_usd,579257850288.2,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2023,external_debt_usd,607387151485.1,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2024,external_debt_usd,605463780812.8,"External debt stocks, total (current US$)",DT.DOD.DECT.CD,World Bank WDI API
+2000,fdi_net_inflows_usd,32994718699.75,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2001,fdi_net_inflows_usd,23225846372.251,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2002,fdi_net_inflows_usd,16586600193.114,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2003,fdi_net_inflows_usd,10123013670.99,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2004,fdi_net_inflows_usd,18161380459.7533,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2005,fdi_net_inflows_usd,15459981604.1196,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2006,fdi_net_inflows_usd,19418085598.0793,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2007,fdi_net_inflows_usd,44579492463.6336,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2008,fdi_net_inflows_usd,50716402711.4787,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2009,fdi_net_inflows_usd,31480931700.0,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2010,fdi_net_inflows_usd,82389932468.07,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2011,fdi_net_inflows_usd,102427228231.42,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2012,fdi_net_inflows_usd,92568388321.34,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2013,fdi_net_inflows_usd,75211029129.4,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2014,fdi_net_inflows_usd,87713983217.24,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2015,fdi_net_inflows_usd,64738153494.44,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2016,fdi_net_inflows_usd,74294627801.19,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2017,fdi_net_inflows_usd,68885491315.23,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2018,fdi_net_inflows_usd,78183840044.98,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2019,fdi_net_inflows_usd,69174411753.45,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2020,fdi_net_inflows_usd,38270116307.45,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2021,fdi_net_inflows_usd,46440503520.19,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2022,fdi_net_inflows_usd,75501038733.31,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2023,fdi_net_inflows_usd,62750364285.48,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2024,fdi_net_inflows_usd,74090786050.19,"FDI, net inflows (current US$)",BX.KLT.DINV.CD.WD,World Bank WDI API
+2000,gdp_growth_pct,4.38794944745618,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2001,gdp_growth_pct,1.38989640095637,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2002,gdp_growth_pct,3.05346185909312,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2003,gdp_growth_pct,1.14082899824888,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2004,gdp_growth_pct,5.75996463670954,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2005,gdp_growth_pct,3.20213206130431,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2006,gdp_growth_pct,3.96198871122617,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2007,gdp_growth_pct,6.06987060678338,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2008,gdp_growth_pct,5.09419544658736,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2009,gdp_growth_pct,-0.125812002161169,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2010,gdp_growth_pct,7.52822581815364,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2011,gdp_growth_pct,3.97442307944702,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2012,gdp_growth_pct,1.92117598576537,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2013,gdp_growth_pct,3.00482266944432,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2014,gdp_growth_pct,0.503955740242247,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2015,gdp_growth_pct,-3.54576339269425,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2016,gdp_growth_pct,-3.27591690782192,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2017,gdp_growth_pct,1.32286905404399,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2018,gdp_growth_pct,1.783666761634,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2019,gdp_growth_pct,1.22077782360842,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2020,gdp_growth_pct,-3.2767587964736,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2021,gdp_growth_pct,4.76260437908608,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2022,gdp_growth_pct,3.01669435393015,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2023,gdp_growth_pct,3.24165532906981,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2024,gdp_growth_pct,3.41931516501906,"GDP growth, constant prices (%)",NY.GDP.MKTP.KD.ZG,World Bank WDI API
+2001,gini_wb,58.4,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2002,gini_wb,58.1,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2003,gini_wb,57.6,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2004,gini_wb,56.5,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2005,gini_wb,56.3,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2006,gini_wb,55.6,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2007,gini_wb,54.9,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2008,gini_wb,54.0,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2009,gini_wb,53.7,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2011,gini_wb,52.9,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2012,gini_wb,53.4,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2013,gini_wb,52.7,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2014,gini_wb,52.1,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2015,gini_wb,51.9,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2016,gini_wb,53.4,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2017,gini_wb,53.3,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2018,gini_wb,53.9,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2019,gini_wb,53.5,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2020,gini_wb,48.8,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2021,gini_wb,52.9,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2022,gini_wb,51.9,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2023,gini_wb,51.5,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2024,gini_wb,50.3,Gini index (World Bank estimate),SI.POV.GINI,World Bank WDI API
+2006,gross_general_government_debt_pct_gdp,55.48,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2007,gross_general_government_debt_pct_gdp,56.72,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2008,gross_general_government_debt_pct_gdp,55.98,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2009,gross_general_government_debt_pct_gdp,59.21,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2010,gross_general_government_debt_pct_gdp,51.77,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2011,gross_general_government_debt_pct_gdp,51.27,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2012,gross_general_government_debt_pct_gdp,53.67,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2013,gross_general_government_debt_pct_gdp,51.54,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2014,gross_general_government_debt_pct_gdp,56.28,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2015,gross_general_government_debt_pct_gdp,65.5,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2016,gross_general_government_debt_pct_gdp,69.84,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2017,gross_general_government_debt_pct_gdp,73.72,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2018,gross_general_government_debt_pct_gdp,75.27,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2019,gross_general_government_debt_pct_gdp,74.44,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2020,gross_general_government_debt_pct_gdp,86.94,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2021,gross_general_government_debt_pct_gdp,77.31,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2022,gross_general_government_debt_pct_gdp,71.68,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2023,gross_general_government_debt_pct_gdp,73.83,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2024,gross_general_government_debt_pct_gdp,76.27,"General government gross debt (% GDP), December",SGS 13762,Banco Central do Brasil SGS API
+2000,household_consumption_growth_pct,4.03263240559684,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2001,household_consumption_growth_pct,0.771306567314795,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2002,household_consumption_growth_pct,1.3188470597411,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2003,household_consumption_growth_pct,-0.545992777160762,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2004,household_consumption_growth_pct,3.92349409152224,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2005,household_consumption_growth_pct,4.42187773801524,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2006,household_consumption_growth_pct,5.28469933453609,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2007,household_consumption_growth_pct,6.37627062827389,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2008,household_consumption_growth_pct,6.46426518457798,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2009,household_consumption_growth_pct,4.45639652818208,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2010,household_consumption_growth_pct,6.22937212674057,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2011,household_consumption_growth_pct,4.81845948946062,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2012,household_consumption_growth_pct,3.49945069398707,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2013,household_consumption_growth_pct,3.47104367769109,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2014,household_consumption_growth_pct,2.25031928534374,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2015,household_consumption_growth_pct,-3.21649273148977,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2016,household_consumption_growth_pct,-3.83719930406173,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2017,household_consumption_growth_pct,1.97796199575654,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2018,household_consumption_growth_pct,2.36590233012647,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2019,household_consumption_growth_pct,2.59534171060574,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2020,household_consumption_growth_pct,-4.56419229600741,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2021,household_consumption_growth_pct,2.95762502313792,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2022,household_consumption_growth_pct,4.14542081136304,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2023,household_consumption_growth_pct,3.23976151087922,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2024,household_consumption_growth_pct,5.10216783083494,Household final consumption growth (%),NE.CON.PRVT.KD.ZG,World Bank WDI API
+2000,ipca_12m_pct,5.97,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2001,ipca_12m_pct,7.67,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2002,ipca_12m_pct,12.53,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2003,ipca_12m_pct,9.3,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2004,ipca_12m_pct,7.6,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2005,ipca_12m_pct,5.69,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2006,ipca_12m_pct,3.14,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2007,ipca_12m_pct,4.46,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2008,ipca_12m_pct,5.9,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2009,ipca_12m_pct,4.31,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2010,ipca_12m_pct,5.91,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2011,ipca_12m_pct,6.5,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2012,ipca_12m_pct,5.84,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2013,ipca_12m_pct,5.91,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2014,ipca_12m_pct,6.41,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2015,ipca_12m_pct,10.67,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2016,ipca_12m_pct,6.29,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2017,ipca_12m_pct,2.95,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2018,ipca_12m_pct,3.75,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2019,ipca_12m_pct,4.31,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2020,ipca_12m_pct,4.52,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2021,ipca_12m_pct,10.06,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2022,ipca_12m_pct,5.79,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2023,ipca_12m_pct,4.62,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2024,ipca_12m_pct,4.83,"IPCA, 12-month change (%), December",SGS 13522,Banco Central do Brasil SGS API
+2005,net_barter_terms_of_trade,92.9,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2006,net_barter_terms_of_trade,97.8,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2007,net_barter_terms_of_trade,101.4,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2008,net_barter_terms_of_trade,104.9,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2009,net_barter_terms_of_trade,101.7,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2010,net_barter_terms_of_trade,118.5,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2011,net_barter_terms_of_trade,127.3,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2012,net_barter_terms_of_trade,120.4,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2013,net_barter_terms_of_trade,117.1,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2014,net_barter_terms_of_trade,113.2,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2015,net_barter_terms_of_trade,100.0,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2016,net_barter_terms_of_trade,102.4,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2017,net_barter_terms_of_trade,108.2,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2018,net_barter_terms_of_trade,106.9,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2019,net_barter_terms_of_trade,107.0,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2020,net_barter_terms_of_trade,107.7,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2021,net_barter_terms_of_trade,123.2,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2022,net_barter_terms_of_trade,114.5,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2023,net_barter_terms_of_trade,117.2,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2024,net_barter_terms_of_trade,120.8,Net barter terms of trade index (2015 = 100),TT.PRI.MRCH.XD.WD,World Bank WDI API
+2001,net_public_debt_pct_gdp,51.49,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2002,net_public_debt_pct_gdp,59.93,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2003,net_public_debt_pct_gdp,54.26,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2004,net_public_debt_pct_gdp,50.19,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2005,net_public_debt_pct_gdp,47.92,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2006,net_public_debt_pct_gdp,46.49,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2007,net_public_debt_pct_gdp,44.55,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2008,net_public_debt_pct_gdp,37.57,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2009,net_public_debt_pct_gdp,40.88,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2010,net_public_debt_pct_gdp,37.98,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2011,net_public_debt_pct_gdp,34.47,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2012,net_public_debt_pct_gdp,32.19,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2013,net_public_debt_pct_gdp,30.5,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2014,net_public_debt_pct_gdp,32.59,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2015,net_public_debt_pct_gdp,35.64,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2016,net_public_debt_pct_gdp,46.14,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2017,net_public_debt_pct_gdp,51.37,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2018,net_public_debt_pct_gdp,52.77,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2019,net_public_debt_pct_gdp,54.7,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2020,net_public_debt_pct_gdp,61.37,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2021,net_public_debt_pct_gdp,55.11,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2022,net_public_debt_pct_gdp,56.13,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2023,net_public_debt_pct_gdp,60.43,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2024,net_public_debt_pct_gdp,61.3,"Net public sector debt (% GDP), December",SGS 4513,Banco Central do Brasil SGS API
+2002,primary_result_pct_gdp,-3.19,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2003,primary_result_pct_gdp,-3.24,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2004,primary_result_pct_gdp,-3.69,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2005,primary_result_pct_gdp,-3.74,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2006,primary_result_pct_gdp,-3.15,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2007,primary_result_pct_gdp,-3.24,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2008,primary_result_pct_gdp,-3.33,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2009,primary_result_pct_gdp,-1.94,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2010,primary_result_pct_gdp,-2.62,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2011,primary_result_pct_gdp,-2.94,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2012,primary_result_pct_gdp,-2.18,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2013,primary_result_pct_gdp,-1.71,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2014,primary_result_pct_gdp,0.56,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2015,primary_result_pct_gdp,1.86,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2016,primary_result_pct_gdp,2.48,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2017,primary_result_pct_gdp,1.68,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2018,primary_result_pct_gdp,1.55,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2019,primary_result_pct_gdp,0.84,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2020,primary_result_pct_gdp,9.24,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2021,primary_result_pct_gdp,-0.72,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2022,primary_result_pct_gdp,-1.25,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2023,primary_result_pct_gdp,2.28,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2024,primary_result_pct_gdp,0.4,"Public sector borrowing requirement, primary, consolidated public sector, 12-month (% GDP), December; negative = surplus",SGS 5793,Banco Central do Brasil SGS API
+2000,reserves_usd,33015297295.6899,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2001,reserves_usd,35866445530.2453,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2002,reserves_usd,37832146718.419,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2003,reserves_usd,49297286966.3088,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2004,reserves_usd,52934865185.6721,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2005,reserves_usd,53799284976.6774,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2006,reserves_usd,85842861115.1295,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2007,reserves_usd,180333622535.832,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2008,reserves_usd,193783363540.648,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2009,reserves_usd,238539464848.441,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2010,reserves_usd,288574623536.621,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2011,reserves_usd,352010222755.829,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2012,reserves_usd,373160977539.731,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2013,reserves_usd,358816422466.117,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2014,reserves_usd,363570226084.66,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2015,reserves_usd,356464980327.488,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2016,reserves_usd,364984039092.456,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2017,reserves_usd,373955518686.487,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2018,reserves_usd,374709673447.827,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2019,reserves_usd,356886386911.978,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2020,reserves_usd,355614251456.139,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2021,reserves_usd,362210079181.317,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2022,reserves_usd,324673449781.4,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2023,reserves_usd,355021395541.562,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2024,reserves_usd,329732443813.377,Total reserves incl. gold (current US$),FI.RES.TOTL.CD,World Bank WDI API
+2000,selic_pct,16.19,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2001,selic_pct,19.05,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2002,selic_pct,23.03,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2003,selic_pct,16.91,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2004,selic_pct,17.5,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2005,selic_pct,18.24,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2006,selic_pct,13.19,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2007,selic_pct,11.18,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2008,selic_pct,13.66,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2009,selic_pct,8.65,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2010,selic_pct,10.66,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2011,selic_pct,10.9,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2012,selic_pct,7.16,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2013,selic_pct,9.9,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2014,selic_pct,11.58,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2015,selic_pct,14.15,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2016,selic_pct,13.65,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2017,selic_pct,7.0,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2018,selic_pct,6.4,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2019,selic_pct,4.59,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2020,selic_pct,1.9,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2021,selic_pct,8.76,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2022,selic_pct,13.65,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2023,selic_pct,11.87,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2024,selic_pct,11.77,"Selic rate, monthly annualised (% p.a.), December",SGS 4189,Banco Central do Brasil SGS API
+2000,unemployment_ilo_pct,10.889,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2001,unemployment_ilo_pct,10.649,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2002,unemployment_ilo_pct,10.641,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2003,unemployment_ilo_pct,11.168,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2004,unemployment_ilo_pct,10.072,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2005,unemployment_ilo_pct,10.551,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2006,unemployment_ilo_pct,9.692,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2007,unemployment_ilo_pct,9.28,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2008,unemployment_ilo_pct,8.268,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2009,unemployment_ilo_pct,9.419,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2010,unemployment_ilo_pct,8.42,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2011,unemployment_ilo_pct,7.578,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2012,unemployment_ilo_pct,7.251,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2013,unemployment_ilo_pct,7.071,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2014,unemployment_ilo_pct,6.755,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2015,unemployment_ilo_pct,8.538,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2016,unemployment_ilo_pct,11.58,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2017,unemployment_ilo_pct,12.792,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2018,unemployment_ilo_pct,12.329,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2019,unemployment_ilo_pct,11.936,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2020,unemployment_ilo_pct,13.697,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2021,unemployment_ilo_pct,13.158,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2022,unemployment_ilo_pct,9.231,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2023,unemployment_ilo_pct,7.947,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API
+2024,unemployment_ilo_pct,6.801,"Unemployment, ILO modelled estimate (%)",SL.UEM.TOTL.ZS,World Bank WDI API

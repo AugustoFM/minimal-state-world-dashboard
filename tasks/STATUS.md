@@ -13,8 +13,9 @@
 | C3 | todo | | |
 | C4 | done | `task/c4` (merged) | Social block produces 5/10/15/20y sensitivity envelopes for S0, S1, R_mod, R_amb and optional R_max from C1 health shares and C2 GDP per capita; reviewed and committed by Claude (Codex run ended at usage limit after outputs were complete); IMR and LE anchors are read from raw files, S0 has no assumed trend, and every configured gap is emitted as `not_modelled`. LE uses its central-only elasticity; bound combinations are recorded. `40 passed`; CLI wrote 660 rows. No upstream-file change requested. |
 | C5 | todo | | Parameters sourced by Claude (config/parameters.yaml long_run_feedback): PWT hc returns, health->output 0-4% per LE year (BCS 2001 vs Acemoglu-Johnson 2007), public capital elasticity 0.083/0.106/0.122 (Bom-Ligthart 2014, abstract), risk premium 2/5/7 bp per pp debt (Baldacci-Kumar 2010), inequality -0.1 pp growth per Gini point (Ostry et al. 2014; off until C3). Needs Brazil public capital stock data. |
+| C6 | todo | | Parameters sourced by Claude (config/parameters.yaml external_block): GDP elasticity to commodity prices 0.033 (derived from Gruss 2014 GVAR; Brazil less open than LAC peers), actual vs potential split (IMF WEO Oct 2015, abstract), FX pass-through 0.10 (12m) / 0.16 (24m) (BCB MPR Mar 2026). Gaps: commodity revenue, FX-linked debt share, longer ToT series (FUNCEX). |
 | D1 | todo | | |
-| D2 | todo | | |
+| D2 | todo | | Observed 2000-2024 inputs saved by Claude: data/brazil/backtest_observed.csv (scripts/fetch_brazil_backtest.py; WDI + BCB SGS: GDP, consumption, unemployment, exports, reserves, external debt, FDI, CPI/IPCA, Selic, BRL/USD, terms of trade from 2005, primary result, net and gross public debt, Gini). Back-test must feed observed external paths (C6). |
 | E1 | todo | | |
 | E2 | todo | | |
 
