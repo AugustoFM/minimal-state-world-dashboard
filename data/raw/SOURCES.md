@@ -145,3 +145,9 @@ pages/full text on 2026-10-20. Exact locators are recorded in
 | File | Source URL | Retrieved | Licence / terms | Notes |
 |---|---|---|---|---|
 | `brazil/revenue/ifi_estudo_especial_16_nov2021.pdf` | [IFI Estudo Especial nº 16](https://www12.senado.leg.br/ifi/pdf/estudo-especial-no-16-a-elasticidade-da-receita-em-relacao-ao-pib-nov-2021) | 2026-10-20 (Claude) | Senado Federal / IFI publication; free reuse with citation | Untouched PDF; SHA-256 `1ea52b4ad7d1fd3f77f43045a91af0d857a977eaed262c72e1b674af24e41b94`. Revenue elasticity to GDP: long run 0.92 (negative gap) / 0.98 (positive gap); short run 1.17 / 1.51; error correction -0.63 per quarter. |
+
+## Public capital (for C5)
+
+| File | Source URL | Retrieved | Licence / terms | Notes |
+|---|---|---|---|---|
+| `brazil/public_capital/IMFInvestmentandCapitalStockDataset2021.xlsx` | [IMF Investment and Capital Stock Dataset 2021](https://infrastructuregovern.imf.org/content/dam/PIMA/Knowledge-Hub/dataset/IMFInvestmentandCapitalStockDataset2021.xlsx) | 2026-10-20 (Claude) | IMF, free to use with attribution | Untouched workbook; SHA-256 `6e2d02e5926a8472966000f4546e8fa9f7461ac5b84b1f63f3c3eb5bd52a5028`. Brazil general-government capital stock 2019: 0.82 x GDP (constant 2017 PPP) / 0.77 (nominal); public investment 2.06% of GDP (2019); depreciation implied by K_t = (1-d)K_(t-1) + I_t: 2.2%-4.5% per year 2010-2019. For C5 channel 3 (public capital). |

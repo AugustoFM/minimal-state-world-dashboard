@@ -101,6 +101,7 @@ def sample_draw(rng: np.random.Generator, parameters: Mapping, inputs: Mapping) 
     social_choices = parameters["social_modelling_choices"]["reduction_hitting_health_education"]
     imr = parameters["social_outcome_elasticities"]["infant_mortality_wrt_public_health_spending"]
     leakage = parameters["governance"]["leakage_share_of_spending"]
+    revenue_elasticity = parameters["revenue_elasticity_to_gdp"]
     draw = {
         "profile_year": int(rng.choice(vintages)),
         "pension_gdp_per_worker_weight": snap(rng.uniform(weight["low"], weight["high"])),
@@ -111,6 +112,7 @@ def sample_draw(rng: np.random.Generator, parameters: Mapping, inputs: Mapping) 
         ),
         "imr_elasticity": triangular(rng, imr["low"], imr["central"], imr["high"]),
         "leakage_share": float(rng.uniform(leakage["low"], leakage["high"])),
+        "revenue_elasticity": float(rng.uniform(revenue_elasticity["low"], revenue_elasticity["high"])),
     }
     for category in MULTIPLIER_CATEGORIES:
         entry = accumulated[category]
@@ -141,6 +143,8 @@ def central_draw(parameters: Mapping, inputs: Mapping) -> dict:
             parameters["governance"]["leakage_share_of_spending"]["low"]
             + parameters["governance"]["leakage_share_of_spending"]["high"]
         ),
+        # The deterministic C2 rule (revenue a fixed share of GDP) is elasticity 1.
+        "revenue_elasticity": 1.0,
     }
     for category in MULTIPLIER_CATEGORIES:
         draw[f"multiplier_{category}"] = float(accumulated[category]["central"])
@@ -160,6 +164,7 @@ def parameters_for_draw(parameters: Mapping, draw: Mapping) -> dict:
     for category in MULTIPLIER_CATEGORIES:
         _collapse(accumulated[category], draw[f"multiplier_{category}"])
     _collapse(result["macro_modelling_choices"]["efficiency_output_effect"], draw["efficiency_output_effect"])
+    _collapse(result["revenue_elasticity_to_gdp"], draw["revenue_elasticity"])
     return result
 
 
@@ -388,6 +393,7 @@ def run(
             "service_cut_fraction": "triangular(low, central, high) from social_modelling_choices",
             "imr_elasticity": "triangular(low, central, high) from social_outcome_elasticities",
             "pension_gdp_per_worker_weight": f"uniform(low, high), snapped to a {WEIGHT_GRID_STEP} grid",
+            "revenue_elasticity": "uniform(0.92, 0.98) from revenue_elasticity_to_gdp (IFI EE16 long run; C2 deterministic rule is 1.0)",
             "leakage_share": "uniform(low, high) from governance.leakage_share_of_spending (cancels in scenario-vs-S0 comparisons; drives the leakage_halved sensitivity)",
             "profile_year": "discrete, equal probability over profile_years.values",
         },

@@ -425,6 +425,16 @@ def multiplier_by_package(parameters: Mapping, variant: str) -> dict[str, dict]:
             "multiplier": float(value),
             "horizon_months": float(horizon),
         }
+    revenue = estimates.get("total_revenue")
+    if revenue is None or revenue.get(variant) is None:
+        # Without a configured revenue multiplier, tax paths are not allowed
+        # (checked in run_corner); zero keeps spending-only scenarios unchanged.
+        result["revenue"] = {"multiplier": 0.0, "horizon_months": 12.0, "configured": False}
+    else:
+        result["revenue"] = {
+            "multiplier": float(revenue[variant]),
+            "horizon_months": float(revenue["horizon_months"]),
+        }
     return result
 
 
@@ -435,6 +445,23 @@ def validate_protected_categories(scenarios: Mapping) -> None:
     touched = {name for name in protected if float(shares.get(name, 0.0)) != 0.0}
     if touched:
         raise ValueError(f"Protected categories have non-zero package shares: {sorted(touched)}")
+
+
+def _interpolate_by_year(path: Mapping, elapsed: int, label: str) -> float:
+    """Linear ramp between horizon points, starting from zero at the base year."""
+    try:
+        points = {0: 0.0} | {int(horizon): float(value) for horizon, value in path.items()}
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"Invalid by-year path for {label}") from exc
+    horizons = sorted(points)
+    if elapsed < 0 or elapsed > horizons[-1]:
+        raise ValueError(f"Projection year is outside {label}")
+    upper = next(horizon for horizon in horizons if horizon >= elapsed)
+    lower = max(horizon for horizon in horizons if horizon <= elapsed)
+    if upper == lower:
+        return points[lower]
+    weight = (elapsed - lower) / (upper - lower)
+    return points[lower] + weight * (points[upper] - points[lower])
 
 
 def build_spending_paths(
@@ -472,6 +499,7 @@ def build_spending_paths(
     for year in years:
         s0 = float(pivot.loc[year, "S0"])
         scenario_gaps = {"S0": 0.0, "S1": s0 - float(pivot.loc[year, "S1"])}
+        revenue_changes = {"S0": 0.0, "S1": 0.0}
         elapsed = year - base_year
         for scenario, definition in scenarios["scenarios"].items():
             # Reductions (R_*) sit below S0; expansions (direction: above_S0)
@@ -479,24 +507,14 @@ def build_spending_paths(
             if not isinstance(definition, dict) or "by_year" not in definition:
                 continue
             sign = -1.0 if definition.get("direction") == "above_S0" else 1.0
-            try:
-                points = {0: 0.0} | {
-                    int(horizon): float(value)
-                    for horizon, value in definition["by_year"].items()
-                }
-            except (KeyError, TypeError, ValueError) as exc:
-                raise ValueError(f"Missing or invalid by_year path for {scenario}") from exc
-            horizons = sorted(points)
-            if elapsed < 0 or elapsed > horizons[-1]:
-                raise ValueError(f"Projection year is outside {scenario}.by_year")
-            upper = next(horizon for horizon in horizons if horizon >= elapsed)
-            lower = max(horizon for horizon in horizons if horizon <= elapsed)
-            if upper == lower:
-                gap = points[lower]
-            else:
-                weight = (elapsed - lower) / (upper - lower)
-                gap = points[lower] + weight * (points[upper] - points[lower])
+            gap = _interpolate_by_year(definition["by_year"], elapsed, f"{scenario}.by_year")
             scenario_gaps[str(scenario)] = sign * gap
+            # Tax policy: revenue above S0 in pp of GDP (positive = tax increase).
+            revenue_path = definition.get("revenue_by_year")
+            revenue_changes[str(scenario)] = (
+                0.0 if revenue_path is None
+                else _interpolate_by_year(revenue_path, elapsed, f"{scenario}.revenue_by_year")
+            )
         for scenario, total_gap in scenario_gaps.items():
             totals.append(
                 {
@@ -504,6 +522,17 @@ def build_spending_paths(
                     "scenario": scenario,
                     "spending_pct_gdp": s0 - total_gap,
                     "gap_below_s0_pp": total_gap,
+                    "revenue_change_pp": revenue_changes[scenario],
+                }
+            )
+            # A tax increase enters the multiplier machinery as a negative gap on
+            # the "revenue" package, so the (negative) revenue multiplier lowers GDP.
+            gaps.append(
+                {
+                    "year": year,
+                    "scenario": scenario,
+                    "package": "revenue",
+                    "gap_below_s0_pp": -revenue_changes[scenario],
                 }
             )
             for package, share in shares.items():
@@ -556,6 +585,17 @@ def multiplier_level_effect(
             for year, value in effects.items()
         )
     return pd.DataFrame(records)
+
+
+def revenue_elasticity(parameters: Mapping, variant: str) -> float:
+    """Revenue elasticity to GDP; the C2 rule (1.0) when no value is configured.
+
+    `revenue_elasticity_to_gdp` has a sourced low/high (IFI EE16) and no central;
+    deterministic C2 corners therefore keep elasticity 1.0, and D1 samples it.
+    """
+    entry = parameters.get("revenue_elasticity_to_gdp") or {}
+    value = entry.get("central")
+    return 1.0 if value is None else float(value)
 
 
 def debt_step(previous_debt: float, interest: float, nominal_growth: float, primary_balance: float) -> float:
@@ -659,7 +699,12 @@ def run_corner(
 ) -> pd.DataFrame:
     """Evaluate one aligned low/central/high parameter corner."""
     spending, package_gaps = build_spending_paths(annual_baseline, scenarios, variant)
-    effects = multiplier_level_effect(package_gaps, multiplier_by_package(parameters, variant), persistence)
+    multipliers = multiplier_by_package(parameters, variant)
+    if multipliers["revenue"].get("configured") is False and (
+        package_gaps.loc[package_gaps["package"].eq("revenue"), "gap_below_s0_pp"].abs() > 0
+    ).any():
+        raise ValueError("A scenario sets revenue_by_year but no total_revenue multiplier is configured")
+    effects = multiplier_level_effect(package_gaps, multipliers, persistence)
     frame = spending.merge(effects, on=["year", "scenario"], validate="one_to_one")
     start_year, end_year = int(frame["year"].min()), int(frame["year"].max())
     growth = baseline_real_gdp_path(population, start_year, end_year, inputs, variant)
@@ -670,7 +715,14 @@ def run_corner(
     okun = macro_input(inputs, "okun_coefficient", variant)
     frame["unemployment_change_pp"] = -okun * frame["gdp_level_vs_s0_pct"]
     revenue = macro_input(inputs, "revenue_gdp", variant)
-    frame["primary_balance_gdp"] = revenue - frame["spending_pct_gdp"]
+    elasticity = revenue_elasticity(parameters, variant)
+    # Revenue in reais moves with GDP^elasticity relative to S0, so its share of
+    # GDP scales by (Y/Y_S0)^(elasticity-1); elasticity 1 is the original C2 rule.
+    frame["revenue_gdp"] = (
+        revenue * (1 + frame["gdp_level_vs_s0_pct"] / 100) ** (elasticity - 1)
+        + frame["revenue_change_pp"]
+    )
+    frame["primary_balance_gdp"] = frame["revenue_gdp"] - frame["spending_pct_gdp"]
     inflation = macro_input(inputs, "gdp_deflator_growth", variant) / 100
     mode = inputs.get("derived", {}).get(
         "interest_rate_mode", "historical_real_reinflated_with_projected_deflator"

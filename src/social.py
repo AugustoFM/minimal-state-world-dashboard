@@ -287,7 +287,7 @@ def project_social(
     horizons = [int(value) for value in horizons]
     target_years = {base_year + horizon: horizon for horizon in horizons}
     configured = _require(scenarios, "scenarios")
-    scenario_names = [name for name in ("S0", "S1", "R_mod", "R_amb", "R_max", "E_mod", "E_amb") if name in configured]
+    scenario_names = [name for name in ("S0", "S1", "R_mod", "R_amb", "R_max", "E_mod", "E_amb", "E_mod_tax", "E_amb_tax") if name in configured]
     base_imr = _required_number(base_inputs, "infant_mortality.value")
     base_imr_year = int(_required_number(base_inputs, "infant_mortality.year"))
     base_le = _required_number(base_inputs, "life_expectancy.value")

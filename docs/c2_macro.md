@@ -210,3 +210,14 @@ consolidated-public-sector headline, which has different coverage.
 
 Required null inputs fail clearly. With `--allow-missing`, only dependent
 outputs are omitted and the skipped-output mapping is recorded.
+
+## Revenue path (added 2026-10-20)
+
+Two revenue mechanisms, both applied identically to cuts and expansions:
+
+1. **Revenue response to GDP.** Revenue in reais moves with GDP^e relative to S0, so revenue/GDP = base share x (Y/Y_S0)^(e-1). The deterministic C2 corners keep the original rule e = 1 (revenue a fixed share of GDP: a cut that lowers GDP lowers revenue one-for-one). D1 samples e ~ uniform(0.92, 0.98), the long-run elasticities of central-government revenue in IFI Estudo Especial 16 (2021); at annual frequency the short-run overshoot (1.17-1.51 per quarter) has largely corrected (error correction -0.63 per quarter).
+2. **Tax policy.** A scenario may set `revenue_by_year` (pp of GDP above S0 revenue; positive = tax increase). It raises the primary balance one-for-one and lowers GDP through the Sanches et al. accumulated revenue multiplier (-0.55, range -0.70 to -0.33, 15-month horizon), using the same transitory/persistent machinery as spending (package `revenue`).
+
+Tax-financed expansions `E_mod_tax` and `E_amb_tax` raise spending and revenue by the same pp of GDP: the primary balance stays at S0's, GDP still rises (spending multipliers exceed the revenue multiplier in absolute value), and debt/GDP ends slightly below S0 through the larger denominator.
+
+Not yet modelled: which taxes change (incidence by income, needed for C3 and the P1 programmes), behavioural responses beyond the aggregate multiplier, and the short-run revenue overshoot within a year.
