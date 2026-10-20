@@ -709,3 +709,22 @@ revenue_elasticity_to_gdp:
   central: null
   high: 0.98
   status: "sourced; not yet wired (revenue-path task)"
+
+# --- Fiscal delivery (F1; added 2026-10-21, Claude) ----------------------------------------------
+fiscal_delivery:
+  # Outturn minus ORIGINAL LDO primary target, consolidated public sector, pp of GDP (surplus positive).
+  # data/brazil/fiscal_delivery.csv (19 archived years; consolidated values available for 14). 2020 excluded
+  # (pandemic; targets suspended under the state of calamity), leaving 13 years.
+  source: "data/brazil/fiscal_delivery.csv (LDO compliance annexes; outturns match BCB SGS 5793)"
+  concept: consolidated_public_sector
+  years: [2008, 2010, 2011, 2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023, 2024, 2025]
+  miss_vs_original_pp_gdp: [0.27, -0.68, 0.25, -2.96, -2.97, 0.49, 0.33, 0.95, 4.49, 3.27, -1.63, -0.28, -0.39]
+  summary: {mean: 0.09, median: 0.25, p10: -2.69, p90: 2.81}
+  default_use: "P1 applies the pooled median bias (about zero) to both programmes' promised primary paths: on average governments since 2008 delivered their original target"
+  sensitivity_use: "empirical bootstrap of the 13 misses, same draws for both programmes; labelled as including macro surprises"
+  own_record_sensitivity: "by-government misses in fiscal_delivery.csv; Flávio Bolsonaro has no presidential record (Jair Bolsonaro 2019-22 is a weak proxy); Lula I-II has only 2 of 8 years archived"
+  caveats:
+    - "a miss mixes fiscal management with macro surprises (2015-16 recession; 2021-22 inflation and commodity revenue); the model already draws GDP and external shocks, so the full spread double-counts them"
+    - "missing years 2001, 2003-2007, 2009, 2013 are mostly Lula I-II; the sample under-represents that period"
+    - "targets were revised in several years (2015, 2016, 2017, 2018); misses vs final targets are smaller (median 0.13)"
+  status: choice
