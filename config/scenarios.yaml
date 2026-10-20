@@ -6,8 +6,9 @@ scenarios:
   S0:  {name: status_quo, description: "current rules; pension+health rise with ageing; revenue unchanged; debt drifts up"}
   S1:  {name: constant_size, optional: true, description: "spending/GDP held at today's share (cost of offsetting ageing drift)"}
   R_mod: {name: moderate_reduction, pace_pp_gdp_per_year_below_S0: 0.2, by_year: {5: 1, 10: 2, 15: 3, 20: 4}}
-  R_amb: {name: ambitious_reduction, pace_pp_gdp_per_year_below_S0: 0.4, by_year: {5: 2, 10: 4, 15: 6, 20: 8}, cap: "within B1 cap at every horizon; nearly binding at 20y (8 vs 8.5)"}
-  R_max: {name: edge_of_experience, optional: true, by_year: {5: 4.2, 10: 5.5, 15: 7.3, 20: 8.5}, description: "B1 cap: largest reduction vs S0 that keeps the change from today within the 10th percentile of observed middle-income declines; stress/upper-bound case, not a recommendation"}
+  R_amb: {name: ambitious_reduction, pace_pp_gdp_per_year_below_S0: 0.4, by_year: {5: 2, 10: 4, 15: 6, 20: 7.0}, cap: "B1 conservative precedent cap applied at 20y (8 -> 7.0); 15y is inside by only 0.1 pp"}
+  R_max: {name: edge_of_experience, optional: true, by_year: {5: 4.2, 10: 5.5, 15: 7.3, 20: 8.5}, description: "B1 central precedent cap: change from today at the 10th percentile of observed middle-income changes; needs legislation of nearly its full size; stress case, not a recommendation"}
+# by_year sizes are authoritative; pace_pp_gdp_per_year_below_S0 is the nominal pace (R_amb is capped at 20y by B1). Paths ramp linearly between horizons.
 reduction_is_measured_against: S0        # not against today; part of the effort offsets ageing drift
 package_shares: {pension_and_indexation: 0.40, subsidies_and_tax_expenditures: 0.25, efficiency_health_education_admin: 0.20, other_current: 0.15}
 protected: [public_investment, means_tested_transfers]
@@ -15,13 +16,29 @@ variants: [pension_only, efficiency_only, investment_also_cut_stress, compensati
 outputs: [gdp_per_capita, debt_gdp, unemployment, gini, top1_share, top10_share, poverty, life_expectancy, schooling, health_access, hdi_components]
 percentiles: [10, 50, 90]
 
-b1_calibration:   # task B1, 2026-10-20; reproduce with scripts/calibrate_b1.py -> data/brazil/b1_calibration.csv
-  method: "cap_below_S0(h) = C1 drift_low(h) + |country-weighted p10 of observed change(h)|, middle-income episodes excluding spike starts and windows with a >10 pp year-on-year jump (series breaks/crises)"
-  observed_change_p10_pp: {5: -2.8, 10: -2.6, 15: -3.0, 20: -2.7}   # screened sample: 82/74/64/46 countries
-  c1_drift_low_pp: {5: 1.4, 10: 2.9, 15: 4.3, 20: 5.8}
-  cap_below_S0_pp: {5: 4.2, 10: 5.5, 15: 7.3, 20: 8.5}
-  result: "R_mod and R_amb are inside the cap at all horizons; R_amb nearly binds at 20y. Cap assumes the C1 ageing drift materialises: if pension-reform transition lowers the drift, the cap falls one-for-one."
-  binding_constraint: "legal: federal discretionary spending is 1.6% of GDP (2024, IFI RAF 101 Table 6), 8.4% of federal primary spending. R_amb at 5y (2 pp) exceeds all federal discretionary spending, so it requires changes to mandatory spending rules (pensions/indexation, subsidies/tax expenditures) passed within the first years."
-  proxies: ["episodes use central-government expense (WDI), not general-government primary spending", "discretionary share is federal (central government) only; states and municipalities not covered"]
-  data_issues: ["WDI expense has series breaks (e.g. Nicaragua 65% in 1990 to 11% in 1994); screened out here by the >10 pp jump rule - A4 summary percentiles still include them"]
-  changed_defaults: "none to R_mod/R_amb sizes; added optional R_max"
+b1_calibration:   # task B1, 2026-10-20; reproduce with scripts/calibrate_b1.py -> data/brazil/b1_calibration.csv, b1_sensitivity.csv
+  # Two separate bounds. Precedent: how far spending/GDP has fallen elsewhere. Implementability: how much can
+  # be cut without new law. Neither is a forecast of what Brazil will do.
+  precedent_bound:
+    method: "cap_below_S0(h) = C1 drift_low(h) - p10(h); p10 = country-weighted 10th percentile of observed spending/GDP change, middle-income countries, A4 episodes"
+    method_choices: {percentile: 0.10, spike_start_pp: 3, series_break_pp: 10, status: "choice; sensitivity in b1_sensitivity.csv"}
+    observed_change_p10_pp: {5: -2.8, 10: -2.6, 15: -3.0, 20: -2.7}
+    sensitivity_p10_pp:
+      threshold_grid: {5: [-3.6, -2.5], 10: [-3.7, -2.0], 15: [-4.3, -2.3], 20: [-5.1, -2.6]}
+      leave_one_country_out: {5: [-2.8, -2.7], 10: [-2.6, -2.3], 15: [-3.0, -2.6], 20: [-2.8, -2.1]}
+      country_bootstrap_q10_q90: {5: [-3.0, -2.5], 10: [-3.1, -2.1], 15: [-4.4, -1.8], 20: [-5.4, -1.2]}
+    c1_drift_low_pp: {5: 1.4, 10: 2.9, 15: 4.3, 20: 5.8}
+    cap_central_pp: {5: 4.2, 10: 5.5, 15: 7.3, 20: 8.5}
+    cap_conservative_pp: {5: 3.9, 10: 4.9, 15: 6.1, 20: 7.0}   # uses bootstrap q90 of p10 (least negative)
+    classification: {R_mod: "inside at all horizons", R_amb: "inside at 5/10/15y (15y margin 0.1 pp); 8 pp at 20y was borderline, so capped to 7.0"}
+    caveat: "Cap assumes the C1 ageing drift happens; a lower drift (e.g. pension-reform transition) lowers the cap one-for-one."
+  implementability_bound:
+    no_legislation_max_pp: 0.4   # 25% of federal discretionary spending (1.6% GDP)
+    sources: ["LC 200/2023 art. 7 para 2: discretionary floor 75% of authorised (quoted in IFI RAF 103, Aug 2025, fn. 20)", "IFI RAF 101 (Jun 2025) Table 6: federal discretionary 1.6% GDP, 8.4% of federal primary spending, 2024"]
+    legislation_needed_pp: {R_mod: {5: 0.6, 10: 1.6, 15: 2.6, 20: 3.6}, R_amb: {5: 1.6, 10: 3.6, 15: 5.6, 20: 6.6}}
+    reading: "Every R path except R_mod's first years needs new law on mandatory spending (pensions/indexation, subsidies/tax expenditures). Withholding discretionary spending is a one-year budget tool, not a permanent cut."
+    precedent_for_legislation: "EC 103/2019 pension reform: estimated 10-year savings R$ 855-870 bn (government / IFI, Sept-Nov 2019; secondary, not yet converted to % GDP)"
+    status: "no sourced reform-timing envelope yet; implementability is reported, not used to resize paths"
+  proxies: ["episodes use central-government expense (WDI), not general-government primary spending", "discretionary share is federal only; states and municipalities not covered"]
+  data_issues: ["WDI expense has series breaks (e.g. Nicaragua 65% in 1990 to 11% in 1994); screened here, still present in A4 episodes_summary.csv"]
+  changed_defaults: "R_amb 20y 8 -> 7.0 (conservative precedent cap); added optional R_max. R_mod unchanged."

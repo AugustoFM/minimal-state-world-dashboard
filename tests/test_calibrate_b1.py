@@ -39,3 +39,9 @@ def test_break_window_detects_jump_inside_episode_only() -> None:
         {"iso3": ["A", "A"], "start_year": [2000, 2001], "end_year": [2005, 2005]}
     )
     assert b1.break_windows(series, episodes).tolist() == [True, False]
+
+
+def test_classify_uses_conservative_then_central_bound() -> None:
+    assert b1.classify(3.0, conservative=3.5, central=4.0) == "inside"
+    assert b1.classify(3.8, conservative=3.5, central=4.0) == "borderline"
+    assert b1.classify(4.5, conservative=3.5, central=4.0) == "outside"
