@@ -1,8 +1,8 @@
 sample_group,horizon_years,n_episodes,p10,p50,p90,series_code,government_scope,income_classification_basis
-middle_income,5,563,-2.942108989622359,1.0868154370399008,5.60607042229856,GC.XPN.TOTL.GD.ZS,central government only; not general government,current World Bank classification (2026 API snapshot)
-middle_income,10,195,-2.0690342845708174,2.8367996159896993,9.08944043520782,GC.XPN.TOTL.GD.ZS,central government only; not general government,current World Bank classification (2026 API snapshot)
-middle_income,15,0,,,,GC.XPN.TOTL.GD.ZS,central government only; not general government,current World Bank classification (2026 API snapshot)
-middle_income,20,0,,,,GC.XPN.TOTL.GD.ZS,central government only; not general government,current World Bank classification (2026 API snapshot)
+middle_income,5,1289,-3.46229372994544,0.947316760125851,5.536353116265041,GC.XPN.TOTL.GD.ZS,central government only; not general government,current World Bank classification (2026 API snapshot)
+middle_income,10,885,-3.810574246045341,2.0071269100231994,7.549071898764319,GC.XPN.TOTL.GD.ZS,central government only; not general government,current World Bank classification (2026 API snapshot)
+middle_income,15,598,-4.29691757793142,2.920255475413847,9.24641422360751,GC.XPN.TOTL.GD.ZS,central government only; not general government,current World Bank classification (2026 API snapshot)
+middle_income,20,386,-4.393392645717851,3.579905027034049,10.42822904759325,GC.XPN.TOTL.GD.ZS,central government only; not general government,current World Bank classification (2026 API snapshot)
 brazil,5,9,-1.3571048943282982,1.853919778631802,4.972059284333783,GC.XPN.TOTL.GD.ZS,central government only; not general government,current World Bank classification (2026 API snapshot)
 brazil,10,4,1.6248388122742718,3.8735253012787503,6.08093883737841,GC.XPN.TOTL.GD.ZS,central government only; not general government,current World Bank classification (2026 API snapshot)
 brazil,15,0,,,,GC.XPN.TOTL.GD.ZS,central government only; not general government,current World Bank classification (2026 API snapshot)

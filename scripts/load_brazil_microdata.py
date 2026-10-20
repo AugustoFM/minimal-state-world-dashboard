@@ -26,6 +26,8 @@ ALLOWED_CANONICAL = {
     "labor_force_status", "employment_status",
     "labor_income_nominal_brl", "labor_income_real_brl", "household_income_brl",
     "household_income_per_capita_brl", "consumption_expenditure_brl", "survey_weight",
+    "retirement_pension_income_brl", "bpc_income_brl", "bolsa_familia_income_brl",
+    "other_program_income_brl", "household_size",
 }
 
 
@@ -53,10 +55,20 @@ def load_export(dataset: str, input_path: Path, mapping_path: Path) -> pd.DataFr
         frame = pd.read_parquet(input_path)
     else:
         raise ValueError("input must be a CSV or Parquet export produced using the official IBGE reading layout")
-    missing = set(columns) - set(frame.columns)
+    household_key_columns = mapping.get("household_key_columns", [])
+    if not isinstance(household_key_columns, list) or any(not isinstance(c, str) for c in household_key_columns):
+        raise ValueError("household_key_columns must be a list of source column names")
+    if set(household_key_columns) & set(columns):
+        raise ValueError("internal household keys must not also be mapped to output columns")
+    missing = (set(columns) | set(household_key_columns)) - set(frame.columns)
     if missing:
         raise ValueError(f"source columns absent from export: {sorted(missing)}")
     result = frame[list(columns)].rename(columns=columns).copy()
+    if household_key_columns:
+        # The grouping key is used only inside this function and never enters
+        # the exported frame. This row count is suitable for person-level files.
+        household_sizes = frame.groupby(household_key_columns, dropna=False)[household_key_columns[0]].transform("size")
+        result["household_size"] = household_sizes.to_numpy()
     if "year" not in result or "survey_weight" not in result:
         raise ValueError("mapping must include year and survey_weight")
     result.insert(0, "survey", "PNAD Continua" if dataset == "pnadc" else "POF 2017-2018")

@@ -23,8 +23,9 @@ Example mapping format:
     "V1028": "survey_weight",
     "V2009": "age",
     "VD4019": "labor_income_nominal_brl"
-  }
+  },
+  "household_key_columns": ["<official household key field(s)>"]
 }
 ```
 
-This is illustrative, not an approved map. Never map sample IDs, direct personal identifiers, or names/contact fields into the analysis output.
+This is illustrative, not an approved map. `household_key_columns` are temporary calculation inputs: the loader uses them to compute `household_size` and never exports them. Add those fields only after the official year-specific layout is reviewed. Never map sample IDs, direct personal identifiers, or names/contact fields into the analysis output. Full microdata remains excluded from git and is not downloaded until the source mappings are agreed.

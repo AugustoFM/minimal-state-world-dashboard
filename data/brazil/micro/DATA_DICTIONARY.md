@@ -16,9 +16,15 @@ This is the source-variable shortlist for discussion before any full microdata d
 | `employment_status` | `VD4002` | Employment status; verify edition-specific layout. |
 | `labor_income_nominal_brl` | `VD4019` | Habitual earnings from all jobs, age 14+; nominal BRL and reference year. |
 | `labor_income_real_brl` | `VD4019` × official annual deflator | Derive only with matching official deflator and documented price base; keep nominal field too. |
+| `household_income_per_capita_brl` | `VD5002` | Official effective household per-capita income measure. Respect its exclusions (benefits in kind/tickets and income of lodgers, domestic workers and their relatives); retain edition/reference period. |
+| `retirement_pension_income_brl` | `V5004A2` | Amount from retirement/pension source in annual all-sources visit layout; verify edition-specific names and reference period. |
+| `bpc_income_brl` | `V5001A2` | Amount from BPC/LOAS source in annual all-sources visit layout. |
+| `bolsa_familia_income_brl` | `V5002A2` | Amount from Bolsa Família/Auxílio Brasil source in annual all-sources visit layout. |
+| `other_program_income_brl` | `V5003A2` | Amount from other government social programs; keep distinct from BPC and Bolsa Família. |
+| `household_size` | derived with temporary household grouping | Number of resident person records in each dwelling, computed internally and exported as a count only. Grouping key is dropped before output. |
 | `survey_weight` | `V1028` | Expansion weight; check interview/annual release layout. |
 
-Candidate earnings definitions are supported by the IBGE derived-variable and deflator documentation linked in `README.md`. Confirm all candidate codes against the exact year-specific reading program before approving the mapping. Do not combine first- and fifth-visit records without an explicit survey design decision.
+The official 2025 visit-1 dictionary/input layout and IBGE derived-variable documentation have been downloaded. `VD5002` is identified in IBGE's derived-variable documentation as effective household per-capita income. The source-income codes shown are candidate codes from the all-sources annual layout and still require transcription against the official dictionary before a year-specific mapping is approved. Retain source visit and reference period; do not combine first- and fifth-visit records without an explicit survey design decision. Use temporary household grouping only to calculate household size or a separately requested derived value, not to replace the official per-capita measure.
 
 ## POF 2017–2018 (resident, household/unit-of-consumption and income tables)
 
@@ -27,17 +33,15 @@ The POF is distributed as multiple linked files with distinct record levels. The
 | Canonical field | Source field | Meaning / handling |
 |---|---|---|
 | `year` | survey metadata | Reference period 2017–2018; preserve file/table reference period. |
-| `state_code` | official residence field | Federative unit code; confirm source field in the official layout. |
-| `urban_rural` | official residence field | Residence situation; confirm source field in the official layout. |
-| `sex` | resident table | Sex category as coded by IBGE; confirm source field in the official layout. |
-| `age` | resident table | Age in years; confirm source field in the official layout. |
-| `education_level` | resident table | Education; confirm source field and categories in the official layout. |
-| `household_income_brl` | derived `renda_total` or documented income components | Household/unit-of-consumption total income; respect IBGE's corrected derived variable and record reference period. |
-| `household_income_per_capita_brl` | documented total divided by unit size, or official field | Use official derived variable where available; otherwise derive only from documented income and roster definitions. |
+| `state_code` | resident table residence field | Federative unit code; exact variable name must be transcribed from the downloaded official POF dictionary before mapping approval. |
+| `urban_rural` | resident table residence field | Residence situation; exact variable name must be transcribed from official dictionary. |
+| `sex`, `age`, `education_level` | resident table | Demographic fields; exact variable names must be transcribed from official dictionary. |
+| `household_income_brl` | corrected derived `renda_total` | Household/unit-of-consumption income; preserve the corrected derived field and its reference period. |
+| `household_income_per_capita_brl` | documented total divided by unit size, or official field | Use official derived field where available; otherwise derive only from documented income and roster definitions. |
 | `consumption_expenditure_brl` | expenditure-table value | Preserve table's expenditure reference period and monetary unit. |
-| `survey_weight` | official unit/person weight | Keep table-level weight and sampling design metadata; confirm exact field by record level. |
+| `survey_weight` | official unit/person weight | Keep table-level weight and sampling design metadata; exact variable is record-level specific. |
 
-**Not in the initial loader contract:** sample cluster, dwelling, household, unit-of-consumption or person keys. They are not person names or direct identifiers, but they can enable record linkage; keep them out of the analysis export unless an agreed research design requires a controlled, non-public intermediate.
+**Internal-only grouping:** household, dwelling, unit-of-consumption and person keys may be read temporarily from official layouts to calculate household size or per-capita measures, but must be dropped before the analysis export. The exact POF key structure and all POF variable codes remain unapproved until transcribed and checked against the downloaded official POF dictionary and reading programs. No POF microdata download is authorized by this dictionary.
 
 ## Fields excluded from all exports
 

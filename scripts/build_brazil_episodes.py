@@ -13,7 +13,7 @@ import pandas as pd
 
 
 ROOT = Path(__file__).resolve().parents[1]
-WDI = ROOT / "data/raw/worldbank_long.csv"
+WB_SPENDING = ROOT / "data/raw/brazil/worldbank_expense_1990_2025.json"
 CLASSIFICATIONS = ROOT / "data/raw/brazil/worldbank_country_metadata.json"
 EPISODES = ROOT / "data/brazil/episodes.csv"
 SUMMARY = ROOT / "data/brazil/episodes_summary.csv"
@@ -36,9 +36,18 @@ def eligible_countries() -> pd.DataFrame:
 
 
 def make_episodes() -> tuple[pd.DataFrame, pd.DataFrame]:
-    raw = pd.read_csv(WDI)
-    values = raw.loc[raw["indicator"].eq("gov_expense_pct_gdp"),
-                     ["iso3", "country", "year", "value"]].copy()
+    # Use the dedicated, untouched API response so the requested 1990–2025
+    # coverage is independent of the broader WDI refresh window.
+    payload = json.loads(WB_SPENDING.read_text(encoding="utf-8"))
+    if len(payload) < 2 or not isinstance(payload[1], list):
+        raise ValueError("World Bank spending response has no observation list")
+    raw = pd.DataFrame(payload[1])
+    values = pd.DataFrame({
+        "iso3": raw["countryiso3code"],
+        "country": raw["country"].map(lambda item: item.get("value") if isinstance(item, dict) else None),
+        "year": raw["date"],
+        "value": raw["value"],
+    })
     values["year"] = pd.to_numeric(values["year"], errors="coerce")
     values["value"] = pd.to_numeric(values["value"], errors="coerce")
     values = values.dropna(subset=["iso3", "year", "value"])
@@ -78,7 +87,7 @@ def make_episodes() -> tuple[pd.DataFrame, pd.DataFrame]:
                     "series_code": INDICATOR,
                     "government_scope": "central government only; not general government",
                     "income_classification_basis": "current World Bank classification (2026 API snapshot)",
-                    "source": "World Bank WDI series already in data/raw/worldbank_long.csv",
+                    "source": "World Bank WDI API; data/raw/brazil/worldbank_expense_1990_2025.json",
                 })
     episodes = pd.DataFrame(rows)
     if episodes.empty:
