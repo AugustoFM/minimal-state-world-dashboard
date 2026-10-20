@@ -139,3 +139,9 @@ pages/full text on 2026-10-20. Exact locators are recorded in
 | `brazil/governance/wgi_GOV_WGI_GE.EST.json` | [World Bank WGI API, Government Effectiveness](https://api.worldbank.org/v2/country/BRA/indicator/GOV_WGI_GE.EST?format=json&per_page=100) | 2026-10-20 (Claude) | CC BY 4.0 | Untouched; SHA-256 `1393c545a10107778be5b089010bcdc7979ead42d652e05269f51fb5d9587449`. Context only. |
 | `brazil/governance/CPI2025_Results.xlsx` | [Transparency International, CPI 2025 results](https://images.transparencycdn.org/images/CPI2025_Results.xlsx) | 2026-10-20 (Claude) | TI terms: reuse with attribution | Untouched (strict OOXML; read by parsing the XML); SHA-256 `543a2ad438c4ba9a70367ee10a44a2565de7fae6bcd8a8db0c23d0b993e46e31`. Sheet 'CPI Historical' Brazil 2012-2025 with standard errors. Context only. |
 | Ferraz, Finan & Moreira (2012), J. Public Economics 96; NBER WP 18150 | [NBER PDF](https://www.nber.org/system/files/working_papers/w18150/w18150.pdf) | 2026-10-20 (Claude) | NBER, free to read | Full text, section 3.1 (35% of audited municipalities, 8% diverted), fn. 13 (Transparência Brasil 2005: 13-55% of FUNDEF lost, secondary), Table 4 (-0.35 SD). PDF SHA-256 `27a941a444ecb5f2ad6323e0175d2d141e424c049e29a741643a5ca59a737a23` (not versioned). `governance.leakage_share_of_spending`. |
+
+## Revenue elasticity
+
+| File | Source URL | Retrieved | Licence / terms | Notes |
+|---|---|---|---|---|
+| `brazil/revenue/ifi_estudo_especial_16_nov2021.pdf` | [IFI Estudo Especial nº 16](https://www12.senado.leg.br/ifi/pdf/estudo-especial-no-16-a-elasticidade-da-receita-em-relacao-ao-pib-nov-2021) | 2026-10-20 (Claude) | Senado Federal / IFI publication; free reuse with citation | Untouched PDF; SHA-256 `1ea52b4ad7d1fd3f77f43045a91af0d857a977eaed262c72e1b674af24e41b94`. Revenue elasticity to GDP: long run 0.92 (negative gap) / 0.98 (positive gap); short run 1.17 / 1.51; error correction -0.63 per quarter. |

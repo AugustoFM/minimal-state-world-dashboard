@@ -474,8 +474,11 @@ def build_spending_paths(
         scenario_gaps = {"S0": 0.0, "S1": s0 - float(pivot.loc[year, "S1"])}
         elapsed = year - base_year
         for scenario, definition in scenarios["scenarios"].items():
-            if not str(scenario).startswith("R_"):
+            # Reductions (R_*) sit below S0; expansions (direction: above_S0)
+            # sit above it, so their gap below S0 is negative.
+            if not isinstance(definition, dict) or "by_year" not in definition:
                 continue
+            sign = -1.0 if definition.get("direction") == "above_S0" else 1.0
             try:
                 points = {0: 0.0} | {
                     int(horizon): float(value)
@@ -493,7 +496,7 @@ def build_spending_paths(
             else:
                 weight = (elapsed - lower) / (upper - lower)
                 gap = points[lower] + weight * (points[upper] - points[lower])
-            scenario_gaps[str(scenario)] = gap
+            scenario_gaps[str(scenario)] = sign * gap
         for scenario, total_gap in scenario_gaps.items():
             totals.append(
                 {

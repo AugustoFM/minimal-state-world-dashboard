@@ -287,7 +287,7 @@ def project_social(
     horizons = [int(value) for value in horizons]
     target_years = {base_year + horizon: horizon for horizon in horizons}
     configured = _require(scenarios, "scenarios")
-    scenario_names = [name for name in ("S0", "S1", "R_mod", "R_amb", "R_max") if name in configured]
+    scenario_names = [name for name in ("S0", "S1", "R_mod", "R_amb", "R_max", "E_mod", "E_amb") if name in configured]
     base_imr = _required_number(base_inputs, "infant_mortality.value")
     base_imr_year = int(_required_number(base_inputs, "infant_mortality.year"))
     base_le = _required_number(base_inputs, "life_expectancy.value")
@@ -313,12 +313,14 @@ def project_social(
         for scenario in scenario_names:
             scenario_config = configured[scenario] or {}
             reduction = 0.0
-            if scenario.startswith("R_"):
+            if "by_year" in scenario_config:
                 by_year = scenario_config.get("by_year", {})
                 reduction_value = by_year.get(horizon, by_year.get(str(horizon)))
                 if reduction_value is None:
                     raise MissingSocialParameter(f"Missing scenario reduction: scenarios.{scenario}.by_year.{horizon}")
-                reduction = float(reduction_value)
+                # Expansions above S0 enter as negative reductions.
+                sign = -1.0 if scenario_config.get("direction") == "above_S0" else 1.0
+                reduction = sign * float(reduction_value)
             c1_source = "S1" if scenario == "S1" else "S0"
             service_variants = ("central",) if scenario in ("S0", "S1") else VARIANTS
             for c1_variant, c2_variant, persistence, service_variant, elasticity_variant in product(

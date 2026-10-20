@@ -55,7 +55,7 @@
     "top10_share": "C3 pending",
     "poverty_rate": "C3 pending"
   },
-  "inputs_commit": "47a36059404dccadd6f22c9bd440af5b62b2e772",
-  "created_utc": "2026-10-20T19:01:14+00:00",
-  "runtime_seconds": 388.9
+  "inputs_commit": "b8cd026ba90e62e64dc4f903200e0466194756b1",
+  "created_utc": "2026-10-20T19:12:53+00:00",
+  "runtime_seconds": 459.9
 }

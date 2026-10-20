@@ -691,3 +691,20 @@ governance:
     wgi_control_of_corruption: "World Bank WGI, GOV_WGI_CC.EST (-2.5 to 2.5), Brazil 1996-2025"
     cpi: "Transparency International CPI 2012-2025 (0-100), with standard errors"
     use: "context only; not a model input"
+
+# --- Revenue response to GDP (added 2026-10-20, Claude; used by the revenue-path extension, P1) ---
+revenue_elasticity_to_gdp:
+  # IFI (Senado) Estudo Especial no 16, Nov 2021: central-government recurring revenue, quarterly 1997-2021,
+  # cointegration (long run) and error-correction (short run) estimates split by sign of the output gap.
+  source: "IFI Estudo Especial no 16 (Nov 2021), Tables 2-4"
+  url: "https://www12.senado.leg.br/ifi/pdf/estudo-especial-no-16-a-elasticidade-da-receita-em-relacao-ao-pib-nov-2021"
+  verified: full_text
+  scope: "federal (central-government) total revenue; applied to general-government revenue as a proxy"
+  long_run_total_revenue: {negative_gap: 0.92, positive_gap: 0.98}
+  short_run_total_revenue: {negative_gap: 1.17, positive_gap: 1.51}
+  error_correction_per_quarter: -0.63
+  annual_use: "the error correction closes most of the short-run overshoot within a year, so the annual model uses the long-run values: low 0.92, high 0.98 (central null; sample uniform). The current C2 rule (revenue a fixed share of GDP) is elasticity 1.0, slightly above both."
+  low: 0.92
+  central: null
+  high: 0.98
+  status: "sourced; not yet wired (revenue-path task)"

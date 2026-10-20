@@ -8,7 +8,9 @@ scenarios:
   R_mod: {name: moderate_reduction, pace_pp_gdp_per_year_below_S0: 0.2, by_year: {5: 1, 10: 2, 15: 3, 20: 4}}
   R_amb: {name: ambitious_reduction, pace_pp_gdp_per_year_below_S0: 0.4, by_year: {5: 2, 10: 4, 15: 6, 20: 7.0}, cap: "B1 conservative precedent cap applied at 20y (8 -> 7.0); 15y is inside by only 0.1 pp"}
   R_max: {name: edge_of_experience, optional: true, by_year: {5: 4.2, 10: 5.5, 15: 7.3, 20: 8.5}, description: "B1 central precedent cap: change from today at the 10th percentile of observed middle-income changes; needs legislation of nearly its full size; stress case, not a recommendation"}
-# by_year sizes are authoritative; pace_pp_gdp_per_year_below_S0 is the nominal pace (R_amb is capped at 20y by B1). Paths ramp linearly between horizons.
+  E_mod: {name: moderate_expansion, direction: above_S0, pace_pp_gdp_per_year_above_S0: 0.2, by_year: {5: 1, 10: 2, 15: 3, 20: 4}, financing: debt, description: "mirror of R_mod: spending 0.2 pp GDP/yr above S0; within the observed p90 increase at every horizon"}
+  E_amb: {name: ambitious_expansion, direction: above_S0, pace_pp_gdp_per_year_above_S0: 0.4, by_year: {5: 2, 10: 4, 15: 4.8, 20: 4.6}, financing: debt, cap: "mirror of R_amb, capped at 15/20y by the observed p90 increase in middle-income countries minus C1 drift_low (central precedent cap; S0 already rises with ageing)"}
+# by_year sizes are authoritative (direction: above_S0 marks expansions, gap negative); pace_pp_gdp_per_year_below_S0 is the nominal pace (R_amb is capped at 20y by B1). Paths ramp linearly between horizons.
 reduction_is_measured_against: S0        # not against today; part of the effort offsets ageing drift
 package_shares: {pension_and_indexation: 0.40, subsidies_and_tax_expenditures: 0.25, efficiency_health_education_admin: 0.20, other_current: 0.15}
 protected: [public_investment, means_tested_transfers]
