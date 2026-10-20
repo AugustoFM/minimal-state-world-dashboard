@@ -190,7 +190,8 @@ social_modelling_choices:
     rule: "UNDP HDI health index = (LE - 20) / (85 - 20)"
     source: "UNDP HDR technical notes (goalposts 20 and 85 years)"
   not_modelled:
-    - "schooling (mean and expected years): no sourced elasticity (see social_outcome_elasticities.missing)"
+    - "expected years of schooling: no sourced elasticity (see social_outcome_elasticities.missing)"
+    - "mean years of schooling: elasticity now available (schooling_years_wrt_local_public_spending, proxy) but C4 does not yet model the cohort replacement needed to reach the adult measure - next C4 task"
     - "physicians per 1,000 and other health-access measures: no sourced elasticity"
     - "HDI education index and overall HDI: depend on schooling, so only the health index is produced"
 
@@ -228,10 +229,26 @@ social_outcome_elasticities:
     high: null
     range_basis: "point estimate only (abstract)"
     note: "Consistent with Szklo et al. 2024 central -0.126 for Brazil"
-  # GAP: no sourced elasticity yet for schooling (mean or expected years), physicians per 1,000 or other
-  # health-access measures with respect to public spending. C4 must not invent these; it can model only
-  # infant mortality and life expectancy until they are added.
-  missing: [education_spending_to_mean_years_schooling, education_spending_to_expected_years_schooling, health_spending_to_physicians_per_1000]
+  schooling_years_wrt_local_public_spending:
+    # Litschig & Morrison (2013), AEJ: Applied 5(4): 206-240 (working paper Litschig 2012, UPF 1142);
+    # RDD on FPM transfer cutoffs, Brazilian municipalities, 1982-85 funding, 1991 census outcomes.
+    # +~20% local public spending per capita for 4 years -> school-age cohorts +~0.3 years of schooling
+    # per capita (+~7%). Elasticity = 7 / 20 = 0.35 (our division of two published point estimates).
+    source: "Litschig & Morrison 2013; Litschig 2012 UPF WP 1142, abstract and section on education outcomes"
+    url: "https://econ-papers.upf.edu/papers/1142.pdf"
+    verified: full_text
+    low: null
+    central: 0.35
+    high: null
+    range_basis: "point estimate only (ratio of two published point estimates)"
+    proxy: "spending is TOTAL municipal spending (education, transport, housing/urban), not education spending; applying it to education spending overstates the dose, so the effect is likely an upper bound per R$ of education spending"
+    applies_to: "years of schooling of school-age cohorts exposed to the spending; reaches HDI mean years of schooling (adults 25+) only through cohort replacement"
+    persistence: "gains attenuated but persisted to 2000 (de Carvalho Filho & Litschig 2022, JHR 57(3)); no long-run elasticity published"
+    long_run_url: "https://jhr.uwpress.org/content/wpjhr/57/3/868.full.pdf"
+  # GAP: no sourced elasticity for physicians per 1,000 or other health-access measures. Szklo, Clarke &
+  # Rocha (2024) show EC 29 raised health inputs and access but report them only as standardised indices
+  # (Table A.2), not per-capita elasticities. Expected years of schooling also has no sourced elasticity.
+  missing: [education_spending_to_expected_years_schooling, health_spending_to_physicians_per_1000]
 
 # C1 age-profile baseline inputs. All values below are sourced or explicitly
 # marked as modelling assumptions; this is the sole runtime parameter source.

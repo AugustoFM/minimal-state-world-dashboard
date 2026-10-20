@@ -79,3 +79,10 @@ pages/full text on 2026-10-20. Exact locators are recorded in
 | `brazil/micro_validation/ibge_sidra_7435_gini.json` | [IBGE SIDRA table 7435](https://apisidra.ibge.gov.br/values/t/7435/n1/all/v/all/p/all?formato=json) | 2026-10-20 (Claude) | Official public data | Untouched API response; SHA-256 `4e1649bdc0835bdee1784906ec242b05c945ea4f45c00b5fcfa5b97795ffdc1a`. Published Gini of household per-capita income 2012-2025 (2025 = 0.511). |
 | `brazil/tax/centis-br-ac2024.xlsx` | [Receita Federal, Distribuição da Renda por Centis, AC 2024 (Brasil)](https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/publicacoes/estudos/distribuicao-da-renda/distribuicao-de-renda-por-centis-estudo-ampliado-2017-a-2023/2024) | 2026-10-20 (Claude) | Reproduction authorised with citation (metadata p. 2) | Untouched workbook; SHA-256 `c0ab867b13865b350e98220a69bb63b2e4a106827fc3c73286822112b9ae07d3`. IRPF declarations, calendar year 2024; Tables I-XI by ranking concept. Tidy extract: `data/brazil/micro/tax_centiles_2024.csv`. |
 | `brazil/tax/metadados-centis-ac2024.pdf` | same page (Grandes Números IRPF, March 2026) | 2026-10-20 (Claude) | as above | Untouched PDF; SHA-256 `3e2aa2a9ec76f7ce71ab471e4983b5ac28c8f929058bca412281d1a4505a6152`. Field definitions and ranking concepts (RTB, RB1-RB4, ...). |
+
+## C4 elasticity sources (config/parameters.yaml)
+
+| Paper | URL / DOI | Retrieved | Licence / terms | Verified | Used for |
+|---|---|---|---|---|---|
+| Litschig & Morrison (2013), AEJ: Applied 5(4); Litschig (2012) UPF WP 1142 | [UPF working paper PDF](https://econ-papers.upf.edu/papers/1142.pdf) | 2026-10-20 (Claude) | Working paper, free to read | full text | `social_outcome_elasticities.schooling_years_wrt_local_public_spending` (0.35, proxy: total municipal spending) |
+| de Carvalho Filho & Litschig (2022), JHR 57(3) | [JHR PDF](https://jhr.uwpress.org/content/wpjhr/57/3/868.full.pdf) | 2026-10-20 (Claude) | Journal copyright; free PDF | abstract and introduction | persistence note for the schooling elasticity |
