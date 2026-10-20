@@ -548,3 +548,73 @@ published_potential_growth_benchmark:
     url: https://www.imf.org/-/media/files/publications/cr/2025/english/1braea2025001-source-pdf.pdf
     table_series_code: medium-term real GDP growth forecast, described as convergence to potential
   verified: full_text
+
+# --- Long-run feedback block (C5) -------------------------------------------------------------
+# Added 2026-10-20 (Claude). Four channels through which spending choices change potential growth or
+# financing costs over 5-20 years. Two favour keeping spending (human capital, public capital), one can
+# cut either way (inequality), one favours lower debt (risk premium). All run as a variant on top of C2,
+# never as the only path, and each can be switched off to show its contribution.
+long_run_feedback:
+  human_capital_from_schooling:
+    # Links C4 schooling change to the PWT human-capital index used in C2 growth accounting.
+    mapping: "hc = exp(phi(s)); phi piecewise linear in mean years of schooling s"
+    returns_per_year_of_schooling: {up_to_4_years: 0.134, years_4_to_8: 0.101, above_8_years: 0.068}
+    source: "Penn World Table, 'Human capital in PWT 9.0' (Feenstra, Inklaar & Timmer), eq. 1; rates from Psacharopoulos (1994)"
+    url: "https://www.rug.nl/ggdc/docs/human_capital_in_pwt_90.pdf"
+    verified: full_text
+    note: "Brazil adult mean schooling is above 8 years, so the marginal return is 0.068. Requires C4 to turn cohort schooling gains into adult mean years (cohort replacement) - C5 task."
+  health_to_output:
+    # Effect of one extra year of life expectancy on output (labour productivity).
+    unit: "% change in output per +1 year of life expectancy"
+    low: 0.0
+    central: null
+    high: 4.0
+    range_basis: "two conflicting studies; no central value is defensible, so sample uniform[low, high] (choice)"
+    sources:
+      high: "Bloom, Canning & Sevilla (2001) NBER WP 8587, abstract and conclusion: +1 year LE -> +4% output (cross-country production function)"
+      low: "Acemoglu & Johnson (2007) 'Disease and Development' (JPE 115(6)), abstract: estimates exclude positive effects of life expectancy on GDP per capita within 40-60 year horizons"
+    urls: ["https://www.nber.org/system/files/working_papers/w8587/w8587.pdf", "https://baselinescenario.com/wp-content/uploads/2009/08/disease-and-development.pdf"]
+    verified: full_text
+  public_capital:
+    # Output elasticity of the public capital stock; investment changes accumulate into it.
+    unit: "elasticity of output to public capital stock"
+    low: 0.083
+    central: 0.106
+    high: 0.122
+    range_basis: "Bom & Ligthart (2014) meta-analysis headline estimates: short-run 0.083, sample average 0.106, long-run 0.122 (central-government public capital)"
+    source: "Bom & Ligthart (2014), Journal of Economic Surveys 28(5): 889-916; 578 estimates from 68 studies"
+    url: "https://ucrisportal.univie.ac.at/en/publications/what-have-we-learned-from-three-decades-of-research-on-the-produc/"
+    verified: abstract
+    note: "Core infrastructure at regional/local level roughly doubles these (abstract) - not used. Needs an initial Brazil public capital stock and depreciation (e.g. IMF Investment and Capital Stock Dataset) - data to download in C5."
+  sovereign_risk_premium:
+    # Change in long-term government borrowing rate per percentage point of GDP change in public debt.
+    unit: "basis points per 1 pp of GDP change in debt/GDP"
+    low: 2
+    central: 5
+    high: 7
+    range_basis: "low/high = literature range summarised in Baldacci & Kumar (2010) section II (2-7 bp); central = their own panel estimate (~5 bp, 31 advanced and emerging economies, 1980-2008)"
+    source: "Baldacci & Kumar (2010), IMF WP 10/184"
+    url: "https://www.imf.org/external/pubs/ft/wp/2010/wp10184.pdf"
+    verified: full_text
+    deficit_channel_note: "Same paper: +1 pp GDP deficit -> +20 (nominal) to +30 (real) bp; up to 50 bp with high initial deficits/debt or low saving. Use the debt channel only, to avoid double counting; report the deficit channel as a sensitivity."
+    applies_to: "deviation of debt/GDP from S0, added to the real implicit rate in C2 debt dynamics"
+  inequality_to_growth:
+    # Effect of net (after taxes and transfers) Gini on growth. Needs C3; switched off until C3 exists.
+    unit: "pp of annual GDP growth per +1 net Gini point (0-100 scale)"
+    low: null
+    central: -0.1
+    high: null
+    range_basis: "point estimate only: Ostry, Berg & Tsangarides (2014) net Gini 37 -> 42 lowers growth ~0.5 pp/yr (section III.A), i.e. -0.1 per point"
+    duration_effect: "+1 Gini point -> ~7% shorter expected growth spell (same paper, section III.B); not used"
+    source: "Ostry, Berg & Tsangarides (2014), IMF Staff Discussion Note 14/02"
+    url: "https://www.imf.org/external/pubs/ft/sdn/2014/sdn1402.pdf"
+    verified: full_text
+    caveat: "Cross-country panel association; causality contested. Off by default; run as a separate variant once C3 produces net Gini paths."
+    status: "inactive until C3"
+long_run_feedback_choices:
+  # Lead-developer choices for C5 (status: choice).
+  run_as: "variant 'with_feedback' alongside 'without_feedback' for every scenario; never replaces C2 results"
+  channels_default_on: [human_capital_from_schooling, health_to_output, public_capital, sovereign_risk_premium]
+  channels_default_off: [inequality_to_growth]
+  symmetry: "every channel applies to spending increases and cuts alike (same evidence standard for both)"
+  attribution: "report each channel's contribution separately (one-at-a-time switch-off), so the dashboard can show which channel drives the gap"
