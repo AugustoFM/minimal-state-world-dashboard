@@ -1,12 +1,173 @@
-# Each value needs low/central/high and a source. Filled in task B2.
-# Seed values from reviewed papers (verify against the source before use):
-multipliers_brazil_cumulative:        # Sanches, Santos, Martins (2026), SVAR
-  public_investment: {central: 2.6, source: "Sanches et al. 2026"}
-  social_benefits:   {central: 2.15, source: "Sanches et al. 2026"}
-  subsidies:         {central: null, note: "low; value to extract", source: "Sanches et al. 2026"}
+# Model parameters (task B2). Every value has low/central/high, unit and source.
+# Rules: never add a number without a source; when a paper gives only a point estimate, low/high are
+# null and `range_basis` says so (the Monte Carlo must then use a documented fallback, not a guess).
+# `verified` = how the number was checked:
+#   full_text  - read in the paper's own table/text on the date given
+#   abstract   - read in the abstract or an author/publisher summary only
+#   secondary  - taken from the literature review doc, not yet re-checked against the source
+# Literature review: Claude Doc "Brazil: state-size reform scenarios - literature review and execution plan".
+# Checked: 2026-10-20. Source registry (URL, retrieval date, licence) for these papers goes in
+# data/raw/SOURCES.md under "B2 parameter sources" once task C1 (which also appends there) is merged.
+
+# --- Macro block (C2) ---------------------------------------------------------------------------
+fiscal_multipliers_brazil:
+  # Sanches, Santos, Martins (2026), Estudos Economicos 56(1), DOI 10.1590/1980-53575612mhg.
+  # SVAR (Blanchard-Perotti), federal accounts, baseline monthly 1997-2023 excl. 2020-21.
+  # Federal government only; applying to general government is an assumption to state in outputs.
+  # Horizons (footnote 7): 25 months for public investment and social benefits (higher persistence),
+  # 15 months for all other components and revenue. Quarterly spec E1 uses 8 / 5 quarters (~24 / ~15 months).
+  # `specs` keeps every published estimate with its specification. The paper reports no standard errors
+  # (only 5% significance stars), so low/high are the min/max across specifications at the SAME horizon:
+  # specification uncertainty, NOT a confidence interval.
+  source: "Sanches, Santos & Martins 2026, Table 2 (baseline); Tables C1 (full sample), D1 (1997-2019), E1 (quarterly), F1 (controls)"
+  url: "https://www.scielo.br/j/ee/a/pjHsgbX5bB3Zms7hxsK6txg/?lang=en"
+  verified: full_text
+  unit: "R$ change in GDP per R$ of spending change, accumulated"
+  sampling_rule: "triangular(low, central, high) - modelling choice by Claude (B2), not from the source; D1 must report it"
+  accumulated:
+    public_investment:  {horizon_months: 25, low: 1.9,   central: 2.6,   high: 3.5,  range_basis: "min/max across specs", specs: {baseline: 2.6, C1: 2.43, D1: 2.7, E1_q8: 3.5, F1: 1.9}, significant_5pct: {baseline: true, F1: false}, note: "F1 significant at 10% only"}
+    social_benefits:    {horizon_months: 25, low: 1.75,  central: 2.15,  high: 3.1,  range_basis: "min/max across specs", specs: {baseline: 2.15, C1: 2.1, D1: 2.25, E1_q8: 3.1, F1: 1.75}, significant_5pct: {baseline: true}}
+    subsidies:          {horizon_months: 15, low: -1.87, central: 0.52,  high: 1.5,  range_basis: "min/max across specs", specs: {baseline: 0.52, C1: -0.06, D1: 0.02, E1_q5: -1.87, F1: 1.5}, significant_5pct: {baseline: false}, note: "not significant in any spec"}
+    personnel:          {horizon_months: 15, low: -2.0,  central: -1.18, high: 0.38, range_basis: "min/max across specs", specs: {baseline: -1.18, C1: -0.51, D1: -1.23, E1_q5: 0.38, F1: -2.0}, significant_5pct: {baseline: false}, note: "not significant; negative sign implausible as structural - C2 must not rely on it"}
+    other_expenditures: {horizon_months: 15, low: -0.4,  central: 0.28,  high: 0.28, range_basis: "min/max across specs", specs: {baseline: 0.28, C1: 0.12, D1: -0.4, E1_q5: -0.18, F1: -0.3}, significant_5pct: {baseline: false}}
+    total_expenditure:  {horizon_months: 15, low: 0.16,  central: 0.5,   high: 0.76, range_basis: "min/max across specs", specs: {baseline: 0.5, C1: 0.16, D1: 0.22, E1_q5: 0.76, F1: 0.3}, significant_5pct: {baseline: false}}
+    total_revenue:      {horizon_months: 15, low: -0.7,  central: -0.55, high: -0.33, range_basis: "min/max across specs", specs: {baseline: -0.55, C1: -0.7, D1: -0.6, E1_q5: -0.38, F1: -0.33}, significant_5pct: {baseline: false}, note: "impact multiplier -0.43 significant"}
+  accumulated_12_months:
+    # Table 2 last column; the paper uses these for its one-year simulations. Baseline spec only:
+    # no robustness table reports a 12-month value, so low/high are null. C2 must not draw these
+    # deterministically; use the `accumulated` ranges scaled by (value_12m / central) or treat as central only.
+    public_investment:  {horizon_months: 12, low: null, central: 2.4,   high: null, range_basis: "baseline only"}
+    social_benefits:    {horizon_months: 12, low: null, central: 1.81,  high: null, range_basis: "baseline only"}
+    subsidies:          {horizon_months: 12, low: null, central: 0.5,   high: null, range_basis: "baseline only"}
+    personnel:          {horizon_months: 12, low: null, central: -1.14, high: null, range_basis: "baseline only"}
+    other_expenditures: {horizon_months: 12, low: null, central: 0.27,  high: null, range_basis: "baseline only"}
+    total_expenditure:  {horizon_months: 12, low: null, central: 0.47,  high: null, range_basis: "baseline only"}
+    total_revenue:      {horizon_months: 12, low: null, central: -0.53, high: null, range_basis: "baseline only"}
+
+fiscal_multipliers_lac_benchmark:
+  # Cross-check only, not used directly.
+  expenditure_2yr: {low: 0.5, central: null, high: 1.1, source: "IMF Western Hemisphere REO May 2018, ch. 4", verified: abstract, range_basis: "range stated in source"}
+  public_investment_2yr: {low: null, central: 1.5, high: null, source: "IMF Western Hemisphere REO May 2018, ch. 4 ('almost 1.5')", verified: abstract, range_basis: "point estimate only"}
+
+austerity_growth_effect_oecd:
+  # Alesina, Favero, Giavazzi (2018), NBER WP 24246; narrative shocks, 16 OECD countries 1978-2014.
+  spending_based_1pct_gdp_growth_pp: {low: null, central: -0.5, high: null, duration_years: "<2", source: "Alesina, Favero & Giavazzi 2018", verified: secondary, range_basis: "point estimate only"}
+  tax_based_1pct_gdp_cumulative_pct_gdp: {low: null, central: -2.0, high: null, source: "Alesina, Favero & Giavazzi 2018", verified: secondary, range_basis: "point estimate only"}
+  transferability: "OECD sample; use only as a cross-check for Brazil"
+
 growth_threshold_government_consumption_pct_gdp:
-  developing_countries: {central: 19.12, source: "Asimakopoulos & Karavias 2015"}
+  # Asimakopoulos & Karavias (2015), Granger Centre DP 15/02; dynamic panel threshold GMM, 129 countries 1980-2009.
+  all_countries:        {low: null, central: 18.04, high: null, source: "Asimakopoulos & Karavias 2015", verified: secondary, range_basis: "point estimate only"}
+  developing_countries: {low: null, central: 19.12, high: null, source: "Asimakopoulos & Karavias 2015", verified: secondary, range_basis: "point estimate only"}
+  note: "Government consumption, not primary spending; causality contested. Context only, not a model input."
+
+long_run_output_fiscal_mix:
+  # Tourinho & Brum (2020), Estudos Economicos 50(1); deterministic DGE calibrated to Brazil.
+  per_capita_output_gain_pct: {low: null, central: 2.0, high: null, source: "Tourinho & Brum 2020", verified: abstract, range_basis: "point estimate only ('about 2%')", applies_to: "lower gov. consumption + lower capital tax, or higher investment financed by lower transfers"}
+
+# --- Ageing / baseline context (C1) -------------------------------------------------------------
 ageing_pension_health_pct_gdp_no_reform:
+  # Cuevas, Karpowicz, Mulas-Granados & Soto (2017), IMF WP 17/99. Pre-EC 103/2019 reform; benchmark for C1, not an input.
+  source: "Cuevas et al. 2017, IMF WP 17/99"
+  verified: secondary
   y2015: 16
   y2025: 21
   y2050: 40
+  note: "Projection made before the 2019 pension reform (EC 103/2019); C1 should land below this path."
+
+pension_reform_horizon_years:
+  # Freitas & Paes (2023), PPP 67; OLG with EC 103/2019 transition.
+  deficit_relief_years: {low: 10, central: null, high: 15, source: "Freitas & Paes 2023", verified: secondary, range_basis: "range stated in source"}
+
+# --- Distribution (C3) --------------------------------------------------------------------------
+consolidation_gini_effect:
+  # Ball, Furceri, Leigh & Loungani (2013), IMF WP 13/151; local projections, 17 OECD countries, 173 episodes 1978-2009.
+  # Effect of a consolidation episode (~1% of GDP) on the Gini, in Gini points on a 0-100 scale.
+  source: "Ball et al. 2013, IMF WP 13/151, section III and Figure 5"
+  url: "https://www.imf.org/external/pubs/ft/wp/2013/wp13151.pdf"
+  verified: full_text
+  unit: "Gini points (0-100) per ~1% GDP consolidation"
+  year_1: {low: null, central: 0.1, high: null, range_basis: "point estimate only"}
+  year_8: {low: 0.8, central: 0.9, high: 1.0, range_basis: "lag-length robustness (5 lags to 0 lags), Figure 5"}
+  # Composition: the paper gives two specifications that disagree; keep both.
+  #  (a) Figure 6, separate start-date dummies: spending- and tax-based effects "similar" in short and
+  #      medium term (no numbers in text; figure not digitised). Paper cautions most episodes are mixed.
+  #  (b) Section IV text, episodes split by which component was larger (Guajardo et al. 2011 method):
+  #      ~1.0 pp spending-based vs ~0.6 pp tax-based at year 8.
+  # C3 default: use year_8 for both compositions (spec a); spec (b) only as a sensitivity variant.
+  year_8_by_composition_spec_a: {spending_based: "similar to year_8", tax_based: "similar to year_8", source_locator: "Figure 6 and text"}
+  year_8_spending_based_spec_b: {low: null, central: 1.0, high: null, range_basis: "point estimate only", source_locator: "Section IV.A text"}
+  year_8_tax_based_spec_b: {low: null, central: 0.6, high: null, range_basis: "point estimate only", source_locator: "Section IV.A text"}
+  wage_income_share_pp_gdp: {low: null, central: -0.8, high: null, range_basis: "point estimate only"}
+  long_term_unemployment_pct: {low: null, central: 0.5, high: null, range_basis: "point estimate only", note: "'about 0.5 percent over the medium term'"}
+  note: "Effect fades after year 8; insignificant by year 10 (footnote 9). OECD sample."
+
+fiscal_incidence_brazil_2008:
+  # Higgins & Pereira (2013), CEQ WP 7; POF 2008-09. Base for C3 calibration, not a behavioural parameter.
+  source: "Higgins & Pereira 2013, CEQ WP 7"
+  verified: secondary
+  gini_market_income: 0.574
+  gini_after_direct_taxes_transfers: 0.542
+  gini_final_income: 0.464
+  share_direct_transfers_to_non_poor: 0.74
+
+top_income_share_brazil:
+  # Souza & Medeiros (2015); tax returns + PNAD, 1928-2012.
+  top1_share_pct: {low: 10, central: 15, high: 20, source: "Souza & Medeiros 2015", verified: secondary, range_basis: "historical range stated in source, not uncertainty"}
+
+# --- Privatisation variant ----------------------------------------------------------------------
+privatisation_wage_effects:
+  # Arnold (2022), "The Impact of Privatization of State-Owned Enterprises on Workers", AEJ: Applied 14(4).
+  # 1996-2000 Brazilian privatisations; matched employer-employee data (RAIS).
+  source: "Arnold 2022, AEJ: Applied; 2019 Princeton WP for the alternative"
+  url: "https://www.aeaweb.org/doi/10.1257/app.20190428"
+  verified: abstract
+  incumbent_worker_wage_pct: {low: -26, central: -25, high: null, range_basis: "central = published; low = WP 30 log points (= -26%)"}
+  aggregate_formal_wage_pct: {low: -4.4, central: -3.0, high: null, range_basis: "central = published; low = WP 4.5 log points (= -4.4%)"}
+  share_indirect_spillover: {low: 0.67, central: 0.67, high: 0.75, range_basis: "published ~2/3; WP ~3/4"}
+
+# --- Efficiency variant ------------------------------------------------------------------------
+state_spending_efficiency_dea:
+  # Gagliardi, Marinho & de Paula (2023), PPE 53(1); DEA-BCC, 26 states, 2015.
+  mean_efficiency_score: {low: 0.55, central: null, high: 0.83, source: "Gagliardi et al. 2023", verified: secondary, range_basis: "range across DEA models"}
+  note: "Relative efficiency; an upper bound on savings without output loss, not a forecast of achievable savings."
+
+# --- Social block (C4) --------------------------------------------------------------------------
+social_outcome_elasticities:
+  # Not in the original 20 papers; added in B2 (2026-10-20). Elasticity = % change in outcome per 1% change
+  # in public health spending per capita.
+  infant_mortality_wrt_public_health_spending:
+    # Szklo, Clarke & Rocha (2024), IZA DP 16829; EC 29/2000 as natural experiment, Brazilian municipalities
+    # 2000-2010, 64,481 municipality-year cells. Back-of-envelope elasticity (eq. 4), block-bootstrap CIs.
+    source: "Szklo, Clarke & Rocha 2024, IZA DP 16829, Table B.2 and section 5.2.3"
+    url: "https://docs.iza.org/dp16829.pdf"
+    verified: full_text
+    low: -0.206
+    central: -0.126
+    high: -0.071
+    range_basis: "min/max across Table B.2 specifications (FINBRA cols 1-4, SIOPS cols 5-8); central = col 7 cited by authors"
+    bounds_from_text: "near 0 just after reform to about -0.2 after 10 years; CIs rule out values beyond -0.5 at 10 years"
+    asymmetry: "paper finds mortality more sensitive to spending increases than declines (Figure B.5, noisy). Applying this to cuts is an extrapolation; C4 must flag it."
+    horizon: "effect builds over ~10 years"
+  life_expectancy_wrt_health_spending:
+    # Gallet & Doucouliagos (2017), Social Science & Medicine 179: 9-17; meta-regression of 65 studies 1969-2014.
+    # Mostly cross-country, total (not only public) health spending.
+    source: "Gallet & Doucouliagos 2017, Soc Sci Med 179"
+    url: "https://ideas.repec.org/a/eee/socmed/v179y2017icp9-17.html"
+    verified: abstract
+    low: null
+    central: 0.04
+    high: null
+    range_basis: "point estimate only (abstract: 'near to +0.04'); sensitive to age at which LE is measured and to endogeneity controls"
+  mortality_wrt_health_spending_meta:
+    source: "Gallet & Doucouliagos 2017, Soc Sci Med 179"
+    verified: abstract
+    low: null
+    central: -0.13
+    high: null
+    range_basis: "point estimate only (abstract)"
+    note: "Consistent with Szklo et al. 2024 central -0.126 for Brazil"
+  # GAP: no sourced elasticity yet for schooling (mean or expected years), physicians per 1,000 or other
+  # health-access measures with respect to public spending. C4 must not invent these; it can model only
+  # infant mortality and life expectancy until they are added.
+  missing: [education_spending_to_mean_years_schooling, education_spending_to_expected_years_schooling, health_spending_to_physicians_per_1000]
