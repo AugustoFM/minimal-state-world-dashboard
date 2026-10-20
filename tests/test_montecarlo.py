@@ -91,7 +91,8 @@ def test_sampling_is_reproducible_and_percentiles_ordered(context) -> None:
     assert (modelled["p10"] <= modelled["p50"] + 1e-12).all()
     assert (modelled["p50"] <= modelled["p90"] + 1e-12).all()
     gaps = summary.loc[summary["status"].str.startswith("not_modelled")]
-    assert set(gaps["indicator"]) == set(mc.NOT_MODELLED)
+    # C3 is now modelled; remaining gaps are its S1 rows (no package allocation) and any listed in NOT_MODELLED.
+    assert set(gaps["indicator"]) <= set(mc.NOT_MODELLED) | set(mc.MICRO_OUTPUTS)
     assert gaps[["p10", "p50", "p90"]].isna().all().all()
 
 
@@ -128,3 +129,29 @@ def test_uniform_leakage_cancels_out_of_comparisons(context) -> None:
     )
     s0 = high.loc[high["scenario"].eq("S0")]
     assert (s0["infant_mortality_difference_vs_s0_leakage_halved"] < 0).all()
+
+
+def test_feedback_columns_present_and_s0_has_no_supply_feedback(central) -> None:
+    s0 = central.loc[central["scenario"].eq("S0")]
+    for column in ("human_capital_contribution_pct", "health_contribution_pct", "public_capital_contribution_pct"):
+        assert np.allclose(s0[column], 0.0, atol=1e-10)
+    assert np.allclose(s0["gdp_level_vs_s0_pct_with_feedback"], 0.0, atol=1e-10)
+    # Investment stress cuts public capital, so its public-capital contribution is negative for cuts.
+    stress = central.loc[central["variant"].eq("investment_also_cut_stress") & central["scenario"].eq("R_amb")
+                         & central["horizon"].eq(20)]
+    assert (stress["public_capital_contribution_pct"] < 0).all()
+
+
+MICRO_FILE = ROOT / "data/processed/brazil/microdata/pnadc_2025_c3_input.csv"
+
+
+@pytest.mark.skipif(not MICRO_FILE.exists(), reason="git-ignored PNAD microdata not present")
+def test_distribution_outputs_for_default_variant(central) -> None:
+    default = central.loc[central["variant"].eq("default") & central["persistence"].eq("transitory")]
+    s0 = default.loc[default["scenario"].eq("S0")]
+    assert np.allclose(s0["gini_change_vs_s0_points"], 0.0)
+    r_amb = default.loc[default["scenario"].eq("R_amb") & default["horizon"].eq(10)]
+    assert (r_amb["gini_change_vs_s0_points"] > 0).all()          # consolidation raises inequality (Ball et al. direction)
+    assert (r_amb["poverty_759_change_vs_s0_pp"] > 0).all()
+    other = central.loc[central["variant"].eq("pension_only")]
+    assert other["gini_change_vs_s0_points"].isna().all()

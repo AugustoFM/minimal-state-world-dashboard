@@ -26,7 +26,7 @@ from typing import Iterable, Mapping
 import numpy as np
 import pandas as pd
 
-from src import external, social
+from src import external, feedback, micro, social
 from src.baseline import project_baseline, read_yaml
 from src.macro import PERSISTENCE_VARIANTS, load_macro_inputs, run_corner
 
@@ -41,11 +41,15 @@ MACRO_RANGED = (
     "effective_real_interest_rate", "gdp_deflator_growth", "tfp_growth",
     "human_capital_growth", "investment_rate", "okun_coefficient",
 )
-NOT_MODELLED = {
-    "gini": "C3 pending",
-    "top1_share": "C3 pending",
-    "top10_share": "C3 pending",
-    "poverty_rate": "C3 pending",
+NOT_MODELLED: dict[str, str] = {}
+MICRO_VARIANT = "default"          # C3 runs for the default composition only (runtime)
+MICRO_SCENARIOS_EXCLUDED = {"S1"}  # C3 has no package allocation for S1's offset
+MICRO_OUTPUTS = {
+    "gini_change_vs_s0_points": "gini_points_0_100",
+    "poverty_218_change_vs_s0_pp": "pp",
+    "poverty_759_change_vs_s0_pp": "pp",
+    "top1_share_survey_change_vs_s0_pp": "pp",
+    "top10_share_survey_change_vs_s0_pp": "pp",
 }
 MACRO_OUTPUTS = {
     "spending_pct_gdp": "pct_gdp",
@@ -62,6 +66,16 @@ MACRO_OUTPUTS = {
     "debt_gdp_with_external": "pct_gdp",
     "debt_gdp_with_external_vs_s0_pp": "pp_gdp",
     "inflation_with_external_pct": "percent",
+    # C5 long-run feedback (src/feedback.py); no external path, same corner as above
+    "gdp_level_vs_s0_pct_with_feedback": "percent",
+    "gdp_per_capita_with_feedback_vs_s0_pct": "percent",
+    "debt_gdp_with_feedback": "pct_gdp",
+    "debt_gdp_with_feedback_vs_s0_pp": "pp_gdp",
+    "adult_mean_schooling_change_years": "years",
+    "human_capital_contribution_pct": "percent",
+    "health_contribution_pct": "percent",
+    "public_capital_contribution_pct": "percent",
+    "sovereign_risk_premium_debt_contribution_pp": "pp_gdp",
 }
 SOCIAL_OUTPUTS = {
     "real_public_health_spending_pc_change_vs_s0_pct": "percent",
@@ -102,6 +116,7 @@ def sample_draw(rng: np.random.Generator, parameters: Mapping, inputs: Mapping) 
     imr = parameters["social_outcome_elasticities"]["infant_mortality_wrt_public_health_spending"]
     leakage = parameters["governance"]["leakage_share_of_spending"]
     revenue_elasticity = parameters["revenue_elasticity_to_gdp"]
+    lrf = parameters["long_run_feedback"]
     draw = {
         "profile_year": int(rng.choice(vintages)),
         "pension_gdp_per_worker_weight": snap(rng.uniform(weight["low"], weight["high"])),
@@ -113,6 +128,19 @@ def sample_draw(rng: np.random.Generator, parameters: Mapping, inputs: Mapping) 
         "imr_elasticity": triangular(rng, imr["low"], imr["central"], imr["high"]),
         "leakage_share": float(rng.uniform(leakage["low"], leakage["high"])),
         "revenue_elasticity": float(rng.uniform(revenue_elasticity["low"], revenue_elasticity["high"])),
+        "health_output_pct": float(rng.uniform(lrf["health_to_output"]["low"], lrf["health_to_output"]["high"])),
+        "public_capital_elasticity": triangular(
+            rng, lrf["public_capital"]["low"], lrf["public_capital"]["central"], lrf["public_capital"]["high"]
+        ),
+        "sovereign_risk_bp": triangular(
+            rng, lrf["sovereign_risk_premium"]["low"], lrf["sovereign_risk_premium"]["central"],
+            lrf["sovereign_risk_premium"]["high"],
+        ),
+        # C3 structural variants, equally likely (choice): how pension cuts, labour
+        # effects and tax incidence land on households.
+        "micro_pension_variant": str(rng.choice(micro.PENSION_VARIANTS)),
+        "micro_labour_variant": str(rng.choice(micro.LABOUR_VARIANTS)),
+        "micro_tax_variant": str(rng.choice(micro.TAX_VARIANTS)),
     }
     for category in MULTIPLIER_CATEGORIES:
         entry = accumulated[category]
@@ -145,6 +173,16 @@ def central_draw(parameters: Mapping, inputs: Mapping) -> dict:
         ),
         # The deterministic C2 rule (revenue a fixed share of GDP) is elasticity 1.
         "revenue_elasticity": 1.0,
+        # Health-to-output has no central by design; the midpoint of its range.
+        "health_output_pct": 0.5 * (
+            parameters["long_run_feedback"]["health_to_output"]["low"]
+            + parameters["long_run_feedback"]["health_to_output"]["high"]
+        ),
+        "public_capital_elasticity": float(parameters["long_run_feedback"]["public_capital"]["central"]),
+        "sovereign_risk_bp": float(parameters["long_run_feedback"]["sovereign_risk_premium"]["central"]),
+        "micro_pension_variant": "proportional",
+        "micro_labour_variant": "gdp_only",
+        "micro_tax_variant": "proportional",
     }
     for category in MULTIPLIER_CATEGORIES:
         draw[f"multiplier_{category}"] = float(accumulated[category]["central"])
@@ -313,7 +351,99 @@ def load_context(
         "base_year": base_year,
         "target_years": [base_year + h for h in horizons],
         "external_changes": external.historical_changes(data / "backtest_observed.csv"),
+        "feedback_defaults": _feedback_defaults(parameters_path, scenarios_path),
+        "micro": _micro_context(data),
     }
+
+
+def _micro_context(data: Path) -> dict | None:
+    """Prepared PNAD person file and C3 inputs; None when the git-ignored file is absent."""
+    persons_path = data.parent / "processed/brazil/microdata/pnadc_2025_c3_input.csv"
+    if not persons_path.exists():
+        return None
+    inputs = read_yaml("config/c3_inputs_proposed.yaml")
+    prepared = micro.prepare_microdata(pd.read_csv(persons_path, low_memory=False))
+    lines = {name: float(entry["value"]) for name, entry in inputs["poverty_lines_brl_month_per_capita"].items()}
+    base = micro.calculate_indicators(
+        micro.simulate_household_incomes(
+            prepared, gdp_level_vs_s0_pct=0.0, unemployment_change_pp=0.0, package_gaps_pp_gdp={},
+            revenue_change_pp=0.0, nominal_gdp_brl=float(inputs["nominal_gdp_brl_million"]["value"]) * 1e6,
+            minimum_wage_brl=float(inputs["minimum_wage_brl_month"]["value"]), pension_variant="proportional",
+            labour_variant="gdp_only", tax_variant="proportional",
+            consumption_like_exponent=float(inputs["defaults"]["consumption_like_exponent"]),
+            random_seed=0,
+        ),
+        lines,
+    )
+    return {"prepared": prepared, "inputs": inputs, "lines": lines, "base": base}
+
+
+def micro_for_draw(corner: pd.DataFrame, variant_scenarios: Mapping, draw: Mapping, context: Mapping) -> pd.DataFrame:
+    """C3 distribution indicators vs S0 for target years (one draw, one persistence setting)."""
+    ctx = context["micro"]
+    inputs = ctx["inputs"]
+    shares = {k: float(v) for k, v in variant_scenarios["package_shares"].items()}
+    records = []
+    for row in corner.itertuples():
+        if row.scenario in MICRO_SCENARIOS_EXCLUDED:
+            continue
+        gaps = {package: float(row.gap_below_s0_pp) * share for package, share in shares.items()}
+        revenue = max(0.0, float(getattr(row, "revenue_change_pp", 0.0)))
+        households = micro.simulate_household_incomes(
+            ctx["prepared"], gdp_level_vs_s0_pct=float(row.gdp_level_vs_s0_pct),
+            unemployment_change_pp=float(row.unemployment_change_pp), package_gaps_pp_gdp=gaps,
+            revenue_change_pp=revenue, nominal_gdp_brl=float(inputs["nominal_gdp_brl_million"]["value"]) * 1e6,
+            minimum_wage_brl=float(inputs["minimum_wage_brl_month"]["value"]),
+            pension_variant=draw["micro_pension_variant"], labour_variant=draw["micro_labour_variant"],
+            tax_variant=draw["micro_tax_variant"],
+            consumption_like_exponent=float(inputs["defaults"]["consumption_like_exponent"]),
+            random_seed=int(draw.get("draw", 0)),
+        )
+        ind = micro.calculate_indicators(households, ctx["lines"])
+        records.append({"year": row.year, "scenario": row.scenario, **ind})
+    frame = pd.DataFrame(records)
+    s0 = frame.loc[frame["scenario"].eq("S0")].set_index("year")
+    out = frame[["year", "scenario"]].copy()
+    mapping = {
+        "gini_change_vs_s0_points": ("gini", 100.0),
+        "poverty_218_change_vs_s0_pp": ("poverty_headcount_bolsa_familia_pct", 1.0),
+        "poverty_759_change_vs_s0_pp": ("poverty_headcount_half_minimum_wage_2025_pct", 1.0),
+        "top1_share_survey_change_vs_s0_pp": ("survey_top_1_income_share_pct", 1.0),
+        "top10_share_survey_change_vs_s0_pp": ("survey_top_10_income_share_pct", 1.0),
+    }
+    for name, (column, scale) in mapping.items():
+        out[name] = (frame[column] - frame["year"].map(s0[column])) * scale
+    return out
+
+
+def _feedback_defaults(parameters_path: str, scenarios_path: str) -> dict:
+    defaults = feedback.load_feedback_defaults(parameters_path, scenarios_path)
+    defaults.pop("base_adult_schooling_year", None)
+    return defaults
+
+
+def feedback_for_draw(
+    corner: pd.DataFrame, life_expectancy: pd.DataFrame, variant_scenarios: Mapping,
+    draw: Mapping, context: Mapping,
+) -> pd.DataFrame:
+    """Apply C5 to one annual C2 corner with this draw's sampled values."""
+    shares = variant_scenarios["package_shares"]
+    kwargs = dict(context["feedback_defaults"])
+    kwargs.update(
+        efficiency_package_share=float(shares.get("efficiency_health_education_admin", 0.0)),
+        public_investment_package_share=float(shares.get("public_investment", 0.0)),
+        service_cut_fraction=float(draw["service_cut_fraction"]),
+        health_output_pct_per_year=float(draw["health_output_pct"]),
+        public_capital_elasticity=float(draw["public_capital_elasticity"]),
+        sovereign_risk_bp_per_debt_pp=float(draw["sovereign_risk_bp"]),
+        base_real_interest_rate_pct=float(draw["effective_real_interest_rate"]),
+        inflation_pct=float(draw["gdp_deflator_growth"]),
+        life_expectancy_change={
+            (int(r.year), r.scenario): float(r.life_expectancy_difference_vs_s0_years)
+            for r in life_expectancy.itertuples()
+        },
+    )
+    return feedback.apply_feedback(corner, context["population"], **kwargs)
 
 
 def evaluate_draw(draw: Mapping, context: Mapping, external_effects: pd.DataFrame | None = None) -> pd.DataFrame:
@@ -335,6 +465,11 @@ def evaluate_draw(draw: Mapping, context: Mapping, external_effects: pd.DataFram
                 )
                 effects = external.gdp_and_inflation_effects(neutral, context["parameters"])
             corner = external.apply_external(corner, effects, draw_inputs)
+            all_years = sorted(int(y) for y in corner["year"].unique())
+            annual_social = social_for_draw(
+                corner, annual, variant_scenarios, context["parameters"], context["base_inputs"], draw, all_years
+            )
+            corner = feedback_for_draw(corner, annual_social, variant_scenarios, draw, context)
             corner = corner.loc[corner["year"].isin(target_years)].copy()
             s0 = corner.loc[corner["scenario"].eq("S0")].set_index("year")
             corner["gdp_per_capita_vs_s0_pct"] = (
@@ -347,12 +482,22 @@ def evaluate_draw(draw: Mapping, context: Mapping, external_effects: pd.DataFram
             corner["debt_gdp_with_external_vs_s0_pp"] = (
                 corner["debt_gdp_with_external"] - corner["year"].map(s0["debt_gdp_with_external"])
             )
-            outcomes = social_for_draw(
-                corner, annual, variant_scenarios, context["parameters"], context["base_inputs"], draw, target_years
+            corner["gdp_per_capita_with_feedback_vs_s0_pct"] = (
+                corner["gdp_per_capita_with_feedback"] / corner["year"].map(s0["gdp_per_capita_with_feedback"]) - 1.0
+            ) * 100.0
+            corner["debt_gdp_with_feedback_vs_s0_pp"] = (
+                corner["debt_gdp_with_feedback"] - corner["year"].map(s0["debt_gdp_with_feedback"])
             )
+            outcomes = annual_social.loc[annual_social["year"].isin(target_years)]
             merged = corner.merge(outcomes, on=["year", "scenario"], validate="one_to_one")
+            if context.get("micro") is not None and variant == MICRO_VARIANT:
+                merged = merged.merge(micro_for_draw(corner, variant_scenarios, draw, context),
+                                      on=["year", "scenario"], how="left", validate="one_to_one")
+            else:
+                for name in MICRO_OUTPUTS:
+                    merged[name] = np.nan
             merged["draw"], merged["variant"], merged["persistence"] = draw.get("draw", 0), variant, persistence
-            results.append(merged[["draw", "variant", "persistence", "year", "scenario", *MACRO_OUTPUTS, *SOCIAL_OUTPUTS]])
+            results.append(merged[["draw", "variant", "persistence", "year", "scenario", *MACRO_OUTPUTS, *SOCIAL_OUTPUTS, *MICRO_OUTPUTS]])
     frame = pd.concat(results, ignore_index=True)
     frame["horizon"] = frame["year"] - context["base_year"]
     return frame
@@ -393,6 +538,9 @@ def run(
             "service_cut_fraction": "triangular(low, central, high) from social_modelling_choices",
             "imr_elasticity": "triangular(low, central, high) from social_outcome_elasticities",
             "pension_gdp_per_worker_weight": f"uniform(low, high), snapped to a {WEIGHT_GRID_STEP} grid",
+            "health_output_pct": "uniform(0, 4) from long_run_feedback.health_to_output (two conflicting studies)",
+            "public_capital_elasticity": "triangular(0.083, 0.106, 0.122) from long_run_feedback.public_capital",
+            "sovereign_risk_bp": "triangular(2, 5, 7) from long_run_feedback.sovereign_risk_premium; deviation vs base-year debt capped at 50 pp (choice)",
             "revenue_elasticity": "uniform(0.92, 0.98) from revenue_elasticity_to_gdp (IFI EE16 long run; C2 deterministic rule is 1.0)",
             "leakage_share": "uniform(low, high) from governance.leakage_share_of_spending (cancels in scenario-vs-S0 comparisons; drives the leakage_halved sensitivity)",
             "profile_year": "discrete, equal probability over profile_years.values",
@@ -422,10 +570,14 @@ def summarise(draw_results: pd.DataFrame, n_draws: int) -> pd.DataFrame:
     summary = grouped.quantile([p / 100 for p in PERCENTILES]).unstack()
     summary.columns = [f"p{p}" for p in PERCENTILES]
     summary = summary.reset_index()
-    units = {**MACRO_OUTPUTS, **SOCIAL_OUTPUTS}
+    units = {**MACRO_OUTPUTS, **SOCIAL_OUTPUTS, **MICRO_OUTPUTS}
     summary["unit"] = summary["indicator"].map(units)
     summary["n_draws"] = n_draws
     summary["status"] = "modelled: parameter uncertainty only"
+    micro_gap = summary["indicator"].isin(list(MICRO_OUTPUTS)) & summary["p50"].isna()
+    summary.loc[micro_gap, "status"] = (
+        f"not_modelled: C3 runs for the {MICRO_VARIANT} composition only and has no package allocation for S1"
+    )
     gaps = []
     for key, _ in draw_results.groupby(keys, sort=True):
         for indicator, reason in NOT_MODELLED.items():

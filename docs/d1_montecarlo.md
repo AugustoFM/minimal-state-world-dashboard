@@ -25,6 +25,11 @@
 | NTA profile vintage | 2003 or 2018, equal probability | C1 |
 | Service-cut fraction | triangular(0, 0.5, 1) | `social_modelling_choices` (choice) |
 | Infant-mortality elasticity | triangular(-0.206, -0.126, -0.071) | Szklo, Clarke & Rocha (2024) |
+| Revenue elasticity to GDP | uniform(0.92, 0.98) | IFI EE16 long run (C2 deterministic rule 1.0) |
+| Health to output (C5) | uniform(0, 4) % per year of life expectancy | Bloom-Canning-Sevilla vs Acemoglu-Johnson |
+| Public capital elasticity (C5) | triangular(0.083, 0.106, 0.122) | Bom & Ligthart (2014) |
+| Sovereign risk premium (C5) | triangular(2, 5, 7) bp per pp of debt vs base year, deviation capped at 50 pp (choice) | Baldacci & Kumar (2010) |
+| C3 pension / labour / tax-incidence variants | each of two options with probability 1/2 (choice) | C3 |
 | Leakage of social spending (corruption) | uniform(0.028, 0.13) | Ferraz, Finan & Moreira (2012); see docs/governance.md. Cancels in scenario-vs-S0 comparisons; drives the `_leakage_halved` sensitivity columns |
 
 Fixed: life-expectancy elasticity (point estimate), initial debt, revenue/GDP, capital share, K/Y, depreciation, GDP anchors, C1 category shares.
@@ -36,3 +41,8 @@ Choices to keep in view: triangular shapes are a modelling choice, not sourced d
 
 ## What the percentiles mean
 Uncertainty about the model's parameters only. They are not forecast intervals. External shocks (C6) are included only in the `*_with_external` columns (historical block bootstrap); the other columns exclude them. They also exclude long-run feedback (C5), distribution (C3, rows marked `not_modelled`), model misspecification and policy implementation risk. No result is published before the D2 back-test.
+
+## Channels added after the first version
+- **C5 long-run feedback** (`*_with_feedback` columns and channel contributions): schooling into human capital, health into output, public capital, and a sovereign risk premium on debt relative to the base year for every scenario (S0 included), capped at a 50 pp deviation. Inequality-to-growth stays inactive.
+- **C3 distribution** (`gini_change_vs_s0_points`, `poverty_218_change_vs_s0_pp`, `poverty_759_change_vs_s0_pp`, survey top 1%/10% share changes): PNAD Contínua 2025 microsimulation for the `default` composition only and every scenario except S1; each draw samples the pension, labour and tax-incidence variant. Requires the git-ignored PNAD file; rows are `not_modelled` without it.
+- **C6 external** (`*_with_external`) and the **revenue path** (revenue elasticity; `revenue_by_year` tax scenarios E_*_tax).
