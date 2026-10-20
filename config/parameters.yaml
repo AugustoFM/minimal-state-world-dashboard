@@ -44,6 +44,41 @@ fiscal_multipliers_brazil:
     total_expenditure:  {horizon_months: 12, low: null, central: 0.47,  high: null, range_basis: "baseline only"}
     total_revenue:      {horizon_months: 12, low: null, central: -0.53, high: null, range_basis: "baseline only"}
 
+macro_modelling_choices:
+  # Lead-developer decisions for C2 (2026-10-20). These are modelling choices, not estimates: each is
+  # labelled `choice` and must be shown as such in outputs. Change only with a note in tasks/STATUS.md.
+  package_to_multiplier_category:
+    # config/scenarios.yaml package_shares -> fiscal_multipliers_brazil.accumulated categories
+    pension_and_indexation: social_benefits          # pensions are social-benefit cash transfers
+    subsidies_and_tax_expenditures: subsidies
+    efficiency_health_education_admin: efficiency    # see efficiency_output_effect below
+    other_current: other_expenditures
+    public_investment: public_investment             # protected by default; used in the investment-cut stress variant
+    means_tested_transfers: social_benefits          # protected by default; used in compensating-transfer variant
+  efficiency_output_effect:
+    # An efficiency saving delivers the same services with less spending, so by construction it has no
+    # demand multiplier at central; the high bound treats it like `other_expenditures` (partial failure).
+    low: 0.0
+    central: 0.0
+    high: 0.28
+    status: choice
+    range_basis: "0 = pure efficiency; high = other_expenditures central multiplier (Sanches et al. 2026 Table 2)"
+  multiplier_persistence:
+    # How a permanent spending cut moves the GDP level over 5-20 years. Sources give multipliers only up to
+    # 15-25 months, so persistence beyond that is a choice; both variants run in D1.
+    variants:
+      transitory: "each year's spending change has its accumulated multiplier effect spread over horizon_months, then fades to zero (pure demand effect; lower bound on losses)"
+      persistent: "output level gap = accumulated multiplier x spending gap for as long as the gap lasts (upper bound on losses)"
+    default: transitory
+    status: choice
+  personnel_multiplier:
+    rule: "do not use the negative point estimate; personnel cuts use other_expenditures range"
+    status: choice
+    reason: "Sanches et al. personnel multiplier is insignificant in every specification and negative (implausible as structural)"
+  revenue_to_gdp:
+    rule: "revenue/GDP held at base-year share; revenue moves one-for-one with nominal GDP (elasticity 1)"
+    status: choice
+
 fiscal_multipliers_lac_benchmark:
   # Cross-check only, not used directly.
   expenditure_2yr: {low: 0.5, central: null, high: 1.1, source: "IMF Western Hemisphere REO May 2018, ch. 4", verified: abstract, range_basis: "range stated in source"}
