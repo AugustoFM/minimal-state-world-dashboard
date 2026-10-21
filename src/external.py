@@ -181,8 +181,16 @@ def apply_external(corner: pd.DataFrame, effects: pd.DataFrame, inputs: Mapping,
     start_year = int(frame["year"].min())
     steps = effects.set_index("step")
     level = frame["year"].map(lambda y: 0.0 if y == start_year else float(steps.loc[y - start_year, "external_gdp_level_pct"]))
+    # G2 corruption shock (if present in the effects frame): a common GDP level path added to the external one.
+    if "corruption_gdp_level_pct" in steps.columns:
+        corruption = frame["year"].map(
+            lambda y: 0.0 if y == start_year else float(steps.loc[y - start_year, "corruption_gdp_level_pct"]))
+        frame["corruption_gdp_level_pct"] = corruption
+        level = ((1.0 + level / 100.0) * (1.0 + corruption / 100.0) - 1.0) * 100.0
+    else:
+        frame["corruption_gdp_level_pct"] = 0.0
     extra = frame["year"].map(lambda y: 0.0 if y == start_year else float(steps.loc[y - start_year, "external_extra_inflation_pp"]))
-    frame["external_gdp_level_pct"] = level
+    frame["external_gdp_level_pct"] = level  # external and (G2) corruption shocks combined
     frame["gdp_per_capita_with_external"] = frame["gdp_per_capita"] * (1.0 + level / 100.0)
     base_inflation = macro_input(inputs, "gdp_deflator_growth", variant)
     real_rate = macro_input(inputs, "effective_real_interest_rate", variant)
