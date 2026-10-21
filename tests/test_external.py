@@ -73,3 +73,31 @@ def test_bootstrap_uses_observed_changes_only(changes) -> None:
     assert len(path) == 20
     observed = {tuple(np.round(r, 9)) for r in changes.to_numpy()}
     assert all(tuple(np.round(r, 9)) in observed for r in path[["tot_change_pct", "fx_change_pct"]].to_numpy())
+
+
+def test_c7_changes_are_demeaned_and_complete() -> None:
+    changes = external.historical_changes_v2()
+    assert list(changes.index) == list(range(2001, 2025))
+    assert changes[["dlnp_pct", "world_growth_dev_pp"]].mean().abs().max() < 1e-9
+
+
+def test_c7_one_off_price_shock_follows_channel_a(context) -> None:
+    coefficients = external.channel_a_coefficients(context["parameters"], "reverse_2010_2024")
+    path = pd.DataFrame({"step": [1, 2, 3], "dlnp_pct": [10.0, 0.0, 0.0],
+                         "world_growth_dev_pp": 0.0, "fx_change_pct": 0.0})
+    effects = external.gdp_and_inflation_effects(path, context["parameters"], channel_a=coefficients)
+    first = coefficients["dlnP"] * 10
+    second = (1 + first / 100) * (1 + coefficients["dlnP_lag"] * 10 / 100) * 100 - 100
+    assert effects["external_gdp_level_pct"].tolist() == pytest.approx([first, second, second])
+    assert effects["external_extra_inflation_pp"].abs().max() == 0.0
+
+
+def test_c7_central_is_the_average_of_both_windows(context) -> None:
+    central = external.channel_a_coefficients(context["parameters"])
+    primary = external.channel_a_coefficients(context["parameters"], "primary_2000_2014")
+    reverse = external.channel_a_coefficients(context["parameters"], "reverse_2010_2024")
+    assert central["dlnP"] == pytest.approx((primary["dlnP"] + reverse["dlnP"]) / 2)
+
+
+def test_c7_is_the_default_mc_external_input(context) -> None:
+    assert "dlnp_pct" in context["external_changes"].columns
