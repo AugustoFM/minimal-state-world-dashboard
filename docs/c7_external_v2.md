@@ -37,6 +37,8 @@ The prediction equations are associations. In particular, EMBI and Selic endogen
   inputs demeaned over the sample so draws add shocks, not a trend. C (investment) is already part of A's
   total-GDP response and is reported only, to avoid double counting. B is not supported: interest rates
   stay as in C2/C5. D: only dividends pass, and they mostly reflect Petrobras payout policy; not wired,
-  left as an option for the user.
+  left as an option for the user. *Update 2026-10-21 (P2):* wired at the user's request as a best guess -
+  `output_channel_c7.dividend_revenue` (lnP 0.838) adds commodity-linked dividends to the primary balance in
+  the external debt path, the same for every scenario.
 - In the D2 growth-accounting block (observed investment and labour fed in) A would double count factor
   responses, so A is evaluated by the direct out-of-sample growth test above, not added to D2's block.
