@@ -92,6 +92,28 @@ def test_flavio_cut_scenarios_reach_their_sizes_by_the_end_of_the_term() -> None
     assert mid["pension_and_indexation"] == pytest.approx(0.5 * 1.5)
 
 
+def test_revenue_paths_equal_the_sum_of_instrument_paths() -> None:
+    defs = programs.build_programme_scenarios(
+        synthetic_s0(), CONFIG, draw(lula_revenue_pp=0.4, flavio_revenue_pp=-0.8)
+    )
+    expected = {
+        "P_lula_rule": {"top_income": 0.5, "tax_expenditures": 0.5},
+        "P_lula_record": {"top_income": 0.5, "tax_expenditures": 0.5},
+        "P_flavio_low": {"consumption": 0.4, "fuel_energy": 0.2, "payroll": 0.3,
+                         "business_capital": 0.1},
+    }
+    for name, shares in expected.items():
+        definition = defs[name]
+        for horizon, revenue in definition["revenue_by_year"].items():
+            instruments = {
+                instrument: path[horizon]
+                for instrument, path in definition["revenue_by_instrument_by_year"].items()
+            }
+            assert sum(instruments.values()) == pytest.approx(revenue)
+            if revenue:
+                assert {key: value / revenue for key, value in instruments.items()} == pytest.approx(shares)
+
+
 def test_new_programmes_are_financed_inside_the_cut() -> None:
     base = programs.build_programme_scenarios(synthetic_s0(), CONFIG, draw())
     extra = programs.build_programme_scenarios(synthetic_s0(), CONFIG, draw(flavio_new_programmes_pp=0.3))

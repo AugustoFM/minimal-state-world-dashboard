@@ -60,6 +60,8 @@ programmes:
         mechanism: revenue_path
         size_source: assumption
         range_pp_gdp: [0.0, 0.5]
+        incidence_shares: {top_income: 0.5, tax_expenditures: 0.5}
+        incidence_basis: "equal split of the two stated instruments because the programme gives no amounts; the IR exemption to R$5,000 is current law and already in S0"
       - id: L6_pensions
         programme: "no benefit cuts; diversify pension financing; more flexible contributory mechanisms (section 12)"
         model: "pension rules as current law; financing changes not quantified (no effect)"
@@ -96,6 +98,8 @@ programmes:
         mechanism: revenue_path
         size_source: assumption
         range_pp_gdp: [-1.0, 0.0]
+        incidence_shares: {consumption: 0.4, fuel_energy: 0.2, payroll: 0.3, business_capital: 0.1}
+        incidence_basis: "modelling assumption over the four stated instruments because the programme gives no amounts: VAT 40%, fuel and energy 20%, payroll 30%, export and investment exemptions 10%"
       - id: F4_infrastructure
         programme: "R$ 900 bn over four years in transport infrastructure via PPPs, concessions, BNDES and a fund backed by securitised Union assets (Brasil que Cresce: infraestrutura)"
         model: "mostly off-budget: treated as private investment; any budget share not stated -> public investment unchanged; BNDES/guarantee fiscal costs not modelled (gap)"

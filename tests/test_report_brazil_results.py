@@ -43,3 +43,11 @@ def test_s0_excluded_from_difference_tables_and_all_scenarios_defined() -> None:
 
 def test_build_is_deterministic() -> None:
     assert report.build_report() == report.build_report()
+
+
+def test_new_poverty_labels_identify_smoothing_band_and_gap() -> None:
+    assert "smoothed (0.95-1.05 x line)" in report.LABELS["poverty_smoothed_759_change_vs_s0_pp"]
+    assert "poverty gap" in report.LABELS["poverty_gap_759_change_vs_s0_pp"]
+    assert report.HEADLINE_INDICATORS.index("poverty_smoothed_759_change_vs_s0_pp") > report.HEADLINE_INDICATORS.index(
+        "poverty_759_with_65_plus_recipient_change_vs_s0_pp"
+    )

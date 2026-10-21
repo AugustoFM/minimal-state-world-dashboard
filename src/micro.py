@@ -29,6 +29,14 @@ INCOME_COLUMNS = (
 PENSION_VARIANTS = ("proportional", "indexation_floor")
 LABOUR_VARIANTS = ("gdp_only", "employment")
 TAX_VARIANTS = ("proportional", "consumption_like")
+TAX_INSTRUMENTS = (
+    "top_income",
+    "consumption",
+    "fuel_energy",
+    "payroll",
+    "tax_expenditures",
+    "business_capital",
+)
 
 
 @dataclass(frozen=True)
@@ -239,6 +247,62 @@ def _tax_burden(capacity: np.ndarray, score: np.ndarray, weights: np.ndarray, ta
     return np.minimum(capacity, high * score)
 
 
+def _instrument_tax_scores(
+    prepared: PreparedMicrodata,
+    household_total: np.ndarray,
+    consumption_like_exponent: float,
+) -> dict[str, np.ndarray]:
+    """Return household allocation bases for the supported tax instruments."""
+    hh_size = prepared.household_size
+    income_pc = household_total / hh_size
+    top_cut = weighted_quantile(
+        income_pc, prepared.household_weight * hh_size, 0.99,
+    )
+    top_income = hh_size * np.maximum(income_pc - top_cut, 0.0)
+    consumption = hh_size * np.power(income_pc, consumption_like_exponent)
+    payroll = np.bincount(
+        prepared.household_codes,
+        weights=np.where(prepared.employment_status == 1, prepared.labour, 0.0),
+        minlength=len(hh_size),
+    )
+    return {
+        "top_income": top_income,
+        "consumption": consumption,
+        "fuel_energy": consumption.copy(),
+        "payroll": payroll,
+        "tax_expenditures": household_total.copy(),
+        "business_capital": top_income.copy(),
+    }
+
+
+def _apply_instrument_taxes(
+    household_total: np.ndarray,
+    prepared: PreparedMicrodata,
+    changes_pp_gdp: Mapping[str, float],
+    nominal_gdp_brl: float,
+    consumption_like_exponent: float,
+) -> np.ndarray:
+    """Apply rises and cuts with the same fixed base for each instrument."""
+    unknown = set(changes_pp_gdp) - set(TAX_INSTRUMENTS)
+    if unknown:
+        raise ValueError(f"Unknown tax instrument(s): {sorted(unknown)}")
+    scores = _instrument_tax_scores(prepared, household_total, consumption_like_exponent)
+    result = household_total.copy()
+    for instrument, change_pp in changes_pp_gdp.items():
+        monthly_tax = float(change_pp) / 100 * nominal_gdp_brl / 12
+        if monthly_tax == 0:
+            continue
+        score = scores[instrument]
+        if monthly_tax > 0:
+            result -= _tax_burden(result, score, prepared.household_weight, monthly_tax)
+        else:
+            denominator = _weighted_total(score, prepared.household_weight)
+            if denominator <= 0:
+                raise ValueError(f"Non-zero {instrument} tax change has no positive allocation base")
+            result -= monthly_tax * score / denominator
+    return result
+
+
 def simulate_household_incomes(
     persons: pd.DataFrame | PreparedMicrodata,
     *,
@@ -254,6 +318,7 @@ def simulate_household_incomes(
     consumption_like_exponent: float,
     random_seed: int,
     bpc_follows_pension_indexation: bool = True,
+    revenue_change_by_instrument_pp: Mapping[str, float] | None = None,
 ) -> pd.DataFrame:
     """Return one row per IBGE income-unit household after one scenario-year.
 
@@ -310,17 +375,23 @@ def simulate_household_incomes(
     base_total = base_pc * hh_size
     household_total = np.maximum(0.0, base_total + np.bincount(codes, weights=delta))
 
-    monthly_tax = revenue_change_pp / 100 * nominal_gdp_brl / 12
-    if tax_variant == "proportional":
-        score = household_total.copy()
+    if revenue_change_by_instrument_pp is not None:
+        household_total = _apply_instrument_taxes(
+            household_total, prepared, revenue_change_by_instrument_pp,
+            nominal_gdp_brl, consumption_like_exponent,
+        )
     else:
-        score = hh_size * np.power(np.divide(household_total, hh_size), consumption_like_exponent)
-    if monthly_tax >= 0:
-        household_total -= _tax_burden(household_total, score, hh_weight, monthly_tax)
-    else:
-        # Tax cut (P1): relief follows the same incidence score as a rise (choice,
-        # symmetric across programmes); no capacity cap is needed for a transfer in.
-        household_total -= monthly_tax * score / _weighted_total(score, hh_weight)
+        monthly_tax = revenue_change_pp / 100 * nominal_gdp_brl / 12
+        if tax_variant == "proportional":
+            score = household_total.copy()
+        else:
+            score = hh_size * np.power(np.divide(household_total, hh_size), consumption_like_exponent)
+        if monthly_tax >= 0:
+            household_total -= _tax_burden(household_total, score, hh_weight, monthly_tax)
+        else:
+            # Tax relief follows the same incidence score as a rise; no capacity
+            # cap is needed for a transfer into the household.
+            household_total -= monthly_tax * score / _weighted_total(score, hh_weight)
 
     age_0_14 = np.bincount(codes, weights=(prepared.age <= 14).astype(float)).astype(int)
     age_65_plus = np.bincount(codes, weights=(prepared.age >= 65).astype(float)).astype(int)
@@ -349,6 +420,16 @@ def calculate_indicators(households: pd.DataFrame, poverty_lines_brl: Mapping[st
         households["survey_weight"].to_numpy(dtype=float)
         * households["income_unit_size"].to_numpy(dtype=float)
     )
+    income_order = np.argsort(income, kind="stable")
+    sorted_income = income[income_order]
+
+    def smoothed_headcount(weights: np.ndarray, denominator: float, line: float) -> float:
+        """Average 21 weighted CDF values without materialising 21 boolean arrays."""
+        cumulative_weight = np.concatenate(([0.0], np.cumsum(weights[income_order])))
+        band_lines = np.linspace(0.95 * line, 1.05 * line, 21)
+        positions = np.searchsorted(sorted_income, band_lines, side="left")
+        return float(np.mean(100 * cumulative_weight[positions] / denominator))
+
     result = {
         "gini": weighted_gini(income, person_weight),
         "survey_top_1_income_share_pct": 100 * top_income_share(income, person_weight, 0.01),
@@ -357,8 +438,19 @@ def calculate_indicators(households: pd.DataFrame, poverty_lines_brl: Mapping[st
         "weighted_household_count": float(households["survey_weight"].sum()),
     }
     for name, line in poverty_lines_brl.items():
+        line = float(line)
         result[f"poverty_headcount_{name}_pct"] = float(
-            100 * person_weight[income < float(line)].sum() / person_weight.sum()
+            100 * person_weight[income < line].sum() / person_weight.sum()
+        )
+        result[f"poverty_smoothed_{name}_pct"] = smoothed_headcount(
+            person_weight, float(person_weight.sum()), line
+        )
+        normalised_gap = np.maximum((line - income) / line, 0.0)
+        result[f"poverty_gap_{name}_pct"] = float(
+            100 * np.average(normalised_gap, weights=person_weight)
+        )
+        result[f"poverty_gap_sq_{name}"] = float(
+            np.average(normalised_gap ** 2, weights=person_weight)
         )
         subgroup_columns = {
             "age_0_14": "age_0_14_count",
@@ -375,7 +467,19 @@ def calculate_indicators(households: pd.DataFrame, poverty_lines_brl: Mapping[st
             )
             denominator = subgroup_weight.sum()
             result[f"poverty_headcount_{name}_{subgroup}_pct"] = (
-                float(100 * subgroup_weight[income < float(line)].sum() / denominator)
+                float(100 * subgroup_weight[income < line].sum() / denominator)
+                if denominator > 0 else float("nan")
+            )
+            result[f"poverty_smoothed_{name}_{subgroup}_pct"] = (
+                smoothed_headcount(subgroup_weight, float(denominator), line)
+                if denominator > 0 else float("nan")
+            )
+            result[f"poverty_gap_{name}_{subgroup}_pct"] = (
+                float(100 * np.average(normalised_gap, weights=subgroup_weight))
+                if denominator > 0 else float("nan")
+            )
+            result[f"poverty_gap_sq_{name}_{subgroup}"] = (
+                float(np.average(normalised_gap ** 2, weights=subgroup_weight))
                 if denominator > 0 else float("nan")
             )
     return result
