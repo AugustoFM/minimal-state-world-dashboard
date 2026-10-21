@@ -1,0 +1,56 @@
+# Proposed G2 inputs. Kept separate from parameters.yaml pending lead review.
+annual_probability:
+  distribution: uniform
+  low: 0.03
+  high: 0.08
+  derivation: "2 federal episodes with measurable macro effects (1992 Collor impeachment crisis and 2014-2016 Lava Jato) / 36 years, 1990-2025 = 5.6%; bounds are a modelling choice"
+  source_flag: choice_around_historical_count
+  excluded_non_macro_events:
+    - event: "Mensalao (2005)"
+      reason: "no measurable GDP effect identified"
+    - event: "INSS benefit-deduction fraud (2025)"
+      reason: "no measurable GDP effect identified"
+    - event: "similar corruption cases"
+      reason: "excluded unless a measurable macro GDP effect is identified"
+
+gdp_level_loss_pct:
+  distribution: triangular
+  low: 1.0
+  mode: 2.25
+  high: 3.6
+  unit: "percent GDP log-level loss at full effect"
+  bounds:
+    low:
+      basis: "smaller macro-relevant episode"
+      source_flag: choice
+    mode:
+      basis: "2-2.5% contribution of Lava Jato to the 2015-2016 GDP fall; midpoint 2.25%"
+      sources: "GO Associados and Tendencias, as reported secondhand"
+      source_flag: secondary
+    high:
+      basis: "3.6% of GDP over 2014-2017"
+      source: "Dieese for CUT (2024)"
+      source_flag: contested
+      caveat: "Economists cited by Folha contest the estimate for ignoring pre-existing Petrobras problems"
+
+build_up_years: 2
+build_up_source_flag: choice
+build_up_method: "linear to the full loss"
+recovery_half_life_years: 4
+recovery_source_flag: choice
+recovery_basis: "Lava Jato effects on construction and investment persisted"
+overlap_method: "event level effects add in log terms"
+scenario_application: "one event sequence per draw, shared by all scenarios and both programmes"
+
+cpi_sensitivity:
+  enabled_by_default: false
+  use: "only for explicit what-if questions such as Brazil's CPI rising to a specified value"
+  gdp_per_capita_level_effect_pct_per_sd: 17.0
+  phase_in_years: 20
+  phase_in_method: linear
+  cross_country_cpi_sd_points: 20.0
+  cross_country_cpi_sd_status: to_verify
+  cross_country_cpi_sd_note: "placeholder on the modern 0-100 CPI scale; verify before reporting results"
+  source: "Gründler and Potrafke (2019), ifo Working Paper 309; European Journal of Political Economy"
+  source_flag: "paper estimate; CPI scale conversion input to_verify"
+  scope: "one standard deviation of the reversed CPI is associated with about 17% cumulative long-run real GDP per capita"
