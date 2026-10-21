@@ -41,6 +41,7 @@
     "leakage_share": "uniform(low, high) from governance.leakage_share_of_spending (cancels in scenario-vs-S0 comparisons; drives the leakage_halved sensitivity)",
     "profile_year": "discrete, equal probability over profile_years.values"
   },
+  "corruption": "G2 major-scandal shock: annual probability uniform(0.03, 0.08), GDP level loss triangular(1.0, 2.25, 3.6)%, 2-year build-up, 4-year recovery half-life; one event sequence per draw shared by every scenario and programme (stream [seed, 4]); included in external_gdp_level_pct and the *_with_external outputs",
   "fixed": {
     "life_expectancy_elasticity": "central only (point estimate)",
     "point_inputs": "every macro input with low = central = high (initial debt, revenue/GDP, capital share, K/Y, depreciation, GDP anchors)",
@@ -54,7 +55,7 @@
     "percentiles describe parameter uncertainty only, not forecast error or external shocks"
   ],
   "not_modelled": {},
-  "inputs_commit": "cafdc1cc88940218cbb10a09c8bffade99167f0f",
-  "created_utc": "2026-10-21T09:27:24+00:00",
-  "runtime_seconds": 13915.1
+  "inputs_commit": "aa22b54bd6665a64e1a2625c3fce7c57448a0b41",
+  "created_utc": "2026-10-21T14:11:02+00:00",
+  "runtime_seconds": 13772.0
 }

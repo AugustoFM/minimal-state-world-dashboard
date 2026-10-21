@@ -12,7 +12,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_report_builds_offline_and_has_correct_gate() -> None:
     built = report.build_report()
-    assert "Internal review - not for publication: D2 gate FAIL" in built
+    assert ("Internal review - not for publication: D2 gate v2 - Tier 1 (differences vs S0) PASS, "
+            "Tier 2 (debt/GDP levels) FAIL") in built
     assert built == (ROOT / "outputs/results_brazil.md").read_text(encoding="utf-8")
 
 

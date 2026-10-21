@@ -1,11 +1,11 @@
 # Brazil scenario results
 
-**Internal review - not for publication: D2 gate FAIL**
+**Internal review - not for publication: D2 gate v2 - Tier 1 (differences vs S0) PASS, Tier 2 (debt/GDP levels) FAIL**
 
 Run seed: `20261020`  
 Draws: `1000`  
-Inputs commit: `cafdc1cc88940218cbb10a09c8bffade99167f0f`  
-Created: `2026-10-21T09:27:24+00:00`  
+Inputs commit: `aa22b54bd6665a64e1a2625c3fce7c57448a0b41`  
+Created: `2026-10-21T14:11:02+00:00`  
 D2 verdict and diagnostics: parsed from `outputs/backtest.md`
 
 ## How to read
@@ -339,7 +339,7 @@ At the 20-year horizon, the following default-variant p10-p90 intervals include 
 - `E_mod_tax` — transitory: Gini change vs S0 (points); persistent: Gini change vs S0 (points).
 - `E_amb_tax` — transitory: GDP level vs S0, with C5 feedback (%), Debt/GDP vs S0, with C5 feedback (pp), Gini change vs S0 (points); persistent: Gini change vs S0 (points).
 
-The D2 backtest also shows the external block is weak: C6 explains about 0.8 pp of the 24% 2006-2010 boom.
+The D2 backtest showed the C6 external block explained about 0.8 pp of the 24% 2006-2010 boom; the runs now use C7 channel A (commodity prices), which out of sample reproduces about 59% of it (`outputs/c7_backtest.md`). External paths, commodity-linked dividends and the G2 corruption shock are common to every scenario.
 
 Metadata `not_modelled`: none listed. The summary separately contains 1,480 rows explicitly marked not modelled: C3 distribution results are available only for the `default` composition and exclude S1 because it has no package allocation.
 

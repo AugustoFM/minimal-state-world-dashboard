@@ -80,6 +80,8 @@ def parse_backtest(backtest: str) -> dict[str, float | str]:
     gate_match = re.search(r"Overall proposed gate:\s*(PASS|FAIL)", backtest)
     if not gate_match:
         raise ValueError("Could not find the D2 gate verdict in the backtest report")
+    tier1 = re.search(r"Tier 1 - differences vs S0:\s*(PASS|FAIL)", backtest)
+    tier2 = re.search(r"Tier 2 - debt/GDP levels:\s*(PASS|FAIL)", backtest)
     rows = _markdown_rows(backtest)
     debt_start_match = re.search(r"recursion starts from observed (\d{4})", backtest)
     debt_end_match = re.search(r"absolute (\d{4}) debt error", backtest)
@@ -96,6 +98,8 @@ def parse_backtest(backtest: str) -> dict[str, float | str]:
         raise ValueError("Could not read required diagnostics from the backtest tables") from exc
     return {
         "gate": gate_match.group(1),
+        "tier1": tier1.group(1) if tier1 else None,
+        "tier2": tier2.group(1) if tier2 else None,
         "debt_one_step_mean": debt_one_step_mean,
         "debt_cumulative": debt_cumulative,
         "debt_start_year": debt_start_match.group(1),
@@ -322,7 +326,10 @@ def build_report(
     lines = [
         "# Brazil scenario results",
         "",
-        f"**Internal review - not for publication: D2 gate {diagnostics['gate']}**",
+        (f"**Internal review - not for publication: D2 gate v2 - Tier 1 (differences vs S0) {diagnostics['tier1']}, "
+         f"Tier 2 (debt/GDP levels) {diagnostics['tier2']}**"
+         if diagnostics.get("tier1") else
+         f"**Internal review - not for publication: D2 gate {diagnostics['gate']}**"),
         "",
         f"Run seed: `{metadata['seed']}`  ",
         f"Draws: `{metadata['n_draws']}`  ",
@@ -378,9 +385,11 @@ def build_report(
         "",
         *crossing_lines(summary, vs_s0_scenarios),
         "",
-        f"The D2 backtest also shows the external block is weak: C6 explains about "
+        f"The D2 backtest showed the C6 external block explained about "
         f"{float(diagnostics['boom_external']):.1f} pp of the {float(diagnostics['boom_actual']):.0f}% "
-        f"{diagnostics['boom_start_year']}-{diagnostics['boom_end_year']} boom.",
+        f"{diagnostics['boom_start_year']}-{diagnostics['boom_end_year']} boom; the runs now use C7 channel A "
+        "(commodity prices), which out of sample reproduces about 59% of it (`outputs/c7_backtest.md`). "
+        "External paths, commodity-linked dividends and the G2 corruption shock are common to every scenario.",
         "",
         f"Metadata `not_modelled`: {not_modelled_text}. The summary separately contains "
         f"{summary_not_modelled:,} rows explicitly marked not modelled: C3 distribution results are available "
