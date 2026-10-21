@@ -23,6 +23,7 @@
 | D2 | merged (gate FAIL, see outputs/backtest.md) | `task/d2` | Lead review: one-step-ahead debt diagnostic added; mean +1.36 pp/yr, MAE 2.05 - cumulative miss is mostly BNDES/BCB stock-flow operations. Gate decision pending with the user. Offline back-tests built without retuning. Proposed gate FAIL: debt 2024 error +18.57 pp GDP (5 pp tolerance); growth mean error +0.165 pp/yr (0.5 pp tolerance, pass), RMSE 2.238, correlation 0.772. C6 adds only +0.78 pp to cumulative 2006-2010 growth; model leaves -10.18 pp boom residual and predicts +3.22% vs observed -6.24% in 2014-2016. Multiplier tests are weak/unrated (correlations -0.108 total, -0.161 categories); inflation diagnostic correlation 0.505, RMSE 2.047 pp. No 2006 debt run: Tesouro interest-payable history starts in 2010. Claude review requested. |
 | E1 | todo | | |
 | E2 | todo | | |
+| R1 | PR open | `task/r1` | Reproducible internal-review report for the committed 1,000-draw Monte Carlo. D2 gate FAIL is prominent; debt levels carry the documented backtest caution. Summary data are structurally consistent; C3 distribution rows are modelled only for default, non-S1 scenarios, with all other C3 cells explicitly marked not modelled. Claude review requested. |
 
 ## Branch consolidation notes
 
