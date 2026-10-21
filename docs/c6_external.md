@@ -22,3 +22,13 @@ With the neutral path the block reproduces C2's debt and GDP per capita exactly 
 
 ## First results and a warning for D2
 With beta = 0.033 the external block is small: repeating the observed 2005-2011 boom moves the GDP level by about +0.6% and debt/GDP by under 1 pp at 10 years (central parameters, `external_reference_paths.csv`); bootstrap paths give p10-p90 of -0.3% to +0.8% at 10 years. This follows from the sourced estimate (Brazil responds much less than its LAC peers, Gruss 2014), but it is hard to square with 2003-2010, when exports tripled, reserves rose eightfold and the real appreciated strongly. The channels C6 lacks (capital inflows, appreciation lowering inflation and interest rates, commodity revenue, FX-linked debt) are the likely reason. D2 must test this first: if the back-test cannot reproduce 2003-2010 with observed external paths, the block understates external effects and must be extended before any projection is published.
+
+## Superseded for GDP by C7 channel A (2026-10-21)
+
+The Monte Carlo now uses the C7 output channel (docs/c7_external_v2.md) for the GDP level effect:
+commodity export prices and world growth, coefficients drawn per draw from the two prespecified
+estimation windows. The C6 terms-of-trade coefficient remains available (`external_block.gdp_model:
+c6_terms_of_trade`) and is still used by the D2 growth-accounting block. FX pass-through to inflation
+is unchanged. Reference paths with C7 (central coefficients): boom +6.8% GDP level, bust -8.1%
+(C6: about +0.6% / -0.6%). The BRL/USD bootstrap is not demeaned (mean depreciation 4.5% a year in
+2001-2024), so `inflation_with_external_pct` carries an upward drift in draws; this is unchanged from C6.

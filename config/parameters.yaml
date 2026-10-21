@@ -625,6 +625,18 @@ long_run_feedback_choices:
 # falling interest rates moved with a ~37% rise in the terms of trade (WDI, 2005-2011). The model was
 # a closed economy; C6 adds the external environment as an exogenous, uncertain driver.
 external_block:
+  gdp_model: c7_channel_a   # c7_channel_a (default since 2026-10-21) or c6_terms_of_trade
+  output_channel_c7:
+    status: "choice (lead developer 2026-10-21); C7 channel A verdict 'supported' (outputs/c7_backtest.md)"
+    equation: "growth deviation (pp) = b0 dlnP_t + b1 dlnP_t-1 + b2 (world growth - mean); dlnP = 100 x change in ln Brazil commodity export price index (IMF PCTOT); level effect = cumulated deviations"
+    source: "data/brazil/c7_estimates.csv (OLS, Newey-West; constants not used)"
+    coefficient_sets:
+      primary_2000_2014: {dlnP: 0.125351, dlnP_lag: -0.006986, world_gdp_growth_pct: 0.520133}
+      reverse_2010_2024: {dlnP: 0.082437, dlnP_lag: 0.064964, world_gdp_growth_pct: 0.762034}
+    sampling: "one set per Monte Carlo draw, equal probability (separate random stream [seed, 3]); central = average of the two sets"
+    bootstrap_inputs: "joint 2001-2024 changes of dlnP, world growth and BRL/USD (3-year blocks); dlnP and world growth demeaned over the sample so draws add shocks, not a trend"
+    replaces: "gdp_wrt_commodity_prices below for the GDP level effect (kept for the C6 option and the D2 growth block); FX pass-through unchanged"
+    not_wired: "C7 channels B (spread/interest: not supported), C (investment: part of A's total response), D (dividends only supported; payout policy)"
   gdp_wrt_commodity_prices:
     unit: "% change in Brazil GDP level per 1% change in its commodity price index (3-year horizon)"
     low: null

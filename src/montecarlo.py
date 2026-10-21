@@ -359,7 +359,11 @@ def load_context(
         "grid": grid,
         "base_year": base_year,
         "target_years": [base_year + h for h in horizons],
-        "external_changes": external.historical_changes(data / "backtest_observed.csv"),
+        "external_changes": (
+            external.historical_changes_v2(data / "external_observed.csv", data / "backtest_observed.csv")
+            if parameters["external_block"].get("gdp_model") == "c7_channel_a"
+            else external.historical_changes(data / "backtest_observed.csv")
+        ),
         "feedback_defaults": _feedback_defaults(parameters_path, scenarios_path),
         "micro": _micro_context(data),
     }
@@ -563,6 +567,9 @@ def run(
     rng = np.random.default_rng(seed)
     # Separate stream so adding the external block leaves parameter draws unchanged.
     external_rng = np.random.default_rng([seed, 1])
+    c7_rng = np.random.default_rng([seed, 3])  # C7 coefficient window per draw
+    c7 = "dlnp_pct" in context["external_changes"].columns
+    c7_windows = sorted(parameters["external_block"]["output_channel_c7"]["coefficient_sets"]) if c7 else []
     programme_rng = np.random.default_rng([seed, 2])  # P1 sizes; leaves the other streams unchanged
     steps = max(context["target_years"]) - base_year
     draws, results = [], []
@@ -570,8 +577,15 @@ def run(
         draw = sample_draw(rng, parameters, inputs)
         draw["draw"] = index
         path = external.bootstrap_path(external_rng, context["external_changes"], steps)
-        effects = external.gdp_and_inflation_effects(path, parameters)
-        draw["external_tot_cumulative_change_pct"] = float(path["tot_change_pct"].sum())
+        if c7:
+            draw["external_c7_window"] = str(c7_rng.choice(c7_windows))
+            effects = external.gdp_and_inflation_effects(
+                path, parameters, channel_a=external.channel_a_coefficients(parameters, draw["external_c7_window"])
+            )
+            draw["external_commodity_price_cumulative_change_pct"] = float(path["dlnp_pct"].sum())
+        else:
+            effects = external.gdp_and_inflation_effects(path, parameters)
+            draw["external_tot_cumulative_change_pct"] = float(path["tot_change_pct"].sum())
         draw["external_fx_cumulative_change_pct"] = float(path["fx_change_pct"].sum())
         if context.get("programmes") is not None:
             draw.update(programs.sample_programme_draw(programme_rng, context["programmes"], parameters))
@@ -600,7 +614,14 @@ def run(
             "point_inputs": "every macro input with low = central = high (initial debt, revenue/GDP, capital share, K/Y, depreciation, GDP anchors)",
             "c1_category_shares": "point values (COFOG 2024)",
         },
-        "external": "C6 block bootstrap (3-year blocks) of joint observed 2006-2024 terms-of-trade and BRL/USD changes, same path for every scenario in a draw; separate random stream [seed, 1]",
+        "external": (
+            "C7 output channel: block bootstrap (3-year blocks) of joint 2001-2024 commodity export price, world growth "
+            "(both demeaned) and BRL/USD changes, same path for every scenario in a draw (stream [seed, 1]); "
+            "channel-A coefficient set drawn per draw from the two prespecified estimation windows (stream [seed, 3])"
+            if "dlnp_pct" in context["external_changes"].columns else
+            "C6 block bootstrap (3-year blocks) of joint observed 2006-2024 terms-of-trade and BRL/USD changes, "
+            "same path for every scenario in a draw; separate random stream [seed, 1]"
+        ),
         "choices": [
             "triangular sampling for ranges is a modelling choice (fiscal_multipliers_brazil.sampling_rule), not a sourced distribution",
             "parameters are sampled independently: no sourced correlations",
