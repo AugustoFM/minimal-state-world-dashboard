@@ -24,6 +24,7 @@
 | E1 | todo | | |
 | E2 | todo | | |
 | R1 | merged | `task/r1` | Reproducible internal-review report for the committed 1,000-draw Monte Carlo. D2 gate FAIL is prominent; debt levels carry the documented backtest caution. Summary data are structurally consistent; C3 distribution rows are modelled only for default, non-S1 scenarios, with all other C3 cells explicitly marked not modelled. Claude review requested. |
+| C7 | PR open | `task/c7` | External block v2 estimated under the fixed protocol. Supported by the mechanical OOS rule: A output, B2 real rate (knife-edge), C investment, and dividends separately; not supported: B1 spread, B3 debt-rate pass-through, total commodity revenue, and concessions. Tiny samples (A/B/C about 15 fit years; B3 only six usable differences); endogeneity prevents causal interpretation; 2024 EMBI is partial through July. `7 passed` targeted. Full suite: 116 passed, 2 skipped, 2 temp-fixture errors from the documented Windows temp ACL; an ACL-locked untracked `.pytest-c7-tmp` could not be removed by this process. Claude review requested. |
 
 ## Branch consolidation notes
 

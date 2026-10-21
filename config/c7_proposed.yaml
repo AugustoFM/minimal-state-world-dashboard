@@ -1,0 +1,622 @@
+task: C7 external block v2
+estimator: OLS with Bartlett Newey-West SE, lag 1, no finite-sample correction
+interval: 90% normal approximation
+estimates:
+  A_output:
+    fit_window:
+    - 2000
+    - 2014
+    test_window:
+    - 2015
+    - 2024
+    actual_estimation_years:
+    - 2000
+    - 2001
+    - 2002
+    - 2003
+    - 2004
+    - 2005
+    - 2006
+    - 2007
+    - 2008
+    - 2009
+    - 2010
+    - 2011
+    - 2012
+    - 2013
+    - 2014
+    nobs: 15
+    r2: 0.7372892210777788
+    coefficients:
+      constant:
+        estimate: 1.233206191489142
+        newey_west_se: 0.5615819702632657
+        interval_90:
+        - 0.3094860508710555
+        - 2.1569263321072283
+      dlnP:
+        estimate: 0.12535116236664595
+        newey_west_se: 0.024270769539276607
+        interval_90:
+        - 0.08542929906106352
+        - 0.1652730256722284
+      dlnP_lag:
+        estimate: -0.006986423280483878
+        newey_west_se: 0.019971806774659255
+        interval_90:
+        - -0.039837122090556135
+        - 0.02586427552958838
+      world_gdp_growth_pct:
+        estimate: 0.520133106536139
+        newey_west_se: 0.17011301825403158
+        interval_90:
+        - 0.24032209146933314
+        - 0.7999441216029448
+    verdict: supported
+  B1_spread:
+    fit_window:
+    - 2000
+    - 2014
+    test_window:
+    - 2015
+    - 2024
+    actual_estimation_years:
+    - 2000
+    - 2001
+    - 2002
+    - 2003
+    - 2004
+    - 2005
+    - 2006
+    - 2007
+    - 2008
+    - 2009
+    - 2010
+    - 2011
+    - 2012
+    - 2013
+    - 2014
+    nobs: 15
+    r2: 0.15236772750028715
+    coefficients:
+      constant:
+        estimate: -59.5775135481457
+        newey_west_se: 45.889959601755294
+        interval_90:
+        - -135.05978003974946
+        - 15.904752943458035
+      dlnP:
+        estimate: -4.7208053994997625
+        newey_west_se: 3.523595365481909
+        interval_90:
+        - -10.516604016322079
+        - 1.0749932173225538
+      dUS:
+        estimate: -131.40276012649002
+        newey_west_se: 79.71240272031416
+        interval_90:
+        - -262.51799485401517
+        - -0.28752539896487406
+    verdict: not supported
+  B2_real_rate:
+    fit_window:
+    - 2000
+    - 2014
+    test_window:
+    - 2015
+    - 2024
+    actual_estimation_years:
+    - 2001
+    - 2002
+    - 2003
+    - 2004
+    - 2005
+    - 2006
+    - 2007
+    - 2008
+    - 2009
+    - 2010
+    - 2011
+    - 2012
+    - 2013
+    - 2014
+    nobs: 14
+    r2: 0.015066230724489538
+    coefficients:
+      constant:
+        estimate: -0.3166485367883098
+        newey_west_se: 0.5219291939659109
+        interval_90:
+        - -1.1751456644949967
+        - 0.5418485909183772
+      dEMBI_per_100:
+        estimate: 0.12422025155488182
+        newey_west_se: 0.14207589691620887
+        interval_90:
+        - -0.10947380279012782
+        - 0.3579143058998915
+    verdict: supported
+  B3_debt_rate:
+    fit_window:
+    - 2011
+    - 2017
+    test_window:
+    - 2018
+    - 2024
+    actual_estimation_years:
+    - 2012
+    - 2013
+    - 2014
+    - 2015
+    - 2016
+    - 2017
+    nobs: 6
+    r2: 0.12476857396252239
+    coefficients:
+      dr:
+        estimate: 0.16903271364880185
+        newey_west_se: 0.37383778014889085
+        interval_90:
+        - -0.44587571492058836
+        - 0.7839411422181921
+      dr_lag:
+        estimate: 0.3948180162731759
+        newey_west_se: 0.3853035558134669
+        interval_90:
+        - -0.23894993498390416
+        - 1.028585967530256
+    verdict: not supported
+  C_investment:
+    fit_window:
+    - 2000
+    - 2014
+    test_window:
+    - 2015
+    - 2024
+    actual_estimation_years:
+    - 2000
+    - 2001
+    - 2002
+    - 2003
+    - 2004
+    - 2005
+    - 2006
+    - 2007
+    - 2008
+    - 2009
+    - 2010
+    - 2011
+    - 2012
+    - 2013
+    - 2014
+    nobs: 15
+    r2: 0.30713808562273825
+    coefficients:
+      constant:
+        estimate: 0.05920466371848655
+        newey_west_se: 0.2249045977915128
+        interval_90:
+        - -0.3107304796769454
+        - 0.42913980711391847
+      dlnP:
+        estimate: 0.04032753882654637
+        newey_west_se: 0.01276177258444427
+        interval_90:
+        - 0.019336290904693347
+        - 0.06131878674839939
+      dlnP_lag:
+        estimate: -0.011520444099857894
+        newey_west_se: 0.014061262688180006
+        interval_90:
+        - -0.03464916303202818
+        - 0.011608274832312398
+    verdict: supported
+  D_revenue:
+    fit_window:
+    - 2010
+    - 2017
+    test_window:
+    - 2018
+    - 2024
+    actual_estimation_years:
+    - 2010
+    - 2011
+    - 2012
+    - 2013
+    - 2014
+    - 2015
+    - 2016
+    - 2017
+    nobs: 8
+    r2: 0.699499772852415
+    coefficients:
+      constant:
+        estimate: -3.941287595640069
+        newey_west_se: 0.9885302570873987
+        interval_90:
+        - -5.567275174361548
+        - -2.3153000169185898
+      lnP:
+        estimate: 1.1526430615327934
+        newey_west_se: 0.22299081207322263
+        interval_90:
+        - 0.785855815517299
+        - 1.5194303075482878
+    verdict: not supported
+  D_dividends:
+    fit_window:
+    - 2010
+    - 2017
+    test_window:
+    - 2018
+    - 2024
+    actual_estimation_years:
+    - 2010
+    - 2011
+    - 2012
+    - 2013
+    - 2014
+    - 2015
+    - 2016
+    - 2017
+    nobs: 8
+    r2: 0.6659296479909809
+    coefficients:
+      constant:
+        estimate: -3.3713086193342177
+        newey_west_se: 0.6782002666742435
+        interval_90:
+        - -4.486848787772803
+        - -2.2557684508956326
+      lnP:
+        estimate: 0.8379847404569246
+        newey_west_se: 0.14959676235102548
+        interval_90:
+        - 0.5919199633236429
+        - 1.0840495175902063
+    verdict: supported
+  D_concessions:
+    fit_window:
+    - 2010
+    - 2017
+    test_window:
+    - 2018
+    - 2024
+    actual_estimation_years:
+    - 2010
+    - 2011
+    - 2012
+    - 2013
+    - 2014
+    - 2015
+    - 2016
+    - 2017
+    nobs: 8
+    r2: 0.14514722932605084
+    coefficients:
+      constant:
+        estimate: -0.5699789763058527
+        newey_west_se: 1.2829699500974336
+        interval_90:
+        - -2.6802767519933655
+        - 1.5403187993816603
+      lnP:
+        estimate: 0.3146583210758692
+        newey_west_se: 0.2845167286483638
+        interval_90:
+        - -0.1533300519697598
+        - 0.7826466941214982
+    verdict: not supported
+  A_output_CTOT:
+    fit_window:
+    - 2000
+    - 2014
+    test_window:
+    - 2015
+    - 2024
+    actual_estimation_years:
+    - 2000
+    - 2001
+    - 2002
+    - 2003
+    - 2004
+    - 2005
+    - 2006
+    - 2007
+    - 2008
+    - 2009
+    - 2010
+    - 2011
+    - 2012
+    - 2013
+    - 2014
+    nobs: 15
+    r2: 0.7739362021455602
+    coefficients:
+      constant:
+        estimate: -0.4956804416888463
+        newey_west_se: 0.32317524915191037
+        interval_90:
+        - -1.0272564223973117
+        - 0.03589553901961917
+      dlnCTOT:
+        estimate: 3.7071307128830897
+        newey_west_se: 0.8882520165090781
+        interval_90:
+        - 2.2460861618811734
+        - 5.168175263885006
+      dlnCTOT_lag:
+        estimate: 0.2350376498688708
+        newey_west_se: 0.5418719981598157
+        interval_90:
+        - -0.6562624716477435
+        - 1.1263377713854852
+      world_gdp_growth_pct:
+        estimate: 1.140796965905429
+        newey_west_se: 0.09187801793436315
+        interval_90:
+        - 0.9896710748689792
+        - 1.2919228569418786
+    verdict: robustness only
+  A_output_china:
+    fit_window:
+    - 2000
+    - 2014
+    test_window:
+    - 2015
+    - 2024
+    actual_estimation_years:
+    - 2000
+    - 2001
+    - 2002
+    - 2003
+    - 2004
+    - 2005
+    - 2006
+    - 2007
+    - 2008
+    - 2009
+    - 2010
+    - 2011
+    - 2012
+    - 2013
+    - 2014
+    nobs: 15
+    r2: 0.7473471054162142
+    coefficients:
+      constant:
+        estimate: 0.01635079375111492
+        newey_west_se: 1.3004273783660447
+        interval_90:
+        - -2.122661896141268
+        - 2.1553634836434976
+      dlnP:
+        estimate: 0.11542835781206329
+        newey_west_se: 0.02267967653495167
+        interval_90:
+        - 0.07812360960546183
+        - 0.15273310601866474
+      dlnP_lag:
+        estimate: -0.016967212229368603
+        newey_west_se: 0.02063771806212814
+        interval_90:
+        - -0.05091323763586198
+        - 0.016978813177124776
+      world_gdp_growth_pct:
+        estimate: 0.4561630833793617
+        newey_west_se: 0.1699567875799519
+        interval_90:
+        - 0.1766090449034569
+        - 0.7357171218552665
+      china_gdp_growth_pct:
+        estimate: 0.153637731279674
+        newey_west_se: 0.16088867211356228
+        interval_90:
+        - -0.11100058458172507
+        - 0.4182760471410731
+    verdict: robustness only
+  B1_spread_fed_funds:
+    fit_window:
+    - 2000
+    - 2014
+    test_window:
+    - 2015
+    - 2024
+    actual_estimation_years:
+    - 2000
+    - 2001
+    - 2002
+    - 2003
+    - 2004
+    - 2005
+    - 2006
+    - 2007
+    - 2008
+    - 2009
+    - 2010
+    - 2011
+    - 2012
+    - 2013
+    - 2014
+    nobs: 15
+    r2: 0.3871818787081238
+    coefficients:
+      constant:
+        estimate: -64.10723311389755
+        newey_west_se: 37.51987902084177
+        interval_90:
+        - -125.82194220410959
+        - -2.3925240236855103
+      dlnP:
+        estimate: -4.200760908640902
+        newey_west_se: 2.6420776784446596
+        interval_90:
+        - -8.546591960718125
+        - 0.14507014343632196
+      dFed:
+        estimate: -90.37648745026041
+        newey_west_se: 24.74685832987202
+        interval_90:
+        - -131.08144712980464
+        - -49.67152777071617
+    verdict: robustness only
+  A_output_reverse:
+    fit_window:
+    - 2010
+    - 2024
+    test_window:
+    - 2000
+    - 2009
+    actual_estimation_years:
+    - 2010
+    - 2011
+    - 2012
+    - 2013
+    - 2014
+    - 2015
+    - 2016
+    - 2017
+    - 2018
+    - 2019
+    - 2020
+    - 2021
+    - 2022
+    - 2023
+    - 2024
+    nobs: 15
+    r2: 0.6227065961822644
+    coefficients:
+      constant:
+        estimate: -0.6624096919736298
+        newey_west_se: 0.5110286717851954
+        interval_90:
+        - -1.5029770562357019
+        - 0.17815767228844237
+      dlnP:
+        estimate: 0.08243703842665506
+        newey_west_se: 0.03517174194571798
+        interval_90:
+        - 0.02458467112103961
+        - 0.1402894057322705
+      dlnP_lag:
+        estimate: 0.06496410838544722
+        newey_west_se: 0.03934684470191503
+        interval_90:
+        - 0.00024430816840596836
+        - 0.12968390860248846
+      world_gdp_growth_pct:
+        estimate: 0.7620342764744478
+        newey_west_se: 0.131194390388991
+        interval_90:
+        - 0.5462387076074285
+        - 0.977829845341467
+    verdict: robustness only
+  B1_spread_reverse:
+    fit_window:
+    - 2010
+    - 2024
+    test_window:
+    - 2000
+    - 2009
+    actual_estimation_years:
+    - 2010
+    - 2011
+    - 2012
+    - 2013
+    - 2014
+    - 2015
+    - 2016
+    - 2017
+    - 2018
+    - 2019
+    - 2020
+    - 2021
+    - 2022
+    - 2023
+    - 2024
+    nobs: 15
+    r2: 0.3888351095776068
+    coefficients:
+      constant:
+        estimate: -3.3176386935584095
+        newey_west_se: 10.790220827039299
+        interval_90:
+        - -21.065972556521317
+        - 14.430695169404496
+      dlnP:
+        estimate: -2.0595537828923494
+        newey_west_se: 0.7808468950278714
+        interval_90:
+        - -3.3439326302727395
+        - -0.7751749355119595
+      dUS:
+        estimate: -24.616878211875648
+        newey_west_se: 14.680782358217048
+        interval_90:
+        - -48.76461632027414
+        - -0.4691401034771481
+    verdict: robustness only
+  C_investment_reverse:
+    fit_window:
+    - 2010
+    - 2024
+    test_window:
+    - 2000
+    - 2009
+    actual_estimation_years:
+    - 2010
+    - 2011
+    - 2012
+    - 2013
+    - 2014
+    - 2015
+    - 2016
+    - 2017
+    - 2018
+    - 2019
+    - 2020
+    - 2021
+    - 2022
+    - 2023
+    - 2024
+    nobs: 15
+    r2: 0.41999266538137436
+    coefficients:
+      constant:
+        estimate: -0.18849834750126146
+        newey_west_se: 0.23342433416567046
+        interval_90:
+        - -0.572447210172397
+        - 0.19545051516987402
+      dlnP:
+        estimate: 0.04104926576114016
+        newey_west_se: 0.009708356926379376
+        interval_90:
+        - 0.025080439659045595
+        - 0.05701809186323473
+      dlnP_lag:
+        estimate: 0.025104327251281026
+        newey_west_se: 0.01832566104167233
+        interval_90:
+        - -0.005038702779396997
+        - 0.05524735728195905
+    verdict: robustness only
+wiring_proposal:
+- channel: A_output
+  output: gdp_level_pct
+  replaces: C6 ToT-to-GDP beta and potential/cyclical split
+  eligible: true
+- channel: B1_spread+B2_real_rate+B3_debt_rate
+  output: debt_rate_change_pp
+  replaces: adds external interest-rate premium to C2/C5 debt recursion
+  eligible: false
+- channel: C_investment
+  output: investment_rate_change_pp
+  replaces: adds an external investment-rate path before C2 capital accumulation
+  eligible: true
+- channel: D_revenue
+  output: revenue_change_pp_gdp
+  replaces: adds revenue_by_year-like external commodity revenue
+  eligible: false
+warning: Proposals only. Do not wire equations marked ineligible; config/parameters.yaml
+  is unchanged.
