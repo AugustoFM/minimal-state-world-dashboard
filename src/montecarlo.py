@@ -26,8 +26,9 @@ from typing import Iterable, Mapping
 import numpy as np
 import pandas as pd
 
-from src import external, feedback, micro, social
+from src import external, feedback, micro, programs, social
 from src.baseline import project_baseline, read_yaml
+from src.macro import _interpolate_by_year
 from src.macro import PERSISTENCE_VARIANTS, load_macro_inputs, run_corner
 
 
@@ -43,7 +44,8 @@ MACRO_RANGED = (
 )
 NOT_MODELLED: dict[str, str] = {}
 MICRO_VARIANT = "default"          # C3 runs for the default composition only (runtime)
-MICRO_SCENARIOS_EXCLUDED = {"S1"}  # C3 has no package allocation for S1's offset
+MICRO_SCENARIOS_EXCLUDED = {"S1"}
+PROGRAMME_VARIANT = "default"      # P1 programme scenarios carry their own composition; added once  # C3 has no package allocation for S1's offset
 MICRO_OUTPUTS = {
     "gini_change_vs_s0_points": "gini_points_0_100",
     "poverty_218_change_vs_s0_pp": "pp",
@@ -294,8 +296,15 @@ def social_for_draw(
                 share, reduction = health[(year, "S1")], 0.0
             else:
                 share, reduction = health[(year, "S0")], (0.0 if scenario == "S0" else float(gaps[(year, scenario)]))
+            scenario_share = efficiency_share
+            definition = variant_scenarios["scenarios"].get(scenario)
+            if isinstance(definition, Mapping) and "package_gaps_by_year" in definition:
+                # Own composition (P1): pass the services-package gap itself with share 1.
+                reduction = scenario_package_gaps(variant_scenarios, scenario, horizon, reduction).get(
+                    "efficiency_health_education_admin", 0.0)
+                scenario_share = 1.0
             spending = social.health_spending_per_capita(
-                share, gdp[(year, scenario)], reduction, efficiency_share,
+                share, gdp[(year, scenario)], reduction, scenario_share,
                 health_allocation, draw["service_cut_fraction"],
             )
             change = (spending * (1.0 - leakage) / s0_services - 1.0) * 100.0
@@ -378,17 +387,40 @@ def _micro_context(data: Path) -> dict | None:
     return {"prepared": prepared, "inputs": inputs, "lines": lines, "base": base}
 
 
+def scenario_package_gaps(variant_scenarios: Mapping, scenario: str, horizon: int, total_gap: float) -> dict[str, float]:
+    """Package gaps below S0 (pp GDP): a scenario's own package paths, else the variant's shares."""
+    definition = variant_scenarios["scenarios"].get(scenario)
+    if isinstance(definition, Mapping) and "package_gaps_by_year" in definition:
+        return {
+            str(package): _interpolate_by_year(path, horizon, f"{scenario}.{package}")
+            for package, path in definition["package_gaps_by_year"].items()
+        }
+    return {str(k): total_gap * float(v) for k, v in variant_scenarios["package_shares"].items()}
+
+
+def with_programmes(variant_scenarios: Mapping, annual: pd.DataFrame, draw_inputs: Mapping, draw: Mapping,
+                    context: Mapping) -> Mapping:
+    """Add the P1 programme scenarios (built on this draw's S0 path) to a variant configuration."""
+    s0 = programs.s0_path(annual, context["population"], draw_inputs)
+    common = variant_scenarios["package_shares"] if context.get("programme_common_composition") else None
+    definitions = programs.build_programme_scenarios(s0, context["programmes"], draw, common)
+    out = dict(variant_scenarios)
+    out["scenarios"] = {**variant_scenarios["scenarios"], **definitions}
+    return out
+
+
 def micro_for_draw(corner: pd.DataFrame, variant_scenarios: Mapping, draw: Mapping, context: Mapping) -> pd.DataFrame:
     """C3 distribution indicators vs S0 for target years (one draw, one persistence setting)."""
     ctx = context["micro"]
     inputs = ctx["inputs"]
-    shares = {k: float(v) for k, v in variant_scenarios["package_shares"].items()}
     records = []
     for row in corner.itertuples():
         if row.scenario in MICRO_SCENARIOS_EXCLUDED:
             continue
-        gaps = {package: float(row.gap_below_s0_pp) * share for package, share in shares.items()}
-        revenue = max(0.0, float(getattr(row, "revenue_change_pp", 0.0)))
+        gaps = scenario_package_gaps(
+            variant_scenarios, row.scenario, int(row.year) - int(context["base_year"]), float(row.gap_below_s0_pp)
+        )
+        revenue = float(getattr(row, "revenue_change_pp", 0.0))
         households = micro.simulate_household_incomes(
             ctx["prepared"], gdp_level_vs_s0_pct=float(row.gdp_level_vs_s0_pct),
             unemployment_change_pp=float(row.unemployment_change_pp), package_gaps_pp_gdp=gaps,
@@ -428,10 +460,23 @@ def feedback_for_draw(
 ) -> pd.DataFrame:
     """Apply C5 to one annual C2 corner with this draw's sampled values."""
     shares = variant_scenarios["package_shares"]
+    efficiency_share: float | dict = float(shares.get("efficiency_health_education_admin", 0.0))
+    investment_share: float | dict = float(shares.get("public_investment", 0.0))
+    own = [s for s, d in variant_scenarios["scenarios"].items()
+           if isinstance(d, Mapping) and "package_gaps_by_year" in d]
+    if own:
+        # Effective shares per row, so that share x total gap = the scenario's own package gap.
+        efficiency_share, investment_share = {}, {}
+        base_year = int(corner["year"].min())
+        for row in corner.itertuples():
+            key, total = (int(row.year), str(row.scenario)), float(row.gap_below_s0_pp)
+            packages = scenario_package_gaps(variant_scenarios, row.scenario, key[0] - base_year, total)
+            efficiency_share[key] = packages.get("efficiency_health_education_admin", 0.0) / total if total else 0.0
+            investment_share[key] = packages.get("public_investment", 0.0) / total if total else 0.0
     kwargs = dict(context["feedback_defaults"])
     kwargs.update(
-        efficiency_package_share=float(shares.get("efficiency_health_education_admin", 0.0)),
-        public_investment_package_share=float(shares.get("public_investment", 0.0)),
+        efficiency_package_share=efficiency_share,
+        public_investment_package_share=investment_share,
         service_cut_fraction=float(draw["service_cut_fraction"]),
         health_output_pct_per_year=float(draw["health_output_pct"]),
         public_capital_elasticity=float(draw["public_capital_elasticity"]),
@@ -454,6 +499,8 @@ def evaluate_draw(draw: Mapping, context: Mapping, external_effects: pd.DataFram
     target_years = context["target_years"]
     results = []
     for variant, variant_scenarios in context["variant_configs"].items():
+        if context.get("programmes") is not None and variant == PROGRAMME_VARIANT:
+            variant_scenarios = with_programmes(variant_scenarios, annual, draw_inputs, draw, context)
         for persistence in PERSISTENCE_VARIANTS:
             corner = run_corner(
                 annual, context["population"], variant_scenarios, draw_parameters, draw_inputs, "central", persistence
@@ -516,6 +563,7 @@ def run(
     rng = np.random.default_rng(seed)
     # Separate stream so adding the external block leaves parameter draws unchanged.
     external_rng = np.random.default_rng([seed, 1])
+    programme_rng = np.random.default_rng([seed, 2])  # P1 sizes; leaves the other streams unchanged
     steps = max(context["target_years"]) - base_year
     draws, results = [], []
     for index in range(n_draws):
@@ -525,6 +573,8 @@ def run(
         effects = external.gdp_and_inflation_effects(path, parameters)
         draw["external_tot_cumulative_change_pct"] = float(path["tot_change_pct"].sum())
         draw["external_fx_cumulative_change_pct"] = float(path["fx_change_pct"].sum())
+        if context.get("programmes") is not None:
+            draw.update(programs.sample_programme_draw(programme_rng, context["programmes"], parameters))
         draws.append(draw)
         results.append(evaluate_draw(draw, context, effects))
     draw_results = pd.concat(results, ignore_index=True)
@@ -559,6 +609,16 @@ def run(
         ],
         "not_modelled": NOT_MODELLED,
     }
+    if context.get("programmes") is not None:
+        metadata["programmes"] = {
+            "scenarios": list(programs.PROGRAMMES),
+            "variant": PROGRAMME_VARIANT,
+            "sampling": context["programmes"]["model_parameters"]["sampling"],
+            "stream": "separate random stream [seed, 2]",
+            "composition": "default package shares for both (sensitivity)" if context.get("programme_common_composition")
+            else "programme-specific assumed compositions (programs_2026.yaml)",
+            "status": "unpublished until the D2 gate and lead/user review",
+        }
     return draw_results, pd.DataFrame(draws), metadata
 
 
@@ -613,9 +673,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--draws", type=int, default=N_DRAWS)
     parser.add_argument("--seed", type=int, default=SEED)
     parser.add_argument("--output-dir", default="outputs/runs")
+    parser.add_argument("--programmes", action="store_true",
+                        help="add the P1 2026 programme scenarios (config/programs_2026.yaml)")
+    parser.add_argument("--programmes-common-composition", action="store_true",
+                        help="P1 sensitivity: both programmes cut with the default package shares")
     args = parser.parse_args(argv)
     started = time.time()
     context = load_context()
+    if args.programmes or args.programmes_common_composition:
+        context["programmes"] = read_yaml("config/programs_2026.yaml")
+        context["programme_common_composition"] = args.programmes_common_composition
     draw_results, draws, metadata = run(args.draws, args.seed, context=context)
     summary = summarise(draw_results, args.draws)
     output = Path(args.output_dir)

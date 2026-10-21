@@ -129,6 +129,7 @@ def apply_external(corner: pd.DataFrame, effects: pd.DataFrame, inputs: Mapping,
             if previous_nominal is not None:
                 interest = nominal_rate_from_real(real_rate, row.inflation_with_external_pct) / 100.0
                 previous_debt = debt_step(previous_debt, interest, nominal / previous_nominal - 1.0, row.primary_balance_gdp / 100.0)
+                previous_debt -= float(getattr(row, "debt_adjustment_pp", 0.0)) / 100.0
             debt[(row.year, scenario)] = previous_debt * 100.0
             previous_nominal = nominal
     frame["debt_gdp_with_external"] = [debt[(y, s)] for y, s in zip(frame["year"], frame["scenario"])]

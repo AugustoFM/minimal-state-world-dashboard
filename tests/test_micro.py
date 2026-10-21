@@ -127,3 +127,9 @@ def test_pnad_no_change_reproduces_validation_anchors() -> None:
     assert indicators["weighted_household_count"] == pytest.approx(79.3e6, abs=0.1e6)
     assert 0 <= indicators["poverty_headcount_218_pct"] <= 100
     assert 0 <= indicators["poverty_headcount_759_pct"] <= 100
+
+
+def test_tax_cut_relief_follows_incidence_score() -> None:
+    # Monthly GDP 1,000; a 1 pp cut returns 10 in proportion to household income.
+    households = run_toy(toy_persons(), revenue_change_pp=-1.0)
+    assert households["household_income_per_capita_brl"].tolist() == pytest.approx([101, 202, 303, 404])

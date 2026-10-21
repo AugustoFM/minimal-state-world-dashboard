@@ -264,8 +264,6 @@ def simulate_household_incomes(
         raise ValueError(f"Unknown tax_variant: {tax_variant}")
     if nominal_gdp_brl <= 0 or minimum_wage_brl <= 0 or consumption_like_exponent <= 0:
         raise ValueError("GDP, minimum wage and consumption exponent must be positive")
-    if revenue_change_pp < 0:
-        raise ValueError("C3 tax incidence currently supports non-negative revenue changes only")
 
     weights = prepared.person_weight
     delta = np.zeros(len(weights), dtype=float)
@@ -306,7 +304,12 @@ def simulate_household_incomes(
         score = household_total.copy()
     else:
         score = hh_size * np.power(np.divide(household_total, hh_size), consumption_like_exponent)
-    household_total -= _tax_burden(household_total, score, hh_weight, monthly_tax)
+    if monthly_tax >= 0:
+        household_total -= _tax_burden(household_total, score, hh_weight, monthly_tax)
+    else:
+        # Tax cut (P1): relief follows the same incidence score as a rise (choice,
+        # symmetric across programmes); no capacity cap is needed for a transfer in.
+        household_total -= monthly_tax * score / _weighted_total(score, hh_weight)
 
     return pd.DataFrame({
         "hh_id": hh_ids,

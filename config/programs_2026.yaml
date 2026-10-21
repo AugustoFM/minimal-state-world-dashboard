@@ -128,6 +128,31 @@ programmes:
         model: "payroll-cost cut counted in F3 revenue; labour regulation not modelled (gap)"
         mechanism: not_modelled
 
+model_parameters:   # how src/programs.py turns the items above into C2 scenarios (lead-developer choices, 2026-10-21)
+  start_year: 2027
+  term_years: 4                    # 2027-2030; after 2030 each programme's gap vs S0 (spending, revenue) is held
+  federal_share_of_general_government_primary:
+    value: 0.48
+    derivation: "federal primary spending 18.8% of GDP (IFI RAF 101, 2024) / general-government primary spending 39.3% of GDP (data/brazil/fiscal.csv, 2024)"
+    use: "L1 applies the LC 200 rule to this share of S0 spending; states and municipalities follow S0"
+    caveat: "proportional split of S0 ageing drift; most RGPS drift is federal, so the rule's squeeze is understated"
+  lc200_rule:
+    share_of_revenue_growth: 0.7     # 50% when the primary target is missed: not modelled
+    floor: 0.006
+    ceiling: 0.025
+    revenue_growth_basis: "ex ante: S0 real GDP growth plus the L5 revenue ramp"
+  lula_compression_composition:
+    shares: {other_current: 0.5, subsidies_and_tax_expenditures: 0.25, efficiency_health_education_admin: 0.25}
+    source: assumption
+    reason: "spending cap with protected pensions (L6), transfers (L3), investment (L4) and health/education floors (L7) squeezes mainly discretionary current spending; floors keep the service share below F2's"
+  flavio_debt_target:
+    rule: "planned primary balance moves linearly from the 2026 S0 level to d_2026 (i - g_t)/(1 + g_t) over T years (F1), on S0 rates and growth"
+    tax_cuts: "spending gap = planned primary-balance change minus the F3 revenue change"
+    new_programmes: "F8 spending is financed inside the path: cuts in the F2 composition rise by the F8 amount and the services package is reduced by it"
+    privatisation: "F5 receipts retire debt in equal parts over the term (debt_adjustment_by_year)"
+  delivery: "both programmes add the F1 pooled median miss (parameters.yaml fiscal_delivery.summary.median) to their planned gap from 2027; the bootstrap spread is a sensitivity only"
+  sampling: "unstated sizes uniform over their ranges, T uniform over whole years 2-6; central run uses midpoints (T = 4)"
+
 model_gaps_found:   # what the model must add to cover both programmes (task P1)
   - "revenue path dimension: both programmes change taxes; the model holds revenue/GDP fixed (C2 revenue_to_gdp rule)"
   - "rule-based spending paths: LC 200/2023 band rule and a debt-target rule, instead of fixed by_year reductions"

@@ -500,15 +500,36 @@ def build_spending_paths(
         s0 = float(pivot.loc[year, "S0"])
         scenario_gaps = {"S0": 0.0, "S1": s0 - float(pivot.loc[year, "S1"])}
         revenue_changes = {"S0": 0.0, "S1": 0.0}
+        debt_adjustments = {"S0": 0.0, "S1": 0.0}
+        package_paths: dict[str, dict[str, float]] = {}
         elapsed = year - base_year
         for scenario, definition in scenarios["scenarios"].items():
-            # Reductions (R_*) sit below S0; expansions (direction: above_S0)
-            # sit above it, so their gap below S0 is negative.
-            if not isinstance(definition, dict) or "by_year" not in definition:
+            if not isinstance(definition, dict):
                 continue
-            sign = -1.0 if definition.get("direction") == "above_S0" else 1.0
-            gap = _interpolate_by_year(definition["by_year"], elapsed, f"{scenario}.by_year")
-            scenario_gaps[str(scenario)] = sign * gap
+            if "package_gaps_by_year" in definition:
+                # Package-level paths (pp GDP below S0 per package; negative =
+                # above S0), used by the 2026 programme scenarios (P1).
+                package_paths[str(scenario)] = {
+                    str(package): _interpolate_by_year(path, elapsed, f"{scenario}.package_gaps_by_year.{package}")
+                    for package, path in definition["package_gaps_by_year"].items()
+                }
+                gap = sum(package_paths[str(scenario)].values())
+                scenario_gaps[str(scenario)] = gap
+            elif "by_year" in definition:
+                # Reductions (R_*) sit below S0; expansions (direction: above_S0)
+                # sit above it, so their gap below S0 is negative.
+                sign = -1.0 if definition.get("direction") == "above_S0" else 1.0
+                gap = _interpolate_by_year(definition["by_year"], elapsed, f"{scenario}.by_year")
+                scenario_gaps[str(scenario)] = sign * gap
+            else:
+                continue
+            # Stock adjustment (e.g. privatisation receipts): pp of GDP of debt
+            # retired in that year, outside the primary balance.
+            adjustment_path = definition.get("debt_adjustment_by_year")
+            debt_adjustments[str(scenario)] = (
+                0.0 if adjustment_path is None
+                else _interpolate_by_year(adjustment_path, elapsed, f"{scenario}.debt_adjustment_by_year")
+            )
             # Tax policy: revenue above S0 in pp of GDP (positive = tax increase).
             revenue_path = definition.get("revenue_by_year")
             revenue_changes[str(scenario)] = (
@@ -523,6 +544,7 @@ def build_spending_paths(
                     "spending_pct_gdp": s0 - total_gap,
                     "gap_below_s0_pp": total_gap,
                     "revenue_change_pp": revenue_changes[scenario],
+                    "debt_adjustment_pp": debt_adjustments[scenario],
                 }
             )
             # A tax increase enters the multiplier machinery as a negative gap on
@@ -535,13 +557,16 @@ def build_spending_paths(
                     "gap_below_s0_pp": -revenue_changes[scenario],
                 }
             )
-            for package, share in shares.items():
+            scenario_packages = package_paths.get(
+                scenario, {package: total_gap * share for package, share in shares.items()}
+            )
+            for package, package_gap in scenario_packages.items():
                 gaps.append(
                     {
                         "year": year,
                         "scenario": scenario,
                         "package": package,
-                        "gap_below_s0_pp": total_gap * share,
+                        "gap_below_s0_pp": package_gap,
                     }
                 )
     return pd.DataFrame(totals), pd.DataFrame(gaps)
@@ -757,7 +782,7 @@ def run_corner(
                 interest,
                 nominal_growth,
                 row.primary_balance_gdp / 100,
-            )
+            ) - float(getattr(row, "debt_adjustment_pp", 0.0)) / 100
             debt_values[int(row.year)] = previous_debt * 100
             previous_nominal_gdp = nominal_gdp
         mask = frame["scenario"].eq(scenario)
