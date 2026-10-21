@@ -22,6 +22,7 @@ def toy_persons() -> pd.DataFrame:
         "survey_weight": [1.0, 1.0, 1.0, 1.0],
         "household_condition": [1, 1, 1, 1],
         "household_income_per_capita_brl": [100.0, 200.0, 300.0, 400.0],
+        "age": [70, 10, 40, 68],
         "education_level": [1.0, 1.0, 2.0, 2.0],
         "employment_status": [2.0, 1.0, 1.0, 2.0],
         "labor_income_nominal_brl": [0.0, 200.0, 300.0, 0.0],
@@ -83,6 +84,34 @@ def test_means_tested_increase_reduces_low_line_poverty() -> None:
         {"line": 105},
     )["poverty_headcount_line_pct"]
     assert changed < base
+
+
+def test_bpc_follows_pension_indexation_by_default_and_can_be_disabled() -> None:
+    persons = toy_persons()
+    persons.loc[persons.hh_id.eq("d"), "bolsa_familia_income_brl"] = 0.0
+    persons.loc[persons.hh_id.eq("d"), "bpc_income_brl"] = 100.0
+    with_bpc = run_toy(
+        persons,
+        package_gaps_pp_gdp={"pension_and_indexation": 1.0},
+    ).set_index("hh_id")
+    assert with_bpc.loc["a", "household_income_per_capita_brl"] == pytest.approx(95.0)
+    assert with_bpc.loc["d", "household_income_per_capita_brl"] == pytest.approx(395.0)
+    without_bpc = run_toy(
+        persons,
+        package_gaps_pp_gdp={"pension_and_indexation": 1.0},
+        bpc_follows_pension_indexation=False,
+    )
+    assert without_bpc.set_index("hh_id").loc["d", "household_income_per_capita_brl"] == 400.0
+
+
+def test_age_specific_and_older_recipient_household_poverty() -> None:
+    households = run_toy(toy_persons())
+    result = calculate_indicators(households, {"line": 250.0})
+    assert result["poverty_headcount_line_age_0_14_pct"] == pytest.approx(100.0)
+    assert result["poverty_headcount_line_age_65_plus_pct"] == pytest.approx(50.0)
+    assert result[
+        "poverty_headcount_line_living_with_65_plus_pension_bpc_recipient_pct"
+    ] == pytest.approx(100.0)
 
 
 def test_excluded_conditions_are_outside_income_unit() -> None:

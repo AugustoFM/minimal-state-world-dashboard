@@ -1,0 +1,15 @@
+row_type,index,category,start_period,end_period,months,annualised_inflation_pct,inpc_benefit_real_change_pct_per_year,feasibility
+observed_series,INPC,general,201201,202609,177,5.6545273763,0.0000000000,exact_archived_monthly_series
+observed_series,INPC,health_group,201201,202609,177,6.0286708077,-0.3528700572,exact_archived_monthly_series
+observed_series,INPC,health_plans,201201,202609,177,8.4907104276,-2.6142174202,exact_archived_monthly_series
+observed_series,INPC,medical_services,201201,202609,177,6.8264020773,-1.0969897686,exact_archived_monthly_series
+observed_series,INPC,medicines,201201,202609,177,5.5460614906,0.1027663981,exact_archived_monthly_series
+observed_series,IPCA,general,201201,202609,177,5.6867111939,-0.0304520949,exact_archived_monthly_series
+observed_series,IPCA,health_group,201201,202609,177,6.4585850177,-0.7552774079,exact_archived_monthly_series
+observed_series,IPCA,health_plans,201201,202609,177,8.5082790080,-2.6299851567,exact_archived_monthly_series
+observed_series,IPCA,medical_services,201201,202609,177,6.9124866531,-1.1766252158,exact_archived_monthly_series
+observed_series,IPCA,medicines,201201,202609,177,5.3507247561,0.2883725963,exact_archived_monthly_series
+health_adjusted_sensitivity,INPC-indexed benefit,inpc_weights,201201,202609,177,5.6545273763,0.0000000000,exact_by_construction
+health_adjusted_sensitivity,INPC-indexed benefit,older_double_health_exposure_proxy,201201,202609,177,6.0286708077,-0.3528700572,closest_feasible_no_archived_expenditure_weight
+health_adjusted_sensitivity,INPC-indexed benefit,plan_holder_extra_health_exposure_proxy,201201,202609,177,8.4907104276,-2.6142174202,closest_feasible_no_archived_expenditure_weight
+health_adjusted_sensitivity,INPC-indexed benefit,nonholder_equal_medicines_services_proxy,201201,202609,177,6.1843020529,-0.4989199593,robustness_equal_item_weights_not_primary_definition

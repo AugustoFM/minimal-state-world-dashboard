@@ -41,6 +41,7 @@ class PreparedMicrodata:
     household_weight: np.ndarray
     base_pc: np.ndarray
     person_weight: np.ndarray
+    age: np.ndarray
     education: np.ndarray
     employment_status: np.ndarray
     labour: np.ndarray
@@ -108,7 +109,7 @@ def top_income_share(values: np.ndarray, weights: np.ndarray, top_fraction: floa
 def _validate_person_table(persons: pd.DataFrame) -> None:
     required = {
         "hh_id", "survey_weight", "household_condition",
-        "household_income_per_capita_brl", "education_level",
+        "household_income_per_capita_brl", "age", "education_level",
         "employment_status", *INCOME_COLUMNS,
     }
     missing = required - set(persons.columns)
@@ -118,6 +119,8 @@ def _validate_person_table(persons: pd.DataFrame) -> None:
         raise ValueError("hh_id cannot be missing")
     if (persons["survey_weight"] <= 0).any():
         raise ValueError("survey_weight must be positive")
+    if persons["age"].isna().any() or (persons["age"] < 0).any():
+        raise ValueError("age must be present and non-negative")
 
 
 def _weighted_total(values: np.ndarray, weights: np.ndarray) -> float:
@@ -204,6 +207,7 @@ def prepare_microdata(persons: pd.DataFrame) -> PreparedMicrodata:
         household_weight=grouped["survey_weight"].first().to_numpy(dtype=float),
         base_pc=grouped["household_income_per_capita_brl"].first().to_numpy(dtype=float),
         person_weight=eligible["survey_weight"].to_numpy(dtype=float),
+        age=eligible["age"].to_numpy(dtype=float),
         education=eligible["education_level"].to_numpy(dtype=float),
         employment_status=eligible["employment_status"].to_numpy(dtype=float),
         labour=eligible["labor_income_nominal_brl"].fillna(0).to_numpy(dtype=float),
@@ -249,6 +253,7 @@ def simulate_household_incomes(
     tax_variant: str,
     consumption_like_exponent: float,
     random_seed: int,
+    bpc_follows_pension_indexation: bool = True,
 ) -> pd.DataFrame:
     """Return one row per IBGE income-unit household after one scenario-year.
 
@@ -269,13 +274,19 @@ def simulate_household_incomes(
     delta = np.zeros(len(weights), dtype=float)
 
     pension = prepared.pension
+    bpc = prepared.bpc
     pension_base = pension if pension_variant == "proportional" else np.minimum(pension, minimum_wage_brl)
+    pension_amount = pension
+    if bpc_follows_pension_indexation:
+        pension_amount = pension + bpc
+        # BPC is wholly minimum-wage-linked. Under the proportional variant,
+        # pension and BPC changes are proportional to their observed amounts.
+        pension_base = pension_base + bpc
     delta += _component_delta(
-        pension, weights, package_gaps_pp_gdp.get("pension_and_indexation", 0.0),
+        pension_amount, weights, package_gaps_pp_gdp.get("pension_and_indexation", 0.0),
         nominal_gdp_brl, pension_base,
     )
 
-    bpc = prepared.bpc
     bolsa = prepared.bolsa
     transfers = bpc + bolsa
     delta += _component_delta(
@@ -311,11 +322,19 @@ def simulate_household_incomes(
         # symmetric across programmes); no capacity cap is needed for a transfer in.
         household_total -= monthly_tax * score / _weighted_total(score, hh_weight)
 
+    age_0_14 = np.bincount(codes, weights=(prepared.age <= 14).astype(float)).astype(int)
+    age_65_plus = np.bincount(codes, weights=(prepared.age >= 65).astype(float)).astype(int)
+    older_recipient = (prepared.age >= 65) & ((pension + bpc) > 0)
+    has_older_recipient = np.bincount(codes, weights=older_recipient.astype(float)) > 0
+
     return pd.DataFrame({
         "hh_id": hh_ids,
         "survey_weight": hh_weight,
         "income_unit_size": hh_size,
         "household_income_per_capita_brl": household_total / hh_size,
+        "age_0_14_count": age_0_14,
+        "age_65_plus_count": age_65_plus,
+        "living_with_65_plus_pension_bpc_recipient_count": hh_size * has_older_recipient,
     })
 
 
@@ -341,6 +360,24 @@ def calculate_indicators(households: pd.DataFrame, poverty_lines_brl: Mapping[st
         result[f"poverty_headcount_{name}_pct"] = float(
             100 * person_weight[income < float(line)].sum() / person_weight.sum()
         )
+        subgroup_columns = {
+            "age_0_14": "age_0_14_count",
+            "age_65_plus": "age_65_plus_count",
+            "living_with_65_plus_pension_bpc_recipient":
+                "living_with_65_plus_pension_bpc_recipient_count",
+        }
+        for subgroup, column in subgroup_columns.items():
+            if column not in households:
+                continue
+            subgroup_weight = (
+                households["survey_weight"].to_numpy(dtype=float)
+                * households[column].to_numpy(dtype=float)
+            )
+            denominator = subgroup_weight.sum()
+            result[f"poverty_headcount_{name}_{subgroup}_pct"] = (
+                float(100 * subgroup_weight[income < float(line)].sum() / denominator)
+                if denominator > 0 else float("nan")
+            )
     return result
 
 
