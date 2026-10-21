@@ -343,7 +343,7 @@ def _evaluate(
             previous_debt = debt_step(
                 previous_debt, nominal_interest, nominal_growth,
                 float(frame.loc[idx, "primary_balance_gdp"]) / 100,
-            )
+            ) - (float(frame.loc[idx, "debt_adjustment_pp"]) / 100 if "debt_adjustment_pp" in frame else 0.0)
             debt.loc[idx] = previous_debt * 100
             previous_nominal_gdp = nominal_gdp
     # Exact pass-through is an important invariant and avoids harmless
@@ -365,11 +365,11 @@ def apply_feedback(
     capital_share: float,
     education_share_gdp: float,
     health_share_gdp: float,
-    efficiency_package_share: float,
+    efficiency_package_share: float | Mapping[tuple[int, str], float],
     service_cut_fraction: float,
     life_expectancy_change: pd.DataFrame | pd.Series | Mapping[tuple[int, str], float] | None,
     health_output_pct_per_year: float,
-    public_investment_package_share: float,
+    public_investment_package_share: float | Mapping[tuple[int, str], float],
     public_capital_elasticity: float,
     initial_public_capital_gdp: float | None,
     public_capital_depreciation: float | None,
@@ -386,9 +386,7 @@ def apply_feedback(
     frame = _validate_corner(corner)
     for label, value in {
         "health_share_gdp": health_share_gdp,
-        "efficiency_package_share": efficiency_package_share,
         "service_cut_fraction": service_cut_fraction,
-        "public_investment_package_share": public_investment_package_share,
         "health_output_pct_per_year": health_output_pct_per_year,
         "sovereign_risk_bp_per_debt_pp": sovereign_risk_bp_per_debt_pp,
         "base_real_interest_rate_pct": base_real_interest_rate_pct,
@@ -401,6 +399,16 @@ def apply_feedback(
     if not 0 <= service_cut_fraction <= 1:
         raise ValueError("service_cut_fraction must lie in [0,1]")
     gap = _spending_gap(frame)  # positive means spending above S0
+    # Package shares are scalars, or (year, scenario) paths when a scenario has
+    # its own package composition (P1 programme scenarios).
+    shares = {}
+    for label, value in {
+        "efficiency_package_share": efficiency_package_share,
+        "public_investment_package_share": public_investment_package_share,
+    }.items():
+        shares[label] = _path_values(value, frame, label) if isinstance(value, Mapping) else _number(value, label)
+    efficiency_package_share = shares["efficiency_package_share"]
+    public_investment_package_share = shares["public_investment_package_share"]
     education_allocation = education_share_gdp / (education_share_gdp + health_share_gdp)
     education_change = gap * efficiency_package_share * education_allocation * service_cut_fraction
     investment_change = gap * public_investment_package_share
