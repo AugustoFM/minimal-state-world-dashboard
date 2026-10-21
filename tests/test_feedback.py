@@ -164,6 +164,21 @@ def test_risk_premium_amplifies_a_positive_debt_deviation_and_zero_is_unchanged(
     assert r > z
 
 
+def test_feedback_constant_rate_offset_matches_raising_the_scalar():
+    source = corner(end=2030, reform_primary=-2.0, reform_debt=50.0)
+    offset = apply_feedback(
+        source, population(end=2030),
+        **kwargs(sovereign_risk_bp_per_debt_pp=5.0, real_rate_path_offset_pp={2026: 1.0}),
+    )
+    scalar = apply_feedback(
+        source, population(end=2030),
+        **kwargs(sovereign_risk_bp_per_debt_pp=5.0, base_real_interest_rate_pct=1.0),
+    )
+    pd.testing.assert_series_equal(
+        offset["debt_gdp_with_feedback"], scalar["debt_gdp_with_feedback"], check_names=False
+    )
+
+
 def test_equal_small_cut_and_increase_are_opposite_to_first_order():
     cut = corner(end=2035, reform_spending=-0.001)
     increase = corner(end=2035, reform_spending=0.001)

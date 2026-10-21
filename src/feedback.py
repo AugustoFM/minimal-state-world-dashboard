@@ -293,6 +293,7 @@ def _evaluate(
     base_real_interest_rate_pct: float,
     inflation_pct: float,
     initial_debt_gdp: float,
+    real_rate_path_offset_pp: Mapping[int, float] | None = None,
     risk_premium_cap_pp: float | None = 50.0,
 ) -> tuple[pd.Series, pd.Series, pd.Series]:
     supply_channels = {"human_capital", "health", "public_capital", "inequality"}
@@ -311,7 +312,7 @@ def _evaluate(
     debt = pd.Series(index=frame.index, dtype=float)
     start_year = int(frame["year"].min())
     inflation = inflation_pct / 100
-    base_real_rate = base_real_interest_rate_pct / 100
+    offsets = {int(key): float(value) for key, value in (real_rate_path_offset_pp or {}).items()}
     risk_bp = sovereign_risk_bp_per_debt_pp if "sovereign_risk_premium" in active else 0.0
     for scenario, indices in frame.groupby("scenario", sort=False).groups.items():
         ordered = frame.loc[indices].sort_values("year")
@@ -338,6 +339,10 @@ def _evaluate(
             if risk_premium_cap_pp is not None:
                 deviation_pp = max(-risk_premium_cap_pp, min(risk_premium_cap_pp, deviation_pp))
             premium = risk_bp / 10_000 * deviation_pp
+            offset = offsets.get(year, 0.0)
+            if offsets and year > max(offsets):
+                offset = offsets[max(offsets)]
+            base_real_rate = (base_real_interest_rate_pct + offset) / 100
             nominal_interest = (1 + base_real_rate + premium) * (1 + inflation) - 1
             nominal_growth = nominal_gdp / previous_nominal_gdp - 1
             previous_debt = debt_step(
@@ -377,6 +382,7 @@ def apply_feedback(
     base_real_interest_rate_pct: float,
     inflation_pct: float,
     initial_debt_gdp: float,
+    real_rate_path_offset_pp: Mapping[int, float] | None = None,
     gini_change: pd.DataFrame | pd.Series | Mapping[tuple[int, str], float] | None = None,
     inequality_growth_pp_per_gini: float = 0.0,
     allow_missing: bool = False,
@@ -449,6 +455,7 @@ def apply_feedback(
         base_real_interest_rate_pct=base_real_interest_rate_pct,
         inflation_pct=inflation_pct,
         initial_debt_gdp=initial_debt_gdp,
+        real_rate_path_offset_pp=real_rate_path_offset_pp,
         risk_premium_cap_pp=risk_premium_cap_pp,
     )
     frame["gdp_level_vs_s0_pct_with_feedback"] = all_gdp
@@ -464,6 +471,7 @@ def apply_feedback(
             base_real_interest_rate_pct=base_real_interest_rate_pct,
             inflation_pct=inflation_pct,
             initial_debt_gdp=initial_debt_gdp,
+            real_rate_path_offset_pp=real_rate_path_offset_pp,
             risk_premium_cap_pp=risk_premium_cap_pp,
         )
         frame[f"{channel}_contribution_pct"] = all_gdp - without_gdp

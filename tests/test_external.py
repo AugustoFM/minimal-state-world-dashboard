@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import copy
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -54,6 +56,19 @@ def test_same_external_path_for_every_scenario(context, corner, changes) -> None
     out = external.apply_external(corner, effects, context["inputs"])
     per_year = out.groupby("year")["external_gdp_level_pct"].nunique()
     assert (per_year == 1).all()
+
+
+def test_external_debt_uses_same_annual_rate_offset_for_every_scenario(context, corner, changes) -> None:
+    years = int(corner["year"].max() - corner["year"].min())
+    effects = external.gdp_and_inflation_effects(external.reference_path("neutral", changes, years), context["parameters"])
+    inputs = copy.deepcopy(context["inputs"])
+    inputs["derived"]["real_rate_path_offset_pp"] = {year: 1.0 for year in range(2026, 2046)}
+    raised = copy.deepcopy(context["inputs"])
+    for key in ("low", "central", "high"):
+        raised["macro"]["effective_real_interest_rate"][key] += 1.0
+    with_offset = external.apply_external(corner, effects, inputs)
+    with_scalar = external.apply_external(corner, effects, raised)
+    np.testing.assert_allclose(with_offset["debt_gdp_with_external"], with_scalar["debt_gdp_with_external"])
 
 
 def test_permanent_share_and_pass_through(context) -> None:

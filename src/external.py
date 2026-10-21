@@ -26,7 +26,7 @@ from typing import Mapping
 import numpy as np
 import pandas as pd
 
-from src.macro import debt_step, macro_input, nominal_rate_from_real
+from src.macro import debt_step, macro_input, nominal_rate_from_real, real_interest_rate_for_year
 
 
 TOT = "net_barter_terms_of_trade"
@@ -193,7 +193,6 @@ def apply_external(corner: pd.DataFrame, effects: pd.DataFrame, inputs: Mapping,
     frame["external_gdp_level_pct"] = level  # external and (G2) corruption shocks combined
     frame["gdp_per_capita_with_external"] = frame["gdp_per_capita"] * (1.0 + level / 100.0)
     base_inflation = macro_input(inputs, "gdp_deflator_growth", variant)
-    real_rate = macro_input(inputs, "effective_real_interest_rate", variant)
     frame["inflation_with_external_pct"] = base_inflation + extra
     # C7 commodity-linked dividends (0 for C6 paths): added to the primary balance in this debt path.
     if "external_revenue_pp_gdp" in steps.columns:
@@ -211,6 +210,7 @@ def apply_external(corner: pd.DataFrame, effects: pd.DataFrame, inputs: Mapping,
                 price *= 1.0 + row.inflation_with_external_pct / 100.0
             nominal = row.real_gdp * price * (1 + row.gdp_level_vs_s0_pct / 100) * (1 + row.external_gdp_level_pct / 100)
             if previous_nominal is not None:
+                real_rate = real_interest_rate_for_year(inputs, variant, int(row.year))
                 interest = nominal_rate_from_real(real_rate, row.inflation_with_external_pct) / 100.0
                 previous_debt = debt_step(previous_debt, interest, nominal / previous_nominal - 1.0,
                                           (row.primary_balance_gdp + row.external_revenue_pp_gdp) / 100.0)

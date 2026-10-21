@@ -24,7 +24,13 @@ from typing import Mapping
 import numpy as np
 import pandas as pd
 
-from src.macro import baseline_real_gdp_path, debt_step, macro_input, nominal_rate_from_real
+from src.macro import (
+    baseline_real_gdp_path,
+    debt_step,
+    macro_input,
+    nominal_rate_from_real,
+    real_interest_rate_for_year,
+)
 
 PROGRAMMES = ("P_lula_rule", "P_lula_record", "P_flavio_low", "P_flavio_mid", "P_flavio_high")
 
@@ -90,8 +96,11 @@ def s0_path(annual: pd.DataFrame, population: pd.DataFrame, inputs: Mapping, var
     frame["real_growth"] = frame["real_gdp"].pct_change()
     inflation = macro_input(inputs, "gdp_deflator_growth", variant) / 100
     frame["nominal_growth"] = (1 + frame["real_growth"]) * (1 + inflation) - 1
-    real_rate = macro_input(inputs, "effective_real_interest_rate", variant)
-    frame["interest"] = nominal_rate_from_real(real_rate, inflation * 100) / 100
+    frame["interest"] = frame["year"].map(
+        lambda year: nominal_rate_from_real(
+            real_interest_rate_for_year(inputs, variant, int(year)), inflation * 100
+        ) / 100
+    )
     frame["revenue_gdp"] = macro_input(inputs, "revenue_gdp", variant)
     frame["primary_balance_gdp"] = frame["revenue_gdp"] - frame["spending_pct_gdp"]
     debt = [macro_input(inputs, "initial_debt_gdp", variant) / 100]

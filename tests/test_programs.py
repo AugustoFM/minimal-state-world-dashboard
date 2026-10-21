@@ -6,7 +6,7 @@ import pytest
 import yaml
 
 from src import programs
-from src.macro import build_spending_paths
+from src.macro import build_spending_paths, load_macro_inputs, nominal_rate_from_real
 
 CONFIG = yaml.safe_load(open("config/programs_2026.yaml", encoding="utf-8"))
 PARAMETERS = yaml.safe_load(open("config/parameters.yaml", encoding="utf-8"))
@@ -129,6 +129,24 @@ def test_debt_stabilising_primary_balance_is_a_diagnostic() -> None:
     s0 = synthetic_s0()
     g = 1.02 * 1.03 - 1
     assert programs.debt_stabilising_primary_balance(s0, 2029, 2026) == pytest.approx(80.0 * (0.08 - g) / (1 + g))
+
+
+def test_s0_programme_sizing_uses_the_common_annual_rate_path() -> None:
+    inputs = load_macro_inputs("config/parameters.yaml")
+    inputs["derived"]["real_rate_path_offset_pp"] = {2026: 1.0, 2027: 2.0}
+    annual = pd.DataFrame([
+        {"year": year, "scenario": "S0", "variant": "central", "category": "total", "spending_pct_gdp": 40.0}
+        for year in range(2025, 2028)
+    ])
+    path = programs.s0_path(annual, pd.read_csv("data/brazil/population.csv"), inputs)
+    inflation = inputs["macro"]["gdp_deflator_growth"]["central"]
+    base = inputs["macro"]["effective_real_interest_rate"]["central"]
+    expected = [
+        nominal_rate_from_real(base, inflation) / 100,
+        nominal_rate_from_real(base + 1.0, inflation) / 100,
+        nominal_rate_from_real(base + 2.0, inflation) / 100,
+    ]
+    assert path["interest"].tolist() == pytest.approx(expected)
 
 
 def test_sampling_stays_inside_the_stated_ranges() -> None:

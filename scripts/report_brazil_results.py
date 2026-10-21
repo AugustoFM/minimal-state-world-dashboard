@@ -30,6 +30,12 @@ HEADLINE_INDICATORS = (
     "gini_change_vs_s0_points",
     "poverty_218_change_vs_s0_pp",
     "poverty_759_change_vs_s0_pp",
+    "poverty_218_age_0_14_change_vs_s0_pp",
+    "poverty_218_age_65_plus_change_vs_s0_pp",
+    "poverty_218_with_65_plus_recipient_change_vs_s0_pp",
+    "poverty_759_age_0_14_change_vs_s0_pp",
+    "poverty_759_age_65_plus_change_vs_s0_pp",
+    "poverty_759_with_65_plus_recipient_change_vs_s0_pp",
 )
 
 LABELS = {
@@ -43,6 +49,12 @@ LABELS = {
     "gini_change_vs_s0_points": "Gini change vs S0 (points)",
     "poverty_218_change_vs_s0_pp": "Poverty below R$218 change vs S0 (pp)",
     "poverty_759_change_vs_s0_pp": "Poverty below R$759 change vs S0 (pp)",
+    "poverty_218_age_0_14_change_vs_s0_pp": "Poverty below R$218, age 0-14, change vs S0 (pp)",
+    "poverty_218_age_65_plus_change_vs_s0_pp": "Poverty below R$218, age 65+, change vs S0 (pp)",
+    "poverty_218_with_65_plus_recipient_change_vs_s0_pp": "Poverty below R$218, living with a 65+ pension/BPC recipient, change vs S0 (pp)",
+    "poverty_759_age_0_14_change_vs_s0_pp": "Poverty below R$759, age 0-14, change vs S0 (pp)",
+    "poverty_759_age_65_plus_change_vs_s0_pp": "Poverty below R$759, age 65+, change vs S0 (pp)",
+    "poverty_759_with_65_plus_recipient_change_vs_s0_pp": "Poverty below R$759, living with a 65+ pension/BPC recipient, change vs S0 (pp)",
     "debt_gdp": "Debt/GDP level (%)",
     "debt_gdp_with_feedback": "Debt/GDP level with C5 feedback (%)",
 }
@@ -58,6 +70,12 @@ DECIMALS = {
     "gini_change_vs_s0_points": 3,
     "poverty_218_change_vs_s0_pp": 2,
     "poverty_759_change_vs_s0_pp": 2,
+    "poverty_218_age_0_14_change_vs_s0_pp": 2,
+    "poverty_218_age_65_plus_change_vs_s0_pp": 2,
+    "poverty_218_with_65_plus_recipient_change_vs_s0_pp": 2,
+    "poverty_759_age_0_14_change_vs_s0_pp": 2,
+    "poverty_759_age_65_plus_change_vs_s0_pp": 2,
+    "poverty_759_with_65_plus_recipient_change_vs_s0_pp": 2,
     "debt_gdp": 1,
     "debt_gdp_with_feedback": 1,
 }
@@ -353,7 +371,8 @@ def build_report(
         "A missing cell is labelled `not modelled`.",
         "",
     ]
-    for indicator in HEADLINE_INDICATORS:
+    available = set(summary["indicator"])
+    for indicator in (name for name in HEADLINE_INDICATORS if name in available):
         lines.extend([
             f"### {LABELS[indicator]}",
             "",

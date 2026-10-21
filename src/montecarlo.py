@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import hashlib
 import json
 import subprocess
 import time
@@ -50,6 +51,12 @@ MICRO_OUTPUTS = {
     "gini_change_vs_s0_points": "gini_points_0_100",
     "poverty_218_change_vs_s0_pp": "pp",
     "poverty_759_change_vs_s0_pp": "pp",
+    "poverty_218_age_0_14_change_vs_s0_pp": "pp",
+    "poverty_218_age_65_plus_change_vs_s0_pp": "pp",
+    "poverty_218_with_65_plus_recipient_change_vs_s0_pp": "pp",
+    "poverty_759_age_0_14_change_vs_s0_pp": "pp",
+    "poverty_759_age_65_plus_change_vs_s0_pp": "pp",
+    "poverty_759_with_65_plus_recipient_change_vs_s0_pp": "pp",
     "top1_share_survey_change_vs_s0_pp": "pp",
     "top10_share_survey_change_vs_s0_pp": "pp",
 }
@@ -446,6 +453,20 @@ def micro_for_draw(corner: pd.DataFrame, variant_scenarios: Mapping, draw: Mappi
         "gini_change_vs_s0_points": ("gini", 100.0),
         "poverty_218_change_vs_s0_pp": ("poverty_headcount_bolsa_familia_pct", 1.0),
         "poverty_759_change_vs_s0_pp": ("poverty_headcount_half_minimum_wage_2025_pct", 1.0),
+        "poverty_218_age_0_14_change_vs_s0_pp": ("poverty_headcount_bolsa_familia_age_0_14_pct", 1.0),
+        "poverty_218_age_65_plus_change_vs_s0_pp": ("poverty_headcount_bolsa_familia_age_65_plus_pct", 1.0),
+        "poverty_218_with_65_plus_recipient_change_vs_s0_pp": (
+            "poverty_headcount_bolsa_familia_living_with_65_plus_pension_bpc_recipient_pct", 1.0
+        ),
+        "poverty_759_age_0_14_change_vs_s0_pp": (
+            "poverty_headcount_half_minimum_wage_2025_age_0_14_pct", 1.0
+        ),
+        "poverty_759_age_65_plus_change_vs_s0_pp": (
+            "poverty_headcount_half_minimum_wage_2025_age_65_plus_pct", 1.0
+        ),
+        "poverty_759_with_65_plus_recipient_change_vs_s0_pp": (
+            "poverty_headcount_half_minimum_wage_2025_living_with_65_plus_pension_bpc_recipient_pct", 1.0
+        ),
         "top1_share_survey_change_vs_s0_pp": ("survey_top_1_income_share_pct", 1.0),
         "top10_share_survey_change_vs_s0_pp": ("survey_top_10_income_share_pct", 1.0),
     }
@@ -488,6 +509,7 @@ def feedback_for_draw(
         public_capital_elasticity=float(draw["public_capital_elasticity"]),
         sovereign_risk_bp_per_debt_pp=float(draw["sovereign_risk_bp"]),
         base_real_interest_rate_pct=float(draw["effective_real_interest_rate"]),
+        real_rate_path_offset_pp=context["inputs"].get("derived", {}).get("real_rate_path_offset_pp"),
         inflation_pct=float(draw["gdp_deflator_growth"]),
         life_expectancy_change={
             (int(r.year), r.scenario): float(r.life_expectancy_difference_vs_s0_years)
@@ -644,6 +666,12 @@ def run(
         ],
         "not_modelled": NOT_MODELLED,
     }
+    if context.get("real_rate_path") is not None:
+        metadata.update(context["real_rate_path"])
+    metadata["micro_outputs"] = (
+        "C3 distribution indicators are changes versus S0; poverty outputs include all-person, age 0-14, "
+        "age 65+, and people living with a 65+ pension/BPC recipient headcounts for both poverty lines"
+    )
     if context.get("programmes") is not None:
         metadata["programmes"] = {
             "scenarios": list(programs.PROGRAMMES),
@@ -710,6 +738,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--draws", type=int, default=N_DRAWS)
     parser.add_argument("--seed", type=int, default=SEED)
     parser.add_argument("--output-dir", default="outputs/runs")
+    parser.add_argument("--rate-path", choices=("i1",), default=None,
+                        help="sensitivity: add the proposed I1 annual offsets to every scenario's real rate")
     parser.add_argument("--programmes", action="store_true",
                         help="add the P1 2026 programme scenarios (config/programs_2026.yaml)")
     parser.add_argument("--programmes-common-composition", action="store_true",
@@ -717,6 +747,20 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     started = time.time()
     context = load_context()
+    if args.rate_path == "i1":
+        source = Path("config/i1_proposed.yaml")
+        config = read_yaml(source)
+        offsets = {
+            int(row["year"]): float(row["difference_from_fixed_5_05_pp"])
+            for row in config["s0_path_before_fiscal_term"]
+        }
+        context["inputs"].setdefault("derived", {})["real_rate_path_offset_pp"] = offsets
+        context["real_rate_path"] = {
+            "real_rate_path": "i1_proposed_offsets",
+            "real_rate_path_offset_pp": offsets,
+            "real_rate_path_source_file": str(source),
+            "real_rate_path_source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+        }
     if args.programmes or args.programmes_common_composition:
         context["programmes"] = read_yaml("config/programs_2026.yaml")
         context["programme_common_composition"] = args.programmes_common_composition
