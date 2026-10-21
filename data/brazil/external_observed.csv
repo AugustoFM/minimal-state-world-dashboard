@@ -1,0 +1,471 @@
+year,indicator,value,label,series_code,source,aggregation
+1995,china_gdp_growth_pct,11.01541367,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+1996,china_gdp_growth_pct,9.973287812,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+1997,china_gdp_growth_pct,9.297594606,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+1998,china_gdp_growth_pct,7.923545351,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+1999,china_gdp_growth_pct,7.741238277,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2000,china_gdp_growth_pct,8.573573289,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2001,china_gdp_growth_pct,8.324046953,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2002,china_gdp_growth_pct,9.236048704,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2003,china_gdp_growth_pct,10.1138119,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2004,china_gdp_growth_pct,10.14042919,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2005,china_gdp_growth_pct,11.453513,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2006,china_gdp_growth_pct,12.67528423,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2007,china_gdp_growth_pct,14.15077105,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2008,china_gdp_growth_pct,9.668776082,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2009,china_gdp_growth_pct,9.406100143,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2010,china_gdp_growth_pct,10.59169039,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2011,china_gdp_growth_pct,9.462052483,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2012,china_gdp_growth_pct,7.857820148,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2013,china_gdp_growth_pct,7.778429548,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2014,china_gdp_growth_pct,7.461007358,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2015,china_gdp_growth_pct,6.981622556,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2016,china_gdp_growth_pct,6.773688687,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2017,china_gdp_growth_pct,6.891239166,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2018,china_gdp_growth_pct,6.757806142,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2019,china_gdp_growth_pct,6.067378063,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2020,china_gdp_growth_pct,2.339503852,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2021,china_gdp_growth_pct,8.57038415,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2022,china_gdp_growth_pct,3.133854384,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2023,china_gdp_growth_pct,5.416003345,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2024,china_gdp_growth_pct,4.958303788,"China GDP growth, constant prices (%)",CHN:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2005,china_import_volume_index,46.1,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2006,china_import_volume_index,53.7,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2007,china_import_volume_index,61.1,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2008,china_import_volume_index,63.4,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2009,china_import_volume_index,65.2,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2010,china_import_volume_index,79.6,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2011,china_import_volume_index,86.6,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2012,china_import_volume_index,90.7,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2013,china_import_volume_index,99.1,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2014,china_import_volume_index,102.1,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2015,china_import_volume_index,100,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2016,china_import_volume_index,103.7,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2017,china_import_volume_index,112.9,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2018,china_import_volume_index,120.2,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2019,china_import_volume_index,120.2,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2020,china_import_volume_index,126.1,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2021,china_import_volume_index,135.6,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2022,china_import_volume_index,125.9,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2023,china_import_volume_index,129.5,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+2024,china_import_volume_index,131.7,China merchandise import volume index (2015 = 100); WDI coverage from 2005,CHN:TM.QTY.MRCH.XD.WD,World Bank WDI API,annual
+1995,china_merchandise_imports_usd,1.32084e+11,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+1996,china_merchandise_imports_usd,1.38833e+11,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+1997,china_merchandise_imports_usd,1.4237e+11,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+1998,china_merchandise_imports_usd,1.40237e+11,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+1999,china_merchandise_imports_usd,1.65699e+11,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2000,china_merchandise_imports_usd,2.25094e+11,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2001,china_merchandise_imports_usd,2.43553e+11,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2002,china_merchandise_imports_usd,2.9517e+11,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2003,china_merchandise_imports_usd,4.1276e+11,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2004,china_merchandise_imports_usd,5.61229e+11,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2005,china_merchandise_imports_usd,6.59953e+11,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2006,china_merchandise_imports_usd,7.91461e+11,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2007,china_merchandise_imports_usd,9.56116e+11,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2008,china_merchandise_imports_usd,1.132567e+12,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2009,china_merchandise_imports_usd,1.005923e+12,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2010,china_merchandise_imports_usd,1.396247e+12,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2011,china_merchandise_imports_usd,1.743484e+12,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2012,china_merchandise_imports_usd,1.818405e+12,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2013,china_merchandise_imports_usd,1.94999e+12,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2014,china_merchandise_imports_usd,1.959233e+12,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2015,china_merchandise_imports_usd,1.679566e+12,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2016,china_merchandise_imports_usd,1.587925e+12,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2017,china_merchandise_imports_usd,1.843792e+12,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2018,china_merchandise_imports_usd,2.135748e+12,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2019,china_merchandise_imports_usd,2.078386e+12,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2020,china_merchandise_imports_usd,2.065964e+12,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2021,china_merchandise_imports_usd,2.679412e+12,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2022,china_merchandise_imports_usd,2.706507e+12,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2023,china_merchandise_imports_usd,2.556941e+12,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+2024,china_merchandise_imports_usd,2.583218e+12,China merchandise imports (current US$),CHN:TM.VAL.MRCH.CD.WT,World Bank WDI API,annual
+1995,commodity_export_price_index,57.10024261,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+1996,commodity_export_price_index,55.73706055,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+1997,commodity_export_price_index,59.3628273,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+1998,commodity_export_price_index,52.34007263,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+1999,commodity_export_price_index,45.59990692,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2000,commodity_export_price_index,47.12607193,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2001,commodity_export_price_index,45.34921646,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2002,commodity_export_price_index,45.54113388,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2003,commodity_export_price_index,49.35700226,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2004,commodity_export_price_index,54.34000015,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2005,commodity_export_price_index,58.66942978,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2006,commodity_export_price_index,64.58189392,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2007,commodity_export_price_index,68.76396942,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2008,commodity_export_price_index,82.84118652,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2009,commodity_export_price_index,75.86444092,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2010,commodity_export_price_index,96.1733017,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2011,commodity_export_price_index,112.7688522,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2012,commodity_export_price_index,100,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2013,commodity_export_price_index,100.2752304,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2014,commodity_export_price_index,89.46128082,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2015,commodity_export_price_index,64.17279053,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2016,commodity_export_price_index,67.83071136,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2017,commodity_export_price_index,72.85248566,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2018,commodity_export_price_index,71.88939667,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2019,commodity_export_price_index,72.53276825,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2020,commodity_export_price_index,74.23125458,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2021,commodity_export_price_index,99.06117249,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2022,commodity_export_price_index,96.11808014,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2023,commodity_export_price_index,91.6442337,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2024,commodity_export_price_index,83.25010681,"Commodity export price index, weights = exports/total commodity exports, rolling",IMF/PCTOT/A.BR.x.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+1995,commodity_import_price_index,37.55338669,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+1996,commodity_import_price_index,39.2742424,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+1997,commodity_import_price_index,38.21876907,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+1998,commodity_import_price_index,30.39089012,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+1999,commodity_import_price_index,33.20231247,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2000,commodity_import_price_index,42.16386414,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2001,commodity_import_price_index,39.84689713,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2002,commodity_import_price_index,41.24352264,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2003,commodity_import_price_index,45.91264343,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2004,commodity_import_price_index,55.52868271,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2005,commodity_import_price_index,66.65557861,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2006,commodity_import_price_index,79.29039764,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2007,commodity_import_price_index,86.15445709,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2008,commodity_import_price_index,105.8027725,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2009,commodity_import_price_index,70.52574921,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2010,commodity_import_price_index,88.40222168,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2011,commodity_import_price_index,107.5787811,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2012,commodity_import_price_index,100,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2013,commodity_import_price_index,100.5580063,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2014,commodity_import_price_index,93.58907318,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2015,commodity_import_price_index,59.20872879,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2016,commodity_import_price_index,53.97319031,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2017,commodity_import_price_index,64.62779236,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2018,commodity_import_price_index,77.15348816,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2019,commodity_import_price_index,65.05417633,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2020,commodity_import_price_index,51.67402267,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2021,commodity_import_price_index,87.6207962,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2022,commodity_import_price_index,114.7835083,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2023,commodity_import_price_index,84.97075653,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2024,commodity_import_price_index,80.42222595,"Commodity import price index, weights = imports/total commodity imports, rolling",IMF/PCTOT/A.BR.m.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+1995,commodity_tot_index,98.63179779,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+1996,commodity_tot_index,98.49272919,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+1997,commodity_tot_index,98.68043518,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+1998,commodity_tot_index,98.75141144,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+1999,commodity_tot_index,98.34007263,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2000,commodity_tot_index,98.06813049,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2001,commodity_tot_index,98.06252289,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2002,commodity_tot_index,98.01235962,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2003,commodity_tot_index,98.08718109,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2004,commodity_tot_index,98.13602448,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2005,commodity_tot_index,98.13594055,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2006,commodity_tot_index,98.29490662,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2007,commodity_tot_index,98.44005585,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2008,commodity_tot_index,98.94525146,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2009,commodity_tot_index,99.46793365,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2010,commodity_tot_index,100.109375,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2011,commodity_tot_index,100.4756927,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2012,commodity_tot_index,100,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2013,commodity_tot_index,100.0031815,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2014,commodity_tot_index,99.55270386,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2015,commodity_tot_index,98.87439728,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2016,commodity_tot_index,99.36739349,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2017,commodity_tot_index,99.3408432,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2018,commodity_tot_index,98.87783813,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2019,commodity_tot_index,99.30578613,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2020,commodity_tot_index,99.94439697,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2021,commodity_tot_index,100.2725906,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2022,commodity_tot_index,99.50841522,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2023,commodity_tot_index,99.92527771,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+2024,commodity_tot_index,99.5490036,"Commodity net export price index, weights = net exports/GDP, rolling (Gruss-Kebhaj CTOT)",IMF/PCTOT/A.BR.xm_gdp.H_RW_IX,IMF Commodity Terms of Trade database via DB.nomics,annual
+1995,current_account_pct_gdp,-2.35736655,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+1996,current_account_pct_gdp,-2.733687371,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+1997,current_account_pct_gdp,-3.638262905,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+1998,current_account_pct_gdp,-4.051458188,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+1999,current_account_pct_gdp,-4.466605304,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2000,current_account_pct_gdp,-4.047741302,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2001,current_account_pct_gdp,-4.444786532,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2002,current_account_pct_gdp,-1.845259017,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2003,current_account_pct_gdp,0.3928771837,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2004,current_account_pct_gdp,1.338630648,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2005,current_account_pct_gdp,1.309884666,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2006,current_account_pct_gdp,0.972710523,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2007,current_account_pct_gdp,-0.1970969611,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2008,current_account_pct_gdp,-2.099337848,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2009,current_account_pct_gdp,-1.759357874,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2010,current_account_pct_gdp,-3.925946045,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2011,current_account_pct_gdp,-3.194618319,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2012,current_account_pct_gdp,-3.759416117,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2013,current_account_pct_gdp,-3.574220796,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2014,current_account_pct_gdp,-4.49883038,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2015,current_account_pct_gdp,-3.518391668,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2016,current_account_pct_gdp,-1.700113397,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2017,current_account_pct_gdp,-1.224299258,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2018,current_account_pct_gdp,-2.807520086,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2019,current_account_pct_gdp,-3.414291031,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2020,current_account_pct_gdp,-1.641035418,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2021,current_account_pct_gdp,-2.358220972,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2022,current_account_pct_gdp,-2.149676985,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2023,current_account_pct_gdp,-1.231394458,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+2024,current_account_pct_gdp,-2.988014271,Brazil current account balance (% of GDP),BRA:BN.CAB.XOKA.GD.ZS,World Bank WDI API,annual
+1995,embi_brazil_spread_bp,1117.576,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+1996,embi_brazil_spread_bp,690.2948207,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+1997,embi_brazil_spread_bp,445.02,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+1998,embi_brazil_spread_bp,800.432,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+1999,embi_brazil_spread_bp,1034.286853,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2000,embi_brazil_spread_bp,727.3359375,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2001,embi_brazil_spread_bp,889.7413127,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2002,embi_brazil_spread_bp,1364.397683,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2003,embi_brazil_spread_bp,834.8875969,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2004,embi_brazil_spread_bp,540.2923077,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2005,embi_brazil_spread_bp,398.0346154,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2006,embi_brazil_spread_bp,235.4285714,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2007,embi_brazil_spread_bp,180.627907,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2008,embi_brazil_spread_bp,299.9496124,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2009,embi_brazil_spread_bp,305.7945736,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2010,embi_brazil_spread_bp,203.4341085,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2011,embi_brazil_spread_bp,193.7992278,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2012,embi_brazil_spread_bp,183.996139,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2013,embi_brazil_spread_bp,204.7093023,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2014,embi_brazil_spread_bp,230.7015504,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2015,embi_brazil_spread_bp,345.957529,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2016,embi_brazil_spread_bp,381.6833977,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2017,embi_brazil_spread_bp,268.1245136,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2018,embi_brazil_spread_bp,272.2529183,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2019,embi_brazil_spread_bp,241.4980695,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2020,embi_brazil_spread_bp,320.7490494,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2021,embi_brazil_spread_bp,301.1158301,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2022,embi_brazil_spread_bp,303.2213439,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2023,embi_brazil_spread_bp,228.4291498,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,annual mean
+2024,embi_brazil_spread_bp,213.662069,"EMBI+ Brazil sovereign spread, annual mean of daily values (bp)",JPM366_EMBI366,J.P. Morgan via Ipeadata,partial-year mean (to month 7)
+1995,export_volume_growth_pct,-17.36195397,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+1996,export_volume_growth_pct,-0.4198645021,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+1997,export_volume_growth_pct,11.01928872,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+1998,export_volume_growth_pct,4.908205322,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+1999,export_volume_growth_pct,5.706289582,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2000,export_volume_growth_pct,12.86054936,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2001,export_volume_growth_pct,9.230526893,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2002,export_volume_growth_pct,6.476821943,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2003,export_volume_growth_pct,11.01593942,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2004,export_volume_growth_pct,14.4737797,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2005,export_volume_growth_pct,9.644189671,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2006,export_volume_growth_pct,4.837427876,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2007,export_volume_growth_pct,6.17610164,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2008,export_volume_growth_pct,0.4092509822,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2009,export_volume_growth_pct,-9.247066469,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2010,export_volume_growth_pct,11.72172151,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2011,export_volume_growth_pct,4.811946379,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2012,export_volume_growth_pct,0.7076416435,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2013,export_volume_growth_pct,1.830295075,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2014,export_volume_growth_pct,-1.569680443,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2015,export_volume_growth_pct,6.819563948,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2016,export_volume_growth_pct,0.8631255564,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2017,export_volume_growth_pct,4.908793377,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2018,export_volume_growth_pct,4.053083682,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2019,export_volume_growth_pct,-2.561421037,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2020,export_volume_growth_pct,-2.290905832,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2021,export_volume_growth_pct,4.382256602,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2022,export_volume_growth_pct,5.742839876,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2023,export_volume_growth_pct,8.922171526,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+2024,export_volume_growth_pct,2.762913491,"Brazil exports, constant prices (% growth)",BRA:NE.EXP.GNFS.KD.ZG,World Bank WDI API,annual
+1995,fdi_net_inflows_pct_gdp,0.6315860204,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+1996,fdi_net_inflows_pct_gdp,1.475965411,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+1997,fdi_net_inflows_pct_gdp,2.150453059,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+1998,fdi_net_inflows_pct_gdp,3.340888093,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+1999,fdi_net_inflows_pct_gdp,4.733770227,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2000,fdi_net_inflows_pct_gdp,5.033916805,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2001,fdi_net_inflows_pct_gdp,4.147593774,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2002,fdi_net_inflows_pct_gdp,3.253580613,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2003,fdi_net_inflows_pct_gdp,1.813400524,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2004,fdi_net_inflows_pct_gdp,2.713531663,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2005,fdi_net_inflows_pct_gdp,1.733893546,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2006,fdi_net_inflows_pct_gdp,1.753125704,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2007,fdi_net_inflows_pct_gdp,3.190826013,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2008,fdi_net_inflows_pct_gdp,2.990609469,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2009,fdi_net_inflows_pct_gdp,1.888482241,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2010,fdi_net_inflows_pct_gdp,3.730012884,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2011,fdi_net_inflows_pct_gdp,3.915180114,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2012,fdi_net_inflows_pct_gdp,3.754962856,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2013,fdi_net_inflows_pct_gdp,3.041509016,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2014,fdi_net_inflows_pct_gdp,3.57135267,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2015,fdi_net_inflows_pct_gdp,3.592149318,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2016,fdi_net_inflows_pct_gdp,4.137378039,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2017,fdi_net_inflows_pct_gdp,3.338259817,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2018,fdi_net_inflows_pct_gdp,4.078588215,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2019,fdi_net_inflows_pct_gdp,3.692673213,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2020,fdi_net_inflows_pct_gdp,2.592637953,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2021,fdi_net_inflows_pct_gdp,2.779790849,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2022,fdi_net_inflows_pct_gdp,3.868031797,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2023,fdi_net_inflows_pct_gdp,2.863833443,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+2024,fdi_net_inflows_pct_gdp,3.389608085,Brazil FDI net inflows (% of GDP),BRA:BX.KLT.DINV.WD.GD.ZS,World Bank WDI API,annual
+1995,import_volume_growth_pct,7.766569777,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+1996,import_volume_growth_pct,5.594315197,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+1997,import_volume_growth_pct,14.59507693,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+1998,import_volume_growth_pct,-0.05666123662,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+1999,import_volume_growth_pct,-15.09414547,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2000,import_volume_growth_pct,10.7985867,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2001,import_volume_growth_pct,3.331402846,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2002,import_volume_growth_pct,-13.30726904,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2003,import_volume_growth_pct,-0.4834971956,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2004,import_volume_growth_pct,10.36404525,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2005,import_volume_growth_pct,7.461346041,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2006,import_volume_growth_pct,17.76258455,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2007,import_volume_growth_pct,19.55759868,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2008,import_volume_growth_pct,17.02571025,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2009,import_volume_growth_pct,-7.60196744,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2010,import_volume_growth_pct,33.63902465,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2011,import_volume_growth_pct,9.393263457,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2012,import_volume_growth_pct,1.130851735,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2013,import_volume_growth_pct,6.669679308,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2014,import_volume_growth_pct,-2.271895593,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2015,import_volume_growth_pct,-14.19063686,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2016,import_volume_growth_pct,-10.3429328,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2017,import_volume_growth_pct,6.716940697,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2018,import_volume_growth_pct,7.742778941,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2019,import_volume_growth_pct,1.332566091,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2020,import_volume_growth_pct,-9.476639026,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2021,import_volume_growth_pct,13.75205325,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2022,import_volume_growth_pct,0.9514937604,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2023,import_volume_growth_pct,-1.182846734,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+2024,import_volume_growth_pct,15.57254972,"Brazil imports, constant prices (% growth)",BRA:NE.IMP.GNFS.KD.ZG,World Bank WDI API,annual
+1995,investment_rate_pct_gdp,20.28629762,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+1996,investment_rate_pct_gdp,18.64065378,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+1997,investment_rate_pct_gdp,19.12290113,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+1998,investment_rate_pct_gdp,18.5423485,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+1999,investment_rate_pct_gdp,17.01629422,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2000,investment_rate_pct_gdp,18.30448803,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2001,investment_rate_pct_gdp,18.4180865,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2002,investment_rate_pct_gdp,17.92625082,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2003,investment_rate_pct_gdp,16.60475915,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2004,investment_rate_pct_gdp,17.32023332,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2005,investment_rate_pct_gdp,17.05618346,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2006,investment_rate_pct_gdp,17.21029958,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2007,investment_rate_pct_gdp,17.99576134,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2008,investment_rate_pct_gdp,19.38532956,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2009,investment_rate_pct_gdp,19.10195804,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2010,investment_rate_pct_gdp,20.53467365,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2011,investment_rate_pct_gdp,20.60896421,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2012,investment_rate_pct_gdp,20.71671277,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2013,investment_rate_pct_gdp,20.91192187,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2014,investment_rate_pct_gdp,19.87302891,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2015,investment_rate_pct_gdp,17.83580705,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2016,investment_rate_pct_gdp,15.52432732,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2017,investment_rate_pct_gdp,14.55898652,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2018,investment_rate_pct_gdp,15.09691196,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2019,investment_rate_pct_gdp,15.47116974,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2020,investment_rate_pct_gdp,16.56102156,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2021,investment_rate_pct_gdp,17.91784905,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2022,investment_rate_pct_gdp,17.80040239,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2023,investment_rate_pct_gdp,16.41097511,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+2024,investment_rate_pct_gdp,16.90936132,Brazil gross fixed capital formation (% of GDP),BRA:NE.GDI.FTOT.ZS,World Bank WDI API,annual
+1995,investment_volume_growth_pct,2.092942276,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+1996,investment_volume_growth_pct,1.195521101,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+1997,investment_volume_growth_pct,8.418114383,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+1998,investment_volume_growth_pct,-0.1638407807,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+1999,investment_volume_growth_pct,-8.875302371,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2000,investment_volume_growth_pct,4.813191583,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2001,investment_volume_growth_pct,1.304475514,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2002,investment_volume_growth_pct,-1.443774803,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2003,investment_volume_growth_pct,-3.984512373,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2004,investment_volume_growth_pct,8.486963405,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2005,investment_volume_growth_pct,1.956301055,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2006,investment_volume_growth_pct,6.660788312,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2007,investment_volume_growth_pct,11.95240786,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2008,investment_volume_growth_pct,12.28695792,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2009,investment_volume_growth_pct,-2.13387479,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2010,investment_volume_growth_pct,17.85392141,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2011,investment_volume_growth_pct,6.834046414,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2012,investment_volume_growth_pct,0.7787769655,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2013,investment_volume_growth_pct,5.827201091,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2014,investment_volume_growth_pct,-4.224068615,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2015,investment_volume_growth_pct,-13.9465002,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2016,investment_volume_growth_pct,-12.12982647,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2017,investment_volume_growth_pct,-2.557355567,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2018,investment_volume_growth_pct,5.23175834,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2019,investment_volume_growth_pct,4.026067467,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2020,investment_volume_growth_pct,-1.746961307,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2021,investment_volume_growth_pct,12.90711909,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2022,investment_volume_growth_pct,1.089475224,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2023,investment_volume_growth_pct,-2.978855835,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+2024,investment_volume_growth_pct,6.860758444,"Brazil gross fixed capital formation, constant prices (% growth)",BRA:NE.GDI.FTOT.KD.ZG,World Bank WDI API,annual
+1995,us_10y_yield_pct,6.57392,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+1996,us_10y_yield_pct,6.443531746,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+1997,us_10y_yield_pct,6.35396,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+1998,us_10y_yield_pct,5.26288,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+1999,us_10y_yield_pct,5.646135458,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2000,us_10y_yield_pct,6.030278884,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2001,us_10y_yield_pct,5.020685484,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2002,us_10y_yield_pct,4.61308,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2003,us_10y_yield_pct,4.01388,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2004,us_10y_yield_pct,4.27132,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2005,us_10y_yield_pct,4.28888,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2006,us_10y_yield_pct,4.795,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2007,us_10y_yield_pct,4.634661355,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2008,us_10y_yield_pct,3.664262948,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2009,us_10y_yield_pct,3.26412,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2010,us_10y_yield_pct,3.215059761,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2011,us_10y_yield_pct,2.78164,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2012,us_10y_yield_pct,1.80344,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2013,us_10y_yield_pct,2.35016,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2014,us_10y_yield_pct,2.53956,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2015,us_10y_yield_pct,2.138286853,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2016,us_10y_yield_pct,1.83744,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2017,us_10y_yield_pct,2.32948,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2018,us_10y_yield_pct,2.91124498,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2019,us_10y_yield_pct,2.1414,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2020,us_10y_yield_pct,0.8892031873,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2021,us_10y_yield_pct,1.44685259,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2022,us_10y_yield_pct,2.950562249,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2023,us_10y_yield_pct,3.959,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+2024,us_10y_yield_pct,4.20796,"US 10-year Treasury constant-maturity yield, annual mean (%)",DGS10,Federal Reserve Bank of St. Louis (FRED),annual mean
+1995,us_fed_funds_pct,5.836666667,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+1996,us_fed_funds_pct,5.298333333,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+1997,us_fed_funds_pct,5.46,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+1998,us_fed_funds_pct,5.353333333,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+1999,us_fed_funds_pct,4.97,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2000,us_fed_funds_pct,6.235833333,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2001,us_fed_funds_pct,3.8875,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2002,us_fed_funds_pct,1.666666667,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2003,us_fed_funds_pct,1.1275,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2004,us_fed_funds_pct,1.349166667,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2005,us_fed_funds_pct,3.213333333,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2006,us_fed_funds_pct,4.964166667,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2007,us_fed_funds_pct,5.019166667,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2008,us_fed_funds_pct,1.9275,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2009,us_fed_funds_pct,0.16,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2010,us_fed_funds_pct,0.175,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2011,us_fed_funds_pct,0.1016666667,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2012,us_fed_funds_pct,0.14,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2013,us_fed_funds_pct,0.1075,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2014,us_fed_funds_pct,0.08916666667,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2015,us_fed_funds_pct,0.1325,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2016,us_fed_funds_pct,0.395,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2017,us_fed_funds_pct,1.001666667,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2018,us_fed_funds_pct,1.831666667,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2019,us_fed_funds_pct,2.158333333,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2020,us_fed_funds_pct,0.3758333333,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2021,us_fed_funds_pct,0.08,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2022,us_fed_funds_pct,1.683333333,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2023,us_fed_funds_pct,5.024166667,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+2024,us_fed_funds_pct,5.143333333,"US effective federal funds rate, annual mean (%)",FEDFUNDS,Federal Reserve Bank of St. Louis (FRED),annual mean
+1995,world_gdp_growth_pct,3.178073216,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+1996,world_gdp_growth_pct,3.586234018,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+1997,world_gdp_growth_pct,3.996789156,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+1998,world_gdp_growth_pct,2.781252822,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+1999,world_gdp_growth_pct,3.578568191,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2000,world_gdp_growth_pct,4.56720186,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2001,world_gdp_growth_pct,2.029944476,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2002,world_gdp_growth_pct,2.318915353,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2003,world_gdp_growth_pct,3.074163184,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2004,world_gdp_growth_pct,4.495378598,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2005,world_gdp_growth_pct,4.059151394,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2006,world_gdp_growth_pct,4.489135105,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2007,world_gdp_growth_pct,4.431233768,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2008,world_gdp_growth_pct,2.091604481,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2009,world_gdp_growth_pct,-1.333038142,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2010,world_gdp_growth_pct,4.520852139,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2011,world_gdp_growth_pct,3.314318393,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2012,world_gdp_growth_pct,2.747433594,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2013,world_gdp_growth_pct,2.889747656,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2014,world_gdp_growth_pct,3.168491931,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2015,world_gdp_growth_pct,3.127213257,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2016,world_gdp_growth_pct,2.789740742,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2017,world_gdp_growth_pct,3.446586232,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2018,world_gdp_growth_pct,3.286630865,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2019,world_gdp_growth_pct,2.680308748,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2020,world_gdp_growth_pct,-2.886211855,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2021,world_gdp_growth_pct,6.485088876,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2022,world_gdp_growth_pct,3.440010973,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2023,world_gdp_growth_pct,2.859384933,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
+2024,world_gdp_growth_pct,2.900013402,"World GDP growth, constant prices (%)",WLD:NY.GDP.MKTP.KD.ZG,World Bank WDI API,annual
