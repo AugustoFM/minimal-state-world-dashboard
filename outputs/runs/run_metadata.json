@@ -34,6 +34,9 @@
     "service_cut_fraction": "triangular(low, central, high) from social_modelling_choices",
     "imr_elasticity": "triangular(low, central, high) from social_outcome_elasticities",
     "pension_gdp_per_worker_weight": "uniform(low, high), snapped to a 0.025 grid",
+    "health_output_pct": "uniform(0, 4) from long_run_feedback.health_to_output (two conflicting studies)",
+    "public_capital_elasticity": "triangular(0.083, 0.106, 0.122) from long_run_feedback.public_capital",
+    "sovereign_risk_bp": "triangular(2, 5, 7) from long_run_feedback.sovereign_risk_premium; deviation vs base-year debt capped at 50 pp (choice)",
     "revenue_elasticity": "uniform(0.92, 0.98) from revenue_elasticity_to_gdp (IFI EE16 long run; C2 deterministic rule is 1.0)",
     "leakage_share": "uniform(low, high) from governance.leakage_share_of_spending (cancels in scenario-vs-S0 comparisons; drives the leakage_halved sensitivity)",
     "profile_year": "discrete, equal probability over profile_years.values"
@@ -50,13 +53,8 @@
     "persistence (transitory/persistent) is reported as a dimension, not sampled",
     "percentiles describe parameter uncertainty only, not forecast error or external shocks"
   ],
-  "not_modelled": {
-    "gini": "C3 pending",
-    "top1_share": "C3 pending",
-    "top10_share": "C3 pending",
-    "poverty_rate": "C3 pending"
-  },
-  "inputs_commit": "38f6403b3a5bfca723507d48e36460287cd70c77",
-  "created_utc": "2026-10-20T19:33:58+00:00",
-  "runtime_seconds": 578.0
+  "not_modelled": {},
+  "inputs_commit": "8d2d2544344d3126da061af46495027af065a1c4",
+  "created_utc": "2026-10-20T23:52:18+00:00",
+  "runtime_seconds": 9251.9
 }
