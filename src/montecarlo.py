@@ -26,7 +26,7 @@ from typing import Iterable, Mapping
 import numpy as np
 import pandas as pd
 
-from src import external, feedback, micro, programs, social
+from src import corruption, external, feedback, micro, programs, social
 from src.baseline import project_baseline, read_yaml
 from src.macro import _interpolate_by_year
 from src.macro import PERSISTENCE_VARIANTS, load_macro_inputs, run_corner
@@ -68,6 +68,7 @@ MACRO_OUTPUTS = {
     "debt_gdp_with_external": "pct_gdp",
     "debt_gdp_with_external_vs_s0_pp": "pp_gdp",
     "inflation_with_external_pct": "percent",
+    "corruption_gdp_level_pct": "percent",
     # C5 long-run feedback (src/feedback.py); no external path, same corner as above
     "gdp_level_vs_s0_pct_with_feedback": "percent",
     "gdp_per_capita_with_feedback_vs_s0_pct": "percent",
@@ -366,6 +367,7 @@ def load_context(
         ),
         "feedback_defaults": _feedback_defaults(parameters_path, scenarios_path),
         "micro": _micro_context(data),
+        "corruption": corruption.load_config("config/corruption_proposed.yaml"),
     }
 
 
@@ -568,6 +570,8 @@ def run(
     # Separate stream so adding the external block leaves parameter draws unchanged.
     external_rng = np.random.default_rng([seed, 1])
     c7_rng = np.random.default_rng([seed, 3])  # C7 coefficient window per draw
+    corruption_rng = np.random.default_rng([seed, 4])  # G2 scandal shocks
+    corruption_config = context.get("corruption")
     c7 = "dlnp_pct" in context["external_changes"].columns
     c7_windows = sorted(parameters["external_block"]["output_channel_c7"]["coefficient_sets"]) if c7 else []
     programme_rng = np.random.default_rng([seed, 2])  # P1 sizes; leaves the other streams unchanged
@@ -587,6 +591,11 @@ def run(
             effects = external.gdp_and_inflation_effects(path, parameters)
             draw["external_tot_cumulative_change_pct"] = float(path["tot_change_pct"].sum())
         draw["external_fx_cumulative_change_pct"] = float(path["fx_change_pct"].sum())
+        if corruption_config is not None:
+            shock = corruption.draw_path(corruption_rng, steps, corruption_config)
+            effects = effects.merge(shock[["step", "corruption_gdp_level_pct"]], on="step", validate="one_to_one")
+            draw["corruption_probability"] = float(shock.attrs["sampled_probability"])
+            draw["corruption_events"] = int(shock["corruption_event"].sum())
         if context.get("programmes") is not None:
             draw.update(programs.sample_programme_draw(programme_rng, context["programmes"], parameters))
         draws.append(draw)
@@ -609,6 +618,11 @@ def run(
             "leakage_share": "uniform(low, high) from governance.leakage_share_of_spending (cancels in scenario-vs-S0 comparisons; drives the leakage_halved sensitivity)",
             "profile_year": "discrete, equal probability over profile_years.values",
         },
+        "corruption": (
+            "G2 major-scandal shock: annual probability uniform(0.03, 0.08), GDP level loss triangular(1.0, 2.25, 3.6)%, "
+            "2-year build-up, 4-year recovery half-life; one event sequence per draw shared by every scenario and "
+            "programme (stream [seed, 4]); included in external_gdp_level_pct and the *_with_external outputs"
+        ),
         "fixed": {
             "life_expectancy_elasticity": "central only (point estimate)",
             "point_inputs": "every macro input with low = central = high (initial debt, revenue/GDP, capital share, K/Y, depreciation, GDP anchors)",

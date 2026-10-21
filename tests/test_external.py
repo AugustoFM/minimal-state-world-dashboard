@@ -101,3 +101,14 @@ def test_c7_central_is_the_average_of_both_windows(context) -> None:
 
 def test_c7_is_the_default_mc_external_input(context) -> None:
     assert "dlnp_pct" in context["external_changes"].columns
+
+
+def test_corruption_shock_combines_with_external_level(context, corner) -> None:
+    years = int(corner["year"].max() - corner["year"].min())
+    effects = external.gdp_and_inflation_effects(
+        external.reference_path("neutral", external.historical_changes_v2(), years), context["parameters"])
+    effects["corruption_gdp_level_pct"] = -2.0
+    out = external.apply_external(corner, effects, context["inputs"])
+    later = out.loc[out["year"] > out["year"].min()]
+    assert later["external_gdp_level_pct"].tolist() == pytest.approx([-2.0] * len(later))
+    assert (later["gdp_per_capita_with_external"] < later["gdp_per_capita"]).all()
