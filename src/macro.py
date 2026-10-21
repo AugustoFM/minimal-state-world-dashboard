@@ -512,6 +512,7 @@ def build_spending_paths(
         s0 = float(pivot.loc[year, "S0"])
         scenario_gaps = {"S0": 0.0, "S1": s0 - float(pivot.loc[year, "S1"])}
         revenue_changes = {"S0": 0.0, "S1": 0.0}
+        non_tax_revenue = {"S0": 0.0, "S1": 0.0}
         debt_adjustments = {"S0": 0.0, "S1": 0.0}
         package_paths: dict[str, dict[str, float]] = {}
         elapsed = year - base_year
@@ -548,6 +549,13 @@ def build_spending_paths(
                 0.0 if revenue_path is None
                 else _interpolate_by_year(revenue_path, elapsed, f"{scenario}.revenue_by_year")
             )
+            # Property income such as foregone SOE dividends affects the
+            # primary balance, but is neither a tax nor a multiplier shock.
+            non_tax_path = definition.get("non_tax_revenue_by_year")
+            non_tax_revenue[str(scenario)] = (
+                0.0 if non_tax_path is None
+                else _interpolate_by_year(non_tax_path, elapsed, f"{scenario}.non_tax_revenue_by_year")
+            )
         for scenario, total_gap in scenario_gaps.items():
             totals.append(
                 {
@@ -556,6 +564,7 @@ def build_spending_paths(
                     "spending_pct_gdp": s0 - total_gap,
                     "gap_below_s0_pp": total_gap,
                     "revenue_change_pp": revenue_changes[scenario],
+                    "non_tax_revenue_pp": non_tax_revenue[scenario],
                     "debt_adjustment_pp": debt_adjustments[scenario],
                 }
             )
@@ -759,7 +768,9 @@ def run_corner(
         revenue * (1 + frame["gdp_level_vs_s0_pct"] / 100) ** (elasticity - 1)
         + frame["revenue_change_pp"]
     )
-    frame["primary_balance_gdp"] = frame["revenue_gdp"] - frame["spending_pct_gdp"]
+    frame["primary_balance_gdp"] = (
+        frame["revenue_gdp"] - frame["spending_pct_gdp"]
+    ) + frame["non_tax_revenue_pp"]
     inflation = macro_input(inputs, "gdp_deflator_growth", variant) / 100
     mode = inputs.get("derived", {}).get(
         "interest_rate_mode", "historical_real_reinflated_with_projected_deflator"

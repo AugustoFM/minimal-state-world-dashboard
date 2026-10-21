@@ -347,6 +347,8 @@ def _evaluate(
             nominal_growth = nominal_gdp / previous_nominal_gdp - 1
             previous_debt = debt_step(
                 previous_debt, nominal_interest, nominal_growth,
+                # Includes non-tax revenue from C2 (for example lost SOE
+                # dividends) without treating it as household taxation.
                 float(frame.loc[idx, "primary_balance_gdp"]) / 100,
             ) - (float(frame.loc[idx, "debt_adjustment_pp"]) / 100 if "debt_adjustment_pp" in frame else 0.0)
             debt.loc[idx] = previous_debt * 100

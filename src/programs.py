@@ -231,9 +231,17 @@ def build_programme_scenarios(
     # --- Flávio: three cut sizes, F3 tax cuts, F5 privatisation, F8 new programmes financed inside.
     new_programmes = {y: float(draw["flavio_new_programmes_pp"]) * ramp[y] for y in years}
     tax = horizon_path({y: float(draw["flavio_revenue_pp"]) * ramp[y] for y in years})
-    privatisation = horizon_path(
+    default_privatisation = horizon_path(
         {y: (float(draw["flavio_privatisation_pp"]) / term if start <= y <= last else 0.0) for y in years}
     )
+    privatisation = {
+        int(h): float(v) for h, v in draw.get(
+            "privatisation_debt_adjustment_by_year", default_privatisation
+        ).items()
+    }
+    non_tax_revenue = {
+        int(h): float(v) for h, v in draw.get("privatisation_non_tax_revenue_by_year", {}).items()
+    }
     for name, scenario in model["flavio_cut_scenarios"].items():
         if not isinstance(scenario, Mapping):
             continue  # notes
@@ -247,6 +255,7 @@ def build_programme_scenarios(
             "package_gaps_by_year": flavio,
             "revenue_by_year": dict(tax),
             "debt_adjustment_by_year": dict(privatisation),
+            "non_tax_revenue_by_year": dict(non_tax_revenue),
         }
     return out
 
