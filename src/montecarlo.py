@@ -27,7 +27,7 @@ from typing import Iterable, Mapping
 import numpy as np
 import pandas as pd
 
-from src import corruption, external, feedback, micro, programs, social
+from src import corruption, external, feedback, micro, privatisation, programs, social
 from src.baseline import project_baseline, read_yaml
 from src.macro import _interpolate_by_year
 from src.macro import PERSISTENCE_VARIANTS, load_macro_inputs, run_corner
@@ -597,6 +597,7 @@ def run(
     c7 = "dlnp_pct" in context["external_changes"].columns
     c7_windows = sorted(parameters["external_block"]["output_channel_c7"]["coefficient_sets"]) if c7 else []
     programme_rng = np.random.default_rng([seed, 2])  # P1 sizes; leaves the other streams unchanged
+    privatisation_rng = np.random.default_rng([seed, 5])  # PZ sales; leaves every existing stream unchanged
     steps = max(context["target_years"]) - base_year
     draws, results = [], []
     for index in range(n_draws):
@@ -620,11 +621,27 @@ def run(
             draw["corruption_events"] = int(shock["corruption_event"].sum())
         if context.get("programmes") is not None:
             draw.update(programs.sample_programme_draw(programme_rng, context["programmes"], parameters))
+            petroleum_factor: dict[int, float] = {}
+            if "dlnp_pct" in path.columns:
+                cumulative = np.exp(path["dlnp_pct"].to_numpy().cumsum() / 100.0)
+                petroleum_factor = {
+                    base_year + int(step): float(factor)
+                    for step, factor in zip(path["step"], cumulative)
+                }
+            sale = privatisation.sale_paths(
+                context["privatisation_inventory"], context.get("privatisation_package", "f5"),
+                privatisation_rng, context["privatisation_nominal_gdp_brl_million"],
+                f5_target_pp=float(draw["flavio_privatisation_pp"]),
+                base_year=base_year, end_year=base_year + steps, petroleum_factor_by_year=petroleum_factor,
+            )
+            draw["privatisation_debt_adjustment_by_year"] = sale["debt_adjustment_by_year"]
+            draw["privatisation_non_tax_revenue_by_year"] = sale["non_tax_revenue_by_year"]
         draws.append(draw)
         results.append(evaluate_draw(draw, context, effects))
     draw_results = pd.concat(results, ignore_index=True)
     metadata = {
         "seed": seed, "n_draws": n_draws, "variants": variant_names,
+        "privatisation_package": context.get("privatisation_package", "f5"),
         "persistence": list(PERSISTENCE_VARIANTS), "horizons": horizons, "base_year": base_year,
         "sampled": {
             **{f"multiplier_{c}": "triangular(low, central, high) from fiscal_multipliers_brazil.accumulated" for c in MULTIPLIER_CATEGORIES},
@@ -678,6 +695,8 @@ def run(
             "variant": PROGRAMME_VARIANT,
             "sampling": context["programmes"]["model_parameters"]["sampling"],
             "stream": "separate random stream [seed, 2]",
+            "privatisation_package": context.get("privatisation_package", "f5"),
+            "privatisation_stream": "separate random stream [seed, 5]",
             "composition": "default package shares for both (sensitivity)" if context.get("programme_common_composition")
             else "programme-specific assumed compositions (programs_2026.yaml)",
             "status": "unpublished until the D2 gate and lead/user review",
@@ -720,7 +739,25 @@ def reference_paths(context: Mapping) -> pd.DataFrame:
     for name in ("boom", "neutral", "bust"):
         path = external.reference_path(name, context["external_changes"], steps)
         effects = external.gdp_and_inflation_effects(path, context["parameters"])
-        frame = evaluate_draw(draw, context, effects)
+        path_draw = dict(draw)
+        if context.get("programmes") is not None:
+            petroleum_factor = {}
+            if "dlnp_pct" in path.columns:
+                cumulative = np.exp(path["dlnp_pct"].to_numpy().cumsum() / 100.0)
+                petroleum_factor = {
+                    context["base_year"] + int(step): float(factor)
+                    for step, factor in zip(path["step"], cumulative)
+                }
+            sale = privatisation.sale_paths(
+                context["privatisation_inventory"], context.get("privatisation_package", "f5"),
+                np.random.default_rng([SEED, 5]), context["privatisation_nominal_gdp_brl_million"],
+                f5_target_pp=float(path_draw["flavio_privatisation_pp"]),
+                base_year=context["base_year"], end_year=context["base_year"] + steps,
+                petroleum_factor_by_year=petroleum_factor,
+            )
+            path_draw["privatisation_debt_adjustment_by_year"] = sale["debt_adjustment_by_year"]
+            path_draw["privatisation_non_tax_revenue_by_year"] = sale["non_tax_revenue_by_year"]
+        frame = evaluate_draw(path_draw, context, effects)
         frame.insert(0, "external_path", name)
         frames.append(frame.drop(columns="draw"))
     return pd.concat(frames, ignore_index=True)
@@ -744,6 +781,8 @@ def main(argv: list[str] | None = None) -> int:
                         help="add the P1 2026 programme scenarios (config/programs_2026.yaml)")
     parser.add_argument("--programmes-common-composition", action="store_true",
                         help="P1 sensitivity: both programmes cut with the default package shares")
+    parser.add_argument("--privatisation", choices=privatisation.PACKAGES, default="f5",
+                        help="PZ sale package for programme scenarios (default: f5)")
     args = parser.parse_args(argv)
     started = time.time()
     context = load_context()
@@ -764,6 +803,9 @@ def main(argv: list[str] | None = None) -> int:
     if args.programmes or args.programmes_common_composition:
         context["programmes"] = read_yaml("config/programs_2026.yaml")
         context["programme_common_composition"] = args.programmes_common_composition
+        context["privatisation_package"] = args.privatisation
+        context["privatisation_inventory"] = pd.read_csv(privatisation.INVENTORY_PATH)
+        context["privatisation_nominal_gdp_brl_million"] = privatisation.nominal_gdp_by_year()[2025]
     draw_results, draws, metadata = run(args.draws, args.seed, context=context)
     summary = summarise(draw_results, args.draws)
     output = Path(args.output_dir)

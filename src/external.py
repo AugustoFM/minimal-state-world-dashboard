@@ -212,6 +212,8 @@ def apply_external(corner: pd.DataFrame, effects: pd.DataFrame, inputs: Mapping,
             if previous_nominal is not None:
                 real_rate = real_interest_rate_for_year(inputs, variant, int(row.year))
                 interest = nominal_rate_from_real(real_rate, row.inflation_with_external_pct) / 100.0
+                # C2's primary balance already contains non-tax revenue, so it
+                # enters this recursion once and remains outside tax incidence.
                 previous_debt = debt_step(previous_debt, interest, nominal / previous_nominal - 1.0,
                                           (row.primary_balance_gdp + row.external_revenue_pp_gdp) / 100.0)
                 previous_debt -= float(getattr(row, "debt_adjustment_pp", 0.0)) / 100.0

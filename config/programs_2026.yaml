@@ -103,7 +103,7 @@ programmes:
         size_source: current_share
       - id: F5_privatisation
         programme: "resume the National Privatisation Programme case by case (Profissionalização: estatais)"
-        model: "asset sales: one-off debt reduction 0 to 2 pp GDP over the term (assumption); privatisation wage effects from parameters.yaml privatisation_wage_effects; lost dividends not modelled"
+        model: "f5 package: tier-A sales retire gross debt over 2027-2030, capped by the existing 0 to 2 pp GDP assumption; lost Union dividends reduce non-tax revenue from the year after each sale; privatisation wage effects remain from parameters.yaml"
         mechanism: privatisation
         size_source: assumption
         range_pp_gdp: [0.0, 2.0]
@@ -149,7 +149,17 @@ model_parameters:   # how src/programs.py turns the items above into C2 scenario
     rule: "planned primary balance moves linearly from the 2026 S0 level to d_2026 (i - g_t)/(1 + g_t) over T years (F1), on S0 rates and growth"
     tax_cuts: "spending gap = planned primary-balance change minus the F3 revenue change"
     new_programmes: "F8 spending is financed inside the path: cuts in the F2 composition rise by the F8 amount and the services package is reduced by it"
-    privatisation: "F5 receipts retire debt in equal parts over the term (debt_adjustment_by_year)"
+    privatisation: "PZ package receipts retire gross debt in the sale year (debt_adjustment_by_year); lost dividends enter non_tax_revenue_by_year from the following year and do not enter the tax multiplier or household tax incidence"
+  privatisation_packages:
+    f5:
+      scope: "tier A companies, value-weighted; total proceeds capped by the existing F5 0-2 pp GDP draw"
+      status: "default: TSE case-by-case programme"
+    broad:
+      scope: "all tier A and tier B except Petrobras and Banco do Brasil; Caixa, BNDES, BNB, Banco da Amazonia and tiers C/D excluded"
+      status: "sensitivity: selective interpretation of the broader statement"
+    broad_bb_petrobras:
+      scope: "broad plus Banco do Brasil control and the full 36.61% state stake in Petrobras, counting Union, BNDES and BNDESPar once"
+      status: "sensitivity: maximal interpretation of the broader statement"
   flavio_debt_target_note: "P2 (2026-10-21): the F1 debt-stabilising rule no longer sets the size (it implied ~6.4 pp GDP of cuts in 4 years, beyond any precedent); the debt-stabilising primary balance is reported as a diagnostic. Sizes come from flavio_cut_scenarios."
   flavio_cut_scenarios:   # pp of GDP below S0 by 2030, linear over 2027-2030; user request 2026-10-21
     low:
