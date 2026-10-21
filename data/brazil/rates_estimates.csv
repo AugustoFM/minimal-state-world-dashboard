@@ -1,0 +1,28 @@
+analysis,specification,term,estimate,std_error,ci95_low,ci95_high,unit,nobs,r2,start,end,nw_lags
+fiscal_expectations,primary_differences_2010_2026m09,constant,0.0040084317,0.0149446159,-0.0252824772,0.0332993406,percentage points per percentage point,200,0.0023035161,2010-02-01,2026-09-01,6
+fiscal_expectations,primary_differences_2010_2026m09,primary_balance_t2_pct_gdp,-0.0361301673,0.0581333309,-0.1500694021,0.0778090675,percentage points per percentage point,200,0.0023035161,2010-02-01,2026-09-01,6
+fiscal_expectations,primary_differences_2010_2026m09,dlsp_t3_pct_gdp,0.0016062716,0.0135820351,-0.0250140280,0.0282265713,percentage points per percentage point,200,0.0023035161,2010-02-01,2026-09-01,6
+fiscal_expectations,primary_differences_2010_2026m09,us_10y_pct,0.0174098844,0.0578581169,-0.0959899409,0.1308097097,percentage points per percentage point,200,0.0023035161,2010-02-01,2026-09-01,6
+fiscal_expectations,robustness_levels_trend,constant,3.0069138957,1.3474090464,0.3660406923,5.6477870991,percentage points per percentage point,201,0.5711288955,2010-01-01,2026-09-01,6
+fiscal_expectations,robustness_levels_trend,trend,0.0003199998,0.0047913402,-0.0090708543,0.0097108539,percentage points per percentage point,201,0.5711288955,2010-01-01,2026-09-01,6
+fiscal_expectations,robustness_levels_trend,primary_balance_t2_pct_gdp,0.0819532110,0.2043725339,-0.3186095949,0.4825160168,percentage points per percentage point,201,0.5711288955,2010-01-01,2026-09-01,6
+fiscal_expectations,robustness_levels_trend,dlsp_t3_pct_gdp,-0.0084554247,0.0289487396,-0.0651939116,0.0482830622,percentage points per percentage point,201,0.5711288955,2010-01-01,2026-09-01,6
+fiscal_expectations,robustness_levels_trend,us_10y_pct,0.7056466107,0.0973056704,0.5149310011,0.8963622202,percentage points per percentage point,201,0.5711288955,2010-01-01,2026-09-01,6
+fiscal_expectations,robustness_differences_2017_2026m09,constant,0.0128101820,0.0161975663,-0.0189364645,0.0445568286,percentage points per percentage point,116,0.0222996369,2017-02-01,2026-09-01,6
+fiscal_expectations,robustness_differences_2017_2026m09,primary_balance_t2_pct_gdp,0.0454852063,0.0667075096,-0.0852591100,0.1762295226,percentage points per percentage point,116,0.0222996369,2017-02-01,2026-09-01,6
+fiscal_expectations,robustness_differences_2017_2026m09,dlsp_t3_pct_gdp,0.0148820027,0.0095650196,-0.0038650912,0.0336290965,percentage points per percentage point,116,0.0222996369,2017-02-01,2026-09-01,6
+fiscal_expectations,robustness_differences_2017_2026m09,us_10y_pct,0.0532651493,0.0612939871,-0.0668688579,0.1733991565,percentage points per percentage point,116,0.0222996369,2017-02-01,2026-09-01,6
+fiscal_expectations,robustness_dbgg_differences_2018_2026m09,constant,0.0207940819,0.0170094409,-0.0125438096,0.0541319735,percentage points per percentage point,104,0.0136804769,2018-02-01,2026-09-01,6
+fiscal_expectations,robustness_dbgg_differences_2018_2026m09,primary_balance_t2_pct_gdp,0.0627060092,0.0832938510,-0.1005469389,0.2259589574,percentage points per percentage point,104,0.0136804769,2018-02-01,2026-09-01,6
+fiscal_expectations,robustness_dbgg_differences_2018_2026m09,dbgg_t3_pct_gdp,0.0103997503,0.0135980861,-0.0162520088,0.0370515093,percentage points per percentage point,104,0.0136804769,2018-02-01,2026-09-01,6
+fiscal_expectations,robustness_dbgg_differences_2018_2026m09,us_10y_pct,0.0555475215,0.0660722867,-0.0739517809,0.1850468239,percentage points per percentage point,104,0.0136804769,2018-02-01,2026-09-01,6
+fiscal_expectations,robustness_embi_differences_to_2024m06,constant,-0.0009450548,0.0170367243,-0.0343364208,0.0324463112,percentage points per percentage point,173,0.0039214618,2010-02-01,2024-06-01,6
+fiscal_expectations,robustness_embi_differences_to_2024m06,primary_balance_t2_pct_gdp,-0.0364826821,0.0581697247,-0.1504932474,0.0775278832,percentage points per percentage point,173,0.0039214618,2010-02-01,2024-06-01,6
+fiscal_expectations,robustness_embi_differences_to_2024m06,dlsp_t3_pct_gdp,0.0029327588,0.0131357136,-0.0228127669,0.0286782844,percentage points per percentage point,173,0.0039214618,2010-02-01,2024-06-01,6
+fiscal_expectations,robustness_embi_differences_to_2024m06,us_10y_pct,-0.0170564158,0.0580130449,-0.1307598944,0.0966470628,percentage points per percentage point,173,0.0039214618,2010-02-01,2024-06-01,6
+fiscal_expectations,robustness_embi_differences_to_2024m06,embi_brazil_bp,-0.0002641658,0.0007325614,-0.0016999597,0.0011716281,percentage points per percentage point,173,0.0039214618,2010-02-01,2024-06-01,6
+debt_pass_through,primary_2010_2025,constant,7.8725205301,1.2084951446,5.5039135711,10.2411274890,percentage points per percentage point,15,0.3865738729,2010,2025,1
+debt_pass_through,primary_2010_2025,selic_current,0.4046662533,0.1726000962,0.0663762810,0.7429562257,percentage points per percentage point,15,0.3865738729,2010,2025,1
+debt_pass_through,primary_2010_2025,selic_lag,0.0247646872,0.1521819962,-0.2735065444,0.3230359189,percentage points per percentage point,15,0.3865738729,2010,2025,1
+debt_pass_through,derived_2010_2025,long_run_pass_through,0.4294309406,0.1125562815,0.2088246826,0.6500371985,percentage points per percentage point,15,0.3865738729,2010,2025,1
+debt_pass_through,derived_2010_2025,year1_share,0.9423313858,,,,share of long-run pass-through,15,0.3865738729,2010,2025,1
