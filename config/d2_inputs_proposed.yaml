@@ -1,0 +1,54 @@
+status: proposed_for_lead_developer_review
+backtest_periods:
+  debt: [2010, 2024]
+  growth: [2006, 2019]
+  multiplier: [2010, 2024]
+  inflation: [2005, 2024]
+
+tolerances:
+  debt_final_year_absolute_error_pp_gdp:
+    value: 5.0
+    proposed: true
+  growth_absolute_mean_error_pp_per_year:
+    value: 0.5
+    proposed: true
+  multiplier:
+    rated: false
+    reason: "Weak diagnostic with no tolerance supplied: spending changes are not identified fiscal shocks."
+  inflation:
+    rated: false
+    reason: "Diagnostic with no tolerance supplied: the one-variable pass-through block omits expectations, slack and administered prices."
+
+inflation_target_pct:
+  source: "Conselho Monetario Nacional (CMN) resolutions"
+  verification: "transcribed_without_network_check"
+  note: "Proposed D2 input only; verify the resolutions before publication."
+  by_year:
+    2005: 4.5
+    2006: 4.5
+    2007: 4.5
+    2008: 4.5
+    2009: 4.5
+    2010: 4.5
+    2011: 4.5
+    2012: 4.5
+    2013: 4.5
+    2014: 4.5
+    2015: 4.5
+    2016: 4.5
+    2017: 4.5
+    2018: 4.5
+    2019: 4.25
+    2020: 4.0
+    2021: 3.75
+    2022: 3.5
+    2023: 3.25
+    2024: 3.0
+
+method_choices:
+  growth_tfp: "C2 central 2000-2019 PWT CAGR, held constant; not tuned to the back-test"
+  growth_external: "Unchanged C6 terms-of-trade level-effect equation applied to observed annual log changes"
+  multiplier_trend: "2010-2024 arithmetic mean observed real GDP growth"
+  multiplier_rule: "C2 transitory response, evaluated with both total-expenditure and default-package category multipliers"
+  debt_primary_balance: "BCB observed primary result, sign-converted because the source records surpluses as negative"
+  debt_interest: "Tesouro GFS interest payable as percent of GDP divided by lagged BCB gross debt as percent of GDP"
