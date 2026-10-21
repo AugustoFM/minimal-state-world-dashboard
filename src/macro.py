@@ -380,6 +380,18 @@ def macro_input(inputs: Mapping, name: str, variant: str) -> float:
     return number
 
 
+def real_interest_rate_for_year(inputs: Mapping, variant: str, year: int) -> float:
+    """Return the drawn real rate plus an optional common annual offset."""
+    base = macro_input(inputs, "effective_real_interest_rate", variant)
+    offsets = inputs.get("derived", {}).get("real_rate_path_offset_pp", {})
+    if not offsets or int(year) <= 2025:
+        return base
+    annual = {int(key): float(value) for key, value in offsets.items()}
+    if int(year) > max(annual):
+        return base + annual[max(annual)]
+    return base + annual.get(int(year), 0.0)
+
+
 def validate_capital_price_basis(inputs: Mapping) -> None:
     """Require investment and the projected capital stock to share a basis."""
     try:
@@ -754,9 +766,6 @@ def run_corner(
     )
     if mode == "legacy_historical_nominal":
         interest = macro_input(inputs, "effective_nominal_interest_rate", variant) / 100
-    else:
-        real_interest = macro_input(inputs, "effective_real_interest_rate", variant)
-        interest = nominal_rate_from_real(real_interest, inflation * 100) / 100
     initial_debt = macro_input(inputs, "initial_debt_gdp", variant) / 100
     initial_year = int(inputs["macro"]["initial_debt_gdp"]["year"])
     if initial_year != start_year:
@@ -776,6 +785,9 @@ def run_corner(
                 continue
             if previous_nominal_gdp is None:
                 raise RuntimeError("Missing base-year nominal GDP")
+            if mode != "legacy_historical_nominal":
+                real_interest = real_interest_rate_for_year(inputs, variant, int(row.year))
+                interest = nominal_rate_from_real(real_interest, inflation * 100) / 100
             nominal_growth = nominal_gdp / previous_nominal_gdp - 1
             previous_debt = debt_step(
                 previous_debt,

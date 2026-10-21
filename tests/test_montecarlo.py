@@ -154,4 +154,5 @@ def test_distribution_outputs_for_default_variant(central) -> None:
     assert (r_amb["gini_change_vs_s0_points"] > 0).all()          # consolidation raises inequality (Ball et al. direction)
     assert (r_amb["poverty_759_change_vs_s0_pp"] > 0).all()
     other = central.loc[central["variant"].eq("pension_only")]
-    assert other["gini_change_vs_s0_points"].isna().all()
+    assert np.allclose(s0[list(mc.MICRO_OUTPUTS)], 0.0)
+    assert other[list(mc.MICRO_OUTPUTS)].isna().all().all()

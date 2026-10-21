@@ -19,6 +19,7 @@ from src.macro import (
     real_rate_from_nominal,
     read_pwt_brazil_growth,
     read_general_government_fiscal_workbook,
+    real_interest_rate_for_year,
     run_corner,
     validate_capital_price_basis,
 )
@@ -329,6 +330,53 @@ def test_s0_debt_path_equals_textbook_recursion_with_sourced_inputs():
         debt = debt * (1 + interest) / (1 + nominal_growth) - row.primary_balance_gdp / 100
         expected.append(debt * 100)
         previous_nominal_gdp = nominal_gdp
+    assert s0["debt_gdp"].tolist() == pytest.approx(expected)
+
+
+def test_real_rate_path_zero_and_constant_offsets_match_scalar_rate():
+    base = _inputs()
+    zero = copy.deepcopy(base)
+    zero["derived"] = {"real_rate_path_offset_pp": {2026: 0.0, 2027: 0.0, 2028: 0.0}}
+    raised = copy.deepcopy(base)
+    raised["macro"]["effective_real_interest_rate"]["central"] += 1.0
+    offset = copy.deepcopy(base)
+    offset["derived"] = {"real_rate_path_offset_pp": {2026: 1.0, 2027: 1.0, 2028: 1.0}}
+    original = run_corner(
+        _baseline(), _population(), _scenarios(), _parameters(), base, "central", "transitory"
+    )
+    with_zero = run_corner(
+        _baseline(), _population(), _scenarios(), _parameters(), zero, "central", "transitory"
+    )
+    with_raised = run_corner(
+        _baseline(), _population(), _scenarios(), _parameters(), raised, "central", "transitory"
+    )
+    with_offset = run_corner(
+        _baseline(), _population(), _scenarios(), _parameters(), offset, "central", "transitory"
+    )
+    pd.testing.assert_frame_equal(original, with_zero)
+    pd.testing.assert_series_equal(with_raised["debt_gdp"], with_offset["debt_gdp"])
+    assert real_interest_rate_for_year(offset, "central", 2025) == 2.0
+    assert real_interest_rate_for_year(offset, "central", 2045) == 3.0
+
+
+def test_year_varying_rate_offset_enters_the_year_being_stepped():
+    inputs = _inputs()
+    inputs["derived"] = {"real_rate_path_offset_pp": {2026: 1.0, 2027: 2.0, 2028: 3.0}}
+    result = run_corner(
+        _baseline(), _population(), _scenarios(), _parameters(), inputs, "central", "transitory"
+    )
+    s0 = result.loc[result["scenario"].eq("S0")].sort_values("year")
+    debt = inputs["macro"]["initial_debt_gdp"]["central"] / 100
+    previous_nominal = None
+    expected = []
+    inflation = inputs["macro"]["gdp_deflator_growth"]["central"] / 100
+    for row in s0.itertuples():
+        nominal = row.real_gdp * (1 + inflation) ** (row.year - 2025)
+        if previous_nominal is not None:
+            interest = nominal_rate_from_real(2.0 + inputs["derived"]["real_rate_path_offset_pp"][row.year], 3.0) / 100
+            debt = debt_step(debt, interest, nominal / previous_nominal - 1, row.primary_balance_gdp / 100)
+        expected.append(debt * 100)
+        previous_nominal = nominal
     assert s0["debt_gdp"].tolist() == pytest.approx(expected)
 
 
