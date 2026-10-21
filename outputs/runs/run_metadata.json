@@ -46,7 +46,7 @@
     "point_inputs": "every macro input with low = central = high (initial debt, revenue/GDP, capital share, K/Y, depreciation, GDP anchors)",
     "c1_category_shares": "point values (COFOG 2024)"
   },
-  "external": "C6 block bootstrap (3-year blocks) of joint observed 2006-2024 terms-of-trade and BRL/USD changes, same path for every scenario in a draw; separate random stream [seed, 1]",
+  "external": "C7 output channel: block bootstrap (3-year blocks) of joint 2001-2024 commodity export price, world growth (both demeaned) and BRL/USD changes, same path for every scenario in a draw (stream [seed, 1]); channel-A coefficient set drawn per draw from the two prespecified estimation windows (stream [seed, 3])",
   "choices": [
     "triangular sampling for ranges is a modelling choice (fiscal_multipliers_brazil.sampling_rule), not a sourced distribution",
     "parameters are sampled independently: no sourced correlations",
@@ -54,7 +54,7 @@
     "percentiles describe parameter uncertainty only, not forecast error or external shocks"
   ],
   "not_modelled": {},
-  "inputs_commit": "8d2d2544344d3126da061af46495027af065a1c4",
-  "created_utc": "2026-10-20T23:52:18+00:00",
-  "runtime_seconds": 9251.9
+  "inputs_commit": "cafdc1cc88940218cbb10a09c8bffade99167f0f",
+  "created_utc": "2026-10-21T09:27:24+00:00",
+  "runtime_seconds": 13915.1
 }

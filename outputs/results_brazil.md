@@ -4,8 +4,8 @@
 
 Run seed: `20261020`  
 Draws: `1000`  
-Inputs commit: `8d2d2544344d3126da061af46495027af065a1c4`  
-Created: `2026-10-20T23:52:18+00:00`  
+Inputs commit: `cafdc1cc88940218cbb10a09c8bffade99167f0f`  
+Created: `2026-10-21T09:27:24+00:00`  
 D2 verdict and diagnostics: parsed from `outputs/backtest.md`
 
 ## How to read
