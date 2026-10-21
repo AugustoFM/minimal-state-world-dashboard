@@ -25,6 +25,7 @@
 | E2 | todo | | |
 | R1 | merged | `task/r1` | Reproducible internal-review report for the committed 1,000-draw Monte Carlo. D2 gate FAIL is prominent; debt levels carry the documented backtest caution. Summary data are structurally consistent; C3 distribution rows are modelled only for default, non-S1 scenarios, with all other C3 cells explicitly marked not modelled. Claude review requested. |
 | C7 | done | `task/c7`, `task/c7-wire` | Channels estimated by Codex with fixed specs, fit 2000-2014 / test 2015-2024. A (output) supported: reverse-window fit predicts ~59% of the 2006-10 boom out of sample (C6 ~3%); wired into the MC (window drawn per draw, demeaned bootstrap). B (spread/interest) not supported; C reported only (inside A); D only dividends (not wired, user option). 2014-16 still unexplained (domestic). |
+| G2 | PR open | `task/g2` | Major-corruption shock module: shared event sequence across all scenarios/programmes, uniform 3-8% annual probability, triangular 1.0/2.25/3.6% log-level loss, two-year build-up and four-year recovery half-life. CPI improvement sensitivity is off by default; its cross-country CPI SD placeholder is flagged `to_verify`. Awaiting Claude review and D1 wiring. |
 
 ## Branch consolidation notes
 
