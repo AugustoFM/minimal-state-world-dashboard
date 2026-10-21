@@ -650,6 +650,8 @@ def summarise(draw_results: pd.DataFrame, n_draws: int) -> pd.DataFrame:
 def reference_paths(context: Mapping) -> pd.DataFrame:
     """Central-parameter results under the fixed boom / neutral / bust external paths."""
     draw = central_draw(context["parameters"], context["inputs"])
+    if context.get("programmes") is not None:
+        draw.update(programs.central_programme_draw(context["programmes"], context["parameters"]))
     steps = max(context["target_years"]) - context["base_year"]
     frames = []
     for name in ("boom", "neutral", "bust"):
