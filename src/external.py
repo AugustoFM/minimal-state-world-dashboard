@@ -145,7 +145,9 @@ def _effects_c7(path: pd.DataFrame, parameters: Mapping, coefficients: Mapping[s
     block = parameters["external_block"]
     pass_12 = float(block["exchange_rate_pass_through"]["horizon_12m"]["central"])
     pass_24 = float(block["exchange_rate_pass_through"]["horizon_24m"]["central"])
-    level, previous_price, previous_fx = 1.0, 0.0, 0.0
+    level, previous_price, previous_fx, cumulative_log_price = 1.0, 0.0, 0.0, 0.0
+    dividends = block["output_channel_c7"].get("dividend_revenue")
+    dividend_coefficient = 0.0 if dividends is None else float(dividends["lnP"])
     records = []
     for row in path.itertuples(index=False):
         growth = (
@@ -154,6 +156,7 @@ def _effects_c7(path: pd.DataFrame, parameters: Mapping, coefficients: Mapping[s
             + coefficients["world_gdp_growth_pct"] * row.world_growth_dev_pp
         )
         level *= 1.0 + growth / 100.0
+        cumulative_log_price += row.dlnp_pct / 100.0
         extra_inflation = pass_12 * row.fx_change_pct + (pass_24 - pass_12) * previous_fx
         previous_price, previous_fx = row.dlnp_pct, row.fx_change_pct
         records.append({
@@ -162,6 +165,7 @@ def _effects_c7(path: pd.DataFrame, parameters: Mapping, coefficients: Mapping[s
             # C7 estimates the total response; no potential/cyclical split is identified.
             "external_potential_level_pct": float("nan"),
             "external_extra_inflation_pp": extra_inflation,
+            "external_revenue_pp_gdp": dividend_coefficient * cumulative_log_price,
         })
     return pd.DataFrame(records)
 
@@ -183,6 +187,12 @@ def apply_external(corner: pd.DataFrame, effects: pd.DataFrame, inputs: Mapping,
     base_inflation = macro_input(inputs, "gdp_deflator_growth", variant)
     real_rate = macro_input(inputs, "effective_real_interest_rate", variant)
     frame["inflation_with_external_pct"] = base_inflation + extra
+    # C7 commodity-linked dividends (0 for C6 paths): added to the primary balance in this debt path.
+    if "external_revenue_pp_gdp" in steps.columns:
+        frame["external_revenue_pp_gdp"] = frame["year"].map(
+            lambda y: 0.0 if y == start_year else float(steps.loc[y - start_year, "external_revenue_pp_gdp"]))
+    else:
+        frame["external_revenue_pp_gdp"] = 0.0
     initial_debt = macro_input(inputs, "initial_debt_gdp", variant) / 100.0
     debt = {}
     for scenario, group in frame.groupby("scenario", sort=False):
@@ -194,7 +204,8 @@ def apply_external(corner: pd.DataFrame, effects: pd.DataFrame, inputs: Mapping,
             nominal = row.real_gdp * price * (1 + row.gdp_level_vs_s0_pct / 100) * (1 + row.external_gdp_level_pct / 100)
             if previous_nominal is not None:
                 interest = nominal_rate_from_real(real_rate, row.inflation_with_external_pct) / 100.0
-                previous_debt = debt_step(previous_debt, interest, nominal / previous_nominal - 1.0, row.primary_balance_gdp / 100.0)
+                previous_debt = debt_step(previous_debt, interest, nominal / previous_nominal - 1.0,
+                                          (row.primary_balance_gdp + row.external_revenue_pp_gdp) / 100.0)
                 previous_debt -= float(getattr(row, "debt_adjustment_pp", 0.0)) / 100.0
             debt[(row.year, scenario)] = previous_debt * 100.0
             previous_nominal = nominal

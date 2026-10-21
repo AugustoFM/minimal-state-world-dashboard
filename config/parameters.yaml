@@ -636,7 +636,12 @@ external_block:
     sampling: "one set per Monte Carlo draw, equal probability (separate random stream [seed, 3]); central = average of the two sets"
     bootstrap_inputs: "joint 2001-2024 changes of dlnP, world growth and BRL/USD (3-year blocks); dlnP and world growth demeaned over the sample so draws add shocks, not a trend"
     replaces: "gdp_wrt_commodity_prices below for the GDP level effect (kept for the C6 option and the D2 growth block); FX pass-through unchanged"
-    not_wired: "C7 channels B (spread/interest: not supported), C (investment: part of A's total response), D (dividends only supported; payout policy)"
+    not_wired: "C7 channels B (spread/interest: not supported) and C (investment: part of A's total response)"
+    dividend_revenue:
+      lnP: 0.837985
+      source: "C7 D_dividends (fit 2010-2017, out-of-sample RMSE 0.231 vs naive 0.285, supported); data/brazil/c7_estimates.csv"
+      use: "general-government dividends change by lnP x cumulative change in ln commodity export prices (pp GDP), same for every scenario; added to the primary balance in the external debt path (debt_gdp_with_external only; C5 does not carry external effects)"
+      decided: "lead developer 2026-10-21 at the user's request (best guess from the back-tests); payout policy held at current law for every scenario"
   gdp_wrt_commodity_prices:
     unit: "% change in Brazil GDP level per 1% change in its commodity price index (3-year horizon)"
     low: null
