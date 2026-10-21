@@ -1,0 +1,22 @@
+company,group,dependent,listed_ticker,union_stake_total_pct,tier,legal_route,campaign_status,rtn_dividend_line,notes
+Petrobras,energy,no,PETR3;PETR4,36.61,B,"selling control needs a law changing Lei 9.478/1997 art. 62 (Union majority of voting shares); STF ADI 5624: parent-company control sale needs legislative authorisation; non-control shares (BNDESPar, Union PN) need none","not named by the TSE programme; inside the 95% statement only by implication",1.4.2.8 Petrobras,"stake = Union + BNDES + BNDESPar; the BNDESPar part pays the Treasury through BNDES dividends (count once); dividends commodity-linked (C7)"
+Banco do Brasil,financial,no,BBAS3,50.0,B,"control sale needs a law (STF ADI 5624); Union holds 50.0%, so no non-control excess",not named,1.4.2.1 Banco do Brasil,
+Caixa Economica Federal,financial,no,,100.0,C,"public company (empresa publica); sale needs a law","excluded by campaign advisers (Daniella Marques Sep 2026; Adolfo Sachsida Oct 2026, press)",1.4.2.4 Caixa Economica Federal,"subsidiaries (e.g. Caixa Seguridade) can be partly sold without a law; report separately if modelled"
+BNDES,financial,no,,100.0,C,"development bank and policy instrument; sale not discussed; BNDESPar equity-portfolio sales would be tier A",not named,1.4.2.3 BNDES,"BNDESPar holds Petrobras shares: count once"
+Banco do Nordeste (BNB),financial,no,BNBR3,"above 90 (2026 press, verify)",C,"administers the constitutional fund FNE (CF art. 159 I c)",not named,1.4.2.2 BNB,
+Banco da Amazonia,financial,no,BAZA3,verify,C,"administers the constitutional fund FNO (CF art. 159 I c)",not named,1.4.2.9 Demais,
+Correios (ECT),services,no,,100.0,B,"postal service is a Union duty (CF art. 21 X); PL 591/2021 passed the Chamber in 2021 and stalled in the Senate","named by the candidate (June 2026, press) as a privatisation",1.4.2.5 Correios,"loss-making (2025 loss about R$ 8.5 bn, press); contingent liability: Postalis pension deficit (assumption range)"
+Serpro,technology,no,,100.0,B,"in PND 2021, removed 2023; data-security constraints",not named,1.4.2.9 Demais,
+Dataprev,technology,no,,100.0,B,"in PND 2021, removed 2023; holds social-security data",not named,1.4.2.9 Demais,
+Casa da Moeda,industry,no,,100.0,B,law needed,not named,1.4.2.9 Demais,
+Telebras,technology,verify,TELB3;TELB4,verify,B,law needed,not named,1.4.2.9 Demais,
+Infraero,infrastructure,no,,100.0,A,"PND; airports largely conceded already",not named,1.4.2.9 Demais,residual value small
+Port authorities (SPA Santos; CDRJ; CODEBA; CDP; CDC; CODERN),infrastructure,no,,100.0,A,"PND; precedent: CODESA sold 2022",not named,1.4.2.9 Demais,
+CEAGESP; Ceasaminas,food supply,no,,100.0,A,PND precedent,not named,1.4.2.9 Demais,
+EMGEA; ABGF,financial,no,,100.0,A,"wind-down or merger rather than sale",not named,1.4.2.9 Demais,
+Hemobras,industry,no,,100.0,C,strategic health supply,not named,1.4.2.9 Demais,
+Finep,financial,no,,100.0,C,innovation funding agency (FNDCT),not named,1.4.2.9 Demais,
+PPSA (Pre-Sal Petroleo),energy,no,,100.0,C,"manages the Union's pre-salt production-sharing oil (Lei 12.304/2010)",not named,1.4.2.9 Demais,
+ENBPar; Eletronuclear; INB; Nuclep; Amazul,energy/defence,mixed,,100.0,C,"nuclear monopoly (CF art. 21 XXIII, art. 177 V) and the Itaipu treaty",not named,1.4.2.9 Demais,
+IMBEL; Emgepron,defence,mixed,,100.0,C,defence,not named,1.4.2.9 Demais,
+"Dependent companies (17; e.g. Embrapa, Ebserh, GHC, HCPA, SGB-CPRM, EPE, Conab, Codevasf, CBTU, Trensurb, Infra S.A., EBC, Ceitec)",various,yes,,100.0,D,"funded by the Treasury; most provide public services or research and are not saleable; closure or merger only",not named,,"savings only from closure or merger of specific units; default zero"
