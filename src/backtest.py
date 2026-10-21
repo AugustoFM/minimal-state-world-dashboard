@@ -37,9 +37,23 @@ DEFAULT_PATHS = {
     "parameters": ROOT / "config/parameters.yaml",
     "scenarios": ROOT / "config/scenarios.yaml",
     "d2": ROOT / "config/d2_inputs_proposed.yaml",
+    "c7_backtest": ROOT / "data/brazil/c7_backtest.csv",
+    "c7_estimates": ROOT / "data/brazil/c7_estimates.csv",
+    "external_observed": ROOT / "data/brazil/external_observed.csv",
     "results": ROOT / "data/brazil/backtest_results.csv",
     "report": ROOT / "outputs/backtest.md",
 }
+
+PERIOD_WINDOWS = [
+    ("Dilma I", 2011, 2014, False),
+    ("2015-2016", 2015, 2016, False),
+    ("Temer", 2017, 2018, False),
+    ("Bolsonaro", 2019, 2022, False),
+    ("Lula III (data end 2024)", 2023, 2024, False),
+    ("2023-2025", 2023, 2025, True),
+]
+IBGE_2025_GROWTH = 2.3
+IBGE_2025_GROWTH_SOURCE = "IBGE, released 2026-03-03; hand-entered"
 
 RESULT_COLUMNS = [
     "test", "year", "observed_value", "predicted_value", "residual",
@@ -132,7 +146,62 @@ def debt_one_step(inputs: pd.DataFrame) -> pd.DataFrame:
     return data.iloc[1:].reset_index(drop=True)
 
 
-def build_debt_test(wide: pd.DataFrame, workbook: str | Path, nominal_path: str | Path) -> pd.DataFrame:
+def sfa_out_of_sample(
+    inputs: pd.DataFrame,
+    estimate_start: int = 2011,
+    estimate_end: int = 2017,
+    anchor_year: int = 2017,
+) -> tuple[pd.DataFrame, dict]:
+    """Estimate a constant SFA in 2011-2017 and test it after the 2017 anchor.
+
+    SFA is observed debt minus the one-step textbook prediction, in percentage
+    points of GDP.  The standard deviation is the sample standard deviation.
+    """
+    data = inputs.sort_values("year").reset_index(drop=True).copy()
+    one_step = debt_one_step(data)
+    one_step["sfa_pp"] = -one_step["residual_pp"]
+    estimation = one_step.loc[one_step["year"].between(estimate_start, estimate_end)]
+    expected_years = list(range(estimate_start, estimate_end + 1))
+    if estimation["year"].astype(int).tolist() != expected_years:
+        raise ValueError(f"SFA estimation requires exactly {expected_years}")
+    mean_sfa = float(estimation["sfa_pp"].mean())
+    sd_sfa = float(estimation["sfa_pp"].std(ddof=1))
+
+    indexed = data.set_index("year")
+    if anchor_year not in indexed.index:
+        raise ValueError(f"SFA recursion lacks anchor year {anchor_year}")
+    years = list(range(anchor_year, int(data["year"].max()) + 1))
+    zero = [float(indexed.loc[anchor_year, "observed_debt_gdp"])]
+    with_sfa = zero.copy()
+    for year in years[1:]:
+        row = indexed.loc[year]
+        args = (
+            float(row["implicit_interest_pct"]) / 100.0,
+            float(row["nominal_gdp_growth_pct"]) / 100.0,
+            float(row["primary_balance_gdp"]) / 100.0,
+        )
+        zero.append(debt_step(zero[-1] / 100.0, *args) * 100.0)
+        with_sfa.append(debt_step(with_sfa[-1] / 100.0, *args) * 100.0 + mean_sfa)
+    recursion = pd.DataFrame({
+        "year": years,
+        "observed_debt_gdp": indexed.loc[years, "observed_debt_gdp"].to_numpy(dtype=float),
+        "zero_sfa_debt_gdp": zero,
+        "with_sfa_debt_gdp": with_sfa,
+    })
+    recursion["zero_sfa_residual_pp"] = recursion["zero_sfa_debt_gdp"] - recursion["observed_debt_gdp"]
+    recursion["with_sfa_residual_pp"] = recursion["with_sfa_debt_gdp"] - recursion["observed_debt_gdp"]
+    summary = {
+        "estimation_years": expected_years,
+        "mean_2011_2017": mean_sfa,
+        "sd_2011_2017": sd_sfa,
+        "values_by_year": {
+            int(row.year): float(row.sfa_pp) for row in one_step.itertuples(index=False)
+        },
+    }
+    return recursion, summary
+
+
+def debt_test_inputs(wide: pd.DataFrame, workbook: str | Path, nominal_path: str | Path) -> pd.DataFrame:
     years = list(range(2010, 2025))
     nominal = annual_nominal_gdp(nominal_path)
     debt = wide["gross_general_government_debt_pct_gdp"]
@@ -148,7 +217,11 @@ def build_debt_test(wide: pd.DataFrame, workbook: str | Path, nominal_path: str 
             "implicit_interest_pct": interest,
             "nominal_gdp_growth_pct": math.nan if year == years[0] else (float(nominal.loc[year] / nominal.loc[year - 1]) - 1.0) * 100.0,
         })
-    inputs = pd.DataFrame(rows)
+    return pd.DataFrame(rows)
+
+
+def build_debt_test(wide: pd.DataFrame, workbook: str | Path, nominal_path: str | Path) -> pd.DataFrame:
+    inputs = debt_test_inputs(wide, workbook, nominal_path)
     frames = []
     for test, out, note in [
         ("debt_engine", debt_backtest(inputs), "input_change is primary surplus (+) / deficit (-), pp GDP"),
@@ -164,6 +237,29 @@ def build_debt_test(wide: pd.DataFrame, workbook: str | Path, nominal_path: str 
             "baseline_prediction": np.nan,
             "external_contribution": np.nan,
             "input_change": out["primary_balance_gdp"],
+            "unit": "percent_of_gdp",
+            "note": note,
+        }))
+    recursion, summary = sfa_out_of_sample(inputs)
+    for test, prediction, residual, note in [
+        (
+            "debt_engine_zero_sfa_oos", "zero_sfa_debt_gdp", "zero_sfa_residual_pp",
+            "recursion from observed 2017 debt; zero stock-flow adjustment",
+        ),
+        (
+            "debt_engine_with_sfa_oos", "with_sfa_debt_gdp", "with_sfa_residual_pp",
+            f"recursion from observed 2017 debt; constant 2011-2017 mean SFA ({summary['mean_2011_2017']:+.6f} pp/year)",
+        ),
+    ]:
+        frames.append(pd.DataFrame({
+            "test": test,
+            "year": recursion["year"],
+            "observed_value": recursion["observed_debt_gdp"],
+            "predicted_value": recursion[prediction],
+            "residual": recursion[residual],
+            "baseline_prediction": np.nan,
+            "external_contribution": np.nan,
+            "input_change": np.nan,
             "unit": "percent_of_gdp",
             "note": note,
         }))
@@ -325,6 +421,136 @@ def build_inflation_test(wide: pd.DataFrame, parameters: Mapping, d2: Mapping) -
     })
 
 
+def build_c7_gate_test(path: str | Path) -> pd.DataFrame:
+    """Load, without re-estimation, the fixed C7 channel-A OOS audit rows."""
+    data = pd.read_csv(path).loc[lambda x: x["channel"].eq("A_output")].copy()
+    if data["year"].astype(int).tolist() != list(range(2015, 2025)):
+        raise ValueError("C7 channel A gate requires the checked-in 2015-2024 rows")
+    return pd.DataFrame({
+        "test": "c7_channel_a_oos",
+        "year": data["year"].astype(int),
+        "observed_value": data["observed"].astype(float),
+        "predicted_value": data["predicted"].astype(float),
+        "residual": data["predicted"].astype(float) - data["observed"].astype(float),
+        "baseline_prediction": data["naive"].astype(float),
+        "external_contribution": data["c6"].astype(float),
+        "input_change": np.nan,
+        "unit": "percentage_points_per_year",
+        "note": "loaded from data/brazil/c7_backtest.csv; fixed 2015-2024 channel A OOS test, not re-estimated",
+    })
+
+
+def read_general_government_revenue(path: str | Path) -> pd.Series:
+    """Read code 1 annual general-government revenue/GDP from sheet 3.2.a."""
+    sheet = pd.read_excel(path, sheet_name="3.2.a", header=None)
+    years = pd.to_numeric(sheet.iloc[3], errors="coerce")
+    code = sheet.iloc[:, 0].astype(str).str.strip()
+    rows = sheet.loc[code.eq("1")]
+    if len(rows) != 1:
+        raise ValueError("Expected exactly one code row '1' in workbook sheet 3.2.a")
+    values = pd.to_numeric(rows.iloc[0], errors="coerce")
+    result = {
+        int(year): float(values.iloc[column]) * 100.0
+        for column, year in enumerate(years)
+        if pd.notna(year) and pd.notna(values.iloc[column])
+    }
+    return pd.Series(result, name="revenue_pct_gdp").sort_index()
+
+
+def _endpoint_change(series: pd.Series, start: int, end: int) -> tuple[float, float, float]:
+    """Change over a period measured from the last year before it (the inherited level) to its end."""
+    base = start - 1
+    if base not in series.index or end not in series.index:
+        return math.nan, math.nan, math.nan
+    first, last = float(series.loc[base]), float(series.loc[end])
+    return first, last, last - first
+
+
+def period_diagnostic(
+    wide: pd.DataFrame,
+    fiscal_path: str | Path,
+    workbook_path: str | Path,
+    external_path: str | Path,
+    estimates_path: str | Path,
+    parameters: Mapping,
+) -> pd.DataFrame:
+    """Build neutral calendar-period summaries from observed input columns."""
+    fiscal = pd.read_csv(fiscal_path).set_index("year")
+    spending = fiscal["primary_spending_pct_gdp"].astype(float)
+    revenue = read_general_government_revenue(workbook_path)
+    primary = -wide["primary_result_pct_gdp"].astype(float)
+    debt = wide["gross_general_government_debt_pct_gdp"].astype(float)
+
+    external_long = pd.read_csv(external_path)
+    external = external_long.pivot(index="year", columns="indicator", values="value").sort_index()
+    price = external["commodity_export_price_index"].astype(float)
+    dlnp = np.log(price).diff() * 100.0
+    regressors = pd.DataFrame({
+        "dlnP": dlnp,
+        "dlnP_lag": dlnp.shift(1),
+        "world_gdp_growth_pct": external["world_gdp_growth_pct"].astype(float),
+    })
+    estimates = pd.read_csv(estimates_path)
+    reverse = estimates.loc[estimates["channel"].eq("A_output_reverse")]
+    coefficients = reverse.set_index("coefficient")["estimate"].astype(float)
+    needed = {"dlnP", "dlnP_lag", "world_gdp_growth_pct"}
+    if not needed.issubset(coefficients.index):
+        raise ValueError(f"C7 reverse estimates lack {sorted(needed - set(coefficients.index))}")
+    # Lead review fix: the reverse fit's own fitted values (constant included), so the trend and the world
+    # growth level enter as estimated; the constant is reported as `trend_proxy_pct`.
+    trend = float(coefficients.loc["constant"])
+    c7_fitted = trend + sum(regressors[name] * coefficients.loc[name] for name in sorted(needed))
+    multiplier = float(parameters["fiscal_multipliers_brazil"]["accumulated"]["total_expenditure"]["central"])
+    spending_effect = spending.diff() * multiplier
+    implied = c7_fitted + spending_effect
+
+    growth = wide["gdp_growth_pct"].astype(float).copy()
+    growth.loc[2025] = IBGE_2025_GROWTH
+    rows = []
+    for label, start, end, separately_flagged in PERIOD_WINDOWS:
+        gdp_window = growth.loc[start:end]
+        s0, s1, ds = _endpoint_change(spending, start, end)
+        r0, r1, dr = _endpoint_change(revenue, start, end)
+        p0, p1, dp = _endpoint_change(primary, start, end)
+        d0, d1, dd = _endpoint_change(debt, start, end)
+        if start - 1 in price.index and end in price.index:
+            commodity_change = float((math.log(float(price.loc[end])) - math.log(float(price.loc[start - 1]))) * 100.0)
+        else:
+            commodity_change = math.nan
+        model_window = implied.loc[start:end]
+        model_complete = len(model_window) == end - start + 1 and model_window.notna().all()
+        implied_mean = float(model_window.mean()) if model_complete else math.nan
+        observed_mean = float(gdp_window.mean())
+        rows.append({
+            "period": label,
+            "start_year": start,
+            "end_year": end,
+            "separately_flagged": separately_flagged,
+            "average_real_gdp_growth_pct": observed_mean,
+            "growth_years": ";".join(str(year) for year in gdp_window.index),
+            "growth_source": IBGE_2025_GROWTH_SOURCE if end == 2025 else "data/brazil/backtest_observed.csv:gdp_growth_pct",
+            "primary_spending_start_pct_gdp": s0,
+            "primary_spending_end_pct_gdp": s1,
+            "primary_spending_change_pp": ds,
+            "revenue_start_pct_gdp": r0,
+            "revenue_end_pct_gdp": r1,
+            "revenue_change_pp": dr,
+            "primary_balance_start_pct_gdp": p0,
+            "primary_balance_end_pct_gdp": p1,
+            "primary_balance_change_pp": dp,
+            "gross_debt_start_pct_gdp": d0,
+            "gross_debt_end_pct_gdp": d1,
+            "gross_debt_change_pp": dd,
+            "commodity_price_log_change_pct": commodity_change,
+            "model_implied_growth_pct": implied_mean,
+            "model_residual_pp": implied_mean - observed_mean if model_complete else math.nan,
+            "model_years": f"{start}-{end}" if model_complete else "unavailable: 2025 C7 inputs absent",
+            "trend_proxy_pct": trend,
+            "spending_multiplier": multiplier,
+        })
+    return pd.DataFrame(rows)
+
+
 def statistics_table(results: pd.DataFrame, d2: Mapping) -> pd.DataFrame:
     records = []
     for test, data in results.groupby("test", sort=False):
@@ -337,6 +563,7 @@ def statistics_table(results: pd.DataFrame, d2: Mapping) -> pd.DataFrame:
             "rmse": float(np.sqrt(np.mean(np.square(residual)))),
             "correlation": correlation,
             "final_error": float(residual.iloc[-1]),
+            "naive_rmse": math.nan,
             "status": "not_rated",
         }
         if test == "debt_engine":
@@ -345,8 +572,36 @@ def statistics_table(results: pd.DataFrame, d2: Mapping) -> pd.DataFrame:
         elif test == "growth_block":
             tol = float(d2["tolerances"]["growth_absolute_mean_error_pp_per_year"]["value"])
             record["status"] = "PASS" if abs(record["mean_error"]) <= tol else "FAIL"
+        elif test == "debt_engine_one_step":
+            tol = float(d2["tolerances"]["debt_one_step_mae_pp_gdp"]["value"])
+            record["status"] = "PASS" if record["mae"] <= tol else "FAIL"
+        elif test in {"debt_engine_zero_sfa_oos", "debt_engine_with_sfa_oos"}:
+            tol = float(d2["tolerances"]["debt_final_year_absolute_error_pp_gdp"]["value"])
+            record["status"] = "PASS" if abs(record["final_error"]) <= tol else "FAIL"
+        elif test == "c7_channel_a_oos":
+            naive_residual = data["baseline_prediction"].astype(float) - data["observed_value"].astype(float)
+            record["naive_rmse"] = float(np.sqrt(np.mean(np.square(naive_residual))))
+            record["status"] = "PASS" if record["rmse"] < record["naive_rmse"] else "FAIL"
         records.append(record)
     return pd.DataFrame(records)
+
+
+def gate_verdicts(stats: pd.DataFrame, d2: Mapping) -> dict[str, str]:
+    """Apply the lead-developer's two-tier publication gate."""
+    lookup = stats.set_index("test")
+    one_step_tol = float(d2["tolerances"]["debt_one_step_mae_pp_gdp"]["value"])
+    growth_tol = float(d2["tolerances"]["growth_absolute_mean_error_pp_per_year"]["value"])
+    debt_tol = float(d2["tolerances"]["debt_final_year_absolute_error_pp_gdp"]["value"])
+    tier1_checks = [
+        float(lookup.loc["debt_engine_one_step", "mae"]) <= one_step_tol,
+        abs(float(lookup.loc["growth_block", "mean_error"])) <= growth_tol,
+        float(lookup.loc["c7_channel_a_oos", "rmse"]) < float(lookup.loc["c7_channel_a_oos", "naive_rmse"]),
+    ]
+    tier2_pass = abs(float(lookup.loc["debt_engine_with_sfa_oos", "final_error"])) <= debt_tol
+    return {
+        "tier_1_differences_vs_s0": "PASS" if all(tier1_checks) else "FAIL",
+        "tier_2_levels": "PASS" if tier2_pass else "FAIL",
+    }
 
 
 def _compound(values: pd.Series) -> float:
@@ -372,7 +627,7 @@ def episode_table(growth: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def render_report(results: pd.DataFrame, stats: pd.DataFrame, d2: Mapping) -> str:
+def _render_report_v1(results: pd.DataFrame, stats: pd.DataFrame, d2: Mapping) -> str:
     lookup = stats.set_index("test")
     rated = lookup.loc[["debt_engine", "growth_block"], "status"]
     verdict = "PASS" if rated.eq("PASS").all() else "FAIL"
@@ -463,6 +718,119 @@ def render_report(results: pd.DataFrame, stats: pd.DataFrame, d2: Mapping) -> st
     return "\n".join(lines) + "\n"
 
 
+def render_report(
+    results: pd.DataFrame,
+    stats: pd.DataFrame,
+    d2: Mapping,
+    sfa_summary: Mapping,
+    periods: pd.DataFrame,
+) -> str:
+    lookup = stats.set_index("test")
+    gates = gate_verdicts(stats, d2)
+    growth = results.loc[results["test"].eq("growth_block")]
+    debt = results.loc[results["test"].eq("debt_engine")]
+    episodes = episode_table(growth)
+
+    lines = [
+        "# D2 historical back-tests", "",
+        f"**Overall proposed gate: {'PASS' if all(value == 'PASS' for value in gates.values()) else 'FAIL'}.** Legacy aggregate retained for downstream report compatibility; use the two tier verdicts below for publication decisions.", "",
+        f"**Tier 1 - differences vs S0: {gates['tier_1_differences_vs_s0']}.** This is the gate for publishing scenario effects.", "",
+        f"**Tier 2 - debt/GDP levels: {gates['tier_2_levels']}.** The verdict uses the out-of-sample recursion with the pre-2018 mean SFA; the zero-SFA result is reported alongside it.", "",
+        "No coefficient was tuned to improve these results. Calculations are offline and use checked-in observations and fixed model parameters.", "",
+        "## Gate v2", "",
+        "| Tier | Test | Statistic | Tolerance / benchmark | Verdict |",
+        "|---|---|---:|---:|---|",
+        f"| 1: differences vs S0 | Debt engine, one step ahead (2011-2024) | MAE {lookup.loc['debt_engine_one_step', 'mae']:.3f} pp | <= {d2['tolerances']['debt_one_step_mae_pp_gdp']['value']:g} pp | {lookup.loc['debt_engine_one_step', 'status']} |",
+        f"| 1: differences vs S0 | Growth block (2006-2019) | absolute mean error {abs(lookup.loc['growth_block', 'mean_error']):.3f} pp/yr | <= {d2['tolerances']['growth_absolute_mean_error_pp_per_year']['value']:g} pp/yr | {lookup.loc['growth_block', 'status']} |",
+        f"| 1: differences vs S0 | C7 channel A OOS (2015-2024) | RMSE {lookup.loc['c7_channel_a_oos', 'rmse']:.3f} pp | naive RMSE {lookup.loc['c7_channel_a_oos', 'naive_rmse']:.3f} pp; must be lower | {lookup.loc['c7_channel_a_oos', 'status']} |",
+        f"| 2: levels | 2017-anchor zero-SFA recursion, 2024 | error {lookup.loc['debt_engine_zero_sfa_oos', 'final_error']:+.3f} pp | absolute error <= {d2['tolerances']['debt_final_year_absolute_error_pp_gdp']['value']:g} pp | {lookup.loc['debt_engine_zero_sfa_oos', 'status']} (reported only) |",
+        f"| 2: levels | 2017-anchor with-SFA recursion, 2024 | error {lookup.loc['debt_engine_with_sfa_oos', 'final_error']:+.3f} pp | absolute error <= {d2['tolerances']['debt_final_year_absolute_error_pp_gdp']['value']:g} pp | {lookup.loc['debt_engine_with_sfa_oos', 'status']} |",
+        "",
+        "All gate rules are lead-developer decisions dated 2026-10-21 in `config/d2_inputs_proposed.yaml`. C7 audit rows are read from `data/brazil/c7_backtest.csv`, not re-estimated.", "",
+        f"The level tolerance is absolute 2024 debt error <= {d2['tolerances']['debt_final_year_absolute_error_pp_gdp']['value']:g} pp of GDP.", "",
+        "## All annual test statistics", "",
+        "| Block | Mean error | MAE | RMSE | Correlation | Final error | Verdict |",
+        "|---|---:|---:|---:|---:|---:|---|",
+    ]
+    for row in stats.itertuples(index=False):
+        lines.append(f"| {row.test} | {row.mean_error:.3f} | {row.mae:.3f} | {row.rmse:.3f} | {row.correlation:.3f} | {row.final_error:.3f} | {row.status} |")
+
+    largest_debt = debt.loc[debt["residual"].abs().nlargest(3).index]
+    lines += [
+        "", "## Debt engine", "",
+        "The original cumulative recursion starts from observed 2010 gross debt. The Tesouro workbook has no 2006-2009 interest-payable observations, so no earlier implicit-rate series is invented.", "",
+        "| Year | Observed debt | Simulated debt | Simulated - observed |",
+        "|---:|---:|---:|---:|",
+    ]
+    for row in largest_debt.itertuples(index=False):
+        lines.append(f"| {row.year} | {row.observed_value:.2f} | {row.predicted_value:.2f} | {row.residual:+.2f} |")
+    lines += [
+        "",
+        f"The one-step-ahead mean error is {lookup.loc['debt_engine_one_step', 'mean_error']:+.2f} pp/year and MAE is {lookup.loc['debt_engine_one_step', 'mae']:.2f} pp. Re-anchoring each year separates equation error from accumulation.", "",
+        "The textbook identity omits stock-flow adjustments, valuation/reclassification effects and repo effects. Tesouro GFS interest and BCB primary-result/gross-debt series also differ in institutional coverage and timing.", "",
+        "## Stock-flow adjustment", "",
+        f"SFA is observed debt minus the one-step prediction. The 2011-2017 mean is {sfa_summary['mean_2011_2017']:+.3f} pp of GDP/year and the sample SD is {sfa_summary['sd_2011_2017']:.3f} pp. Only these seven years estimate the constant applied after the observed 2017 anchor.", "",
+        "| Year | Implied SFA (pp GDP) | Documented context (not fitted) |",
+        "|---:|---:|---|",
+    ]
+    for year, value in sfa_summary["values_by_year"].items():
+        context = "Treasury loans to BNDES" if year in {2011, 2012} else ("BNDES early repayments and BCB result transfers" if 2016 <= year <= 2022 else "")
+        lines.append(f"| {year} | {value:+.3f} | {context} |")
+    lines += [
+        "",
+        "The operation labels provide balance-sheet context; they are not fitted annual values. The OOS comparison recursively applies zero SFA or the fixed 2011-2017 mean during 2018-2024.", "",
+        "## Growth accounting plus external block", "",
+        "Observed PWT investment-derived capital accumulation, human capital and employment are used each year. TFP is fixed at the C2 central 2000-2019 rate and C6 is unchanged.", "",
+        "| Episode | Actual cumulative growth | Fixed-TFP factor model | C6 addition | Model total | Model - actual |",
+        "|---|---:|---:|---:|---:|---:|",
+    ]
+    for row in episodes.itertuples(index=False):
+        lines.append(f"| {row.episode} ({row.period}) | {row.actual:.2f}% | {row.base:.2f}% | {row.external:+.2f} pp | {row.model:.2f}% | {row.residual:+.2f} pp |")
+    largest_growth = growth.loc[growth["residual"].abs().nlargest(3).index]
+    lines += ["", "The boom row measures the 2006-2010 transitions from the 2005 level; earlier ToT observations are unavailable in the D2 input.", "", "Largest annual growth residuals:", "", "| Year | Observed | Model | C6 contribution | Model - observed |", "|---:|---:|---:|---:|---:|"]
+    for row in largest_growth.itertuples(index=False):
+        lines.append(f"| {row.year} | {row.observed_value:.2f} | {row.predicted_value:.2f} | {row.external_contribution:+.2f} | {row.residual:+.2f} |")
+
+    def fmt(value: float, suffix: str = "") -> str:
+        return "NA" if pd.isna(value) else f"{value:+.2f}{suffix}"
+
+    lines += [
+        "", "## Period diagnostic", "",
+        "Every calendar window is treated identically. Changes are end-year minus start-year values within the window; commodity prices use 100 x ln(end/start). Primary balance is sign-flipped, so positive means surplus. This is descriptive, not a causal attribution or ranking.", "",
+        "| Period | Avg GDP growth | Spending/GDP change | Revenue/GDP change | Primary-balance change | Gross-debt change | Commodity log change | Implied growth | Residual |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
+    ]
+    for row in periods.itertuples(index=False):
+        flag = " [separately flagged]" if row.separately_flagged else ""
+        lines.append(
+            f"| {row.period}{flag} | {fmt(row.average_real_gdp_growth_pct, '%')} | {fmt(row.primary_spending_change_pp)} pp | "
+            f"{fmt(row.revenue_change_pp)} pp | {fmt(row.primary_balance_change_pp)} pp | {fmt(row.gross_debt_change_pp)} pp | "
+            f"{fmt(row.commodity_price_log_change_pct, '%')} | {fmt(row.model_implied_growth_pct, '%')} | {fmt(row.model_residual_pp)} pp |"
+        )
+    lines += [
+        "",
+        "Inputs are observed annual GDP growth; Q4 general-government primary spending/GDP; revenue/GDP from workbook sheet 3.2.a code `1`; sign-flipped consolidated primary balance; gross debt; and commodity export prices. The 2019 revenue figure includes the one-off transfer-of-rights auction in concessions code 1415.", "",
+        f"The flagged 2023-2025 row uses 2025 GDP growth {IBGE_2025_GROWTH:.1f}% ({IBGE_2025_GROWTH_SOURCE}) and complete 2025 spending/revenue. Debt, primary balance, commodity price, implied growth and residual are `NA` because those checked-in series stop in 2024; no value is carried forward.", "",
+        "Level changes run from the last year before each period (the inherited level) to the period's last year. "
+        f"Model-implied growth is the C7 `A_output_reverse` fitted value (constant {periods['trend_proxy_pct'].iloc[0]:.3f} included, world growth as a level, as estimated), plus the C2 central total-expenditure multiplier ({periods['spending_multiplier'].iloc[0]:.2f}) times annual primary-spending/GDP change. The reverse coefficients were fitted on 2010-2024, so all 2011-2024 windows are in-sample for that fit.", "",
+        "Residuals mix domestic policy, credit, politics, omitted shocks and measurement. They are not attributed to governments and must not be read as rankings.", "",
+        "## Multiplier diagnostic", "",
+        f"The benchmark is growth minus its 2010-2024 mean ({float(results.loc[results.test.eq('multiplier_total'), 'baseline_prediction'].iloc[0]):.3f}%). Spending changes are endogenous and do not identify fiscal shocks, so this remains unrated.", "",
+    ]
+    for name in ("multiplier_total", "multiplier_categories"):
+        lines.append(f"- `{name}`: correlation {lookup.loc[name, 'correlation']:.3f}, RMSE {lookup.loc[name, 'rmse']:.3f} pp.")
+    inflation = lookup.loc["inflation_pass_through"]
+    lines += [
+        "", "## Inflation pass-through diagnostic", "",
+        f"Observed BRL/USD pass-through is compared with IPCA minus target. Mean error is {inflation['mean_error']:+.3f} pp, RMSE {inflation['rmse']:.3f} pp and correlation {inflation['correlation']:.3f}. This incomplete one-variable diagnostic remains unrated.", "",
+        "## Publication implications", "",
+        "Tier 1 passes, so paired scenario differences vs S0 clear the numerical gate; this is not proof of causal validity." if gates["tier_1_differences_vs_s0"] == "PASS" else "Tier 1 fails, so scenario differences vs S0 do not clear the publication gate.",
+        "Tier 2 passes with the pre-specified SFA OOS run, so debt/GDP levels clear the numerical gate subject to the documented concept limitations." if gates["tier_2_levels"] == "PASS" else "Tier 2 fails, so debt/GDP paths should not be published as model-validated levels.", "",
+        "The annual audit rows are in `data/brazil/backtest_results.csv` (residual = predicted minus observed).",
+    ]
+    return "\n".join(lines) + "\n"
+
+
 def run_backtests(paths: Mapping[str, str | Path] = DEFAULT_PATHS) -> tuple[pd.DataFrame, pd.DataFrame, str]:
     parameters = _yaml(paths["parameters"])
     scenarios = _yaml(paths["scenarios"])
@@ -473,11 +841,32 @@ def run_backtests(paths: Mapping[str, str | Path] = DEFAULT_PATHS) -> tuple[pd.D
         build_growth_test(wide, parameters, paths["pwt"]),
         build_multiplier_tests(wide, paths["fiscal"], parameters, scenarios),
         build_inflation_test(wide, parameters, d2),
+        build_c7_gate_test(paths["c7_backtest"]),
     ], ignore_index=True)[RESULT_COLUMNS]
     if results.duplicated(["test", "year"]).any():
         raise RuntimeError("Back-test output must have one row per test/year")
     stats = statistics_table(results, d2)
-    return results, stats, render_report(results, stats, d2)
+    debt_inputs = debt_test_inputs(wide, paths["workbook"], paths["nominal_gdp"])
+    _, sfa_summary = sfa_out_of_sample(debt_inputs)
+    periods = period_diagnostic(
+        wide, paths["fiscal"], paths["workbook"], paths["external_observed"],
+        paths["c7_estimates"], parameters,
+    )
+    return results, stats, render_report(results, stats, d2, sfa_summary, periods)
+
+
+def write_sfa_summary(path: str | Path, summary: Mapping) -> None:
+    """Idempotently persist the reproducible SFA block for later Monte Carlo use."""
+    config = _yaml(path)
+    config["sfa_summary"] = {
+        "definition": "observed debt minus one-step debt-engine prediction, pp GDP",
+        "estimation_years": [2011, 2017],
+        "mean_2011_2017": float(summary["mean_2011_2017"]),
+        "sd_2011_2017": float(summary["sd_2011_2017"]),
+        "sd_definition": "sample standard deviation (ddof=1)",
+        "values_by_year": {int(year): float(value) for year, value in summary["values_by_year"].items()},
+    }
+    Path(path).write_text(yaml.safe_dump(config, sort_keys=False, allow_unicode=True), encoding="utf-8")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -490,6 +879,10 @@ def main(argv: list[str] | None = None) -> int:
     args.report.parent.mkdir(parents=True, exist_ok=True)
     results.to_csv(args.results, index=False, float_format="%.10f")
     args.report.write_text(report, encoding="utf-8")
+    wide = observed_wide(DEFAULT_PATHS["observed"])
+    debt_inputs = debt_test_inputs(wide, DEFAULT_PATHS["workbook"], DEFAULT_PATHS["nominal_gdp"])
+    _, sfa_summary = sfa_out_of_sample(debt_inputs)
+    write_sfa_summary(DEFAULT_PATHS["d2"], sfa_summary)
     print(stats.to_string(index=False, float_format=lambda value: f"{value:.4f}"))
     print(f"Wrote {len(results)} annual rows to {args.results} and {args.report}")
     return 0
