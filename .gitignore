@@ -12,3 +12,6 @@ outputs/runs/draws/
 
 # F1: full PLDO metas-fiscais annexes are 7-22 MB; only the extracted evaluation sections are versioned (hashes of both in SOURCES.md).
 data/raw/brazil/fiscal_delivery/*_anexo_iv_metas_fiscais.pdf
+
+# Programme (candidate) results: local only, never versioned (runoff 2026-10-25; not for campaign use).
+outputs/programme_results/
