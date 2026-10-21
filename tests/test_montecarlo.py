@@ -71,6 +71,20 @@ def test_variant_shares_follow_definitions(context) -> None:
     assert configs["default"]["protected"] == context["scenarios"]["protected"]
 
 
+def test_programme_instrument_paths_are_used_only_in_instrument_mode(context) -> None:
+    scenarios = {"scenarios": {"P": {
+        "revenue_by_instrument_by_year": {
+            "top_income": {1: 0.1, 5: 0.5},
+            "tax_expenditures": {1: 0.1, 5: 0.5},
+        }
+    }}}
+    assert mc.scenario_revenue_by_instrument(scenarios, "P", 3) == pytest.approx(
+        {"top_income": 0.3, "tax_expenditures": 0.3}
+    )
+    assert mc.scenario_revenue_by_instrument(scenarios, "S0", 3) is None
+    assert context["tax_incidence"] == "instrument"
+
+
 def test_pension_only_has_no_health_effect(central) -> None:
     pension = central.loc[central["variant"].eq("pension_only") & central["scenario"].isin(["R_mod", "R_amb"])]
     # Health spending per capita still moves with GDP, but no cut lands on health services.
@@ -156,3 +170,7 @@ def test_distribution_outputs_for_default_variant(central) -> None:
     other = central.loc[central["variant"].eq("pension_only")]
     assert np.allclose(s0[list(mc.MICRO_OUTPUTS)], 0.0)
     assert other[list(mc.MICRO_OUTPUTS)].isna().all().all()
+    assert {unit for name, unit in mc.MICRO_OUTPUTS.items() if "poverty_smoothed" in name} == {"pp"}
+    assert {unit for name, unit in mc.MICRO_OUTPUTS.items() if "poverty_gap_" in name and "gap_sq" not in name} == {
+        "pp_of_line"
+    }

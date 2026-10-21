@@ -53,6 +53,17 @@ def _composition(config: Mapping, programme: str, item: str) -> dict[str, float]
     raise KeyError(f"{programme}.{item} has no composition")
 
 
+def _incidence_shares(config: Mapping, programme: str, item: str) -> dict[str, float]:
+    """Return and validate the tax-instrument shares documented in the programme config."""
+    for entry in config["programmes"][programme]["items"]:
+        if entry["id"] == item:
+            shares = {str(k): float(v) for k, v in entry["incidence_shares"].items()}
+            if not math.isclose(sum(shares.values()), 1.0, abs_tol=1e-9):
+                raise ValueError(f"{programme}.{item} incidence shares must sum to one")
+            return shares
+    raise KeyError(f"{programme}.{item} has no incidence shares")
+
+
 def sample_programme_draw(rng: np.random.Generator, config: Mapping, parameters: Mapping) -> dict:
     """Programme sizes the programmes do not state, sampled uniformly over their ranges."""
     draw = {
@@ -171,6 +182,14 @@ def build_programme_scenarios(
     def packages(total: Mapping[int, float], composition: Mapping[str, float]) -> dict[str, dict[int, float]]:
         return {package: horizon_path({y: total[y] * share for y in years}) for package, share in composition.items()}
 
+    def revenue_instruments(
+        revenue: Mapping[int, float], programme: str, item: str,
+    ) -> dict[str, dict[int, float]]:
+        return {
+            instrument: horizon_path({y: revenue[y] * share for y in years})
+            for instrument, share in _incidence_shares(config, programme, item).items()
+        }
+
     def merge(target: dict[str, dict[int, float]], package: str, path: dict[int, float]) -> None:
         old = target.get(package, {})
         target[package] = {h: old.get(h, 0.0) + v for h, v in path.items()}
@@ -206,6 +225,7 @@ def build_programme_scenarios(
         "name": "programme_lula_pt_2026_lc200_rule",
         "package_gaps_by_year": lula_rule,
         "revenue_by_year": horizon_path(rule_revenue),
+        "revenue_by_instrument_by_year": revenue_instruments(rule_revenue, "lula_pt", "L5_tax"),
     }
 
     # --- Lula, record: spending/GDP and tax revenue/GDP keep their 2022-2025 trends during the term.
@@ -226,6 +246,7 @@ def build_programme_scenarios(
         "name": "programme_lula_pt_2026_record_trend",
         "package_gaps_by_year": packages(record_total, shares(record["composition"]["shares"])),
         "revenue_by_year": horizon_path(record_revenue),
+        "revenue_by_instrument_by_year": revenue_instruments(record_revenue, "lula_pt", "L5_tax"),
     }
 
     # --- Flávio: three cut sizes, F3 tax cuts, F5 privatisation, F8 new programmes financed inside.
@@ -254,6 +275,12 @@ def build_programme_scenarios(
             "name": f"programme_flavio_bolsonaro_pl_2026_{name}",
             "package_gaps_by_year": flavio,
             "revenue_by_year": dict(tax),
+            "revenue_by_instrument_by_year": {
+                instrument: {h: value * share for h, value in tax.items()}
+                for instrument, share in _incidence_shares(
+                    config, "flavio_bolsonaro_pl", "F3_tax_cuts"
+                ).items()
+            },
             "debt_adjustment_by_year": dict(privatisation),
             "non_tax_revenue_by_year": dict(non_tax_revenue),
         }

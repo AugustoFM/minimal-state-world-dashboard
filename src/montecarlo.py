@@ -57,6 +57,24 @@ MICRO_OUTPUTS = {
     "poverty_759_age_0_14_change_vs_s0_pp": "pp",
     "poverty_759_age_65_plus_change_vs_s0_pp": "pp",
     "poverty_759_with_65_plus_recipient_change_vs_s0_pp": "pp",
+    "poverty_smoothed_218_change_vs_s0_pp": "pp",
+    "poverty_smoothed_218_age_0_14_change_vs_s0_pp": "pp",
+    "poverty_smoothed_218_age_65_plus_change_vs_s0_pp": "pp",
+    "poverty_smoothed_218_with_65_plus_recipient_change_vs_s0_pp": "pp",
+    "poverty_smoothed_759_change_vs_s0_pp": "pp",
+    "poverty_smoothed_759_age_0_14_change_vs_s0_pp": "pp",
+    "poverty_smoothed_759_age_65_plus_change_vs_s0_pp": "pp",
+    "poverty_smoothed_759_with_65_plus_recipient_change_vs_s0_pp": "pp",
+    "poverty_gap_218_change_vs_s0_pp": "pp_of_line",
+    "poverty_gap_218_age_0_14_change_vs_s0_pp": "pp_of_line",
+    "poverty_gap_218_age_65_plus_change_vs_s0_pp": "pp_of_line",
+    "poverty_gap_218_with_65_plus_recipient_change_vs_s0_pp": "pp_of_line",
+    "poverty_gap_759_change_vs_s0_pp": "pp_of_line",
+    "poverty_gap_759_age_0_14_change_vs_s0_pp": "pp_of_line",
+    "poverty_gap_759_age_65_plus_change_vs_s0_pp": "pp_of_line",
+    "poverty_gap_759_with_65_plus_recipient_change_vs_s0_pp": "pp_of_line",
+    "poverty_gap_sq_218_change_vs_s0": "fgt2_index",
+    "poverty_gap_sq_759_change_vs_s0": "fgt2_index",
     "top1_share_survey_change_vs_s0_pp": "pp",
     "top10_share_survey_change_vs_s0_pp": "pp",
 }
@@ -374,6 +392,7 @@ def load_context(
         ),
         "feedback_defaults": _feedback_defaults(parameters_path, scenarios_path),
         "micro": _micro_context(data),
+        "tax_incidence": "instrument",
         "corruption": corruption.load_config("config/corruption_proposed.yaml"),
     }
 
@@ -411,6 +430,19 @@ def scenario_package_gaps(variant_scenarios: Mapping, scenario: str, horizon: in
     return {str(k): total_gap * float(v) for k, v in variant_scenarios["package_shares"].items()}
 
 
+def scenario_revenue_by_instrument(
+    variant_scenarios: Mapping, scenario: str, horizon: int,
+) -> dict[str, float] | None:
+    """Return a scenario's instrument split, when its definition provides one."""
+    definition = variant_scenarios["scenarios"].get(scenario)
+    if not isinstance(definition, Mapping) or "revenue_by_instrument_by_year" not in definition:
+        return None
+    return {
+        str(instrument): _interpolate_by_year(path, horizon, f"{scenario}.{instrument}")
+        for instrument, path in definition["revenue_by_instrument_by_year"].items()
+    }
+
+
 def with_programmes(variant_scenarios: Mapping, annual: pd.DataFrame, draw_inputs: Mapping, draw: Mapping,
                     context: Mapping) -> Mapping:
     """Add the P1 programme scenarios (built on this draw's S0 path) to a variant configuration."""
@@ -434,6 +466,11 @@ def micro_for_draw(corner: pd.DataFrame, variant_scenarios: Mapping, draw: Mappi
             variant_scenarios, row.scenario, int(row.year) - int(context["base_year"]), float(row.gap_below_s0_pp)
         )
         revenue = float(getattr(row, "revenue_change_pp", 0.0))
+        revenue_by_instrument = None
+        if context.get("tax_incidence", "instrument") == "instrument":
+            revenue_by_instrument = scenario_revenue_by_instrument(
+                variant_scenarios, row.scenario, int(row.year) - int(context["base_year"])
+            )
         households = micro.simulate_household_incomes(
             ctx["prepared"], gdp_level_vs_s0_pct=float(row.gdp_level_vs_s0_pct),
             unemployment_change_pp=float(row.unemployment_change_pp), package_gaps_pp_gdp=gaps,
@@ -443,6 +480,7 @@ def micro_for_draw(corner: pd.DataFrame, variant_scenarios: Mapping, draw: Mappi
             tax_variant=draw["micro_tax_variant"],
             consumption_like_exponent=float(inputs["defaults"]["consumption_like_exponent"]),
             random_seed=int(draw.get("draw", 0)),
+            revenue_change_by_instrument_pp=revenue_by_instrument,
         )
         ind = micro.calculate_indicators(households, ctx["lines"])
         records.append({"year": row.year, "scenario": row.scenario, **ind})
@@ -467,6 +505,44 @@ def micro_for_draw(corner: pd.DataFrame, variant_scenarios: Mapping, draw: Mappi
         "poverty_759_with_65_plus_recipient_change_vs_s0_pp": (
             "poverty_headcount_half_minimum_wage_2025_living_with_65_plus_pension_bpc_recipient_pct", 1.0
         ),
+        "poverty_smoothed_218_change_vs_s0_pp": ("poverty_smoothed_bolsa_familia_pct", 1.0),
+        "poverty_smoothed_218_age_0_14_change_vs_s0_pp": (
+            "poverty_smoothed_bolsa_familia_age_0_14_pct", 1.0
+        ),
+        "poverty_smoothed_218_age_65_plus_change_vs_s0_pp": (
+            "poverty_smoothed_bolsa_familia_age_65_plus_pct", 1.0
+        ),
+        "poverty_smoothed_218_with_65_plus_recipient_change_vs_s0_pp": (
+            "poverty_smoothed_bolsa_familia_living_with_65_plus_pension_bpc_recipient_pct", 1.0
+        ),
+        "poverty_smoothed_759_change_vs_s0_pp": ("poverty_smoothed_half_minimum_wage_2025_pct", 1.0),
+        "poverty_smoothed_759_age_0_14_change_vs_s0_pp": (
+            "poverty_smoothed_half_minimum_wage_2025_age_0_14_pct", 1.0
+        ),
+        "poverty_smoothed_759_age_65_plus_change_vs_s0_pp": (
+            "poverty_smoothed_half_minimum_wage_2025_age_65_plus_pct", 1.0
+        ),
+        "poverty_smoothed_759_with_65_plus_recipient_change_vs_s0_pp": (
+            "poverty_smoothed_half_minimum_wage_2025_living_with_65_plus_pension_bpc_recipient_pct", 1.0
+        ),
+        "poverty_gap_218_change_vs_s0_pp": ("poverty_gap_bolsa_familia_pct", 1.0),
+        "poverty_gap_218_age_0_14_change_vs_s0_pp": ("poverty_gap_bolsa_familia_age_0_14_pct", 1.0),
+        "poverty_gap_218_age_65_plus_change_vs_s0_pp": ("poverty_gap_bolsa_familia_age_65_plus_pct", 1.0),
+        "poverty_gap_218_with_65_plus_recipient_change_vs_s0_pp": (
+            "poverty_gap_bolsa_familia_living_with_65_plus_pension_bpc_recipient_pct", 1.0
+        ),
+        "poverty_gap_759_change_vs_s0_pp": ("poverty_gap_half_minimum_wage_2025_pct", 1.0),
+        "poverty_gap_759_age_0_14_change_vs_s0_pp": (
+            "poverty_gap_half_minimum_wage_2025_age_0_14_pct", 1.0
+        ),
+        "poverty_gap_759_age_65_plus_change_vs_s0_pp": (
+            "poverty_gap_half_minimum_wage_2025_age_65_plus_pct", 1.0
+        ),
+        "poverty_gap_759_with_65_plus_recipient_change_vs_s0_pp": (
+            "poverty_gap_half_minimum_wage_2025_living_with_65_plus_pension_bpc_recipient_pct", 1.0
+        ),
+        "poverty_gap_sq_218_change_vs_s0": ("poverty_gap_sq_bolsa_familia", 1.0),
+        "poverty_gap_sq_759_change_vs_s0": ("poverty_gap_sq_half_minimum_wage_2025", 1.0),
         "top1_share_survey_change_vs_s0_pp": ("survey_top_1_income_share_pct", 1.0),
         "top10_share_survey_change_vs_s0_pp": ("survey_top_10_income_share_pct", 1.0),
     }
@@ -641,6 +717,7 @@ def run(
     draw_results = pd.concat(results, ignore_index=True)
     metadata = {
         "seed": seed, "n_draws": n_draws, "variants": variant_names,
+        "tax_incidence": context.get("tax_incidence", "instrument"),
         "privatisation_package": context.get("privatisation_package", "f5"),
         "persistence": list(PERSISTENCE_VARIANTS), "horizons": horizons, "base_year": base_year,
         "sampled": {
@@ -783,9 +860,12 @@ def main(argv: list[str] | None = None) -> int:
                         help="P1 sensitivity: both programmes cut with the default package shares")
     parser.add_argument("--privatisation", choices=privatisation.PACKAGES, default="f5",
                         help="PZ sale package for programme scenarios (default: f5)")
+    parser.add_argument("--tax-incidence", choices=("instrument", "uniform"), default="instrument",
+                        help="household incidence for programme revenue changes (default: instrument)")
     args = parser.parse_args(argv)
     started = time.time()
     context = load_context()
+    context["tax_incidence"] = args.tax_incidence
     if args.rate_path == "i1":
         source = Path("config/i1_proposed.yaml")
         config = read_yaml(source)

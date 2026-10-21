@@ -114,6 +114,56 @@ def test_age_specific_and_older_recipient_household_poverty() -> None:
     ] == pytest.approx(100.0)
 
 
+def test_mass_at_line_is_damped_and_gap_changes_continuously() -> None:
+    households = pd.DataFrame({
+        "survey_weight": np.ones(10),
+        "income_unit_size": np.ones(10),
+        "household_income_per_capita_brl": [50.0] * 3 + [100.0] * 4 + [150.0] * 3,
+    })
+    before = calculate_indicators(households, {"line": 100.0})
+    after = calculate_indicators(
+        households.assign(household_income_per_capita_brl=lambda frame:
+                          frame["household_income_per_capita_brl"] - 0.01),
+        {"line": 100.0},
+    )
+
+    raw_change = after["poverty_headcount_line_pct"] - before["poverty_headcount_line_pct"]
+    smoothed_change = after["poverty_smoothed_line_pct"] - before["poverty_smoothed_line_pct"]
+    gap_change = after["poverty_gap_line_pct"] - before["poverty_gap_line_pct"]
+    assert raw_change == pytest.approx(40.0)
+    assert smoothed_change == pytest.approx(40.0 / 21.0)
+    assert 0 < gap_change < smoothed_change
+    # The four people at the line contribute 0.004 pp; the three already-poor
+    # people add 0.003 pp under the same uniform one-cent loss.
+    assert gap_change == pytest.approx(0.007)
+
+
+def test_smoothed_headcount_matches_raw_for_clean_uniform_case() -> None:
+    # Ten equally spaced incomes have no observation in the 95-105 smoothing band.
+    households = pd.DataFrame({
+        "survey_weight": np.ones(10),
+        "income_unit_size": np.ones(10),
+        "household_income_per_capita_brl": np.arange(5.0, 100.0, 10.0),
+    })
+    indicators = calculate_indicators(households, {"line": 50.0})
+    assert indicators["poverty_headcount_line_pct"] == pytest.approx(50.0)
+    assert indicators["poverty_smoothed_line_pct"] == pytest.approx(50.0)
+
+
+def test_fgt_measures_have_analytic_values_for_all_and_subgroups() -> None:
+    households = pd.DataFrame({
+        "survey_weight": [1.0, 1.0, 1.0],
+        "income_unit_size": [1, 1, 1],
+        "household_income_per_capita_brl": [50.0, 100.0, 150.0],
+        "age_65_plus_count": [1, 1, 1],
+    })
+    indicators = calculate_indicators(households, {"line": 100.0})
+    assert indicators["poverty_gap_line_pct"] == pytest.approx(100.0 / 6.0)
+    assert indicators["poverty_gap_sq_line"] == pytest.approx(1.0 / 12.0)
+    assert indicators["poverty_gap_line_age_65_plus_pct"] == pytest.approx(100.0 / 6.0)
+    assert indicators["poverty_gap_sq_line_age_65_plus"] == pytest.approx(1.0 / 12.0)
+
+
 def test_excluded_conditions_are_outside_income_unit() -> None:
     persons = toy_persons()
     excluded = persons.iloc[[0]].copy()
@@ -162,3 +212,64 @@ def test_tax_cut_relief_follows_incidence_score() -> None:
     # Monthly GDP 1,000; a 1 pp cut returns 10 in proportion to household income.
     households = run_toy(toy_persons(), revenue_change_pp=-1.0)
     assert households["household_income_per_capita_brl"].tolist() == pytest.approx([101, 202, 303, 404])
+
+
+def test_none_instrument_mapping_is_bit_identical_to_previous_path() -> None:
+    previous = run_toy(toy_persons(), revenue_change_pp=0.5, tax_variant="consumption_like")
+    explicit_none = run_toy(
+        toy_persons(), revenue_change_pp=0.5, tax_variant="consumption_like",
+        revenue_change_by_instrument_pp=None,
+    )
+    pd.testing.assert_frame_equal(previous, explicit_none)
+
+
+def test_instrument_allocations_sum_to_their_targets_and_are_symmetric() -> None:
+    persons = toy_persons()
+    base = run_toy(persons).set_index("hh_id")["household_income_per_capita_brl"]
+    for instrument in ("consumption", "fuel_energy", "payroll", "tax_expenditures"):
+        rise = run_toy(
+            persons, revenue_change_by_instrument_pp={instrument: 0.1},
+        ).set_index("hh_id")["household_income_per_capita_brl"]
+        cut = run_toy(
+            persons, revenue_change_by_instrument_pp={instrument: -0.1},
+        ).set_index("hh_id")["household_income_per_capita_brl"]
+        # Monthly GDP is 1,000, so 0.1 pp is one currency unit.
+        assert (base - rise).sum() == pytest.approx(1.0)
+        assert (cut - base).sum() == pytest.approx(1.0)
+        np.testing.assert_allclose(rise + cut, 2 * base)
+
+
+def test_top_income_rise_changes_no_household_below_top_one_percent_cut() -> None:
+    persons = pd.concat([toy_persons().iloc[[0]].assign(
+        hh_id=str(i), survey_weight=1.0, household_income_per_capita_brl=float(i),
+        labor_income_nominal_brl=float(i), employment_status=1.0,
+        retirement_pension_income_brl=0.0,
+    ) for i in range(1, 101)], ignore_index=True)
+    base = run_toy(persons).set_index("hh_id")["household_income_per_capita_brl"]
+    changed = run_toy(
+        persons, nominal_gdp_brl=1_200.0,
+        revenue_change_by_instrument_pp={"top_income": 0.1},
+    ).set_index("hh_id")["household_income_per_capita_brl"]
+    assert changed.loc[[str(i) for i in range(1, 100)]].equals(base.loc[[str(i) for i in range(1, 100)]])
+    assert changed.loc["100"] == pytest.approx(99.9)
+
+
+def test_business_capital_uses_top_income_base_and_unknown_instrument_fails() -> None:
+    persons = pd.concat([toy_persons().iloc[[0]].assign(
+        hh_id=str(i), survey_weight=1.0, household_income_per_capita_brl=float(i),
+    ) for i in range(1, 101)], ignore_index=True)
+    base = run_toy(persons).set_index("hh_id")["household_income_per_capita_brl"]
+    top_rise = run_toy(persons, nominal_gdp_brl=1_200.0,
+                       revenue_change_by_instrument_pp={"top_income": 0.1})
+    top = run_toy(persons, nominal_gdp_brl=1_200.0,
+                  revenue_change_by_instrument_pp={"top_income": -0.1})
+    capital = run_toy(persons, nominal_gdp_brl=1_200.0,
+                      revenue_change_by_instrument_pp={"business_capital": -0.1})
+    pd.testing.assert_frame_equal(top, capital)
+    np.testing.assert_allclose(
+        top_rise.set_index("hh_id")["household_income_per_capita_brl"]
+        + top.set_index("hh_id")["household_income_per_capita_brl"],
+        2 * base,
+    )
+    with pytest.raises(ValueError, match="Unknown tax instrument"):
+        run_toy(toy_persons(), revenue_change_by_instrument_pp={"unknown": 0.1})
