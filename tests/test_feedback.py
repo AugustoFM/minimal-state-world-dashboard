@@ -4,7 +4,10 @@ import pandas as pd
 import pytest
 
 from src.feedback import (
+    CHANNELS,
     MissingFeedbackInput,
+    _evaluate,
+    _evaluate_reference,
     apply_feedback,
     public_capital_log_output_effect,
     pwt_schooling_phi,
@@ -235,3 +238,45 @@ def test_risk_premium_deviation_cap_binds():
     uncapped = apply_feedback(source, population(end=2045), **kwargs(sovereign_risk_bp_per_debt_pp=5.0, risk_premium_cap_pp=None))
     final = lambda r: r.loc[r["scenario"].eq("S0") & r["year"].eq(2045), "debt_gdp_with_feedback"].item()
     assert final(capped) < final(uncapped)
+
+
+def test_education_channels_are_zero_for_s0_and_symmetric():
+    source = corner(end=2030)
+    dose = {
+        (row.year, row.scenario): (0.0 if row.scenario == "S0" else (row.year - 2025) * 0.001)
+        for row in source.itertuples()
+    }
+    positive = apply_feedback(
+        source, population(end=2030),
+        **kwargs(education_capacity_log_effect=dose, innovation_capacity_log_effect=dose),
+    )
+    negative = apply_feedback(
+        source, population(end=2030),
+        **kwargs(
+            education_capacity_log_effect={key: -value for key, value in dose.items()},
+            innovation_capacity_log_effect={key: -value for key, value in dose.items()},
+        ),
+    )
+    for channel in ("education_capacity", "innovation_capacity"):
+        assert (positive.loc[positive["scenario"].eq("S0"), f"{channel}_contribution_pct"] == 0).all()
+        plus = positive.loc[positive["scenario"].eq("R_mod") & positive["year"].eq(2030), f"{channel}_contribution_pct"].item()
+        minus = negative.loc[negative["scenario"].eq("R_mod") & negative["year"].eq(2030), f"{channel}_contribution_pct"].item()
+        assert plus == pytest.approx(-minus, rel=0.02)
+
+
+def test_numpy_evaluate_equals_rowwise_reference():
+    frame = corner(end=2030)
+    zero = pd.Series(0.0, index=frame.index)
+    effects = {name: zero.copy() for name in (
+        "human_capital", "health", "public_capital", "education_capacity",
+        "innovation_capacity", "inequality",
+    )}
+    effects["education_capacity"].loc[frame["scenario"].eq("R_mod")] = -0.01
+    settings = dict(
+        sovereign_risk_bp_per_debt_pp=5.0, base_real_interest_rate_pct=3.0,
+        inflation_pct=4.0, initial_debt_gdp=50.0,
+    )
+    expected = _evaluate_reference(frame, effects, set(CHANNELS), **settings)
+    actual = _evaluate(frame, effects, set(CHANNELS), **settings)
+    for left, right in zip(expected, actual):
+        pd.testing.assert_series_equal(left, right)
