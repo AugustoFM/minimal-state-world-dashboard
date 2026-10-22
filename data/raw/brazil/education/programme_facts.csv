@@ -1,0 +1,28 @@
+item,year_or_period,value,unit,basis,source_url,retrieved
+rede_federal_units,2002,140,units,government statement,https://tribunademinas.com.br/noticias/brasil-e-mundo/13-03-2024/governo-expandira-rede-federal-de-ensino-em-100-novos-campi.html?amp=1,2026-10-22
+rede_federal_units,2019,661,units,government statement,https://tribunademinas.com.br/noticias/brasil-e-mundo/13-03-2024/governo-expandira-rede-federal-de-ensino-em-100-novos-campi.html?amp=1,2026-10-22
+rede_federal_units,2024,682,units,before the 2024 expansion plan,https://tribunademinas.com.br/noticias/brasil-e-mundo/13-03-2024/governo-expandira-rede-federal-de-ensino-em-100-novos-campi.html?amp=1,2026-10-22
+if_new_campi_planned,2024-2026,100,campi,Novo PAC; R$ 3.9 bn in works; completion planned end-2026 (NE 38; SE 27; S 13; N 12; CO 10),https://tribunademinas.com.br/noticias/brasil-e-mundo/13-03-2024/governo-expandira-rede-federal-de-ensino-em-100-novos-campi.html?amp=1,2026-10-22
+fies_new_contracts,2010,76000,contracts,press (approximate),https://www.gazetadopovo.com.br/vida-e-cidadania/fies-chega-a-15-milhao-de-contratos-8naern6tgxw4m7piv4vrkv3gu/,2026-10-22
+fies_new_contracts_offered,2014,732673,contracts,peak,https://www.poder360.com.br/governo/apos-recorde-de-contratos-fies-perde-863-das-vagas-em-6-anos/,2026-10-22
+fies_new_contracts,2019,85009,contracts,effective contracts,https://abmes.org.br/noticias/detalhe/4069/fies-cai-ao-menor-numero-de-beneficiarios-em-11-anos,2026-10-22
+fies_new_contracts,2020,47082,contracts,lowest since 2009,https://abmes.org.br/noticias/detalhe/4069/fies-cai-ao-menor-numero-de-beneficiarios-em-11-anos,2026-10-22
+fies_places_offered,2025,112000,places,press,https://tribunadonorte.com.br/natal/inadimplencia-no-fies-sobe-28-em-5-anos-no-estado/,2026-10-22
+prouni_scholarships_offered,2024,402092,scholarships,MEC: 304638 full + 97454 partial; industry reports low take-up,https://querobolsa.com.br/prouni,2026-10-22
+pe_de_meia_annual_cost,2025-2026,12,R$ billion per year,study citation,https://www.poder360.com.br/poder-educacao/pe-de-meia-evita-evasao-escolar-de-1-a-cada-4-alunos-diz-estudo/,2026-10-22
+pe_de_meia_dropout_effect,ex-ante 2026,-6.5,pp (composite secondary dropout among vulnerable students: 26.4 -> 19.9),ex-ante simulation (Paes de Barros et al.; CEEI/Insper); not an observed evaluation,https://www.poder360.com.br/poder-educacao/pe-de-meia-evita-evasao-escolar-de-1-a-cada-4-alunos-diz-estudo/,2026-10-22
+pe_de_meia_beneficiaries,2025,5.6,million students (MEC),administrative; other reports ~4 million current,https://oimparcial.com.br/brasil/2026/04/pe-de-meia-reduz-evasao-escolar-em-43-no-ensino-medio-aponta-mec/,2026-10-22
+university_discretionary_budget_real,2019,5.5,R$ billion (real),press series,https://www.poder360.com.br/poder-educacao/orcamento-de-universidades-federais-esta-abaixo-do-nivel-pre-pandemia/,2026-10-22
+university_discretionary_budget_real,2020,4.7,R$ billion (real),press series,https://www.poder360.com.br/poder-educacao/orcamento-de-universidades-federais-esta-abaixo-do-nivel-pre-pandemia/,2026-10-22
+university_discretionary_budget_real,2021,3.5,R$ billion (real),press series,https://www.poder360.com.br/poder-educacao/orcamento-de-universidades-federais-esta-abaixo-do-nivel-pre-pandemia/,2026-10-22
+university_discretionary_budget,2024,5.0,R$ billion,press; MEC reports +22% under the current government on another basis,https://www.poder360.com.br/poder-educacao/orcamento-de-universidades-federais-esta-abaixo-do-nivel-pre-pandemia/,2026-10-22
+university_total_executed_peak,2019,69.8,R$ billion (real),Sou Ciencia/Unifesp; 2024 is 9.5% lower in real terms,https://souciencia.unifesp.br/dados-fctesp/orcamento-universidades-federais/orcamento-geral-das-universidades,2026-10-22
+pbia_ai_plan,2024-2028,23,R$ billion,Plano Brasileiro de Inteligencia Artificial (MCTI),https://agenciabrasil.ebc.com.br/economia/noticia/2026-08/rn-vai-abrigar-supercomputador-brasileiro-de-inteligencia-artificial,2026-10-22
+ai_supercomputer,2026-2027,0.96-1.06,R$ billion,LNCC; Macaiba (RN); procurement moved to 4 Nov 2026; operation expected 2027,https://sindpd.org.br/2026/10/13/licitacao-supercomputador-de-ia/,2026-10-22
+flavio_plan_universities,2026,MEC->MCTI,governance,TSE plan chapter 'Preparar para o Brasil que existe'; no budget figure; IFs unspecified,https://tribunadoplanalto.com.br/flavio-bolsonaro-universidades-federais-mec-mcti-2026/,2026-10-22
+bergmann2020_if_employer_rate_18plus,2000-2010,-0.0452 (SE 0.0420),pp,municipal diff-in-diff (5507 municipalities); preferred spec (2); not significant,https://seer.ufrgs.br/index.php/AnaliseEconomica/article/view/77987,2026-10-22
+bergmann2020_uf_employer_rate_18plus,2000-2010,-0.0219 (SE 0.0524),pp,same; not significant,https://seer.ufrgs.br/index.php/AnaliseEconomica/article/view/77987,2026-10-22
+bergmann2020_if_formal_50plus,2000-2010,0.5838 (SE 0.3227),pp,same; significant at 10%,https://seer.ufrgs.br/index.php/AnaliseEconomica/article/view/77987,2026-10-22
+valero_vanreenen_universities_gdp,1950-2010,0.4,% GDP per capita per +10% universities in a region,78 countries; regional FE (association),https://www.nber.org/system/files/working_papers/w22501/w22501.pdf,2026-10-22
+andrews_college_patents,US 19th-20th c.,40-62,% more patents per year in winning county,winners vs runners-up; mostly migration,https://www.nber.org/system/files/working_papers/w26235/w26235.pdf,2026-10-22
+lochner_moretti_crime_savings,US,14-26,% of private return to high-school graduation,compulsory schooling IV,https://ideas.repec.org/a/aea/aecrev/v94y2004i1p155-189.html,2026-10-22
