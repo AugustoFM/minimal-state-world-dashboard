@@ -18,3 +18,7 @@ outputs/programme_results/
 
 # Presidential travel comparison page: kept local until the lead/user decide to publish (2026-10-22)
 outputs/presidential_travel/
+
+# ED programme-scenario results (contain P_ programme rows): local only, like outputs/programme_results/
+outputs/education.md
+data/brazil/education_scenarios.csv
