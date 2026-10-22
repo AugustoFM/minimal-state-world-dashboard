@@ -19,6 +19,7 @@ import copy
 import hashlib
 import json
 import subprocess
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -27,7 +28,7 @@ from typing import Iterable, Mapping
 import numpy as np
 import pandas as pd
 
-from src import corruption, external, feedback, micro, privatisation, programs, social
+from src import corruption, education, external, feedback, micro, privatisation, programs, social
 from src.baseline import project_baseline, read_yaml
 from src.macro import _interpolate_by_year
 from src.macro import PERSISTENCE_VARIANTS, load_macro_inputs, run_corner
@@ -103,7 +104,12 @@ MACRO_OUTPUTS = {
     "human_capital_contribution_pct": "percent",
     "health_contribution_pct": "percent",
     "public_capital_contribution_pct": "percent",
+    "education_capacity_contribution_pct": "percent",
+    "innovation_capacity_contribution_pct": "percent",
     "sovereign_risk_premium_debt_contribution_pp": "pp_gdp",
+    "sovereign_risk_premium_pp": "pp",
+    "firm_npl_change_vs_s0_pp": "pp",
+    "firm_exit_rate_change_vs_s0_pp": "pp",
 }
 SOCIAL_OUTPUTS = {
     "real_public_health_spending_pc_change_vs_s0_pct": "percent",
@@ -116,6 +122,8 @@ SOCIAL_OUTPUTS = {
     "effective_health_services_pc_change_vs_s0_pct_leakage_halved": "percent",
     "infant_mortality_difference_vs_s0_leakage_halved": "per_1000_live_births",
     "life_expectancy_difference_vs_s0_years_leakage_halved": "years",
+    "employer_share_change_pp": "pp",
+    "youth_homicide_rate_change_per_100k": "per_100k",
 }
 
 
@@ -211,6 +219,10 @@ def central_draw(parameters: Mapping, inputs: Mapping) -> dict:
         "micro_pension_variant": "proportional",
         "micro_labour_variant": "gdp_only",
         "micro_tax_variant": "proportional",
+        "education_capacity_elasticity": 0.02,
+        "innovation_capacity_elasticity": 0.01,
+        "firm_npl_rate_coefficient": 0.460,
+        "firm_exit_rate_coefficient": 0.713,
     }
     for category in MULTIPLIER_CATEGORIES:
         draw[f"multiplier_{category}"] = float(accumulated[category]["central"])
@@ -394,6 +406,8 @@ def load_context(
         "micro": _micro_context(data),
         "tax_incidence": "instrument",
         "corruption": corruption.load_config("config/corruption_proposed.yaml"),
+        "education": education.monte_carlo_channel_inputs(),
+        "education_sensitivity": "none",
     }
 
 
@@ -461,6 +475,9 @@ def micro_for_draw(corner: pd.DataFrame, variant_scenarios: Mapping, draw: Mappi
     records = []
     for row in corner.itertuples():
         if row.scenario in MICRO_SCENARIOS_EXCLUDED:
+            continue
+        if row.scenario == "S0":
+            records.append({"year": row.year, "scenario": row.scenario, **ctx["base"]})
             continue
         gaps = scenario_package_gaps(
             variant_scenarios, row.scenario, int(row.year) - int(context["base_year"]), float(row.gap_below_s0_pp)
@@ -592,7 +609,79 @@ def feedback_for_draw(
             for r in life_expectancy.itertuples()
         },
     )
-    return feedback.apply_feedback(corner, context["population"], **kwargs)
+    education_paths = education_for_draw(corner, variant_scenarios, draw, context)
+    kwargs.update(
+        education_capacity_log_effect=education_paths["capacity"],
+        innovation_capacity_log_effect=education_paths["innovation"],
+    )
+    result = feedback.apply_feedback(corner, context["population"], **kwargs)
+    employer = np.zeros(len(result), dtype=float)
+    homicide = np.zeros(len(result), dtype=float)
+    for scenario, indices in result.groupby("scenario", sort=False).groups.items():
+        ordered = result.loc[indices].sort_values("year")
+        positions = ordered.index.to_numpy()
+        emp, hom = education.composition_indicator_paths(
+            ordered["year"].to_numpy(), education_paths["education_change"].loc[positions].to_numpy(),
+            ordered["adult_mean_schooling_change_years"].to_numpy(), context["parameters"], context["education"],
+        )
+        employer[positions] = emp
+        homicide[positions] = hom
+    result["employer_share_change_pp"] = employer
+    result["youth_homicide_rate_change_per_100k"] = homicide
+    return result
+
+
+def education_for_draw(
+    corner: pd.DataFrame, variant_scenarios: Mapping, draw: Mapping, context: Mapping,
+) -> dict[str, pd.Series]:
+    """Build ED capacity, innovation and indicator doses for one C5 corner."""
+    result = {
+        name: pd.Series(0.0, index=corner.index, dtype=float)
+        for name in ("capacity", "innovation", "education_change")
+    }
+    base_year = int(corner["year"].min())
+    s0_base_gdp = float(corner.loc[
+        corner["scenario"].eq("S0") & corner["year"].eq(base_year), "real_gdp"
+    ].iloc[0])
+    rd_baseline_pp = float(context["education"]["mcti_2024_bn"]) / (s0_base_gdp / 1000.0) * 100.0
+    education_share = float(context["parameters"]["baseline"]["education_gdp_share"]["central"])
+    for scenario, indices in corner.groupby("scenario", sort=False).groups.items():
+        ordered = corner.loc[indices].sort_values("year")
+        positions = ordered.index.to_numpy()
+        years = ordered["year"].to_numpy(dtype=int)
+        service_gap = np.asarray([
+            scenario_package_gaps(
+                variant_scenarios, str(scenario), int(row.year) - base_year, float(row.gap_below_s0_pp)
+            ).get("efficiency_health_education_admin", 0.0)
+            for row in ordered.itertuples()
+        ])
+        education_change, rd_change = education.package_spending_changes(
+            service_gap, context["parameters"], rd_baseline_pp
+        )
+        university, mcti = education.sensitivity_budget_paths(
+            str(scenario), years, context.get("education_sensitivity", "none"), context["education"]
+        )
+        capacity, innovation = education.capacity_innovation_log_effects(
+            years, education_change, rd_change, university, mcti,
+            education_share_gdp=education_share, rd_baseline_pp_gdp=rd_baseline_pp,
+            capacity_elasticity=float(draw["education_capacity_elasticity"]),
+            innovation_elasticity=float(draw["innovation_capacity_elasticity"]),
+            inputs=context["education"],
+        )
+        result["capacity"].loc[positions] = capacity
+        result["innovation"].loc[positions] = innovation
+        result["education_change"].loc[positions] = education_change
+    return result
+
+
+def firm_distress_for_draw(corner: pd.DataFrame, draw: Mapping) -> pd.DataFrame:
+    """Add indicator-only BK responses to the C5 premium gap versus S0."""
+    s0 = corner.loc[corner["scenario"].eq("S0")].set_index("year")["sovereign_risk_premium_pp"]
+    deviation = corner["sovereign_risk_premium_pp"] - corner["year"].map(s0)
+    result = corner.copy()
+    result["firm_npl_change_vs_s0_pp"] = float(draw["firm_npl_rate_coefficient"]) * deviation
+    result["firm_exit_rate_change_vs_s0_pp"] = float(draw["firm_exit_rate_coefficient"]) * deviation
+    return result
 
 
 def evaluate_draw(draw: Mapping, context: Mapping, external_effects: pd.DataFrame | None = None) -> pd.DataFrame:
@@ -621,6 +710,7 @@ def evaluate_draw(draw: Mapping, context: Mapping, external_effects: pd.DataFram
                 corner, annual, variant_scenarios, context["parameters"], context["base_inputs"], draw, all_years
             )
             corner = feedback_for_draw(corner, annual_social, variant_scenarios, draw, context)
+            corner = firm_distress_for_draw(corner, draw)
             corner = corner.loc[corner["year"].isin(target_years)].copy()
             s0 = corner.loc[corner["scenario"].eq("S0")].set_index("year")
             corner["gdp_per_capita_vs_s0_pct"] = (
@@ -674,11 +764,18 @@ def run(
     c7_windows = sorted(parameters["external_block"]["output_channel_c7"]["coefficient_sets"]) if c7 else []
     programme_rng = np.random.default_rng([seed, 2])  # P1 sizes; leaves the other streams unchanged
     privatisation_rng = np.random.default_rng([seed, 5])  # PZ sales; leaves every existing stream unchanged
+    education_rng = np.random.default_rng([seed, 6])  # ED responses; leaves every existing stream unchanged
+    firm_rng = np.random.default_rng([seed, 7])  # BK coefficients; leaves every existing stream unchanged
     steps = max(context["target_years"]) - base_year
     draws, results = [], []
+    started = time.monotonic()
     for index in range(n_draws):
         draw = sample_draw(rng, parameters, inputs)
         draw["draw"] = index
+        draw["education_capacity_elasticity"] = float(education_rng.uniform(0.0, 0.04))
+        draw["innovation_capacity_elasticity"] = float(education_rng.uniform(0.0, 0.02))
+        draw["firm_npl_rate_coefficient"] = float(firm_rng.normal(0.460, (0.664 - 0.256) / 3.92))
+        draw["firm_exit_rate_coefficient"] = float(firm_rng.normal(0.713, (1.512 + 0.085) / 3.92))
         path = external.bootstrap_path(external_rng, context["external_changes"], steps)
         if c7:
             draw["external_c7_window"] = str(c7_rng.choice(c7_windows))
@@ -714,6 +811,11 @@ def run(
             draw["privatisation_non_tax_revenue_by_year"] = sale["non_tax_revenue_by_year"]
         draws.append(draw)
         results.append(evaluate_draw(draw, context, effects))
+        done = index + 1
+        if done % 25 == 0:
+            elapsed = time.monotonic() - started
+            eta = elapsed / done * (n_draws - done)
+            print(f"{done}/{n_draws} draws, elapsed {elapsed:.1f}s, ETA {eta:.1f}s", file=sys.stderr, flush=True)
     draw_results = pd.concat(results, ignore_index=True)
     metadata = {
         "seed": seed, "n_draws": n_draws, "variants": variant_names,
@@ -733,6 +835,10 @@ def run(
             "revenue_elasticity": "uniform(0.92, 0.98) from revenue_elasticity_to_gdp (IFI EE16 long run; C2 deterministic rule is 1.0)",
             "leakage_share": "uniform(low, high) from governance.leakage_share_of_spending (cancels in scenario-vs-S0 comparisons; drives the leakage_halved sensitivity)",
             "profile_year": "discrete, equal probability over profile_years.values",
+            "education_capacity_elasticity": "uniform(0, 0.04), separate stream [seed, 6]",
+            "innovation_capacity_elasticity": "uniform(0, 0.02), separate stream [seed, 6]",
+            "firm_npl_rate_coefficient": "normal(0.460, (0.664 - 0.256) / 3.92), separate stream [seed, 7]",
+            "firm_exit_rate_coefficient": "normal(0.713, (1.512 + 0.085) / 3.92), separate stream [seed, 7]; imprecise, CI includes zero",
         },
         "corruption": (
             "G2 major-scandal shock: annual probability uniform(0.03, 0.08), GDP level loss triangular(1.0, 2.25, 3.6)%, "
@@ -759,6 +865,8 @@ def run(
             "percentiles describe parameter uncertainty only, not forecast error or external shocks",
         ],
         "not_modelled": NOT_MODELLED,
+        "education_sensitivity": context.get("education_sensitivity", "none"),
+        "firm_distress": "BK NPL and exit-rate indicators are associational and indicator-only; they do not feed back to GDP or debt. The exit-rate CI includes zero.",
     }
     if context.get("real_rate_path") is not None:
         metadata.update(context["real_rate_path"])
@@ -793,6 +901,9 @@ def summarise(draw_results: pd.DataFrame, n_draws: int) -> pd.DataFrame:
     summary["unit"] = summary["indicator"].map(units)
     summary["n_draws"] = n_draws
     summary["status"] = "modelled: parameter uncertainty only"
+    summary.loc[summary["indicator"].eq("firm_exit_rate_change_vs_s0_pp"), "status"] = (
+        "modelled: imprecise association; coefficient CI includes zero"
+    )
     micro_gap = summary["indicator"].isin(list(MICRO_OUTPUTS)) & summary["p50"].isna()
     summary.loc[micro_gap, "status"] = (
         f"not_modelled: C3 runs for the {MICRO_VARIANT} composition only and has no package allocation for S1"
@@ -862,10 +973,13 @@ def main(argv: list[str] | None = None) -> int:
                         help="PZ sale package for programme scenarios (default: f5)")
     parser.add_argument("--tax-incidence", choices=("instrument", "uniform"), default="instrument",
                         help="household incidence for programme revenue changes (default: instrument)")
+    parser.add_argument("--education-sensitivity", choices=tuple(education.EDUCATION_SENSITIVITIES), default="none",
+                        help="ED historical-record/recomposition sensitivity (default: none)")
     args = parser.parse_args(argv)
     started = time.time()
     context = load_context()
     context["tax_incidence"] = args.tax_incidence
+    context["education_sensitivity"] = args.education_sensitivity
     if args.rate_path == "i1":
         source = Path("config/i1_proposed.yaml")
         config = read_yaml(source)

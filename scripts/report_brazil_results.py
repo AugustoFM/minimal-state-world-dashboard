@@ -73,6 +73,12 @@ LABELS = {
     "poverty_gap_759_with_65_plus_recipient_change_vs_s0_pp": "R$759 poverty gap, living with a 65+ pension/BPC recipient, change vs S0 (pp of line)",
     "debt_gdp": "Debt/GDP level (%)",
     "debt_gdp_with_feedback": "Debt/GDP level with C5 feedback (%)",
+    "education_capacity_contribution_pct": "Higher-education capacity contribution to GDP level (%)",
+    "innovation_capacity_contribution_pct": "Public-R&D stock contribution to GDP level (%)",
+    "employer_share_change_pp": "Employer share change vs S0 (pp; indicator only)",
+    "youth_homicide_rate_change_per_100k": "Youth homicide-rate change vs S0 (per 100,000; association only)",
+    "firm_npl_change_vs_s0_pp": "Firm NPL-rate change vs S0 (pp; indicator only)",
+    "firm_exit_rate_change_vs_s0_pp": "Firm exit-rate change vs S0 (pp; imprecise association)",
 }
 
 DECIMALS = {
@@ -102,6 +108,12 @@ DECIMALS = {
     "poverty_gap_759_with_65_plus_recipient_change_vs_s0_pp": 3,
     "debt_gdp": 1,
     "debt_gdp_with_feedback": 1,
+    "education_capacity_contribution_pct": 3,
+    "innovation_capacity_contribution_pct": 3,
+    "employer_share_change_pp": 3,
+    "youth_homicide_rate_change_per_100k": 3,
+    "firm_npl_change_vs_s0_pp": 3,
+    "firm_exit_rate_change_vs_s0_pp": 3,
 }
 
 

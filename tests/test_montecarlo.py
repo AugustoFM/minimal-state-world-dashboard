@@ -156,6 +156,27 @@ def test_feedback_columns_present_and_s0_has_no_supply_feedback(central) -> None
     assert (stress["public_capital_contribution_pct"] < 0).all()
 
 
+def test_ed_and_bk_channels_are_zero_for_s0_and_bk_is_linear(central) -> None:
+    s0 = central.loc[central["scenario"].eq("S0")]
+    for column in (
+        "education_capacity_contribution_pct", "innovation_capacity_contribution_pct",
+        "firm_npl_change_vs_s0_pp", "firm_exit_rate_change_vs_s0_pp",
+        "employer_share_change_pp", "youth_homicide_rate_change_per_100k",
+    ):
+        assert np.allclose(s0[column], 0.0, atol=1e-12)
+    source = pd.DataFrame({
+        "year": [2025, 2026, 2025, 2026],
+        "scenario": ["S0", "S0", "R", "R"],
+        "sovereign_risk_premium_pp": [0.0, 0.2, 0.0, 0.7],
+    })
+    result = mc.firm_distress_for_draw(source, {
+        "firm_npl_rate_coefficient": 0.46, "firm_exit_rate_coefficient": 0.713,
+    })
+    row = result.loc[result["scenario"].eq("R") & result["year"].eq(2026)].iloc[0]
+    assert row["firm_npl_change_vs_s0_pp"] == pytest.approx(0.46 * 0.5)
+    assert row["firm_exit_rate_change_vs_s0_pp"] == pytest.approx(0.713 * 0.5)
+
+
 MICRO_FILE = ROOT / "data/processed/brazil/microdata/pnadc_2025_c3_input.csv"
 
 

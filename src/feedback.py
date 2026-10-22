@@ -12,6 +12,7 @@ import math
 from pathlib import Path
 from typing import Iterable, Mapping
 
+import numpy as np
 import pandas as pd
 import yaml
 
@@ -23,6 +24,8 @@ CHANNELS = (
     "human_capital",
     "health",
     "public_capital",
+    "education_capacity",
+    "innovation_capacity",
     "sovereign_risk_premium",
     "inequality",
 )
@@ -284,7 +287,7 @@ def inequality_log_output_effect(
     return output
 
 
-def _evaluate(
+def _evaluate_reference(
     frame: pd.DataFrame,
     log_effects: Mapping[str, pd.Series],
     active: set[str],
@@ -296,7 +299,10 @@ def _evaluate(
     real_rate_path_offset_pp: Mapping[int, float] | None = None,
     risk_premium_cap_pp: float | None = 50.0,
 ) -> tuple[pd.Series, pd.Series, pd.Series]:
-    supply_channels = {"human_capital", "health", "public_capital", "inequality"}
+    supply_channels = {
+        "human_capital", "health", "public_capital", "education_capacity",
+        "innovation_capacity", "inequality",
+    }
     total_log = sum(
         (log_effects[name] for name in supply_channels & active),
         start=pd.Series(0.0, index=frame.index),
@@ -360,6 +366,98 @@ def _evaluate(
     return gdp_gap, gdp_pc, debt
 
 
+def _evaluate(
+    frame: pd.DataFrame,
+    log_effects: Mapping[str, pd.Series],
+    active: set[str],
+    *,
+    sovereign_risk_bp_per_debt_pp: float,
+    base_real_interest_rate_pct: float,
+    inflation_pct: float,
+    initial_debt_gdp: float,
+    real_rate_path_offset_pp: Mapping[int, float] | None = None,
+    risk_premium_cap_pp: float | None = 50.0,
+) -> tuple[pd.Series, pd.Series, pd.Series]:
+    """NumPy implementation of the feedback/debt loop.
+
+    ``_evaluate_reference`` retains the original row-wise implementation as a
+    numerical oracle for the speed-work regression tests.
+    """
+    supply_channels = {
+        "human_capital", "health", "public_capital", "education_capacity",
+        "innovation_capacity", "inequality",
+    }
+    total_log = np.zeros(len(frame), dtype=float)
+    for name in supply_channels & active:
+        total_log += log_effects[name].to_numpy(dtype=float, copy=False)
+    supply_is_zero = bool(np.all(np.abs(total_log) < 1e-15))
+    factor = np.exp(total_log)
+    base_gap = frame["gdp_level_vs_s0_pct"].to_numpy(dtype=float, copy=False)
+    base_pc = frame["gdp_per_capita"].to_numpy(dtype=float, copy=False)
+    if supply_is_zero:
+        gdp_gap_values = base_gap.copy()
+        gdp_pc_values = base_pc.copy()
+    else:
+        gdp_gap_values = ((1.0 + base_gap / 100.0) * factor - 1.0) * 100.0
+        gdp_pc_values = base_pc * factor
+
+    years = frame["year"].to_numpy(dtype=int, copy=False)
+    scenarios = frame["scenario"].to_numpy(copy=False)
+    real_gdp = frame["real_gdp"].to_numpy(dtype=float, copy=False)
+    primary = frame["primary_balance_gdp"].to_numpy(dtype=float, copy=False)
+    debt_adjustment = (
+        frame["debt_adjustment_pp"].to_numpy(dtype=float, copy=False)
+        if "debt_adjustment_pp" in frame else np.zeros(len(frame), dtype=float)
+    )
+    debt_values = np.empty(len(frame), dtype=float)
+    start_year = int(years.min())
+    inflation = inflation_pct / 100.0
+    offsets = {int(key): float(value) for key, value in (real_rate_path_offset_pp or {}).items()}
+    last_offset_year = max(offsets) if offsets else None
+    risk_bp = sovereign_risk_bp_per_debt_pp if "sovereign_risk_premium" in active else 0.0
+    inflation_factors = np.power(1.0 + inflation, years - start_year)
+
+    for scenario in pd.unique(scenarios):
+        positions = np.flatnonzero(scenarios == scenario)
+        positions = positions[np.argsort(years[positions], kind="stable")]
+        previous_debt = initial_debt_gdp / 100.0
+        previous_nominal_gdp: float | None = None
+        for pos in positions:
+            year = int(years[pos])
+            nominal_gdp = (
+                real_gdp[pos] * inflation_factors[pos]
+                * (1.0 + gdp_gap_values[pos] / 100.0)
+            )
+            if year == start_year:
+                debt_values[pos] = initial_debt_gdp
+                previous_nominal_gdp = nominal_gdp
+                continue
+            if previous_nominal_gdp is None:
+                raise RuntimeError("Missing prior nominal GDP")
+            deviation_pp = (previous_debt - initial_debt_gdp / 100.0) * 100.0
+            if risk_premium_cap_pp is not None:
+                deviation_pp = max(-risk_premium_cap_pp, min(risk_premium_cap_pp, deviation_pp))
+            premium = risk_bp / 10_000.0 * deviation_pp
+            offset_year = last_offset_year if last_offset_year is not None and year > last_offset_year else year
+            offset = offsets.get(offset_year, 0.0)
+            base_real_rate = (base_real_interest_rate_pct + offset) / 100.0
+            nominal_interest = (1.0 + base_real_rate + premium) * (1.0 + inflation) - 1.0
+            nominal_growth = nominal_gdp / previous_nominal_gdp - 1.0
+            previous_debt = debt_step(
+                previous_debt, nominal_interest, nominal_growth, primary[pos] / 100.0,
+            ) - debt_adjustment[pos] / 100.0
+            debt_values[pos] = previous_debt * 100.0
+            previous_nominal_gdp = nominal_gdp
+
+    if risk_bp == 0 and supply_is_zero:
+        debt_values = frame["debt_gdp"].to_numpy(dtype=float, copy=True)
+    return (
+        pd.Series(gdp_gap_values, index=frame.index),
+        pd.Series(gdp_pc_values, index=frame.index),
+        pd.Series(debt_values, index=frame.index),
+    )
+
+
 def apply_feedback(
     corner: pd.DataFrame,
     population: pd.DataFrame,
@@ -387,6 +485,8 @@ def apply_feedback(
     real_rate_path_offset_pp: Mapping[int, float] | None = None,
     gini_change: pd.DataFrame | pd.Series | Mapping[tuple[int, str], float] | None = None,
     inequality_growth_pp_per_gini: float = 0.0,
+    education_capacity_log_effect: pd.DataFrame | pd.Series | Mapping[tuple[int, str], float] | None = None,
+    innovation_capacity_log_effect: pd.DataFrame | pd.Series | Mapping[tuple[int, str], float] | None = None,
     allow_missing: bool = False,
     risk_premium_cap_pp: float | None = 50.0,
 ) -> pd.DataFrame:
@@ -444,10 +544,18 @@ def apply_feedback(
     )
     gini = _path_values(gini_change, frame, "gini_change")
     inequality_log = inequality_log_output_effect(frame, gini, inequality_growth_pp_per_gini)
+    education_capacity_log = _path_values(
+        education_capacity_log_effect, frame, "education_capacity_log_effect"
+    )
+    innovation_capacity_log = _path_values(
+        innovation_capacity_log_effect, frame, "innovation_capacity_log_effect"
+    )
     log_effects = {
         "human_capital": human_log,
         "health": health_log,
         "public_capital": public_log,
+        "education_capacity": education_capacity_log,
+        "innovation_capacity": innovation_capacity_log,
         "inequality": inequality_log,
     }
     active = set(CHANNELS)
@@ -463,6 +571,12 @@ def apply_feedback(
     frame["gdp_level_vs_s0_pct_with_feedback"] = all_gdp
     frame["gdp_per_capita_with_feedback"] = all_pc
     frame["debt_gdp_with_feedback"] = all_debt
+    frame["sovereign_risk_premium_pp"] = sovereign_risk_premium_path(
+        frame, all_debt,
+        sovereign_risk_bp_per_debt_pp=sovereign_risk_bp_per_debt_pp,
+        initial_debt_gdp=initial_debt_gdp,
+        risk_premium_cap_pp=risk_premium_cap_pp,
+    )
     frame["adult_mean_schooling_change_years"] = schooling_change
     frame["public_capital_status"] = public_status
     frame["inequality_status"] = "inactive: no Gini path (until C3)" if gini_change is None else "modelled"
@@ -479,6 +593,32 @@ def apply_feedback(
         frame[f"{channel}_contribution_pct"] = all_gdp - without_gdp
         frame[f"{channel}_debt_contribution_pp"] = all_debt - without_debt
     return frame
+
+
+def sovereign_risk_premium_path(
+    frame: pd.DataFrame, debt_gdp: pd.Series, *, sovereign_risk_bp_per_debt_pp: float,
+    initial_debt_gdp: float, risk_premium_cap_pp: float | None = 50.0,
+) -> pd.Series:
+    """Expose the annual C5 premium used by the debt recursion, in pp."""
+    years = frame["year"].to_numpy(dtype=int, copy=False)
+    scenarios = frame["scenario"].to_numpy(copy=False)
+    debts = debt_gdp.to_numpy(dtype=float, copy=False)
+    result = np.zeros(len(frame), dtype=float)
+    start_year = int(years.min())
+    for scenario in pd.unique(scenarios):
+        positions = np.flatnonzero(scenarios == scenario)
+        positions = positions[np.argsort(years[positions], kind="stable")]
+        previous_debt = float(initial_debt_gdp)
+        for pos in positions:
+            if years[pos] == start_year:
+                previous_debt = debts[pos]
+                continue
+            deviation = previous_debt - float(initial_debt_gdp)
+            if risk_premium_cap_pp is not None:
+                deviation = max(-risk_premium_cap_pp, min(risk_premium_cap_pp, deviation))
+            result[pos] = float(sovereign_risk_bp_per_debt_pp) / 100.0 * deviation
+            previous_debt = debts[pos]
+    return pd.Series(result, index=frame.index)
 
 
 def load_feedback_defaults(

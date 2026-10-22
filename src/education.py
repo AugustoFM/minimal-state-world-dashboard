@@ -554,6 +554,17 @@ def programme_spending_changes(
     # Spending paths are scenario inputs, not response-parameter outcomes.  Use
     # C5's central allocation once so low/central/high vary elasticities rather
     # than silently changing the fiscal counterfactual.
+    service_gap = _package_path(
+        definition, "efficiency_health_education_admin", years, min(years)
+    )
+    return package_spending_changes(service_gap, parameters, rd_baseline_pp_gdp)
+
+
+def package_spending_changes(
+    service_gap_below_s0_pp_gdp: Sequence[float], parameters: Mapping,
+    rd_baseline_pp_gdp: float,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Return ED education/R&D changes for any scenario package path."""
     education_share = float(parameters["baseline"]["education_gdp_share"]["central"])
     health_share = float(parameters["baseline"]["health_gdp_share"]["central"])
     allocation = education_share / (education_share + health_share)
@@ -561,12 +572,139 @@ def programme_spending_changes(
         parameters["social_modelling_choices"]["reduction_hitting_health_education"]
         ["service_cut_fraction"]["central"]
     )
-    service_gap = _package_path(
-        definition, "efficiency_health_education_admin", years, min(years)
-    )
-    education = -service_gap * allocation * service_fraction
-    rd = education / education_share * rd_baseline_pp_gdp
+    education = -np.asarray(service_gap_below_s0_pp_gdp, dtype=float) * allocation * service_fraction
+    rd = education / education_share * float(rd_baseline_pp_gdp)
     return education, rd
+
+
+EDUCATION_SENSITIVITIES = {
+    "none": None,
+    "half_record": "P_flavio_mid_half_record",
+    "record_repeat": "P_flavio_mid_record_repeat",
+    "lula_half_recomposition": "P_lula_rule_half_recomposition",
+    "lula_record_recomposition": "P_lula_rule_record_recomposition",
+}
+
+
+def monte_carlo_channel_inputs() -> dict[str, object]:
+    """Load fixed ED calibration inputs once for the Monte Carlo context."""
+    config = yaml.safe_load((ROOT / "config/ed_proposed.yaml").read_text(encoding="utf-8"))
+    calibration = calibration_table().set_index("item")
+    estimates = pd.read_csv(ROOT / "data/brazil/education_estimates.csv")
+    panel = pd.read_csv(ROOT / "data/brazil/education_panel.csv")
+    national = panel.loc[panel["geography"].eq("Brasil")]
+    years = national.loc[
+        national["indicator"].eq("mean_years_schooling") & national["detail"].eq("18 a 29 anos"),
+        ["year", "value"],
+    ]
+    tertiary = national.loc[
+        national["indicator"].eq("education_share_pct") & national["detail"].eq("higher_complete"),
+        ["year", "value"],
+    ]
+    joined = years.merge(tertiary, on="year", suffixes=("_years", "_tertiary"))
+    gradients = estimates.loc[estimates["analysis"].eq("education_gradient")]
+
+    def gradient(specification: str, term: str) -> float:
+        return float(gradients.loc[
+            gradients["specification"].eq(specification) & gradients["term"].eq(term), "estimate"
+        ].iloc[0])
+
+    return {
+        "config": config,
+        "university_2024_bn": float(calibration.loc["federal_universities_total", "r_bn_2024"]),
+        "if_2024_bn": float(calibration.loc["federal_institutes_total", "r_bn_2024"]),
+        "mcti_2024_bn": float(calibration.loc["mcti_budget_units", "r_bn_2024"]),
+        "historical_university_change": float(calibration.loc["federal_universities_total", "change_2018_2022_pct"]) / 100,
+        "historical_mcti_change": float(calibration.loc["mcti_budget_units", "change_2018_2022_pct"]) / 100,
+        "recomposition_university_change": float(calibration.loc["federal_universities_total", "change_2022_2024_pct"]) / 100,
+        "recomposition_mcti_change": float(calibration.loc["mcti_budget_units", "change_2022_2024_pct"]) / 100,
+        "tertiary_slope": float(np.polyfit(joined["value_years"], joined["value_tertiary"], 1)[0]),
+        "employer_gradient_gap": gradient("employer_rate_pct", "higher_complete")
+        - gradient("employer_rate_pct", "secondary_higher_incomplete"),
+        "crime_association": float(estimates.loc[estimates["analysis"].eq("crime_association"), "estimate"].iloc[0]),
+    }
+
+
+def sensitivity_budget_paths(
+    scenario: str, years: Sequence[int], sensitivity: str, inputs: Mapping,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Return university and MCTI relative changes for the selected ED case."""
+    if sensitivity not in EDUCATION_SENSITIVITIES:
+        raise ValueError(f"Unknown education sensitivity: {sensitivity}")
+    selected = EDUCATION_SENSITIVITIES[sensitivity]
+    zeros = np.zeros(len(years), dtype=float)
+    if selected is None:
+        return zeros, zeros.copy()
+    definition = inputs["config"]["scenarios"][selected]
+    if scenario != str(definition["programme_scenario"]):
+        return zeros, zeros.copy()
+    programme = str(definition["programme"])
+    if programme == "lula_pt":
+        university_record = float(inputs["recomposition_university_change"])
+        mcti_record = float(inputs["recomposition_mcti_change"])
+    else:
+        university_record = float(inputs["historical_university_change"])
+        mcti_record = float(inputs["historical_mcti_change"])
+    university = np.asarray([
+        university_record * float(definition["university_record_fraction"]) * _ramp(int(year))
+        for year in years
+    ])
+    mcti = np.asarray([
+        mcti_record * float(definition["mcti_record_fraction"]) * _ramp(int(year))
+        for year in years
+    ])
+    return university, mcti
+
+
+def capacity_innovation_log_effects(
+    years: Sequence[int], education_change_pp_gdp: Sequence[float], rd_change_pp_gdp: Sequence[float],
+    university_change: Sequence[float], mcti_change: Sequence[float], *,
+    education_share_gdp: float, rd_baseline_pp_gdp: float,
+    capacity_elasticity: float, innovation_elasticity: float, inputs: Mapping,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Apply ED's symmetric capacity and perpetual-inventory R&D equations."""
+    years = np.asarray(years, dtype=int)
+    education_change = np.asarray(education_change_pp_gdp, dtype=float)
+    rd_change = np.asarray(rd_change_pp_gdp, dtype=float)
+    university_change = np.asarray(university_change, dtype=float)
+    mcti_change = np.asarray(mcti_change, dtype=float)
+    package_ratio = education_change / float(education_share_gdp)
+    university = float(inputs["university_2024_bn"])
+    federal_institutes = float(inputs["if_2024_bn"])
+    capacity_change = (
+        university * (university_change + package_ratio) + federal_institutes * package_ratio
+    ) / (university + federal_institutes)
+    phase_years = int(inputs["config"]["parameters"]["capacity_phase_in_years"])
+    capacity_log = np.asarray([
+        capacity_phase_in(float(change), max(0, int(year) - 2026), phase_years)
+        for year, change in zip(years, capacity_change)
+    ]) * float(capacity_elasticity)
+    depreciation = float(inputs["config"]["parameters"]["rd_depreciation"])
+    investment_ratio = mcti_change + rd_change / float(rd_baseline_pp_gdp)
+    stock = 1.0
+    innovation_log = []
+    for change in investment_ratio:
+        stock = (1.0 - depreciation) * stock + depreciation * (1.0 + float(change))
+        innovation_log.append(math.copysign(math.log1p(abs(stock - 1.0)), stock - 1.0))
+    return capacity_log, float(innovation_elasticity) * np.asarray(innovation_log)
+
+
+def composition_indicator_paths(
+    years: Sequence[int], education_change_pp_gdp: Sequence[float], adult_schooling_change: Sequence[float],
+    parameters: Mapping, inputs: Mapping,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Return ED employer and non-causal youth-homicide indicators."""
+    tertiary_change = float(inputs["tertiary_slope"]) * np.asarray(adult_schooling_change, dtype=float)
+    employer = tertiary_change / 100.0 * float(inputs["employer_gradient_gap"])
+    young = _young_schooling_path(
+        years, education_change_pp_gdp,
+        float(parameters["baseline"]["education_gdp_share"]["central"]),
+        10.4,
+        float(parameters["social_outcome_elasticities"]["schooling_years_wrt_local_public_spending"]["central"]),
+    )
+    homicide_fraction = float(inputs["config"]["variants"]["central"]["homicide_association_fraction"])
+    homicide = -abs(float(inputs["crime_association"])) * young * homicide_fraction
+    return employer, homicide
 
 
 def build_scenarios(

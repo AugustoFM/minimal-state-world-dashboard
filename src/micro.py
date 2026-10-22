@@ -225,7 +225,10 @@ def prepare_microdata(persons: pd.DataFrame) -> PreparedMicrodata:
     )
 
 
-def _tax_burden(capacity: np.ndarray, score: np.ndarray, weights: np.ndarray, target: float) -> np.ndarray:
+def _tax_burden_reference(
+    capacity: np.ndarray, score: np.ndarray, weights: np.ndarray, target: float
+) -> np.ndarray:
+    """Original bisection retained as a numerical oracle for optimisation tests."""
     if target <= 0:
         return np.zeros_like(capacity)
     available = _weighted_total(capacity, weights)
@@ -245,6 +248,38 @@ def _tax_burden(capacity: np.ndarray, score: np.ndarray, weights: np.ndarray, ta
         else:
             high = middle
     return np.minimum(capacity, high * score)
+
+
+def _tax_burden(capacity: np.ndarray, score: np.ndarray, weights: np.ndarray, target: float) -> np.ndarray:
+    """Allocate a capped score-proportional burden by solving its breakpoints."""
+    if target <= 0:
+        return np.zeros_like(capacity)
+    available = _weighted_total(capacity, weights)
+    if target > available + 1e-6:
+        raise ValueError("Tax change exceeds total non-negative survey household income")
+    valid = score > 0
+    if not valid.any():
+        raise ValueError("Positive tax change has no positive allocation base")
+    valid_positions = np.flatnonzero(valid)
+    ratios = capacity[valid] / score[valid]
+    order = np.argsort(ratios, kind="stable")
+    positions = valid_positions[order]
+    ordered_ratios = ratios[order]
+    weighted_capacity = capacity[positions] * weights[positions]
+    weighted_score = score[positions] * weights[positions]
+    cumulative_capacity = np.r_[0.0, np.cumsum(weighted_capacity)]
+    cumulative_score = np.r_[0.0, np.cumsum(weighted_score)]
+    valid_available = float(cumulative_capacity[-1])
+    if target > valid_available + 1e-6:
+        raise ValueError("Tax change exceeds income with a positive allocation score")
+    remaining_score = cumulative_score[-1] - cumulative_score[:-1]
+    lambdas = np.divide(
+        target - cumulative_capacity[:-1], remaining_score,
+        out=np.full_like(remaining_score, np.inf), where=remaining_score > 0,
+    )
+    feasible = np.flatnonzero(lambdas <= ordered_ratios)
+    multiplier = float(lambdas[feasible[0]]) if len(feasible) else float(ordered_ratios[-1])
+    return np.minimum(capacity, multiplier * score)
 
 
 def _instrument_tax_scores(
@@ -409,8 +444,10 @@ def simulate_household_incomes(
     })
 
 
-def calculate_indicators(households: pd.DataFrame, poverty_lines_brl: Mapping[str, float]) -> dict[str, float]:
-    """Calculate person-weighted distribution indicators from household rows."""
+def _calculate_indicators_reference(
+    households: pd.DataFrame, poverty_lines_brl: Mapping[str, float]
+) -> dict[str, float]:
+    """Original repeated-sort implementation retained as a numerical oracle."""
     required = {"survey_weight", "income_unit_size", "household_income_per_capita_brl"}
     missing = required - set(households.columns)
     if missing:
@@ -424,7 +461,6 @@ def calculate_indicators(households: pd.DataFrame, poverty_lines_brl: Mapping[st
     sorted_income = income[income_order]
 
     def smoothed_headcount(weights: np.ndarray, denominator: float, line: float) -> float:
-        """Average 21 weighted CDF values without materialising 21 boolean arrays."""
         cumulative_weight = np.concatenate(([0.0], np.cumsum(weights[income_order])))
         band_lines = np.linspace(0.95 * line, 1.05 * line, 21)
         positions = np.searchsorted(sorted_income, band_lines, side="left")
@@ -435,6 +471,80 @@ def calculate_indicators(households: pd.DataFrame, poverty_lines_brl: Mapping[st
         "survey_top_1_income_share_pct": 100 * top_income_share(income, person_weight, 0.01),
         "survey_top_10_income_share_pct": 100 * top_income_share(income, person_weight, 0.10),
         "weighted_income_unit_population": float(person_weight.sum()),
+        "weighted_household_count": float(households["survey_weight"].sum()),
+    }
+    for name, line in poverty_lines_brl.items():
+        line = float(line)
+        result[f"poverty_headcount_{name}_pct"] = float(100 * person_weight[income < line].sum() / person_weight.sum())
+        result[f"poverty_smoothed_{name}_pct"] = smoothed_headcount(person_weight, float(person_weight.sum()), line)
+        normalised_gap = np.maximum((line - income) / line, 0.0)
+        result[f"poverty_gap_{name}_pct"] = float(100 * np.average(normalised_gap, weights=person_weight))
+        result[f"poverty_gap_sq_{name}"] = float(np.average(normalised_gap ** 2, weights=person_weight))
+        subgroup_columns = {
+            "age_0_14": "age_0_14_count", "age_65_plus": "age_65_plus_count",
+            "living_with_65_plus_pension_bpc_recipient": "living_with_65_plus_pension_bpc_recipient_count",
+        }
+        for subgroup, column in subgroup_columns.items():
+            if column not in households:
+                continue
+            subgroup_weight = households["survey_weight"].to_numpy(dtype=float) * households[column].to_numpy(dtype=float)
+            denominator = subgroup_weight.sum()
+            result[f"poverty_headcount_{name}_{subgroup}_pct"] = float(100 * subgroup_weight[income < line].sum() / denominator) if denominator > 0 else float("nan")
+            result[f"poverty_smoothed_{name}_{subgroup}_pct"] = smoothed_headcount(subgroup_weight, float(denominator), line) if denominator > 0 else float("nan")
+            result[f"poverty_gap_{name}_{subgroup}_pct"] = float(100 * np.average(normalised_gap, weights=subgroup_weight)) if denominator > 0 else float("nan")
+            result[f"poverty_gap_sq_{name}_{subgroup}"] = float(np.average(normalised_gap ** 2, weights=subgroup_weight)) if denominator > 0 else float("nan")
+    return result
+
+
+def calculate_indicators(households: pd.DataFrame, poverty_lines_brl: Mapping[str, float]) -> dict[str, float]:
+    """Calculate person-weighted distribution indicators from household rows."""
+    required = {"survey_weight", "income_unit_size", "household_income_per_capita_brl"}
+    missing = required - set(households.columns)
+    if missing:
+        raise ValueError(f"Household table missing columns: {sorted(missing)}")
+    income = households["household_income_per_capita_brl"].to_numpy(dtype=float)
+    person_weight = (
+        households["survey_weight"].to_numpy(dtype=float)
+        * households["income_unit_size"].to_numpy(dtype=float)
+    )
+    income_order = np.argsort(income, kind="stable")
+    sorted_income = income[income_order]
+    sorted_person_weight = person_weight[income_order]
+    sorted_weighted_income = sorted_income * sorted_person_weight
+    total_weight = float(person_weight.sum())
+    total_income = float(sorted_weighted_income.sum())
+
+    def smoothed_headcount(weights: np.ndarray, denominator: float, line: float) -> float:
+        """Average 21 weighted CDF values without materialising 21 boolean arrays."""
+        cumulative_weight = np.concatenate(([0.0], np.cumsum(weights[income_order])))
+        band_lines = np.linspace(0.95 * line, 1.05 * line, 21)
+        positions = np.searchsorted(sorted_income, band_lines, side="left")
+        return float(np.mean(100 * cumulative_weight[positions] / denominator))
+
+    if total_income == 0:
+        gini = top_1 = top_10 = 0.0
+    else:
+        cumulative_weight = np.cumsum(sorted_person_weight)
+        gini = float(
+            (sorted_weighted_income * (2 * cumulative_weight - sorted_person_weight)).sum()
+            / (total_weight * total_income) - 1
+        )
+
+        descending_income = sorted_income[::-1]
+        descending_weight = sorted_person_weight[::-1]
+        before = np.r_[0.0, np.cumsum(descending_weight)[:-1]]
+
+        def sorted_top_share(fraction: float) -> float:
+            included = np.clip(fraction * total_weight - before, 0.0, descending_weight)
+            return float(np.sum(descending_income * included) / total_income)
+
+        top_1, top_10 = sorted_top_share(0.01), sorted_top_share(0.10)
+
+    result = {
+        "gini": gini,
+        "survey_top_1_income_share_pct": 100 * top_1,
+        "survey_top_10_income_share_pct": 100 * top_10,
+        "weighted_income_unit_population": total_weight,
         "weighted_household_count": float(households["survey_weight"].sum()),
     }
     for name, line in poverty_lines_brl.items():

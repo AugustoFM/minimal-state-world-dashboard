@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from src import micro
 from src.micro import (
     calculate_indicators,
     simulate_household_incomes,
@@ -273,3 +274,19 @@ def test_business_capital_uses_top_income_base_and_unknown_instrument_fails() ->
     )
     with pytest.raises(ValueError, match="Unknown tax instrument"):
         run_toy(toy_persons(), revenue_change_by_instrument_pp={"unknown": 0.1})
+
+
+def test_optimised_indicators_and_tax_match_references() -> None:
+    households = run_toy(toy_persons())
+    lines = {"low": 218.0, "high": 759.0}
+    expected = micro._calculate_indicators_reference(households, lines)
+    actual = calculate_indicators(households, lines)
+    assert actual == pytest.approx(expected, nan_ok=True, abs=1e-12)
+    rng = np.random.default_rng(17)
+    capacity = rng.uniform(1, 1000, 1000)
+    score = rng.uniform(0.1, 500, 1000)
+    weights = rng.uniform(0.1, 20, 1000)
+    target = float(np.sum(capacity * weights) * 0.4)
+    old = micro._tax_burden_reference(capacity, score, weights, target)
+    new = micro._tax_burden(capacity, score, weights, target)
+    np.testing.assert_allclose(new, old, atol=1e-9, rtol=1e-12)
