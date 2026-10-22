@@ -33,6 +33,7 @@ AS_OF = date(2026, 10, 22)
 TRIPS_OUT = DATA_DIR / "presidential_trips.csv"
 COSTS_OUT = DATA_DIR / "presidential_travel_costs.csv"
 ESTIMATES_OUT = DATA_DIR / "travel_trade_estimates.csv"
+TERMS_OUT = DATA_DIR / "presidential_terms.csv"
 REPORT_OUT = ROOT / "outputs/presidential_travel.md"
 METHOD_OUT = ROOT / "docs/presidential_travel.md"
 HTML_OUT = OUTPUT_DIR / "presidential_travel.html"
@@ -58,6 +59,30 @@ PRESIDENTS = [
     ("Jair Bolsonaro", date(2019, 1, 1), date(2022, 12, 31)),
     ("Lula III", date(2023, 1, 1), date(2026, 12, 31)),
 ]
+
+# Calendar-term boundaries requested in TR3.  Exact dates matter for monthly
+# assignment in the Dilma II / Temer transition; observations are assigned by
+# their actual month (the September 2016 observation belongs to Temer).
+TERMS = [
+    ("FHC I", "FHC", date(1995, 1, 1), date(1998, 12, 31)),
+    ("FHC II", "FHC", date(1999, 1, 1), date(2002, 12, 31)),
+    ("Lula I", "Lula", date(2003, 1, 1), date(2006, 12, 31)),
+    ("Lula II", "Lula", date(2007, 1, 1), date(2010, 12, 31)),
+    ("Dilma I", "Dilma Rousseff", date(2011, 1, 1), date(2014, 12, 31)),
+    ("Dilma II", "Dilma Rousseff", date(2015, 1, 1), date(2016, 8, 31)),
+    ("Temer", "Michel Temer", date(2016, 9, 1), date(2018, 12, 31)),
+    ("Bolsonaro", "Jair Bolsonaro", date(2019, 1, 1), date(2022, 12, 31)),
+    ("Lula III", "Lula", date(2023, 1, 1), date(2026, 9, 30)),
+]
+
+
+def term_for_date(value: date | pd.Timestamp) -> str | None:
+    """Assign a dated observation to the requested presidential term."""
+    d = value.date() if isinstance(value, pd.Timestamp) else value
+    for term, _, start, end in TERMS:
+        if start <= d <= end:
+            return term
+    return None
 
 PRIMARY_FILES = {
     "FHC": "wikipedia_pt_viagens_Fernando_Henrique_Cardoso.wikitext",
@@ -145,7 +170,7 @@ COUNTRY_ALIASES = {
     "suriname": "Suriname", "tailandia": "Thailand", "tanzania": "Tanzania",
     "timor leste": "Timor-Leste", "turquia": "Turkey", "ucrania": "Ukraine",
     "uruguai": "Uruguay", "vaticano": "Vatican City", "venezuela": "Venezuela",
-    "vietna": "Vietnam",
+    "vietna": "Vietnam", "brasil": "Brazil",
 }
 
 
@@ -429,30 +454,70 @@ def _optional_cpgf(factors: pd.Series) -> pd.DataFrame:
     """
     path = RAW_TRAVEL / "presidency_cpgf_2013_2026.csv.gz"
     if not path.exists():
-        return pd.DataFrame(columns=["president", "year", "cpgf_foreign_records", "cpgf_foreign_total_brl_constant_2026_09"])
-    card = pd.read_csv(path, low_memory=False)
-    normal = {c: re.sub(r"[^a-z0-9]", "", _ascii(c)) for c in card.columns}
-    date_col = next((c for c, n in normal.items() if "data" in n or "date" in n), None)
-    value_col = next((c for c, n in normal.items() if any(k in n for k in ("valortransacao", "valor", "amount", "value"))), None)
-    if date_col is None or value_col is None:
-        raise ValueError("Optional CPGF file must contain a date and transaction-value column")
-    card["date"] = pd.to_datetime(card[date_col], dayfirst=True, errors="coerce")
-    values = card[value_col].astype(str).str.replace(r"[^0-9,.-]", "", regex=True)
+        return pd.DataFrame(columns=["president", "year", "cpgf_all_records", "cpgf_all_total_brl_constant_2026_09",
+                                     "cpgf_foreign_records", "cpgf_foreign_total_brl_constant_2026_09"])
+    card = prepare_cpgf(pd.read_csv(path, low_memory=False), factors)
+    presidency = card[card.organ_group.eq("presidency")]
+    vice = card[card.organ_group.eq("vice_presidency")]
+
+    def totals(frame: pd.DataFrame, prefix: str) -> pd.DataFrame:
+        return frame.groupby(["president", "year"], as_index=False).agg(
+            **{f"{prefix}_records": ("constant", "size"), f"{prefix}_total_brl_constant_2026_09": ("constant", "sum")}
+        )
+
+    result = totals(presidency, "cpgf_all")
+    for frame, prefix in [
+        (presidency[presidency.classified], "cpgf_classified"),
+        (presidency[~presidency.classified], "cpgf_unclassified"),
+        (presidency[presidency.foreign], "cpgf_foreign"),
+        (vice, "cpgf_vice_presidency"),
+    ]:
+        result = result.merge(totals(frame, prefix), on=["president", "year"], how="left")
+    count_cols = [c for c in result if c.endswith("_records")]
+    value_cols = [c for c in result if c.endswith("_total_brl_constant_2026_09")]
+    return result.fillna({**{c: 0 for c in count_cols}, **{c: 0.0 for c in value_cols}})
+
+
+def prepare_cpgf(card: pd.DataFrame, factors: pd.Series) -> pd.DataFrame:
+    """Classify Presidency card transactions; classified rows are kept.
+
+    About 99% of the value is published as "Informações protegidas por sigilo":
+    amount and statement month are public, transaction date and payee are not.
+    Such rows are dated to the first day of the statement month.  Only the
+    Presidência da República organ enters the presidential series; the
+    Vice-Presidency is reported separately and other organs (EBC, Imprensa
+    Nacional) are excluded.
+    """
+    normal = {re.sub(r"[^a-z0-9]", "", _ascii(c)): c for c in card.columns}
+    required = {"datatransacao", "valortransacao", "transacao", "nomeorgao", "anoextrato", "mesextrato"}
+    missing = required - set(normal)
+    if missing:
+        raise ValueError(f"CPGF extract lacks columns: {sorted(missing)}")
+    out = pd.DataFrame(index=card.index)
+    statement = pd.to_datetime(
+        card[normal["anoextrato"]].astype(str).str.zfill(4) + "-" + card[normal["mesextrato"]].astype(str).str.zfill(2) + "-01",
+        errors="coerce",
+    )
+    transaction = pd.to_datetime(card[normal["datatransacao"]], dayfirst=True, errors="coerce")
+    out["date"] = transaction.fillna(statement)
+    out["dated_by_statement"] = transaction.isna()
+    values = card[normal["valortransacao"]].astype(str).str.replace(r"[^0-9,.-]", "", regex=True)
     comma_decimal = values.str.contains(",", regex=False)
     values.loc[comma_decimal] = values.loc[comma_decimal].str.replace(".", "", regex=False).str.replace(",", ".", regex=False)
-    card["value_brl"] = pd.to_numeric(values, errors="coerce")
-    text_cols = [c for c in card.columns if card[c].dtype == object and c != value_col]
-    text = card[text_cols].fillna("").astype(str).agg(" ".join, axis=1).map(_ascii)
-    foreign_terms = sorted(set(COUNTRY_ALIASES) | {"exterior", "internacional", "foreign", "usd", "euro", "dolar"}, key=len, reverse=True)
-    pattern = r"\b(?:" + "|".join(re.escape(x) for x in foreign_terms) + r")\b"
-    card = card[text.str.contains(pattern, regex=True)]
-    card["president"] = card.date.map(lambda x: president_for_date(x) if pd.notna(x) else None)
-    card["year"] = card.date.dt.year
-    card["constant"] = deflate_to_constant(card.value_brl, card.date, factors).values
-    return card.dropna(subset=["president", "year"]).groupby(["president", "year"], as_index=False).agg(
-        cpgf_foreign_records=("constant", "size"),
-        cpgf_foreign_total_brl_constant_2026_09=("constant", "sum"),
+    out["value_brl"] = pd.to_numeric(values, errors="coerce")
+    kind = card[normal["transacao"]].fillna("").astype(str).map(_ascii)
+    out["classified"] = kind.str.contains("sigilo")
+    out["foreign"] = ~out.classified & kind.str.contains(r"int\$", regex=True)
+    organ = card[normal["nomeorgao"]].fillna("").astype(str).map(_ascii)
+    out["organ_group"] = np.select(
+        [organ.str.contains("vice-presidencia"), organ.str.contains("presidencia da republica")],
+        ["vice_presidency", "presidency"], default="excluded",
     )
+    out = out[out.date >= pd.Timestamp("2013-01-01")].copy()
+    out["president"] = out.date.map(lambda x: president_for_date(x) if pd.notna(x) else None)
+    out["year"] = out.date.dt.year
+    out["constant"] = deflate_to_constant(out.value_brl, out.date, factors).values
+    return out.dropna(subset=["president", "year"])
 
 
 def build_costs(trips: pd.DataFrame) -> pd.DataFrame:
@@ -725,6 +790,168 @@ def bilateral_estimates(panel: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def _wdi(name: str) -> pd.Series:
+    """Load a frozen World Bank API response as a year-indexed series."""
+    obj = json.loads((RAW_EXTERNAL / name).read_text(encoding="utf-8-sig"))
+    rows = obj[1] if isinstance(obj, list) and len(obj) > 1 else []
+    return pd.Series({int(r["date"]): pd.to_numeric(r.get("value"), errors="coerce") for r in rows}, dtype=float).sort_index()
+
+
+def world_share(domestic: object, world: object) -> float:
+    """Domestic flow as a percentage of the corresponding world flow."""
+    a, b = float(domestic), float(world)
+    return a / b * 100.0 if np.isfinite(a) and np.isfinite(b) and b != 0 else np.nan
+
+
+def _index_series(code: str) -> pd.Series:
+    obj = json.loads((RAW_EXTERNAL / f"ipeadata_{code}.json").read_text(encoding="utf-8-sig"))
+    d = pd.DataFrame(obj["value"])
+    years = pd.to_datetime(d.VALDATA, utc=True).dt.year
+    return pd.Series(pd.to_numeric(d.VALVALOR, errors="coerce").values, index=years).groupby(level=0).last()
+
+
+def _comex_panel() -> pd.DataFrame:
+    frames = []
+    for year in range(1997, 2027):
+        path = RAW_EXTERNAL / f"comexstat_exports_by_country_{year}.json"
+        if not path.exists():
+            continue
+        d = pd.DataFrame(json.loads(path.read_text(encoding="utf-8-sig"))["data"]["list"])
+        d["year"] = year
+        d["country"] = d.country.map(canonical_country)
+        d["exports_usd"] = pd.to_numeric(d.metricFOB, errors="coerce")
+        frames.append(d.loc[d.country != "Brazil", ["year", "country", "exports_usd"]])
+    return pd.concat(frames, ignore_index=True).groupby(["year", "country"], as_index=False).exports_usd.sum()
+
+
+def export_channel_changes(panel: pd.DataFrame, start_year: int, end_year: int,
+                           threshold: float = 10_000_000) -> dict[str, object]:
+    """Count persistent threshold crossings between two observed endpoints."""
+    p = panel.copy()
+    start = p[p.year == start_year].set_index("country").exports_usd
+    end = p[p.year == end_year].set_index("country").exports_usd
+    countries = start.index.union(end.index)
+    a, b = start.reindex(countries, fill_value=0), end.reindex(countries, fill_value=0)
+    opened = sorted(countries[(a < threshold) & (b >= threshold)].tolist())
+    lost = sorted(countries[(a >= threshold) & (b < threshold)].tolist())
+    values = b[b > 0]
+    shares = values / values.sum() if values.sum() else values
+    return {
+        "channels_start": int((a >= threshold).sum()), "channels_end": int((b >= threshold).sum()),
+        "new_markets": len(opened), "lost_markets": len(lost),
+        "new_market_names": "; ".join(opened), "lost_market_names": "; ".join(lost),
+        "top5_share_pct": float(values.nlargest(5).sum() / values.sum() * 100) if values.sum() else np.nan,
+        "hhi": float((shares ** 2).sum()) if len(shares) else np.nan,
+    }
+
+
+def efficiency_ratios(row: pd.Series | dict[str, object]) -> dict[str, float]:
+    """Descriptive outcome-change ratios; missing cost stays missing, never zero."""
+    get = row.get
+    trips, days, cost = float(get("trips", np.nan)), float(get("days_abroad", np.nan)), float(get("matched_cost_brl_2026_09", np.nan))
+    fdi, exp, markets = float(get("fdi_world_share_change_pp", np.nan)), float(get("export_world_share_change_pp", np.nan)), float(get("new_markets_10m", np.nan))
+    safe = lambda n, d: n / d if np.isfinite(n) and np.isfinite(d) and d > 0 else np.nan
+    return {
+        "fdi_share_pp_per_trip": safe(fdi, trips), "fdi_share_pp_per_100_days": safe(fdi * 100, days),
+        "export_share_pp_per_trip": safe(exp, trips), "export_share_pp_per_100_days": safe(exp * 100, days),
+        "new_markets_per_trip": safe(markets, trips),
+        "fdi_share_pp_per_cost_m": safe(fdi, cost / 1e6), "export_share_pp_per_cost_m": safe(exp, cost / 1e6),
+    }
+
+
+def _full_years(start: date, end: date, latest_annual: int = 2025) -> list[int]:
+    first = start.year if start.month == 1 and start.day == 1 else start.year + 1
+    last = end.year if end.month == 12 and end.day == 31 else end.year - 1
+    return list(range(first, min(last, latest_annual) + 1))
+
+
+def build_terms(trips: pd.DataFrame, costs: pd.DataFrame) -> pd.DataFrame:
+    """Build the single auditable term-level table used by reports and HTML."""
+    fdi_m = pd.DataFrame(json.loads((RAW_EXTERNAL / "bcb_sgs_22885.json").read_text(encoding="utf-8-sig")))
+    exp_m = pd.DataFrame(json.loads((RAW_EXTERNAL / "bcb_sgs_22708.json").read_text(encoding="utf-8-sig")))
+    for d in (fdi_m, exp_m):
+        d["date"] = pd.to_datetime(d.data, dayfirst=True)
+        d["value"] = pd.to_numeric(d.valor, errors="coerce")
+        d["term"] = d.date.map(term_for_date)
+    fdi_bra, fdi_world = _wdi("wdi_BRA_BX.KLT.DINV.CD.WD.json"), _wdi("wdi_WLD_BX.KLT.DINV.CD.WD.json")
+    exp_bra, exp_world = _wdi("wdi_BRA_TX.VAL.MRCH.CD.WT.json"), _wdi("wdi_WLD_TX.VAL.MRCH.CD.WT.json")
+    gdp = _wdi("wdi_BRA_NY.GDP.MKTP.CD.json")
+    q_total, q_man, q_basic = (_index_series(x) for x in ("FUNCEX_XQT", "FUNCEX_XQM", "FUNCEX_XQB"))
+    comex = _comex_panel()
+    commodity = pd.Series(dtype=float)
+    ext_path = DATA_DIR / "external_observed.csv"
+    if ext_path.exists():
+        ext = pd.read_csv(ext_path)
+        z = ext[ext.indicator == "commodity_tot_index"]
+        commodity = z.set_index("year").value.astype(float)
+
+    trip_dates = trips.copy()
+    trip_dates["term"] = pd.to_datetime(trip_dates.start_date).map(term_for_date)
+    cost_term = costs.copy()
+    def cost_to_term(r: pd.Series) -> str | None:
+        if int(r.year) == 2016:
+            return "Dilma II" if r.president == "Dilma Rousseff" else "Temer"
+        return term_for_date(date(int(r.year), 7, 1))
+    cost_term["term"] = cost_term.apply(cost_to_term, axis=1)
+    rows = []
+    for order, (term, president, start, end) in enumerate(TERMS, 1):
+        tm_fdi, tm_exp = fdi_m[fdi_m.term == term], exp_m[exp_m.term == term]
+        tt = trip_dates[trip_dates.term == term]
+        cc = cost_term[cost_term.term == term]
+        years = _full_years(start, end)
+        fdi_shares = pd.Series({y: world_share(fdi_bra.get(y), fdi_world.get(y)) for y in years})
+        exp_shares = pd.Series({y: world_share(exp_bra.get(y), exp_world.get(y)) for y in years})
+        baseline = start.year - 1
+        last_full = max(years) if years else None
+        fdi_change = world_share(fdi_bra.get(last_full), fdi_world.get(last_full)) - world_share(fdi_bra.get(baseline), fdi_world.get(baseline)) if last_full else np.nan
+        exp_change = world_share(exp_bra.get(last_full), exp_world.get(last_full)) - world_share(exp_bra.get(baseline), exp_world.get(baseline)) if last_full else np.nan
+        fdi_gdp = pd.Series({y: fdi_bra.get(y) / gdp.get(y) * 100 for y in years if pd.notna(fdi_bra.get(y)) and pd.notna(gdp.get(y))})
+        # ComexStat begins in 1997.  Endpoints are the first and last locally observed year in the term.
+        available = sorted(set(comex.year).intersection(range(start.year, min(end.year, 2026) + 1)))
+        channels10 = export_channel_changes(comex, available[0], available[-1], 10_000_000) if len(available) >= 2 else {}
+        channels1 = export_channel_changes(comex, available[0], available[-1], 1_000_000) if len(available) >= 2 else {}
+        def growth(s: pd.Series) -> float:
+            vals = s.reindex(years).dropna()
+            return ((vals.iloc[-1] / vals.iloc[0]) ** (1 / (len(vals) - 1)) - 1) * 100 if len(vals) > 1 and vals.iloc[0] > 0 else np.nan
+        rec = {
+            "term_order": order, "term": term, "president": president, "start_date": start.isoformat(), "end_date": end.isoformat(),
+            "partial_term": end.year == 2026, "latest_month": tm_fdi.date.max().strftime("%Y-%m") if len(tm_fdi) else "",
+            "fdi_total_usd_m": tm_fdi.value.sum(min_count=1), "fdi_annual_average_usd_m": tm_fdi.value.sum(min_count=1) / len(tm_fdi) * 12 if len(tm_fdi) else np.nan,
+            "fdi_pct_gdp_average": fdi_gdp.mean(), "fdi_world_share_average_pct": fdi_shares.mean(), "fdi_world_share_change_pp": fdi_change,
+            "fdi_world_growth_pct": ((fdi_world.get(last_full) / fdi_world.get(baseline) - 1) * 100) if last_full and pd.notna(fdi_world.get(baseline)) else np.nan,
+            "exports_total_usd_m": tm_exp.value.sum(min_count=1), "exports_annual_average_usd_m": tm_exp.value.sum(min_count=1) / len(tm_exp) * 12 if len(tm_exp) else np.nan,
+            "export_volume_cagr_pct": growth(q_total), "manufactured_volume_cagr_pct": growth(q_man), "basic_volume_cagr_pct": growth(q_basic),
+            "export_world_share_average_pct": exp_shares.mean(), "export_world_share_change_pp": exp_change,
+            "world_exports_growth_pct": ((exp_world.get(last_full) / exp_world.get(baseline) - 1) * 100) if last_full and pd.notna(exp_world.get(baseline)) else np.nan,
+            "commodity_price_change_pct": ((commodity.get(last_full) / commodity.get(baseline) - 1) * 100)
+            if last_full and pd.notna(commodity.get(last_full)) and pd.notna(commodity.get(baseline)) and commodity.get(baseline) else np.nan,
+            "channel_start_year": available[0] if available else np.nan, "channel_end_year": available[-1] if available else np.nan,
+            "channels_start_10m": channels10.get("channels_start", np.nan), "channels_end_10m": channels10.get("channels_end", np.nan),
+            "new_markets_10m": channels10.get("new_markets", np.nan), "lost_markets_10m": channels10.get("lost_markets", np.nan),
+            "new_market_names_10m": channels10.get("new_market_names", ""), "lost_market_names_10m": channels10.get("lost_market_names", ""),
+            "channels_start_1m": channels1.get("channels_start", np.nan), "channels_end_1m": channels1.get("channels_end", np.nan),
+            "new_markets_1m": channels1.get("new_markets", np.nan), "lost_markets_1m": channels1.get("lost_markets", np.nan),
+            "top5_export_share_pct": channels10.get("top5_share_pct", np.nan), "export_hhi": channels10.get("hhi", np.nan),
+            "trips": tt.trip_id.nunique(), "country_visits": tt.country_visits.sum(), "days_abroad": tt.days_abroad.sum(),
+            "distinct_countries_visited": len(set().union(*(set(str(x).split("; ")) for x in tt.countries))) if len(tt) else 0,
+            "matched_cost_brl_2026_09": cc.presidential_support_total_brl_constant_2026_09.sum(min_count=1) if start.year <= 2026 and end.year >= 2014 else np.nan,
+            "cpgf_all_brl_2026_09": cc.get("cpgf_all_total_brl_constant_2026_09", pd.Series(dtype=float)).sum(min_count=1),
+            "cpgf_foreign_brl_2026_09": cc.cpgf_foreign_total_brl_constant_2026_09.sum(min_count=1),
+            "cpgf_classified_brl_2026_09": cc.get("cpgf_classified_total_brl_constant_2026_09", pd.Series(dtype=float)).sum(min_count=1),
+            "cpgf_unclassified_brl_2026_09": cc.get("cpgf_unclassified_total_brl_constant_2026_09", pd.Series(dtype=float)).sum(min_count=1),
+            "cpgf_vice_presidency_brl_2026_09": cc.get("cpgf_vice_presidency_total_brl_constant_2026_09", pd.Series(dtype=float)).sum(min_count=1),
+            "cost_coverage": "2014 onward; matched support is a lower bound" if end.year >= 2014 else "No travel-cost microdata before 2014",
+            "channel_coverage": f"ComexStat endpoints {available[0]}-{available[-1]}" if available else "No ComexStat data",
+        }
+        rec.update(efficiency_ratios(rec))
+        rows.append(rec)
+    result = pd.DataFrame(rows)
+    result["fdi_pct_gdp_change_vs_previous_term_pp"] = result.fdi_pct_gdp_average.diff()
+    result["fdi_share_change_vs_previous_term_pp"] = result.fdi_world_share_average_pct.diff()
+    result["export_share_change_vs_previous_term_pp"] = result.export_world_share_average_pct.diff()
+    return result
+
+
 def _fmt(value: object, digits: int = 1) -> str:
     if value is None or pd.isna(value):
         return "missing"
@@ -948,6 +1175,135 @@ const agg=DATA.estimates.filter(d=>d.analysis==='aggregate'&&d.lag===0); documen
     HTML_OUT.write_text(page, encoding="utf-8")
 
 
+def _markdown_table(d: pd.DataFrame, columns: list[str], digits: int = 2) -> str:
+    labels = [c.replace("_", " ") for c in columns]
+    lines = ["| " + " | ".join(labels) + " |", "|" + "|".join(["---"] * len(columns)) + "|"]
+    for _, r in d.iterrows():
+        vals = []
+        for c in columns:
+            v = r.get(c)
+            vals.append(_fmt(v, digits) if isinstance(v, (int, float, np.integer, np.floating)) else str(v or "missing"))
+        lines.append("| " + " | ".join(x.replace("|", "/") for x in vals) + " |")
+    return "\n".join(lines)
+
+
+def write_term_reports(terms: pd.DataFrame, estimates: pd.DataFrame) -> None:
+    fdi_cols = ["term", "fdi_total_usd_m", "fdi_annual_average_usd_m", "fdi_pct_gdp_average",
+                "fdi_world_share_average_pct", "fdi_world_share_change_pp", "fdi_world_growth_pct"]
+    exp_cols = ["term", "exports_total_usd_m", "exports_annual_average_usd_m", "export_volume_cagr_pct",
+                "manufactured_volume_cagr_pct", "basic_volume_cagr_pct", "export_world_share_average_pct",
+                "export_world_share_change_pp", "world_exports_growth_pct"]
+    channel_cols = ["term", "channel_start_year", "channel_end_year", "channels_start_10m", "channels_end_10m",
+                    "new_markets_10m", "lost_markets_10m", "top5_export_share_pct", "export_hhi"]
+    travel_cols = ["term", "trips", "country_visits", "days_abroad", "distinct_countries_visited",
+                   "matched_cost_brl_2026_09", "cpgf_all_brl_2026_09", "cpgf_classified_brl_2026_09",
+                   "cpgf_unclassified_brl_2026_09", "cpgf_foreign_brl_2026_09", "cpgf_vice_presidency_brl_2026_09"]
+    eff_cols = ["term", "fdi_share_pp_per_trip", "fdi_share_pp_per_100_days", "export_share_pp_per_trip",
+                "export_share_pp_per_100_days", "new_markets_per_trip", "fdi_share_pp_per_cost_m", "export_share_pp_per_cost_m"]
+    markets = "\n".join(f"- **{r.term}:** {r.new_market_names_10m or 'none observed'}" for _, r in terms.iterrows())
+    report = f"""# Brazil presidential terms: travel, FDI and exports
+
+Generated from frozen local inputs on {AS_OF.isoformat()}. FDI and exports are separate throughout. These are descriptive associations, not causal estimates.
+
+## FDI by term
+
+Nominal US$ million; no US GDP deflator is archived, so no real-US$ series is reported. Annual averages use observed monthly coverage. World-share changes compare the last full calendar year with the year before the term.
+
+{_markdown_table(terms, fdi_cols)}
+
+## Exports by term
+
+Nominal US$ million. FUNCEX volume growth is compound annual growth over full calendar years. World conditions are shown beside Brazil's share.
+
+{_markdown_table(terms, exp_cols)}
+
+## Export channels opened per term
+
+Headline threshold: US$10 million; crossing must persist at the term endpoint. FHC I uses 1997, the first ComexStat year, as its start; 2026 is partial. The CSV also contains the US$1 million robustness counts.
+
+{_markdown_table(terms, channel_cols)}
+
+### New markets at the US$10 million threshold
+
+{markets}
+
+## Travel and cost by term
+
+Days are a lower bound from listed stop dates. Matched support cost is a lower bound in constant September 2026 reais and exists only from 2014. CPGF all-card and identifiable-foreign spending are separate and never added to matched support.
+
+{_markdown_table(terms, travel_cols)}
+
+## Efficiency ranking inputs
+
+Ratios are descriptive, not causal. Missing cost means no cost ratio; it is not zero. Rank separately by any column—FDI and exports are never pooled into a composite score.
+
+{_markdown_table(terms, eff_cols, 4)}
+
+## Data gaps
+
+- No travel-cost microdata before 2014; aircraft and unitemised President/spouse costs are absent.
+- Trip lists can omit travel days; parsing disagreements remain in `presidential_trips.csv`.
+- The CPGF foreign subset is a conservative text classification; all-card spending is broader than presidential travel.
+- World Bank annual series cannot be split at the August/September 2016 transition, so annual shares use full years only. Monthly BCB totals use exact term boundaries.
+- ComexStat starts in 1997. The 2026 files and BCB series are partial; annual-rate averages are labelled, and totals are not inflated.
+- US CPI/GDP deflator is not archived; dollar values remain nominal.
+
+<details><summary>Robustness / previous analysis</summary>
+
+The earlier annual Newey-West/permutation models and visited-country fixed-effects models remain in `travel_trade_estimates.csv`. They are retained for auditability, not as the headline. Their small samples, global cycles, destination selection and placebo results do not support causal attribution.
+
+</details>
+"""
+    REPORT_OUT.write_text(report, encoding="utf-8")
+    method = """# Presidential-term travel analysis: method
+
+`python -m src.presidential_travel` rebuilds every owned CSV, this method, the report and the offline HTML from local snapshots only.
+
+Terms use the TR3 boundaries. Monthly BCB FDI and export flows are assigned by observation month; September 2016 belongs to Temer. Trips use departure date. Cost records already retain exact-president assignment around the transition. Annual World Bank comparisons use only complete calendar years inside each term.
+
+FDI measures are BCB monthly total and annual-rate average, World Bank FDI/GDP, Brazil's share of world inflows, and world-flow growth. Exports use separate BCB value measures, FUNCEX total/manufactured/basic quantum growth, Brazil's world merchandise-export share and world export growth. No FDI/export composite is calculated.
+
+An export channel is a ComexStat destination at or above US$10 million (US$1 million robustness). A new market is below the threshold at the observed start endpoint and above it at the end; a lost market is the reverse. Concentration is the top-five share and HHI at the endpoint. This is an endpoint definition, not proof that travel opened a market.
+
+Efficiency ratios divide changes in Brazil's world shares or new-market counts by trips, 100 listed days, or—where covered—R$1 million of matched support cost. They are descriptive associations and are ranked separately for FDI and exports. Missing denominators remain missing.
+
+Costs are deflated by monthly IPCA to September 2026 reais. Matched travel-system support, all Presidency CPGF transactions and conservatively identified foreign CPGF transactions remain separate. None is a complete mission bill.
+"""
+    METHOD_OUT.write_text(method, encoding="utf-8")
+
+
+def write_term_html(terms: pd.DataFrame) -> None:
+    data = json.dumps(json.loads(terms.replace({np.nan: None}).to_json(orient="records")), ensure_ascii=False).replace("</", "<\\/")
+    page = r'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brazil presidential terms: travel, FDI and exports</title><style>
+:root{color-scheme:light dark;--bg:#f5f6f4;--panel:#fff;--text:#182126;--muted:#5d686e;--line:#d6dcde;--gap:#a7afb2;--accent:#39759b;--shadow:0 4px 18px #17212b12}
+@media(prefers-color-scheme:dark){:root{--bg:#101619;--panel:#182126;--text:#eef3f5;--muted:#abb8be;--line:#35434a;--gap:#68757b;--accent:#79b9db;--shadow:none}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,sans-serif}main{max-width:1220px;margin:auto;padding:28px 18px 60px}h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.05;max-width:900px}h2{margin-top:2.4rem}.lede,.note{color:var(--muted)}.toolbar,.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}.toolbar{padding:14px;position:sticky;top:8px;z-index:3;display:flex;gap:12px;align-items:center;flex-wrap:wrap}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:16px 0}.card{padding:16px;overflow:auto}.metric{font-size:1.65rem;font-weight:750}.small{font-size:.86rem;color:var(--muted)}select{font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);padding:8px;border-radius:7px}svg{display:block;width:100%;height:280px}.axis{stroke:var(--line)}.label{fill:var(--muted);font-size:11px}.gap{fill:url(#hatch)}table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}th:first-child,td:first-child{text-align:left}th{background:var(--panel);position:sticky;top:0}.active{outline:2px solid var(--accent)}.pill{border:1px solid var(--line);border-radius:99px;padding:2px 8px;white-space:nowrap}.warning{border-left:5px solid var(--accent)}details{margin-top:1rem}button{font:inherit}
+</style></head><body><main><p class="small">SELF-CONTAINED OFFLINE ANALYSIS · FROZEN INPUTS THROUGH 2026</p><h1>Presidential terms: travel, FDI and exports</h1><p class="lede">Identical term rules from FHC I through Lula III. FDI and exports are always separate. Global conditions accompany Brazil's outcomes. All comparisons are associations, not causal attribution.</p>
+<div class="toolbar"><label for="term">Term</label><select id="term"></select><span id="coverage" class="small"></span></div><section id="cards" class="grid"></section>
+<h2>FDI by term</h2><div class="grid"><div class="card"><h3>FDI, average % of GDP</h3><svg id="fdiGdp"></svg></div><div class="card"><h3>Brazil share of world FDI and world growth</h3><svg id="fdiShare"></svg></div></div><div class="card"><table id="fdiTable"></table><p class="note">Nominal US$: no US GDP deflator is archived. World-share change uses the last full year versus the year before the term.</p></div>
+<h2>Exports by term</h2><div class="grid"><div class="card"><h3>Annual-average export value (US$bn)</h3><svg id="expValue"></svg></div><div class="card"><h3>Export volume growth: total, manufactured, basic</h3><svg id="expVolume"></svg></div><div class="card"><h3>Brazil share of world merchandise exports</h3><svg id="expShare"></svg></div></div><div class="card"><table id="expTable"></table></div>
+<h2>Export channels opened</h2><div class="card"><table id="channelTable"></table><p class="note">US$10m endpoint threshold; US$1m robustness is shown. “New” means below at start and still above at end. This does not attribute the crossing to travel.</p></div><div id="marketLists" class="grid"></div>
+<h2>Travel and cost by term</h2><div class="grid"><div class="card"><h3>Trips and listed days abroad</h3><svg id="travel"></svg></div><div class="card"><h3>Matched support and payment card spending</h3><svg id="cost"></svg><p class="note">Constant Sep-2026 R$m. Hatched bars mean no cost microdata before 2014. Matched support is a lower bound; all-card and identifiable-foreign card spending stay separate.</p></div></div><div class="card"><table id="travelTable"></table></div>
+<h2>Efficiency ranking</h2><div class="card warning"><strong>Descriptive, not causal.</strong> Rankings are separate by measure and missing cost coverage stays missing. No pooled FDI/export score is produced.</div><div class="card"><table id="effTable"></table></div>
+<h2>Data gaps and method</h2><div class="card"><ul><li>No travel-cost microdata before 2014; aircraft and unitemised President/spouse costs are absent.</li><li>Listed travel days are lower bounds; source-list conflicts remain visible in the trip CSV.</li><li>World Bank annual data cannot be split at the 2016 transition; only full calendar years are used for annual comparisons.</li><li>ComexStat starts in 1997. FHC I therefore uses 1997–98 endpoints.</li><li>2026 monthly and partner data are partial. Annual-rate averages are labelled; observed totals are not inflated.</li><li>Presidency card spending (Presidência da República organ only) is about 99% classified (amount and statement month public; date and payee hidden); classified rows are dated to the statement month. It covers all security and logistics of the Presidency, travel and domestic, and cannot be split: it is context, not trip cost. Foreign card spending = non-classified INT$ transactions. Vice-Presidency shown separately; EBC and Imprensa Nacional excluded.</li></ul><details><summary>Definitions</summary><p>FDI uses BCB monthly net direct investment in the country plus WDI annual comparisons. Exports use BCB monthly goods values, FUNCEX quantum indexes and WDI world merchandise exports. Channels are destination-threshold crossings. Concentration is endpoint top-five share and HHI.</p></details></div>
+<script>const DATA=''' + data + r''';const COLORS=['#4e79a7','#59a14f','#f28e2b','#b07aa1','#76b7b2','#e15759'];const presidents=[...new Set(DATA.map(d=>d.president))];const color=d=>COLORS[presidents.indexOf(d.president)%COLORS.length];const f=(v,n=2)=>v==null?'data gap':Number(v).toLocaleString(undefined,{maximumFractionDigits:n,minimumFractionDigits:n});const money=v=>v==null?'data gap':'R$ '+f(v/1e6,1)+'m';
+const sel=document.querySelector('#term');DATA.forEach(d=>sel.add(new Option(d.term,d.term)));sel.value=DATA.at(-1).term;sel.onchange=render;
+function chart(id,keys,scale=1,lineKey=null){const el=document.querySelector(id),W=570,H=260,m={l:42,r:12,t:16,b:54},vals=DATA.flatMap(d=>keys.map(k=>d[k])).filter(v=>v!=null).map(v=>v/scale),max=Math.max(...vals.map(Math.abs),1),lineVals=lineKey?DATA.map(d=>d[lineKey]).filter(v=>v!=null):[],lineMin=Math.min(0,...lineVals),lineMax=Math.max(1,...lineVals),bw=(W-m.l-m.r)/DATA.length,sub=bw/(keys.length+1),y=v=>H-m.b-(v/scale/max)*(H-m.t-m.b),ly=v=>m.t+(lineMax-v)/(lineMax-lineMin)*(H-m.t-m.b);let s='<defs><pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="var(--gap)" stroke-width="2"/></pattern></defs><line class="axis" x1="'+m.l+'" y1="'+(H-m.b)+'" x2="'+(W-m.r)+'" y2="'+(H-m.b)+'"/>';DATA.forEach((d,i)=>{keys.forEach((k,j)=>{const v=d[k],x=m.l+i*bw+4+j*sub;if(v==null){s+=`<rect class="gap" x="${x}" y="${m.t}" width="${sub-3}" height="${H-m.t-m.b}"><title>${d.term}: data gap</title></rect>`}else{s+=`<rect x="${x}" y="${y(v)}" width="${sub-3}" height="${Math.max(0,H-m.b-y(v))}" fill="${j?['#9c755f','#bab0ac'][j-1]||'#9c755f':color(d)}"><title>${d.term} · ${k}: ${f(v/scale)}</title></rect>`}});s+=`<text class="label" text-anchor="end" transform="translate(${m.l+i*bw+bw/2},${H-8}) rotate(-35)">${d.term}</text>`});if(lineKey){const pts=DATA.map((d,i)=>d[lineKey]==null?null:`${m.l+i*bw+bw/2},${ly(d[lineKey])}`).filter(Boolean).join(' ');s+=`<polyline fill="none" stroke="var(--accent)" stroke-width="2.5" points="${pts}"/><text class="label" x="${m.l}" y="${m.t+10}">line: world growth % (own scale)</text>`}el.setAttribute('viewBox',`0 0 ${W} ${H}`);el.innerHTML=s}
+function cell(c,v){if(v==null||v===''||Number.isNaN(v))return 'data gap';if(/year/.test(c))return String(v);if(/_brl_/.test(c))return f(v/1e6,2);if(Number.isInteger(v))return f(v,0);return f(v)}
+function table(id,cols,labels){document.querySelector(id).innerHTML='<thead><tr>'+labels.map(x=>`<th>${x}</th>`).join('')+'</tr></thead><tbody>'+DATA.map(d=>'<tr data-term="'+d.term+'">'+cols.map((c,i)=>`<td>${i===0?`<span class="pill" style="border-color:${color(d)}">${d[c]}</span>`:cell(c,d[c])}</td>`).join('')+'</tr>').join('')+'</tbody>'}
+table('#fdiTable',['term','fdi_total_usd_m','fdi_annual_average_usd_m','fdi_pct_gdp_average','fdi_world_share_average_pct','fdi_world_share_change_pp','fdi_world_growth_pct'],['Term','FDI total US$m','Annual avg US$m','Avg % GDP','Avg world share %','Share change pp','World FDI growth %']);
+table('#expTable',['term','exports_total_usd_m','exports_annual_average_usd_m','export_volume_cagr_pct','manufactured_volume_cagr_pct','basic_volume_cagr_pct','export_world_share_average_pct','world_exports_growth_pct'],['Term','Exports total US$m','Annual avg US$m','Volume CAGR %','Manufactured %','Basic %','World share %','World exports growth %']);
+table('#channelTable',['term','channel_start_year','channel_end_year','channels_start_10m','channels_end_10m','new_markets_10m','lost_markets_10m','new_markets_1m','lost_markets_1m','top5_export_share_pct','export_hhi'],['Term','Start','End','Channels start $10m','End $10m','New $10m','Lost $10m','New $1m','Lost $1m','Top 5 %','HHI']);
+table('#travelTable',['term','trips','country_visits','days_abroad','distinct_countries_visited','matched_cost_brl_2026_09','cpgf_all_brl_2026_09','cpgf_classified_brl_2026_09','cpgf_foreign_brl_2026_09','cpgf_vice_presidency_brl_2026_09'],['Term','Trips','Country-visits','Days','Countries','Matched trip support R$ m (lower bound)','Presidency card, all R$ m (context)','of which classified R$ m','Foreign card (INT$) R$ m','Vice-Presidency card R$ m (separate)']);
+const ranked=[...DATA].sort((a,b)=>(b.export_share_pp_per_trip??-Infinity)-(a.export_share_pp_per_trip??-Infinity));document.querySelector('#effTable').innerHTML='<thead><tr><th>Export-share rank</th><th>Term</th><th>FDI share pp/trip</th><th>FDI pp/100 days</th><th>Export share pp/trip</th><th>Export pp/100 days</th><th>New markets/trip</th><th>FDI pp/R$m</th><th>Export pp/R$m</th><th>Coverage</th></tr></thead><tbody>'+ranked.map((d,i)=>`<tr data-term="${d.term}"><td>${i+1}</td><td>${d.term}</td><td>${f(d.fdi_share_pp_per_trip,4)}</td><td>${f(d.fdi_share_pp_per_100_days,4)}</td><td>${f(d.export_share_pp_per_trip,4)}</td><td>${f(d.export_share_pp_per_100_days,4)}</td><td>${f(d.new_markets_per_trip,3)}</td><td>${f(d.fdi_share_pp_per_cost_m,4)}</td><td>${f(d.export_share_pp_per_cost_m,4)}</td><td>${d.cost_coverage}; ${d.channel_coverage}</td></tr>`).join('')+'</tbody>';
+document.querySelector('#marketLists').innerHTML=DATA.map(d=>`<div class="card"><strong>${d.term}</strong><p>${d.new_market_names_10m||'No new endpoint crossings observed'}</p><p class="small">Lost: ${d.lost_market_names_10m||'none observed'}</p></div>`).join('');
+chart('#fdiGdp',['fdi_pct_gdp_average']);chart('#fdiShare',['fdi_world_share_average_pct'],1,'fdi_world_growth_pct');chart('#expValue',['exports_annual_average_usd_m'],1000);chart('#expVolume',['export_volume_cagr_pct','manufactured_volume_cagr_pct','basic_volume_cagr_pct']);chart('#expShare',['export_world_share_average_pct']);chart('#travel',['trips','days_abroad']);chart('#cost',['matched_cost_brl_2026_09','cpgf_all_brl_2026_09','cpgf_foreign_brl_2026_09'],1e6);
+function render(){const d=DATA.find(x=>x.term===sel.value);document.querySelector('#coverage').textContent=`${d.start_date} to ${d.end_date}${d.partial_term?' · partial through '+d.latest_month:''}`;document.querySelector('#cards').innerHTML=`<div class="card"><div class="small">FDI · annual average</div><div class="metric">US$${f(d.fdi_annual_average_usd_m/1000,1)}bn</div><div class="small">${f(d.fdi_pct_gdp_average)}% GDP · ${f(d.fdi_world_share_average_pct)}% world share</div></div><div class="card"><div class="small">Exports · annual average</div><div class="metric">US$${f(d.exports_annual_average_usd_m/1000,1)}bn</div><div class="small">${f(d.export_volume_cagr_pct)}% volume CAGR · ${f(d.export_world_share_average_pct)}% world share</div></div><div class="card"><div class="small">Travel</div><div class="metric">${f(d.trips,0)} trips · ${f(d.days_abroad,0)} days</div><div class="small">${f(d.distinct_countries_visited,0)} distinct countries</div></div><div class="card"><div class="small">Matched support cost · lower bound</div><div class="metric">${money(d.matched_cost_brl_2026_09)}</div><div class="small">${d.cost_coverage}</div></div>`;document.querySelectorAll('tr[data-term]').forEach(x=>x.classList.toggle('active',x.dataset.term===d.term))}render();</script></main></body></html>'''
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    HTML_OUT.write_text(page, encoding="utf-8")
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--permutations", type=int, default=10_000, help="draws per aggregate permutation test")
@@ -958,13 +1314,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     aggregate = aggregate_estimates(annual, draws=args.permutations)
     bilateral = bilateral_estimates(load_bilateral_panel(trips))
     estimates = pd.concat([aggregate, bilateral], ignore_index=True)
+    terms = build_terms(trips, costs)
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     trips.to_csv(TRIPS_OUT, index=False)
     costs.to_csv(COSTS_OUT, index=False)
     estimates.to_csv(ESTIMATES_OUT, index=False)
-    write_reports(trips, costs, estimates)
-    write_html(trips, costs, estimates, annual)
-    print(f"wrote {len(trips)} trips, {len(costs)} cost rows, {len(estimates)} estimates")
+    terms.to_csv(TERMS_OUT, index=False)
+    write_term_reports(terms, estimates)
+    write_term_html(terms)
+    print(f"wrote {len(trips)} trips, {len(costs)} cost rows, {len(terms)} terms, {len(estimates)} estimates")
     return 0
 
 
