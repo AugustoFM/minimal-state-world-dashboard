@@ -354,6 +354,7 @@ def simulate_household_incomes(
     random_seed: int,
     bpc_follows_pension_indexation: bool = True,
     revenue_change_by_instrument_pp: Mapping[str, float] | None = None,
+    pensioner_income_protection_brl_annual: float = 0.0,
 ) -> pd.DataFrame:
     """Return one row per IBGE income-unit household after one scenario-year.
 
@@ -369,6 +370,8 @@ def simulate_household_incomes(
         raise ValueError(f"Unknown tax_variant: {tax_variant}")
     if nominal_gdp_brl <= 0 or minimum_wage_brl <= 0 or consumption_like_exponent <= 0:
         raise ValueError("GDP, minimum wage and consumption exponent must be positive")
+    if pensioner_income_protection_brl_annual < 0:
+        raise ValueError("pensioner_income_protection_brl_annual must be non-negative")
 
     weights = prepared.person_weight
     delta = np.zeros(len(weights), dtype=float)
@@ -386,6 +389,14 @@ def simulate_household_incomes(
         pension_amount, weights, package_gaps_pp_gdp.get("pension_and_indexation", 0.0),
         nominal_gdp_brl, pension_base,
     )
+    if pensioner_income_protection_brl_annual:
+        protected = (prepared.age >= 65) & (pension > 0)
+        recipient_weight = float(weights[protected].sum())
+        if recipient_weight <= 0:
+            raise ValueError("INSS protection requires at least one weighted pension recipient aged 65+")
+        # The fraud estimate is an annual aggregate.  Spread it equally over
+        # weighted recipients and convert to the survey's monthly income unit.
+        delta[protected] += float(pensioner_income_protection_brl_annual) / 12.0 / recipient_weight
 
     bolsa = prepared.bolsa
     transfers = bpc + bolsa

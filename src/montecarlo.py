@@ -125,6 +125,16 @@ SOCIAL_OUTPUTS = {
     "employer_share_change_pp": "pp",
     "youth_homicide_rate_change_per_100k": "per_100k",
 }
+W3_OUTPUTS = {
+    "anticorruption_leakage_contribution_services_pct": "percent",
+    "anticorruption_leakage_contribution_infant_mortality_per_1000": "per_1000_live_births",
+    "anticorruption_leakage_contribution_life_expectancy_years": "years",
+    "anticorruption_leakage_contribution_health_pct": "percent",
+    "anticorruption_leakage_contribution_schooling_years": "years",
+    "anticorruption_fiscal_saving_pp_gdp": "pp_gdp",
+    "anticorruption_scandal_gdp_contribution_pct": "percent",
+    "anticorruption_pensioner_income_change_pct": "percent",
+}
 
 
 def triangular(rng: np.random.Generator, low: float, central: float, high: float) -> float:
@@ -135,6 +145,75 @@ def triangular(rng: np.random.Generator, low: float, central: float, high: float
     if low == high:
         return central
     return float(rng.triangular(low, central, high))
+
+
+def sample_w3_draw(rng: np.random.Generator, config: Mapping) -> dict:
+    """Sample the four W3 effect sizes from the dedicated [seed, 8] stream."""
+    leakage = config["channels"]["leakage_reduction"]["fraction_removed"]
+    procurement = config["channels"]["procurement_savings"]["saving_fraction"]
+    pension = config["channels"]["inss_fraud_protection"]["annual_brl_billion"]
+    scandal = config["channels"]["scandal_probability"]["probability_reduction_fraction"]
+    return {
+        "anticorruption_leakage_reduction_fraction": triangular(
+            rng, leakage["low"], leakage["mode"], leakage["high"]
+        ),
+        "anticorruption_procurement_saving_fraction": triangular(
+            rng, procurement["low"], procurement["mode"], procurement["high"]
+        ),
+        "anticorruption_inss_protection_brl_billion": triangular(
+            rng, pension["low"], pension["mode"], pension["high"]
+        ),
+        "anticorruption_scandal_probability_reduction_fraction": triangular(
+            rng, scandal["low"], scandal["mode"], scandal["high"]
+        ),
+    }
+
+
+def central_w3_draw(config: Mapping) -> dict:
+    """Return the documented modes for deterministic reference paths."""
+    channels = config["channels"]
+    return {
+        "anticorruption_leakage_reduction_fraction": float(
+            channels["leakage_reduction"]["fraction_removed"]["mode"]
+        ),
+        "anticorruption_procurement_saving_fraction": float(
+            channels["procurement_savings"]["saving_fraction"]["mode"]
+        ),
+        "anticorruption_inss_protection_brl_billion": float(
+            channels["inss_fraud_protection"]["annual_brl_billion"]["mode"]
+        ),
+        "anticorruption_scandal_probability_reduction_fraction": float(
+            channels["scandal_probability"]["probability_reduction_fraction"]["mode"]
+        ),
+    }
+
+
+def w3_programme_for_scenario(context: Mapping, scenario: str) -> str | None:
+    w3 = context.get("w3")
+    if not w3:
+        return None
+    return w3["config"]["scenario_programmes"].get(str(scenario))
+
+
+def w3_channels(context: Mapping, scenario: str) -> set[str]:
+    """Channels enabled for a scenario under the selected programme mapping."""
+    w3 = context.get("w3")
+    programme = w3_programme_for_scenario(context, scenario)
+    if not w3 or programme is None:
+        return set()
+    selection = str(w3["selection"])
+    if selection != "both" and selection != w3["config"]["cli_programme_names"][programme]:
+        return set()
+    if w3["mapping"] == "full":
+        return set(w3["config"]["channel_order"])
+    return set(w3["config"]["programme_mapping"][programme])
+
+
+def w3_leakage_gain_pct(draw: Mapping) -> float:
+    """Effective-service gain relative to the same gross spending and baseline leakage."""
+    leakage = float(draw["leakage_share"])
+    removed = float(draw["anticorruption_leakage_reduction_fraction"])
+    return ((1.0 - leakage * (1.0 - removed)) / (1.0 - leakage) - 1.0) * 100.0
 
 
 def snap(value: float, step: float = WEIGHT_GRID_STEP) -> float:
@@ -306,6 +385,7 @@ def social_for_draw(
     base_inputs: Mapping,
     draw: Mapping,
     years: Iterable[int],
+    context: Mapping,
 ) -> pd.DataFrame:
     """C4 indicators for one draw, using the C4 functions and the variant's efficiency share."""
     choices = parameters["social_modelling_choices"]
@@ -346,8 +426,28 @@ def social_for_draw(
                 health_allocation, draw["service_cut_fraction"],
             )
             change = (spending * (1.0 - leakage) / s0_services - 1.0) * 100.0
-            imr = social.apply_spending_elasticity(base_imr, change, draw["imr_elasticity"], horizon, build_up)
-            le = social.apply_spending_elasticity(base_le, change, le_elasticity, horizon, build_up)
+            effective_change = change
+            leakage_contribution = 0.0
+            w3_started = (
+                context.get("w3") is not None
+                and int(year) >= int(context["w3"]["config"]["policy_start_year"])
+            )
+            if w3_started and "leakage_reduction" in w3_channels(context, str(scenario)):
+                effective_change = (
+                    spending
+                    * (1.0 - leakage * (1.0 - float(draw["anticorruption_leakage_reduction_fraction"])))
+                    / s0_services
+                    - 1.0
+                ) * 100.0
+                leakage_contribution = effective_change - change
+            imr_without_w3 = social.apply_spending_elasticity(
+                base_imr, change, draw["imr_elasticity"], horizon, build_up
+            )
+            le_without_w3 = social.apply_spending_elasticity(base_le, change, le_elasticity, horizon, build_up)
+            imr = social.apply_spending_elasticity(
+                base_imr, effective_change, draw["imr_elasticity"], horizon, build_up
+            )
+            le = social.apply_spending_elasticity(base_le, effective_change, le_elasticity, horizon, build_up)
             change_g = (spending * (1.0 - leakage * (1.0 - removed)) / s0_services - 1.0) * 100.0
             imr_g = social.apply_spending_elasticity(base_imr, change_g, draw["imr_elasticity"], horizon, build_up)
             le_g = social.apply_spending_elasticity(base_le, change_g, le_elasticity, horizon, build_up)
@@ -363,6 +463,12 @@ def social_for_draw(
                 "effective_health_services_pc_change_vs_s0_pct_leakage_halved": change_g,
                 "infant_mortality_difference_vs_s0_leakage_halved": imr_g - base_imr,
                 "life_expectancy_difference_vs_s0_years_leakage_halved": le_g - base_le,
+                "anticorruption_leakage_contribution_services_pct": leakage_contribution,
+                "anticorruption_leakage_contribution_infant_mortality_per_1000": imr - imr_without_w3,
+                "anticorruption_leakage_contribution_life_expectancy_years": le - le_without_w3,
+                "anticorruption_leakage_contribution_health_pct": (
+                    (le - le_without_w3) * float(draw["health_output_pct"])
+                ),
             })
     return pd.DataFrame(records)
 
@@ -463,6 +569,25 @@ def with_programmes(variant_scenarios: Mapping, annual: pd.DataFrame, draw_input
     s0 = programs.s0_path(annual, context["population"], draw_inputs)
     common = variant_scenarios["package_shares"] if context.get("programme_common_composition") else None
     definitions = programs.build_programme_scenarios(s0, context["programmes"], draw, common)
+    if context.get("w3"):
+        config = context["w3"]["config"]
+        purchase_share = float(config["channels"]["procurement_savings"]["purchases_share_gdp_2024"])
+        full_saving = purchase_share * float(draw["anticorruption_procurement_saving_fraction"])
+        ramp = {int(k): float(v) for k, v in config["channels"]["procurement_savings"]["ramp_by_elapsed_year"].items()}
+        for scenario, definition in definitions.items():
+            if "procurement_savings" not in w3_channels(context, scenario):
+                continue
+            existing = definition.get("non_tax_revenue_by_year")
+            merged = {}
+            for horizon, fraction in ramp.items():
+                prior = 0.0 if not existing else _interpolate_by_year(
+                    existing, horizon, f"{scenario}.non_tax_revenue_by_year"
+                )
+                merged[horizon] = prior + full_saving * fraction
+            definition["non_tax_revenue_by_year"] = merged
+            definition["anticorruption_fiscal_saving_by_year"] = {
+                horizon: full_saving * fraction for horizon, fraction in ramp.items()
+            }
     out = dict(variant_scenarios)
     out["scenarios"] = {**variant_scenarios["scenarios"], **definitions}
     return out
@@ -473,11 +598,18 @@ def micro_for_draw(corner: pd.DataFrame, variant_scenarios: Mapping, draw: Mappi
     ctx = context["micro"]
     inputs = ctx["inputs"]
     records = []
+    eligible = (ctx["prepared"].age >= 65) & (ctx["prepared"].pension > 0)
+    eligible_pension_brl_annual = float(
+        np.sum(ctx["prepared"].pension[eligible] * ctx["prepared"].person_weight[eligible]) * 12.0
+    )
     for row in corner.itertuples():
         if row.scenario in MICRO_SCENARIOS_EXCLUDED:
             continue
         if row.scenario == "S0":
-            records.append({"year": row.year, "scenario": row.scenario, **ctx["base"]})
+            records.append({
+                "year": row.year, "scenario": row.scenario,
+                "_anticorruption_pensioner_income_change_pct": 0.0, **ctx["base"],
+            })
             continue
         gaps = scenario_package_gaps(
             variant_scenarios, row.scenario, int(row.year) - int(context["base_year"]), float(row.gap_below_s0_pp)
@@ -488,6 +620,10 @@ def micro_for_draw(corner: pd.DataFrame, variant_scenarios: Mapping, draw: Mappi
             revenue_by_instrument = scenario_revenue_by_instrument(
                 variant_scenarios, row.scenario, int(row.year) - int(context["base_year"])
             )
+        protection_brl = (
+            float(draw["anticorruption_inss_protection_brl_billion"]) * 1e9
+            if "inss_fraud_protection" in w3_channels(context, str(row.scenario)) else 0.0
+        )
         households = micro.simulate_household_incomes(
             ctx["prepared"], gdp_level_vs_s0_pct=float(row.gdp_level_vs_s0_pct),
             unemployment_change_pp=float(row.unemployment_change_pp), package_gaps_pp_gdp=gaps,
@@ -498,9 +634,17 @@ def micro_for_draw(corner: pd.DataFrame, variant_scenarios: Mapping, draw: Mappi
             consumption_like_exponent=float(inputs["defaults"]["consumption_like_exponent"]),
             random_seed=int(draw.get("draw", 0)),
             revenue_change_by_instrument_pp=revenue_by_instrument,
+            pensioner_income_protection_brl_annual=protection_brl,
         )
         ind = micro.calculate_indicators(households, ctx["lines"])
-        records.append({"year": row.year, "scenario": row.scenario, **ind})
+        records.append({
+            "year": row.year, "scenario": row.scenario,
+            "_anticorruption_pensioner_income_change_pct": (
+                protection_brl / eligible_pension_brl_annual * 100.0
+                if eligible_pension_brl_annual > 0 else float("nan")
+            ),
+            **ind,
+        })
     frame = pd.DataFrame(records)
     s0 = frame.loc[frame["scenario"].eq("S0")].set_index("year")
     out = frame[["year", "scenario"]].copy()
@@ -565,6 +709,9 @@ def micro_for_draw(corner: pd.DataFrame, variant_scenarios: Mapping, draw: Mappi
     }
     for name, (column, scale) in mapping.items():
         out[name] = (frame[column] - frame["year"].map(s0[column])) * scale
+    out["anticorruption_pensioner_income_change_pct"] = frame[
+        "_anticorruption_pensioner_income_change_pct"
+    ]
     return out
 
 
@@ -609,12 +756,33 @@ def feedback_for_draw(
             for r in life_expectancy.itertuples()
         },
     )
+    education_service_gain = {
+        (int(row.year), str(row.scenario)): (
+            w3_leakage_gain_pct(draw)
+            if (
+                context.get("w3") is not None
+                and int(row.year) >= int(context["w3"]["config"]["policy_start_year"])
+                and "leakage_reduction" in w3_channels(context, str(row.scenario))
+            ) else 0.0
+        )
+        for row in corner.itertuples()
+    }
+    kwargs["effective_education_services_gain_pct"] = education_service_gain
     education_paths = education_for_draw(corner, variant_scenarios, draw, context)
     kwargs.update(
         education_capacity_log_effect=education_paths["capacity"],
         innovation_capacity_log_effect=education_paths["innovation"],
     )
     result = feedback.apply_feedback(corner, context["population"], **kwargs)
+    if any(value != 0.0 for value in education_service_gain.values()):
+        without_kwargs = dict(kwargs)
+        without_kwargs.pop("effective_education_services_gain_pct")
+        without = feedback.apply_feedback(corner, context["population"], **without_kwargs)
+        result["anticorruption_leakage_contribution_schooling_years"] = (
+            result["adult_mean_schooling_change_years"] - without["adult_mean_schooling_change_years"]
+        )
+    else:
+        result["anticorruption_leakage_contribution_schooling_years"] = 0.0
     employer = np.zeros(len(result), dtype=float)
     homicide = np.zeros(len(result), dtype=float)
     for scenario, indices in result.groupby("scenario", sort=False).groups.items():
@@ -684,6 +852,57 @@ def firm_distress_for_draw(corner: pd.DataFrame, draw: Mapping) -> pd.DataFrame:
     return result
 
 
+def apply_w3_scandal_thinning(
+    macro_corner: pd.DataFrame,
+    external_corner: pd.DataFrame,
+    effects: pd.DataFrame,
+    draw_inputs: Mapping,
+    draw: Mapping,
+    context: Mapping,
+) -> pd.DataFrame:
+    """Replace external/G2 paths only for scenarios whose channel 4 is enabled."""
+    result = external_corner.copy()
+    result["anticorruption_scandal_gdp_contribution_pct"] = 0.0
+    if "_w3_thinned_scandal_path" not in draw:
+        return result
+    thinned = np.asarray(draw["_w3_thinned_scandal_path"], dtype=float)
+    modified = effects.copy()
+    modified["corruption_gdp_level_pct"] = thinned
+    shared = effects.set_index("step")["corruption_gdp_level_pct"]
+    thin_by_step = dict(zip(modified["step"].astype(int), thinned))
+    start_year = int(macro_corner["year"].min())
+    columns = [
+        "corruption_gdp_level_pct", "external_gdp_level_pct", "gdp_per_capita_with_external",
+        "inflation_with_external_pct", "external_revenue_pp_gdp", "debt_gdp_with_external",
+    ]
+    for scenario in macro_corner["scenario"].unique():
+        if "scandal_probability" not in w3_channels(context, str(scenario)):
+            continue
+        mask = macro_corner["scenario"].eq(scenario)
+        replacement = external.apply_external(macro_corner.loc[mask], modified, draw_inputs)
+        result.loc[mask, columns] = replacement[columns].to_numpy()
+        for index, year in result.loc[mask, "year"].items():
+            if int(year) == start_year:
+                continue
+            step = int(year) - start_year
+            old = float(shared.loc[step])
+            new = float(thin_by_step[step])
+            result.loc[index, "anticorruption_scandal_gdp_contribution_pct"] = (
+                (1.0 + new / 100.0) / (1.0 + old / 100.0) - 1.0
+            ) * 100.0
+    return result
+
+
+def w3_fiscal_saving(
+    variant_scenarios: Mapping, scenario: str, horizon: int,
+) -> float:
+    definition = variant_scenarios["scenarios"].get(scenario)
+    if not isinstance(definition, Mapping):
+        return 0.0
+    path = definition.get("anticorruption_fiscal_saving_by_year")
+    return 0.0 if not path else _interpolate_by_year(path, horizon, f"{scenario}.anticorruption_fiscal_saving")
+
+
 def evaluate_draw(draw: Mapping, context: Mapping, external_effects: pd.DataFrame | None = None) -> pd.DataFrame:
     """Run C1 -> C2 -> C4 (+ C6 external path) for one draw, every variant and persistence setting."""
     annual = context["grid"][(draw["profile_year"], draw["pension_gdp_per_worker_weight"])]
@@ -704,14 +923,27 @@ def evaluate_draw(draw: Mapping, context: Mapping, external_effects: pd.DataFram
                     "neutral", context["external_changes"], int(corner["year"].max() - corner["year"].min())
                 )
                 effects = external.gdp_and_inflation_effects(neutral, context["parameters"])
-            corner = external.apply_external(corner, effects, draw_inputs)
+            macro_corner = corner
+            corner = external.apply_external(macro_corner, effects, draw_inputs)
+            if context.get("w3"):
+                corner = apply_w3_scandal_thinning(
+                    macro_corner, corner, effects, draw_inputs, draw, context
+                )
             all_years = sorted(int(y) for y in corner["year"].unique())
             annual_social = social_for_draw(
-                corner, annual, variant_scenarios, context["parameters"], context["base_inputs"], draw, all_years
+                corner, annual, variant_scenarios, context["parameters"], context["base_inputs"], draw, all_years,
+                context,
             )
             corner = feedback_for_draw(corner, annual_social, variant_scenarios, draw, context)
             corner = firm_distress_for_draw(corner, draw)
             corner = corner.loc[corner["year"].isin(target_years)].copy()
+            if context.get("w3"):
+                corner["anticorruption_fiscal_saving_pp_gdp"] = [
+                    w3_fiscal_saving(
+                        variant_scenarios, str(scenario), int(year) - int(context["base_year"])
+                    )
+                    for year, scenario in zip(corner["year"], corner["scenario"])
+                ]
             s0 = corner.loc[corner["scenario"].eq("S0")].set_index("year")
             corner["gdp_per_capita_vs_s0_pct"] = (
                 corner["gdp_per_capita"] / corner["year"].map(s0["gdp_per_capita"]) - 1.0
@@ -737,8 +969,15 @@ def evaluate_draw(draw: Mapping, context: Mapping, external_effects: pd.DataFram
             else:
                 for name in MICRO_OUTPUTS:
                     merged[name] = np.nan
+                if context.get("w3"):
+                    merged["anticorruption_pensioner_income_change_pct"] = np.nan
             merged["draw"], merged["variant"], merged["persistence"] = draw.get("draw", 0), variant, persistence
-            results.append(merged[["draw", "variant", "persistence", "year", "scenario", *MACRO_OUTPUTS, *SOCIAL_OUTPUTS, *MICRO_OUTPUTS]])
+            output_columns = [*MACRO_OUTPUTS, *SOCIAL_OUTPUTS, *MICRO_OUTPUTS]
+            if context.get("w3"):
+                output_columns.extend(W3_OUTPUTS)
+            results.append(merged[[
+                "draw", "variant", "persistence", "year", "scenario", *output_columns
+            ]])
     frame = pd.concat(results, ignore_index=True)
     frame["horizon"] = frame["year"] - context["base_year"]
     return frame
@@ -766,6 +1005,7 @@ def run(
     privatisation_rng = np.random.default_rng([seed, 5])  # PZ sales; leaves every existing stream unchanged
     education_rng = np.random.default_rng([seed, 6])  # ED responses; leaves every existing stream unchanged
     firm_rng = np.random.default_rng([seed, 7])  # BK coefficients; leaves every existing stream unchanged
+    w3_rng = np.random.default_rng([seed, 8]) if context.get("w3") else None
     steps = max(context["target_years"]) - base_year
     draws, results = [], []
     started = time.monotonic()
@@ -776,6 +1016,8 @@ def run(
         draw["innovation_capacity_elasticity"] = float(education_rng.uniform(0.0, 0.02))
         draw["firm_npl_rate_coefficient"] = float(firm_rng.normal(0.460, (0.664 - 0.256) / 3.92))
         draw["firm_exit_rate_coefficient"] = float(firm_rng.normal(0.713, (1.512 + 0.085) / 3.92))
+        if w3_rng is not None:
+            draw.update(sample_w3_draw(w3_rng, context["w3"]["config"]))
         path = external.bootstrap_path(external_rng, context["external_changes"], steps)
         if c7:
             draw["external_c7_window"] = str(c7_rng.choice(c7_windows))
@@ -792,6 +1034,17 @@ def run(
             effects = effects.merge(shock[["step", "corruption_gdp_level_pct"]], on="step", validate="one_to_one")
             draw["corruption_probability"] = float(shock.attrs["sampled_probability"])
             draw["corruption_events"] = int(shock["corruption_event"].sum())
+            if w3_rng is not None:
+                uniforms = w3_rng.random(int(shock["corruption_event"].sum()))
+                draw["_w3_thinned_scandal_path"] = corruption.thinned_path(
+                    shock,
+                    float(draw["anticorruption_scandal_probability_reduction_fraction"]),
+                    uniforms,
+                    corruption_config,
+                    first_eligible_step=(
+                        int(context["w3"]["config"]["policy_start_year"]) - int(base_year)
+                    ),
+                )
         if context.get("programmes") is not None:
             draw.update(programs.sample_programme_draw(programme_rng, context["programmes"], parameters))
             petroleum_factor: dict[int, float] = {}
@@ -809,7 +1062,7 @@ def run(
             )
             draw["privatisation_debt_adjustment_by_year"] = sale["debt_adjustment_by_year"]
             draw["privatisation_non_tax_revenue_by_year"] = sale["non_tax_revenue_by_year"]
-        draws.append(draw)
+        draws.append({key: value for key, value in draw.items() if not key.startswith("_w3_")})
         results.append(evaluate_draw(draw, context, effects))
         done = index + 1
         if done % 25 == 0:
@@ -886,6 +1139,15 @@ def run(
             else "programme-specific assumed compositions (programs_2026.yaml)",
             "status": "unpublished until the D2 gate and lead/user review",
         }
+    if context.get("w3"):
+        metadata["anti_corruption"] = {
+            "selection": context["w3"]["selection"],
+            "mapping": context["w3"]["mapping"],
+            "config": "config/w3_anticorruption.yaml",
+            "stream": "separate random stream [seed, 8]",
+            "parameters_identical_between_programmes": True,
+            "procurement_accounting": "positive non-tax primary-balance item; no household tax incidence or multiplier",
+        }
     return draw_results, pd.DataFrame(draws), metadata
 
 
@@ -897,7 +1159,7 @@ def summarise(draw_results: pd.DataFrame, n_draws: int) -> pd.DataFrame:
     summary = grouped.quantile([p / 100 for p in PERCENTILES]).unstack()
     summary.columns = [f"p{p}" for p in PERCENTILES]
     summary = summary.reset_index()
-    units = {**MACRO_OUTPUTS, **SOCIAL_OUTPUTS, **MICRO_OUTPUTS}
+    units = {**MACRO_OUTPUTS, **SOCIAL_OUTPUTS, **MICRO_OUTPUTS, **W3_OUTPUTS}
     summary["unit"] = summary["indicator"].map(units)
     summary["n_draws"] = n_draws
     summary["status"] = "modelled: parameter uncertainty only"
@@ -920,6 +1182,8 @@ def summarise(draw_results: pd.DataFrame, n_draws: int) -> pd.DataFrame:
 def reference_paths(context: Mapping) -> pd.DataFrame:
     """Central-parameter results under the fixed boom / neutral / bust external paths."""
     draw = central_draw(context["parameters"], context["inputs"])
+    if context.get("w3"):
+        draw.update(central_w3_draw(context["w3"]["config"]))
     if context.get("programmes") is not None:
         draw.update(programs.central_programme_draw(context["programmes"], context["parameters"]))
     steps = max(context["target_years"]) - context["base_year"]
@@ -975,6 +1239,10 @@ def main(argv: list[str] | None = None) -> int:
                         help="household incidence for programme revenue changes (default: instrument)")
     parser.add_argument("--education-sensitivity", choices=tuple(education.EDUCATION_SENSITIVITIES), default="none",
                         help="ED historical-record/recomposition sensitivity (default: none)")
+    parser.add_argument("--anti-corruption", choices=("none", "lula", "flavio", "both"), default="none",
+                        help="W3 anti-corruption sensitivity for the selected programme(s) (default: none)")
+    parser.add_argument("--anti-corruption-mapping", choices=("programme", "full"), default="programme",
+                        help="W3 programme-text mapping or all four channels (default: programme)")
     args = parser.parse_args(argv)
     started = time.time()
     context = load_context()
@@ -994,12 +1262,18 @@ def main(argv: list[str] | None = None) -> int:
             "real_rate_path_source_file": str(source),
             "real_rate_path_source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
         }
-    if args.programmes or args.programmes_common_composition:
+    if args.programmes or args.programmes_common_composition or args.anti_corruption != "none":
         context["programmes"] = read_yaml("config/programs_2026.yaml")
         context["programme_common_composition"] = args.programmes_common_composition
         context["privatisation_package"] = args.privatisation
         context["privatisation_inventory"] = pd.read_csv(privatisation.INVENTORY_PATH)
         context["privatisation_nominal_gdp_brl_million"] = privatisation.nominal_gdp_by_year()[2025]
+    if args.anti_corruption != "none":
+        context["w3"] = {
+            "selection": args.anti_corruption,
+            "mapping": args.anti_corruption_mapping,
+            "config": read_yaml("config/w3_anticorruption.yaml"),
+        }
     draw_results, draws, metadata = run(args.draws, args.seed, context=context)
     summary = summarise(draw_results, args.draws)
     output = Path(args.output_dir)
