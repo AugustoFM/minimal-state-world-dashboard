@@ -15,3 +15,6 @@ data/raw/brazil/fiscal_delivery/*_anexo_iv_metas_fiscais.pdf
 
 # Programme (candidate) results: local only, never versioned (runoff 2026-10-25; not for campaign use).
 outputs/programme_results/
+
+# Presidential travel comparison page: kept local until the lead/user decide to publish (2026-10-22)
+outputs/presidential_travel/
