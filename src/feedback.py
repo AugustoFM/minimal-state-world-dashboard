@@ -489,6 +489,9 @@ def apply_feedback(
     innovation_capacity_log_effect: pd.DataFrame | pd.Series | Mapping[tuple[int, str], float] | None = None,
     allow_missing: bool = False,
     risk_premium_cap_pp: float | None = 50.0,
+    effective_education_services_gain_pct: (
+        pd.DataFrame | pd.Series | Mapping[tuple[int, str], float] | None
+    ) = None,
 ) -> pd.DataFrame:
     """Add feedback-adjusted outcomes and switch-off channel attributions."""
     frame = _validate_corner(corner)
@@ -519,6 +522,11 @@ def apply_feedback(
     public_investment_package_share = shares["public_investment_package_share"]
     education_allocation = education_share_gdp / (education_share_gdp + health_share_gdp)
     education_change = gap * efficiency_package_share * education_allocation * service_cut_fraction
+    if effective_education_services_gain_pct is not None:
+        service_gain = _path_values(
+            effective_education_services_gain_pct, frame, "effective_education_services_gain_pct"
+        )
+        education_change = education_change + education_share_gdp * service_gain / 100.0
     investment_change = gap * public_investment_package_share
     human_log, schooling_change = schooling_log_output_effect(
         frame, population, education_change,
