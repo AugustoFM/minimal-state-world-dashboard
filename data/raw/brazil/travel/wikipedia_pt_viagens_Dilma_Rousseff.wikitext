@@ -1,0 +1,768 @@
+Esta é uma '''lista das viagens presidenciais de [[Dilma Rousseff]]''', a [[Lista de presidentes do Brasil|36ª]] [[Presidente do Brasil]], empossada em [[1 de janeiro]] de [[2011]]. Nesta lista constam as viagens de caráter diplomático realizadas por Dilma Rousseff desde a [[Posse de Dilma Rousseff|posse]], em 2011, até seu [[Impeachment de Dilma Rousseff|impeachment]] em 2016.<ref name="planalto">{{Citar web|url=http://www2.planalto.gov.br/imprensa/relatorio-da-sip/viagens-internacionais-da-presidenta-da-republica-2011|título=Viagens internacionais da Presidenta da República|autor=Secretaria de Imprensa|autorlink=Presidente do Brasil|data=2011}}</ref>
+
+== Resumo ==
+{| class="wikitable" width=80%
+!width=20%|Número de visitas
+!width=80%|País
+|-
+| 1 visita
+|[[Alemanha]], [[Angola]], [[Austrália]], [[Bolívia]], [[Bulgária]], [[Catar]], [[China]], [[Colômbia]], [[Costa Rica]], [[Espanha]], [[Etiópia]], [[Finlândia]], [[Grécia]], [[Guiné Equatorial]], [[Haiti]], [[Índia]], [[Moçambique]], [[Nigéria]], [[Panamá]], [[Reino Unido]], [[Suécia]], [[Suíça]] e [[Suriname]]
+|-
+| 2 visitas
+|[[África do Sul]], [[Cuba]], [[Equador]], [[México]], [[Rússia]], [[Turquia]] e [[Vaticano]]
+|-
+| 3 visitas
+|[[Bélgica]], [[Chile]], [[França]], [[Itália]], [[Paraguai]], [[Peru]], [[Portugal]] e [[Rússia]]
+|-
+| 4 visitas
+|[[Uruguai]] e [[Venezuela]]
+|-
+| 6 visitas
+|[[Argentina]] 
+|-
+|8 visitas
+|[[Estados Unidos]]
+|}
+
+==2011==
+{{Imagem múltipla
+ | align     = center
+ | footer    = 
+ | width     = 280
+
+ | image1    = Dilma Rousseff Cristina Kirchner.png
+ | caption1  = Dilma Rousseff e Cristina Kirchner, 31 de janeiro de 2011.
+ | image2    = Dilma Rousseff G-20 Cannes summit.jpg
+ | caption2  = Dilma chega à Cannes para a VI Cúpula do G20, novembro de 2011.
+ | image3    = Rousseff UN General Debate.jpg
+ | caption3  = Presidente do Brasil abre a 66ª Sessão da Assembleia Geral das nações Unidas, setembro de 2011.
+}}
+{| class="wikitable" width=100%
+!width=13%|País
+!width=12%|Cidade/Região
+!width=15%|Período
+!width=13%|Anfitrião
+!width=60%|Notas
+|-
+|{{ARG}}
+|[[Buenos Aires]]
+|[[31 de janeiro]]
+|[[Cristina Kirchner]]
+|A primeira visita de Estado de Dilma Rousseff como Presidente. Rousseff teria escolhido a Argentina como seu primeiro destino em demonstração aos laços "especiais e estratégicos" entre os dois países.<ref>{{Citar web|url=http://www.channelnewsasia.com/stories/afp_world/view/1107912/1/.html|título=Rousseff to make first foreign visit in Argentina|autor=''Channel News Asia''|data=31 de janeiro de 2011}}</ref> Durante sua visita à Buenos Aires, Rousseff afirmou que "não foi uma decisão casual a Argentina como primeiro destino estrangeiro" e classificou o país vizinho como "aliado estratégico" do Brasil.<ref>{{Citar web|url=http://www.buenosairesherald.com/article/57686/im-here-to-make-our-relationship-stronger-than-ever-rousseff|título='I'm here to make our relationship stronger than ever', Rousseff|autor=''Buenos Aires Herald''|data=30 de janeiro de 2011}}</ref> Rousseff teve uma audiência privada com a Presidente Cristina Kirchner na [[Casa Rosada]] e assinou diversas tratados de ampliação das relações entre os dois países. Ao fim da viagem, Rousseff encontrou-se com representantes das Mães da Praça de Maio.<ref name="planalto"/>
+|-
+|{{POR}}
+|[[Lisboa]]<br>[[Coimbra]]
+|[[28 de março|28]]-[[30 de março]]
+|[[Universidade de Coimbra]]
+|Visita à [[Universidade de Coimbra]], onde [[Lula da Silva]] foi agraciado com o título ''[[honoris causa]]''.<ref>{{Citar web|url=http://noticias.terra.com.br/brasil/noticias/0,,OI5036447-EI7896,00-Lula+e+titulado+doutor+honoris+causa+da+Universidade+de+Coimbra.html|título=Lula é titulado doutor ''honoris causa'' da Universidade de Coimbra|autor=''Terra''|data=30 de março de 2011}}</ref>
+|-
+|{{GRE}}
+|[[Atenas]]
+|[[9 de abril]]
+|
+|Diálogo sobre a [[Crise econômica de 2008-2012|Crise econômica de 2012]] e a organização das [[Jogos Olímpicos de Verão de 2004|Olimpíadas de 2004]].<ref>{{Citar web|url=http://www1.folha.uol.com.br/poder/900583-antes-da-china-dilma-visita-grecia-e-discute-economia-e-olimpiada-com-premie.shtml|título=Antes da China, Dilma visita Grécia e discute economia e Olimpíada com premiê|autor=''[[Folha de S. Paulo]]''|data=9 de abril de 2011|acessodata=2 de outubro de 2014}}</ref>
+|-
+|{{CHN}}
+|[[Pequim]]<br>[[Sanya]]<br>[[Xian]]
+|[[10 de abril|10]]-[[15 de abril]]
+|[[Hu Jintao]]
+|[[Terceira cúpula do BRICS]] e visita à sede da [[ZTE]].
+|-
+|{{URU}}
+|[[Montevidéu]]
+|[[30 de maio]]
+|[[José Mujica]]
+|
+|-
+|{{PAR}}
+|[[Assunção]]
+|[[28 de junho|28]]-[[29 de junho]]
+|[[Fernando Lugo]]
+|41ª Cúpula de Presidentes dos Estados do [[Mercosul]]
+|-
+|{{PER}}
+|[[Lima]]
+|[[28 de julho]]
+|[[Ollanta Humala]]
+|Cerimônia de posse de Ollanta Humala
+|-
+|{{USA}}
+|[[Nova Iorque]]
+|[[18 de setembro|18]]-[[22 de setembro]]
+|[[Barack Obama]]
+|Discurso de abertura da 66ª [[Assembleia Geral das Nações Unidas]]
+|-
+|{{BEL}}
+|[[Bruxelas]]
+|[[2 de outubro|2]]-[[4 de outubro]]
+|[[Lista de primeiros-ministros da Bélgica|Primeiro-ministro]] [[Yves Leterme]]
+|Incluiu um jantar oferecido por [[Herman Van Rompuy]] e [[José Manuel Barroso]]; e um jantar oficial oferecido pelo rei [[Alberto II da Bélgica|Alberto II]].
+|-
+|{{BUL}}
+|[[Sófia]]<br>[[Gabrovo]]<br>[[Veliko Tarnovo]]
+|[[4 de outubro|4]]-[[6 de outubro]]
+|[[Georgi Parvanov]]
+|Em 4 de outubro, Dilma chegou à Bulgária pela primeira vez para uma visita às suas origens familiares.<ref>{{Citar web|url=http://blogs.wsj.com/emergingeurope/2011/10/05/morning-briefing-polish-rate-call-slovakia-in-view/?mod=google_news_blog|título=Morning Briefing: Polish Rate Call, Slovakia in View|publicado=''[[The Wall Street Journal]]''|data=5 de outubro de 2011}}</ref> A Presidente foi recebido pelo Presidente Georgi Parvanov em cerimônia oficial na Praça [[Alexandre Nevsky|Santo Alexandre Nevski]], uma das principais de Sófia. Posteriormente, Rousseff se reuniu com o [[Primeiro-ministro da Bulgária|Primeiro-ministro]] [[Boyko Borisov]] e a [[Assembleia Nacional da Bulgária|Presidente da Assembleia Nacional]], [[Tsetska Tsacheva]]. Durante sua visita, Rousseff foi agraciada com a mais alta honraria de Estado da Bulgária, a [[Ordem de Stara Planina]].<ref>{{Citar web|url=http://www.sofiaecho.com/2011/10/05/1168978_brazilian-president-dilma-rousseff-officially-welcomed-to-bulgaria|título= Brazilian president Dilma Rousseff officially welcomed to Bulgaria|publicado=''The Sofia Echo''|data=5 de outubro de 2011}}</ref> No dia seguinte, 5 de outubro, a Presidente compareceu ao Encontro Comercial Brasil-Bulgária, visando ampliar a presença financeira brasileira no país através de grandes companhias nacionais, como a [[Petrobras]], a [[Vale]] e a [[Embraer]].<ref>{{Citar web|url=http://www.forbes.com/feeds/ap/2011/10/05/general-materials-eu-bulgaria-brazil_8717695.html|título=Brazil's President visit Bulgaria|publicado=''[[Forbes (revista)|Forbes]]''|data=5 de outubro de 2011}}</ref> Após cumprir a agenda oficial, Rousseff visitou o túmulo de seu meio-irmão búlgaro, Lyuben-Kamen Rusev, a quem nunca havia conhecido, e a conheceu a cidade natal de seu pai, [[Gabrovo]].<ref>{{Citar web|url=http://www.novinite.com/view_news.php?id=132738|título=Dilma Rousseff Visits Grave of Her Bulgarian Brother in Sofia|publicado=''Novinite''|data=6 de outubro de 2011}}</ref><ref>{{Citar web|url=http://www.gazetadopovo.com.br/vida-publica/dilma-visita-tumulo-de-irmao-e-cidade-natal-do-pai-na-bulgaria-9np6qibajn4gk3vd885p3yqtq|título=Dilma visita túmulo de irmão e cidade natal do pai na Bulgária|publicado=''[[Gazeta do Povo]]''|data=6 de outubro de 2011}}</ref>
+|-
+|{{TUR}}
+|[[Ancara]]<br>[[Istambul]]
+|[[6 de outubro|6]]-[[8 de outubro]]
+|[[Abdullah Gül]]
+|Dilma chegou à Ancara, Turquia, na noite de 6 de outubro para sua visita diplomática de três dias. Em sua delegação estavam presentes os ministros de Relações Exteriores, Defesa, Fazenda, e Comunicação.<ref>{{Citar web|url=http://english.cri.cn/6966/2011/10/08/2021s661664.htm|título= Turkish President Vows to Boost Relations with Brazil|publicado=''CRI English''|data=8 de outubro de 2011}}</ref> Os tópicos principais da agenda da Presidente incluíram comércio, energia e educação, assim como assuntos de interesse internacional.<ref name="turquia11">{{Citar web|url=http://www.hurriyetdailynews.com/n.php?n=rousseff-visits-turkey-2011-10-06|título=Rousseff visits Turkey|publicado=''Hurriyet Daily''|data=6 de outubro de 2011}}</ref> No primeiro dia de visita, Rousseff reuniu-se com o Presidente Abdullah Gül para assinatura de acordos bilaterais. Os líderes também assinaram uma declaração conjunta denominada "Turquia-Brasil: Uma Perspectiva Estratégica para uma Parceria Dinâmica".<ref name="turquia11"/> Posteriormente, a Presidente visitou o [[Anıtkabir]] e discursou na Cimeira Comercial Brasil-Turquia. No último dia de visita, Rousseff conheceu locais históricos de Istambul.
+|-
+|{{RSA}}
+|[[Pretória]]
+|[[17 de outubro|17]]-[[18 de outubro]]
+|[[Jacob Zuma]]
+|Dilma viajou à África do Sul na primeira etapa de sua viagem pelo continente africano, que também incluiu Moçambique e Angola. Em [[Pretória]], Rousseff foi recebida pelo [[Presidente da África do Sul|Presidente]] [[Jacob Zuma]] no [[Union Buildings|Palácio Presidencial]], onde discutiram sobre a [[reforma do Conselho de Segurança das Nações Unidas|reforma do Conselho de Segurança]], [[Crise da dívida pública da Zona Euro|crise da Zona do Euro]], a [[Guerra Civil Síria|situação política na Síria]] e a eventual [[Intervenção militar na Líbia em 2011|intervenção militar na Líbia]].<ref>{{Citar web|url=http://www.iol.co.za/business/international/ibsa-un-security-council-must-reform-1.1159689|título= IBSA: UN Security Council must reform|publicado=''[[The Independent|Independent Online]]''|data=17 de outubro de 2011}}</ref> Ainda em Pretória, a Presidente compareceu ao [[Fórum de Diálogo Índia-Brasil-África do Sul]], onde reuniu-se com o [[Primeiro-ministro da Índia|Primeiro-ministro indiano]] [[Manmohan Singh]].<ref>{{Citar web|url=http://www.livemint.com/Politics/3MpO0MatIi7abyLUZnCIxN/PM-leaves-for-Pretoria-on-Monday-to-attend-IBSA-summit.html|título=PM leaves for Pretoria on Monday to attend IBSA summit|publicado=''Live Mint''|data=16 de outubro de 2011}}</ref>
+|-
+|{{MOZ}}
+|[[Maputo]]
+|18-[[19 de outubro]]
+|[[Armando Guebuza]]
+|Em Maputo, Dilma participou de homenagem a [[Samora Machel]], o líder do movimento de [[Independência de Moçambique]].<ref>{{Citar web|url=http://blog.planalto.gov.br/em-mocambique-presidenta-dilma-participa-das-homenagens-a-samora-machel/|título=Em Moçambique, Dilma participa das homenagens a Samora Machel|publicado=Palácio do Planalto|data=19 de outubro de 2011}}</ref> Rousseff foi recebida pelo Presidente Armando Guebuza e outros líderes nacionais. A visita teve o objetivo principal de ampliar os laços comerciais entre os dois países.<ref>{{Citar web|url=http://www.clubofmozambique.com/solutions1/sectionnews.php?secao=business&id=23094&tipo=one|título=Dilma Rousseff visit may boost trade relations between Mozambique and Brazil|publicado=''Club of Mozambique''|data=18 de outubro de 2011|acessodata=2016-05-11|arquivourl=https://web.archive.org/web/20120401102500/http://www.clubofmozambique.com/solutions1/sectionnews.php?secao=business&id=23094&tipo=one|arquivodata=2012-04-01|urlmorta=yes}}</ref> O fluxo comercial Moçambique-Brasil havia crescido de 25 milhões de dólares para 60 milhões de dólares em menos de um ano, no período 2010 a 2011.<ref>{{Citar web|url=http://allafrica.com/stories/201110180004.html|título=Mozambique: Brazilian President to Visit Country|publicado=''AllAfrica''|data=18 de outubro de 2011}}</ref> Moçambique possui uma grande taxa de investimentos brasileiros, mais notavelmente em exploração de minérios, e é considerado o maior beneficiário da ajuda brasileira, envolvendo cerca de 70 milhões de dólares em áreas de educação, saúde, agricultura, e treinamento profissional.<ref>{{Citar web|url=http://www.bbc.com/portuguese/noticias/2010/09/100906_mozambique_pu.shtml|título=Brasil faz 'diplomacia da generosidade' em Moçambique|autor=Uchoa, Pablo|publicado=''[[BBC News]]''|data=7 de setembro de 2010}}</ref> Ainda em Maputo, Rousseff inaugurou a nova residência oficial do Embaixador brasileiro e abriu uma exposição de artistas moçambicanos no Centro Cultural Brasil-Moçambique.
+|-
+|{{flagicon|Angola}} [[Angola]]
+|[[Luanda]]
+|19-[[20 de outubro]]
+|[[José Eduardo dos Santos]]
+|Dilma visitou Angola na última etapa de sua viagem diplomática pelo continente africano, com a finalidade de fortalecer a cooperação bilateral.<ref>{{Citar web|url=http://allafrica.com/stories/201110210666.html|título=President Dilma Rousseff Returns to Brazil|publicado=''AllAfrica''|data=20 de outubro de 2011}}</ref> As duas antigas colônias portuguesas compartilham heranças culturais e fortes relações diplomáticas.<ref>{{Citar web|url=http://www.google.com/hostednews/afp/article/ALeqM5gI9uSe8Qr6kejO1diQ-jG1DzXfaQ?docId=CNG.51741d44ded9b31056a85d8267330981.4d1|título=Dilma praises 'brother' Angola|publicado=''[[Google News]]''|data=19 de outubro de 2011}}</ref> Durante sua visita, Rousseff foi recebida pelo [[Presidente de Angola|Presidente]] José Eduardo dos Santos, e também discursou perante a [[Assembleia Nacional de Angola|Assembleia Nacional]].
+|-
+|{{FRA}}
+|[[Cannes]], [[Paris]]
+|[[1 de novembro|1]]-[[5 de novembro]]
+|[[Nicolas Sarkozy]]
+|Dilma passou vários dias na França em função da [[6ª reunião de cúpula do G20]], em [[Cannes]]. A Presidente foi acompanha por seu [[Lista de ministros das Relações Exteriores do Brasil|Ministro de Relações Exteriores]], [[Antonio Patriota]] e [[Lista de ministros da Fazenda do Brasil|Ministro da Fazenda]], [[Guido Mantega]], além da Secretária de Imprensa [[Helena Chagas]] e do Porta-voz da Presidência, [[Rodrigo Baena]]. Durante a reunião de cúpula, Rousseff expressou a intenção do Brasil de oferecer auxílio aos países da Europa através do [[Fundo Monetário Internacional]] e incentivou "liderança, visão clara e ação" em resposta à crise financeira. Rousseff ainda manteve reuniões bilaterais com Austrália, Alemanha, Turquia e Singapura, assim como com os presidentes de China e Indonésia. Em 5 de novembro, a comitiva presidencial desembarcou em Paris, onde visitou a sede da [[UNESCO]] acompanhada pela Diretora-geral da organização, [[Irina Bokova]].
+|-
+|{{VEN}}
+|[[Caracas]]
+|[[1 de dezembro|1]]-[[2 de dezembro]]
+|[[Hugo Chavez]]
+|Dilma compareceu à Cúpula da [[Comunidade de Estados Latino-Americanos e Caribenhos|CELAC]].
+|-
+|{{ARG}}
+|[[Buenos Aires]]
+|[[10 de dezembro]]
+|[[Cristina Kirchner]]
+|Em Buenos Aires pela segunda vez no ano de 2011, Dilma compareceu à cerimônia de posse de [[Cristina Fernández de Kirchner]] para seu segundo mandato como [[Presidente da Argentina|Presidente]].
+|-
+|{{URU}}
+|[[Montevidéu]]
+|[[20 de dezembro]]
+|[[José Mujica]]
+|Dilma Rousseff compareceu à 42ª Cúpula de Chefes de Estado do Mercosul.
+|}
+
+==2012==
+{{Imagem múltipla
+ | align     = center
+ | footer    = 
+ | width     = 280
+
+ | image1    = Dilma Rousseff e Raúl Castro.jpg
+ | caption1  = Dilma Rousseff e Raúl Castro, fevereiero de 2012.
+ | image2    = Dilma Rousseff no Memorial de Mahatma Gandhi.jpg
+ | caption2  = Dilma Rousseff deixa flores no [[Raj Ghat|Memorial Mahatma Gandhi]], março de 2012.
+ | image3    = Dilma Rousseff and Barack Obama 2012.jpg
+ | caption3  = Rousseff e Obama no [[Salão Oval]] da [[Casa Branca]], abril de 2012.
+}}
+{| class="wikitable" width=100%
+!width=13%|País
+!width=12%|Cidade/Região
+!width=15%|Período
+!width=13%|Anfitrião
+!width=60%|Notas
+|-
+|{{CUB}}
+|[[Havana]]<br>[[Mariel]]
+|[[30 de janeiro]] - [[1 de fevereiro]]
+|[[Raúl Castro]]<br>[[Fidel Castro]]
+|
+|-
+|{{flagicon|Haiti}} [[Haiti]]
+|[[Porto Príncipe]]
+|[[1 de fevereiro]]
+|[[Michel Martelly]]
+|Dilma encontrou-se com o [[Presidente do Haiti|Presidente]] Michel Martelly e o [[Primeiro-ministro]] [[Garry Conille]]. Os principais tópicos de discussão foram a entrada ilegal de haitianos no Brasil desde o [[Sismo do Haiti de 2010|Terremoto de 2010]], que assolou o país.<ref>{{Citar web|url=http://news.yahoo.com/brazils-rousseff-haiti-cuba-visit-183143759.html|título=Dilma Rousseff in Haiti after Cuba visit|autor=''[[Yahoo!|Yahoo! News]]''|data=1 de fevereiro de 2014}}</ref>
+|-
+|{{DEU}}
+|[[Hanover]]
+|[[5 de março|5]] - [[6 de março]]
+|[[Angela Merkel]]
+|
+|-
+|{{IND}}
+|[[Nova Déli]]
+|[[27 de março|27]] - [[31 de março]]
+|[[Manmohan Singh]]<br>[[Pratibha Patil]]
+|Participou da [[Quarta cúpula do BRICS|IV Cúpula do BRICS]] e recebeu o título ''honoris causa'' da [[Universidade de Délhi]].<ref>{{Citar web|url=http://noticias.r7.com/brasil/noticias/na-india-dilma-e-homenageada-em-universidade-com-titulo-de-doutora-20120328.html|título=Na Índia, Dilma é homenageada em Universidade com título de doutora|autor=''[[R7]]''|data=28 de março de 2012}}</ref>
+|-
+|{{USA}}
+|[[Washington, D.C.]]<br>[[Boston]]
+|[[9 de abril|9]] - [[10 de abril]]
+|[[Barack Obama]]
+|A primeira visita de Estado de Rousseff aos Estados Unidos como Presidente do Brasil. Rousseff reuniu-se com [[Barack Obama]] na [[Casa Branca]] para tratar de cooperação em desenvolvimento energético, educação e comércio entre os dois países. Os Estados Unidos anunciaram que abririam mais dois consulados em território brasileiro.<ref>{{Citar web|url=http://www.nytimes.com/2012/04/10/world/americas/in-dilma-rousseff-visit-brazil-and-us-accentuate-positive.html|título=Brazil and U.S. accentuate the Positive|autor=''[[The New York Times]]''|data=9 de abril de 2012|acessodata=2 de outubro de 2014}}</ref> Rousseff também visitou o [[Instituto de Tecnologia de Massachusetts]] e a [[Universidade Harvard]], instituições parceiras do Brasil no programa "Ciência sem Fronteiras".<ref>{{Citar web|url=http://www.cnn.com/2012/04/09/politics/us-brazil-presidents/|título=Obama and Brazil's President discuss trade, energy|autor=''[[CNN|CNN.com]]''|data=9 de abril de 2012|acessodata=2 de outubro de 2014}}</ref>
+|-
+|{{COL}}
+|[[Cartagena]]
+|[[14 de abril|14]] - [[15 de abril]]
+|[[Juan Manuel Santos]]
+|Participou da [[6ª Cúpula das Américas|VI Cúpula das Américas]].
+|-
+|{{MEX}}
+|[[Los Cabos]]
+|[[17 de junho|17]] - [[19 de junho]]
+|[[Felipe Calderón]]
+|Rousseff participou da [[G20|VII reunião de cúpula do G20]]. Paralelamente, liderou uma reunião entre os líderes dos [[BRICS]] e encontrou-se em audiência com [[Mario Monti]], [[Angela Merkel]], [[Vladmir Putin]] e [[Mariano Rajoy]].<ref>{{Citar web|url=http://www.bloomberg.com/news/2012-06-18/brics-to-announce-imf-contribution-at-g-20-meeting-brazil-says.html|título=BRICS to announce IMF contribution at G-20 meeting, says Brazil|autor=''Bloomberg News''|data=18 de junho de 2012}}</ref>
+|-
+|{{ARG}}
+|[[Mendoza (Argentina)|Mendoza]]
+|[[28 de junho|28]] - [[29 de junho]]
+|[[Cristina Kirchner]]
+|Participou da 43ª Reunião de Cúpula dos Chefes de Estado do [[Mercosul]] e da reunião extraordinária sobre o [[Crise política de 2012 no Paraguai|''Impeachment'']] de [[Fernando Lugo]], [[presidente do Paraguai]].<ref>{{Citar web|url=http://www.efeamerica.com/309_hispanic-world/1647539_mercosur-suspends-paraguay-embraces-venezuela.html|título=Mercosur suspends Paraguay, embraces Venezuela|autor=''[[EFE]]''|data=28 de junho de 2012|acessodata=2014-10-02|arquivourl=https://web.archive.org/web/20120702234314/http://www.efeamerica.com/309_hispanic-world/1647539_mercosur-suspends-paraguay-embraces-venezuela.html|arquivodata=2012-07-02|urlmorta=yes}}</ref>
+|-
+|{{UK}}
+|[[Londres]]
+|[[25 de julho|25]] - [[28 de julho]]
+|[[David Cameron]]<br>[[Isabel II do Reino Unido|Elizabeth II]]
+|Assistiu a [[Cerimônia de abertura dos Jogos Olímpicos de Verão de 2012|Abertura dos Jogos Olímpicos de 2012]] e inaugurou a ''[[Projeto Casa Brasil|Casa Brasil]]''.<ref>{{Citar web|url=http://www.visitlondon.com/events/detail/25374566-casa-brasil-at-somerset-house|título=Casa Brasil at Somerset House|autor=VisitLondon.com|acessodata=2014-10-02|arquivourl=https://web.archive.org/web/20120727012952/http://www.visitlondon.com/events/detail/25374566-casa-brasil-at-somerset-house|arquivodata=2012-07-27|urlmorta=yes}}</ref> No dia [[27 de julho]], foi recebida pela Elizabeth II para uma reunião privada no [[Palácio de Buckingham]].<ref>{{Citar web|url=http://blog.planalto.gov.br/agenda-dilma-almoca-com-atletas-brasileiros-em-londres/|título=Dilma almoça com atletas brasileiros em Londres|autor=''Blog do Planalto''|data=27 de julho de 2012}}</ref>
+|-
+|{{USA}}
+|[[Nova Iorque]]
+|[[25 de setembro]] - [[1 de outubro]]
+|[[Ban Ki-moon]]
+|Participou da 67ª [[Assembleia Geral das Nações Unidas]].<ref name="retrospectiva-bol">{{Citar web|url=http://noticias.bol.uol.com.br/brasil/2012/12/14/viagens-de-dilma-em-2012-privilegiam-america-latina.jhtm|título=Retrospectiva 2012: Viagens de Dilma ao exterior privilegiam América Latina|autor=''BOL Notícias''|data=14 de dezembro de 2012}}</ref>
+|-
+|{{PER}}
+|[[Lima]]
+|[[1 de outubro|1]] - [[2 de outubro]]
+|[[Ollanta Humala]]
+|Participou da 3ª [[Cúpula América do Sul - Países Árabes]].<ref name="retrospectiva-bol"/>
+|-
+|{{ESP}}
+|[[Cadiz]]<br>[[Madrid]]
+|[[15 de novembro|15]] - [[19 de novembro]]
+|[[Juan Carlos de Espanha|Juan Carlos I]]<br>[[Mariano Rajoy]]
+|Reunião de negócios com o [[Lista de presidentes do governo da Espanha|presidente do Governo]], Mariano Rajoy, e reunião formal com o [[Lista de reis de Espanha|Rei]] Juan Carlos I. Visitou a "Casa do Brasil" e assistiu ao seminário ''Brasil en la senda del crecimiento''.
+|-
+|{{ARG}}
+|[[Buenos Aires]]
+|[[28 de novembro]]
+|[[Cristina Kirchner]]
+|Participou da conferência "Argentina e Brasil, integração e desenvolvimento ou o risco da primarização (das economias)", a convite da União Industrial Argentina (UIA).<ref name="retrospectiva-bol"/>
+|-
+|{{FRA}}
+|[[Paris]]
+|[[9 de dezembro|9]] - [[12 de dezembro]]
+|[[François Hollande]]
+|Viagem de negócios a tratar dos impactos da crise econômica mundial e de acordos de ciência e tecnologia.<ref name="retrospectiva-bol"/>
+|-
+|{{RUS}}
+|[[Moscou]]
+|[[13 de dezembro|13]] - [[14 de dezembro]]
+|[[Dmitri Medvedev]]
+|Primeira visita de Estado à Rússia como Presidente do Brasil, com o objetivo de ampliar a interação comercial entre os dois países.<ref name="retrospectiva-bol"/>
+|}
+
+== 2013 ==
+{{Imagem múltipla
+ | align     = center
+ | footer    = 
+ | width     = 280
+
+ | image1    = Dilma e Cavaco Silva.jpg
+ | caption1  = Rousseff recebida por Aníbal Cavaco Silva no [[Palácio de Belém]].
+ | image2    = Dilma e Francisco - 19-03-2013.jpg
+ | caption2  = Rousseff cumprimenta [[Papa Francisco]] após missa inaugural na [[Praça de São Pedro]], março de 2013.
+ | image3    = BRICS leaders G20 2013-2.jpg
+ | caption3  = Rousseff e outros líderes do [[BRICS]] em [[São Petersburgo]], setembro de 2013.
+}}
+{| class="wikitable" width=100%
+!width=13%|País
+!width=12%|Cidade/Região
+!width=15%|Período
+!width=13%|Anfitrião
+!width=60%|Notas
+|-
+|{{CHL}}
+|[[Santiago]]
+|[[26 de janeiro]]
+|[[Sebastián Piñera]]
+|Dilma Rousseff, em sua primeira viagem oficial no ano de 2013, participou da I Cúpula [[CELAC]] - [[União Europeia]]. Houve ainda uma reunião com Sebastián Piñera e um encontro bilateral com o [[presidente do México]], [[Enrique Peña Nieto]].
+|-
+|{{flagicon|Equatorial Guinea}} [[Guiné Equatorial]]
+|[[Malabo]]
+|[[22 de fevereiro]]
+|[[Teodoro Obiang Nguema Mbasogo|Teodoro Obiang]]
+|Dilma participou da 3ª [[Cúpula América do Sul - África]].
+|-
+|{{NGA}}
+|[[Abuja]]
+|[[23 de fevereiro]]
+|[[Goodluck Jonathan]]
+|Encontro oficial com o [[presidente da Nigéria]], Goodluck Ebele Jonathan. Dilma participou também do encerramento do "Encontro Empresarial Brasil/Nigéria".
+|-
+|{{VEN}}
+|[[Caracas]]
+|[[7 de março|7]] - [[8 de março]]
+|[[Nicolás Maduro]]
+|Junto dos demais chefes de Estado do Mercosul, participou da cerimônia fúnebre do [[Presidente da Venezuela|presidente venezuelano]] [[Hugo Chávez]]. Também estiveram presentes governantes de outros países.<ref>{{Citar web|url=http://www.ebc.com.br/teste/2013/03/dilma-embarco-a-venezuela-para-asistir-al-funeral-de-hugo-chavez|título=Dilma embarcó a Venezuela para asistir al funeral de Hugo Chávez|publicado=[[Agência Brasil]]|data=25 de março de 2013|acessodata=23 de novembro de 2013}}</ref>
+|-
+|{{ITA}} e {{VAT}}
+|[[Roma]]
+|[[17 de março|17]] - [[20 de março]]
+|[[Giorgio Napolitano]]<br>[[Papa Francisco]]
+|Dilma visitou a sede da [[Organização das Nações Unidas para Alimentação e Agricultura]] (FAO) e teve uma reunião com o presidente da República Italiana, Giorgio Napolitano. No última dia de viagem, assistiu a missa inaugural do [[Papa Francisco|pontificado do Papa Francisco]].<ref>{{Citar web|url=http://www.ebc.com.br/teste/2013/03/president-of-brazil-attends-new-popes-inaugural-mass|título=President of Brazil attends new pope's inaugural mass|publicado=[[Agência Brasil]]|data=19 de março de 2013|acessodata=24 de novembro de 2013}}</ref><ref>{{Citar web|url=http://agenciabrasil.ebc.com.br/noticia/2013-03-18/dilma-visita-basilica-construida-em-homenagem-virgem-maria|título=Dilma visita basílica construída em homenagem à Virgem Maria|publicado=[[Agência Brasil]]|data=18 de março de 2013|acessodata=24 de novembro de 2013}}</ref>
+|-
+|{{RSA}}
+|[[Durban]]
+|[[26 de março|26]] - [[27 de março]]
+|[[Jacob Zuma]]
+|Participou da [[Quinta cúpula do BRICS|V Reunião de Cúpula do BRICS]] e teve uma reunião bilateral com o [[presidente da China]], [[Xi Jinping]].
+|-
+|{{PER}}
+|[[Lima]]
+|[[18 de abril]]
+|[[Ollanta Humala]]
+|Reunião de Cúpula Extraordinária da [[Unasul]].
+|-
+|{{VEN}}
+|[[Caracas]]
+|[[19 de abril]]
+|[[Nicolás Maduro]]
+|Dilma participou da cerimônia de posse de Nicolás Maduro como [[Presidente da Venezuela]].
+|-
+|{{ARG}}
+|[[Buenos Aires]]
+|[[25 de abril]]
+|[[Cristina Kirchner]]
+|Reunião de negócios com a presidente Cristina Kirchner e seu gabinete.
+|-
+|{{flagicon|Ethiopia}} [[Etiópia]]
+|[[Adis Abeba]]
+|[[24 de maio|24]] - [[25 de maio]]
+|[[Hailemariam Desalegn]]
+|Solenidades do cinquentenário da [[Organização da Unidade Africana]].
+|-
+|{{POR}}
+|[[Lisboa]]
+|[[9 de junho|9]] - [[10 de junho]]
+|[[Aníbal Cavaco Silva]]
+|No primeiro dia de visita, Dilma reuniu-se com [[António José Seguro]], secretário-geral do [[Partido Socialista Português]]. No dia seguinte, foi recebida pelo Presidente da República, Aníbal Cavaco Silva, e o [[Primeiro-ministro de Portugal|Primeiro-ministro]] [[Pedro Passos Coelho]].
+|-
+|{{URU}}
+|[[Montevidéu]]
+|[[11 de julho|11]] - [[12 de julho]]
+|[[José Mujica]]
+|Cúpula dos Presidentes dos Estados do [[Mercosul]]
+|-
+|{{PAR}}
+|[[Assunção]]
+|[[14 de agosto|14]] - [[15 de agosto]]
+|[[Horacio Cartes]]
+|Cerimônia de posse e juramento de Horacio Cortes como [[Presidente do Paraguai]].
+|-
+|{{SUR}}
+|[[Paramaribo]]
+|[[30 de agosto]]
+|[[Desiré Bouterse]]
+|Participação na [[Unasul|VII Cúpula da Unasul]]
+|-
+|{{RUS}}
+|[[São Petersburgo]]
+|[[3 de setembro|5]] - [[6 de setembro]]
+|[[Vladimir Putin]]
+|No dia [[5 de setembro]], Dilma participou da [[8ª reunião de cúpula do G20]] e reuniu-se com o [[presidente da China]], [[Xi Jinping]] e posteriormente com o [[primeiro-ministro do Japão]], [[Shinzo Abe]]. No dia 6 de setembro, o último dia de visita, houve uma reunião com o [[Singapura|primeiro-ministro de Singapura]], [[Lee Hsien Loong]].<ref>{{Citar web|url=http://agenciabrasil.ebc.com.br/noticia/2013-09-05/cupula-do-g20-dilma-e-obama-ficam-lado-lado-durante-abertura|título=Dilma e Obama ficam lado-a-lado durante abertura|autor=''[[Agência Brasil]]''|data=5 de setembro de 2013}}</ref>
+|-
+|{{USA}}
+|[[Nova Iorque]]
+|[[23 de setembro|23]] - [[25 de setembro]]
+|[[Ban Ki-moon]]
+|Participação na abertura da 68ª [[Assembleia Geral das Nações Unidas]]. Participou ainda do "Foro Político de Alto Nível sobre Desenvolvimento Sustentável".<ref>{{Citar web|url=http://www.usatoday.com/story/news/world/2013/09/17/obama-brazi-dilma-rousseff-national-security-agency/2826211/|título=Brazil cancels U.S. visit over spy claims|autor=''USA Today''|data=17 de setembro de 2013}}</ref>
+|}
+
+== 2014 ==
+[[Ficheiro:Dilmaraulmariel.jpg|thumb|center|300px|Dilma Rousseff e Raúl Castro durante inauguração do [[Porto de Mariel]], janeiro de 2014.]]
+{| class="wikitable" width=100%
+!width=13%|País
+!width=12%|Cidade/Região
+!width=15%|Período
+!width=13%|Anfitrião
+!width=60%|Notas
+|-
+|{{SUI}}
+|[[Zurique]]; [[Davos]]
+|[[23 de janeiro|23]] - [[24 de janeiro]]
+|''[[Joseph Blatter]]''
+| Dilma Rousseff participou do [[Fórum Econômico Mundial]] e se reuniu com lideranças econômicas atuais em Davos. Em Zurique, visitou a sede da [[FIFA]] acompanhada pelo presidente da organização Joseph Blatter.<ref>{{Citar web|url=http://g1.globo.com/mundo/noticia/2014/01/dilma-chega-suica-para-forum-economico-mundial-de-davos.html|título=Dilma chega à Suíça para Fórum Econômico Mundial de Davos|autor=''[[G1]]''|data=23 de janeiro de 2014|acessodata=2 de outubro de 2014}}</ref>
+|-
+|{{CUB}}
+|[[Artemisa]]; [[Havana]]
+|[[27 de janeiro|27]] - [[28 de janeiro]]
+|[[Raúl Castro]]
+|Dilma participou da cerimônia de inauguração do [[Porto de Mariel]], na presença de outros líderes regionais, como [[Nicolás Maduro]] e [[Portia Simpson Miller]]. Em Havana, participou da II Cúpula dos Estados Latino-americanos e Caribenhos (CELAC).<ref name="planalto1">{{Citar web|url=http://www2.planalto.gov.br/area-de-imprensa/relatorios-da-secretaria-de-imprensa/viagens-internacionais-2014|título=Viagens internacionais da Presidenta da República (2014)|autor=Secretaria de Imprensa|autorlink=Governo do Brasil|acessodata=2 de outubro de 2014}}</ref>
+|-
+|{{ITA}} / {{VAT}}
+|[[Roma]]
+|[[21 de fevereiro|21]] - [[22 de fevereiro]]
+|[[Giorgio Napolitano]] /<br>[[Papa Francisco]]
+|Na [[Cidade do Vaticano]], Dilma assistiu à consagração de [[Orani João Tempesta|Dom Orani João Tempesta]] como novo [[cardeal]] e reuniu-se com o Papa Francisco. No último dia de viagem, Rousseff teve reunião com o Presidente Giorgio Napolitano sobre investimentos das empresas italianas no Brasil.<ref>{{Citar web|url=http://agenciabrasil.ebc.com.br/politica/noticia/2014-02/dilma-viaja-roma-para-consistorio-de-dom-orani-e-encontro-com-napolitano|título=Dilma viaja a Roma para consistório de Dom Orani e encontro com Napolitano|autor=''[[Agência Brasil]]''|data=20 de fevereiro de 2014|acessodata=2 de outubro de 2014}}</ref>
+|-
+|{{BEL}}
+|[[Bruxelas]]
+|[[24 de fevereiro]]
+|[[Elio Di Rupo|Elio di Rupo]]
+|Participou de reunião de cúpula entre Brasil e [[União Europeia]].<ref>{{Citar web|url=https://g1.globo.com/mundo/noticia/2014/02/dilma-participa-de-reuniao-brasil-uniao-europeia-em-bruxelas.html|título=Dilma participa de reunião Brasil-União Europeia em Bruxelas|autor=''[[G1]]''|data=24 de fevereiro de 2014}}</ref>
+|-
+|{{CHL}}
+|[[Valparaíso]]
+|[[11 de março]]
+|[[Michelle Bachelet]]
+|Dilma participou da cerimônia de posse de Michelle Bachelet como [[Presidente do Chile|Presidente da República do Chile]].<ref>{{Citar web|url=http://www.bbc.com/news/world-latin-america-26528923|título=Michelle Bahcelet sworn in as Chile's president|autor=''[[BBC News]]''|data=11 de março de 2014|acessodata=2 de outubro de 2014}}</ref>
+|-
+|{{VEN}}
+|[[Caracas]]
+|[[29 de julho]]
+|[[Nicolás Maduro]]
+|Dilma participou da 46ª Cúpula dos Chefes de Estado do [[Mercosul]].<ref>{{Citar web|url=http://oglobo.globo.com/economia/em-encontro-do-mercosul-dilma-se-solidariza-com-argentina-em-crise-da-divida-13421514|título=Em encontro do Mercosul, Dilma se solidariza com Argentina em crise da dívida|autor=''[[O Globo]]''|data=29 de julho de 2014|acessodata=2 de outubro de 2014}}</ref>
+|-
+|{{USA}}
+|[[Nova Iorque]]
+|[[23 de setembro|23]] - [[24 de setembro]]
+|[[Barack Obama]]
+|Participou da 69ª [[Assembleia Geral das Nações Unidas]].<ref>{{Citar web|url=https://epoca.globo.com/tempo/noticia/2014/09/na-onu-dilma-pede-mais-espaco-para-bpaises-em-desenvolvimentob.html|título=Na ONU, Dilma pede mais espaço para países em desenvolvimento|autor=''[[Época (revista)|Época]]''|data=24 de setembro de 2014}}</ref>
+|-
+|{{QAT}}
+|[[Doha]]
+|[[12 de novembro]]
+|[[Tamim bin Hamad al-Thani]]
+|Se reuniu com o Emir Tamim bin Hamad al-Thani e com a ex-consorte [[Mozah bint Nasser al-Missned]].<ref>{{Citar web|url=https://g1.globo.com/politica/noticia/2014/11/dilma-se-encontra-com-emir-do-catar-antes-de-ir-para-o-g20-na-australia.html|título=Dilma se encontra com emir do Catar antes de ir para o G20, na Austrália|autor=''[[G1]]''|data=12 de novembro de 2014}}</ref>
+|-
+|{{AUS}}
+|[[Brisbane]]
+|[[14 de novembro|14]]  - [[16 de novembro]]
+|[[Tony Abbott]]
+|Participou da [[9.ª reunião de cúpula do G20|9ª reunião da cúpula do G20]]. Também se reuniu com os líderes do [[BRICS]] e posteriormente com o [[presidente dos Estados Unidos]], [[Barack Obama]].<ref>{{Citar web|url=https://g1.globo.com/mundo/noticia/2014/11/em-encontro-informal-com-obama-dilma-discute-visita-aos-eua.html|título=Em encontro informal com Obama, Dilma discute visita aos EUA||autor=''[[G1]]''|data=16 de novembro de 2014}}</ref>
+|-
+|{{EQU}}
+|[[Quito]]
+|[[5 de dezembro]]
+|[[Rafael Correa]]
+|Participou da inauguração da nova sede da [[Unasul]] e da Cúpula Extraordinária de Chefes de Estado da Unasul<ref>{{Citar web|título = Presidenta Dilma participa de Cúpula de Quito, no Equador|url = http://www.brasil.gov.br/governo/2014/12/presidenta-dilma-participa-de-cupula-de-quito-no-equador|obra = Portal Brasil|acessadoem = 2015-06-24}}</ref>
+|-
+|{{ARG}}
+|[[Paraná (Argentina)|Paraná]]
+|[[17 de dezembro]]
+|[[Cristina Kirchner]]
+|Dilma participou da 47ª Cúpula dos Chefes de Estado do [[Mercado Comum do Sul|Mercosul]] e Estados Associados<ref>{{Citar web|título = Cúpula de Chefes de Estado do MERCOSUL e Estados Associados e XLVII Reunião do Conselho do Mercado Comum - Paraná, Argentina, 16 e 17 de dezembro de 2014|url = http://www.itamaraty.gov.br/index.php?option=com_content&view=article&id=6212:cupula-de-chefes-de-estado-do-mercosul-e-estados-associados-e-xlvii-reuniao-do-conselho-do-mercado-comum-parana-argentina-16-e-17-de-dezembro-de-2014&catid=42&Itemid=280&lang=pt-BR|obra = www.itamaraty.gov.br|acessadoem = 2015-06-24}}</ref>
+|}
+
+== 2015 ==
+{{Imagem múltipla
+ | align     = center
+ | footer    = 
+ | width     = 250
+
+ | image1    = Brazilian President Rousseff Discusses the U.S.-Brazil Partnership.jpg
+ | caption1  = Dilma Rousseff discursa em jantar de Estado na Casa Branca, junho de 2015.
+ | image2    = Dilma Rousseff and Matteo Renzi 2015.jpg
+ | caption2  = Dilma Rousseff e [[Matteo Renzi]] durante declaração à imprensa, julho de 2015.
+ | image3    = Dilma Rousseff was greeted by Barack Obama during the group photo of the 2015 G-20 Antalya Summit.jpg
+ | caption3  = Rousseff e Obama cumprimentam-se na reunião de cúpula do G20, novembro de 2015.
+}}
+{| class="wikitable" width=100%
+!width=13%|País
+!width=12%|Cidade/Região
+!width=15%|Período
+!width=13%|Anfitrião
+!width=60%|Notas
+|-
+|{{BOL}}
+|[[La Paz]]
+|[[25 de janeiro]]
+|[[Evo Morales]]
+|A presidente Dilma participou da cerimônia de posse de Evo Morales Ayma como [[Presidente da Bolívia]]<ref>{{Citar web|título = Dilma prestigia posse de Morales e busca melhorar relações com Bolívia|url = http://g1.globo.com/mundo/noticia/2015/01/dilma-prestigia-posse-de-morales-e-busca-melhorar-relacoes-com-bolivia.html|acessadoem = 2015-06-24}}</ref>
+|-
+|{{COS}}
+|[[San José (Costa Rica)|San José]]
+|[[28 de janeiro|28]] - [[29 de janeiro]]
+|[[Luis Guillermo Solís]]
+|Dilma participou da III Cúpula da [[Comunidade de Estados Latino-Americanos e Caribenhos]] (CELAC)<ref>{{Citar web|título = Dilma participa de reunião da Celac na Costa Rica|url = http://noticias.uol.com.br/ultimas-noticias/ansa/2015/01/28/dilma-participa-de-reuniao-da-celac-na-costa-rica.htm|acessadoem = 2015-06-24}}</ref>
+|-
+|{{URU}}
+|[[Colônia (departamento)|Colônia]]; [[Montevidéu]]
+|[[28 de fevereiro]] - [[1 de março]]
+|[[José Mujica]] / [[Tabaré Vázquez]]
+|Em Tarariras, Colônia, os presidentes Dilma Rousseff e José Mujica inauguraram o Parque Eólico Artilleros. Em Montevidéu, Dilma participou da posse de Tabaré Vázquez como novo [[presidente do Uruguai]]<ref>{{Citar web|título = Dilma inaugura parque eólico e vai à posse de novo presidente no Uruguai|url = http://g1.globo.com/mundo/noticia/2015/02/dilma-inaugura-parque-eolico-e-vai-posse-de-novo-presidente-no-uruguai.html|acessadoem = 2015-06-24}}</ref>
+|-
+|{{PAN}}
+|[[Cidade do Panamá]]
+|[[10 de abril]]
+|[[Juan Carlos Varela]]
+|Participou da [[7ª Cúpula das Américas|Sétima Reunião de Cúpula das Américas]]<ref>{{Citar web|título = Dilma Rousseff participa da Cúpula das Américas, no Panamá|url = http://g1.globo.com/jornal-nacional/noticia/2015/04/dilma-rousseff-participa-da-cupula-das-americas-no-panama.html|acessadoem = 2015-06-24}}</ref>
+|-
+|{{MEX}}
+|[[Cidade do México]]
+|[[26 de maio|26]] - [[27 de maio]]
+|[[Enrique Peña Nieto]]
+|Dilma realizou visita de Estado e participou de sessão solene no Congresso Mexicano<ref>{{Citar web|título = Dilma é recebida por Nieto no início da visita ao México|url = http://noticias.terra.com.br/brasil/politica/dilma-e-recebida-por-pena-nieto-no-inicio-de-sua-visita-de-estado-ao-mexico,05bf757c72e0459e9391cbd1f32840f7ifoeRCRD.html|acessadoem = 2015-06-24}}</ref>
+|-
+|{{BEL}}
+|[[Bruxelas]]
+|[[10 de junho|10]] - [[11 de junho]]
+|[[Charles Michel]]
+|Reuniu-se com o primeiro-ministro belga, [[Charles Michel]], e participou da II Cúpula [[Comunidade de Estados Latino-Americanos e Caribenhos|CELAC]] - [[União Europeia]]<ref>{{Citar web|título = Brasil pode apresentar nos próximos meses oferta comercial à UE, diz Dilma|url = http://g1.globo.com/politica/noticia/2015/06/dilma-se-reune-em-bruxelas-com-primeiro-ministro-da-belgica.html|acessadoem = 2015-06-24}}</ref>
+|-
+|{{EUA}}
+|[[Washington, D.C.]];<br>[[Vale do Silício]];<br>[[Nova Iorque (cidade)|Nova Iorque]]
+|[[28 de junho]] - [[3 de julho]]
+|[[Barack Obama]]
+|{{Mais informações|Relações entre Brasil e Estados Unidos}}
+O presidente Barack Obama e a presidente brasileira se encontraram quase dois anos após que presidenta Rousseff cancelou uma rara visita de Estado a Washington depois das revelações de que o Brasil foi alvo do programa de espionagem americano. EUA está à procura de comércio bilateral e os investimentos desde que a China ultrapassou os EUA como maior parceiro comercial do Brasil. Rousseff viajou para Nova York para se encontrar com banqueiros e ao Vale do Silício para angariar negócios para a indústria de tecnologia de informações do Brasil.<ref>[http://www.usnews.com/news/politics/articles/2015/06/29/climate-top-item-for-obama-sit-down-with-brazil-leader With dinner and monument tour, Obama, Rousseff try to show spy scandal is thing of the past] By DARLENE SUPERVILLE and ADRIANA GOMEZ LICON,[[Associated Press]] on June 29, 2015</ref><ref>[http://www.npr.org/2015/06/30/418776095/brazil-s-president-in-washington-to-patch-up-relationship-with-obama Brazil Tries To Rebuild Relations With U.S. After NSA Spying Scandal] by Jackie Northam in June 30, 2015 ([[NPR]])</ref>
+|-
+|{{RUS}}
+|[[Ufá]]
+|[[8 de julho|8]] - [[9 de julho]]
+|[[Vladimir Putin]]
+|Participou da [[Sétima cúpula do BRICS|VII Reunião de Cúpula do BRICS]] e reuniu-se com o presidente Vladimir Putin.<ref>{{Citar web|url=https://g1.globo.com/mundo/noticia/2015/07/dilma-se-reune-com-o-presidente-vladimir-putin-na-russia.html|título = Dilma se reúne com o presidente Vladimir Putin na Rússia|autor=''[[G1]]''|data=8 de julho de 2015}}</ref>
+|-
+|{{ITA}}
+|[[Roma]];
+[[Milão]]
+|[[10 de julho|10]] - [[11 de julho]]
+|[[Sergio Mattarella]] /[[Matteo Renzi]]
+|Reuniu-se em com o presidente Sergio Mattarella e o primeiro-ministro Matteo Renzi. No último dia de viagem, visitou a [[Exposição Universal de 2015]], sediada em Milão.<ref>{{Citar web|url=https://oglobo.globo.com/politica/apos-cupula-dos-brics-dilma-encontra-presidente-primeiro-ministro-da-italia-16723086|título =  Após cúpula dos Brics, Dilma encontra presidente e primeiro-ministro da Itália|autor=''[[O Globo]]''|data=10 de julho de 2015}}</ref>
+|-
+|{{USA}}
+|[[Nova Iorque]]
+|[[25 de setembro|25]] - [[28 de setembro]]
+|[[Barack Obama]]
+|Participou da 70ª [[Assembleia Geral das Nações Unidas]].<ref>{{Citar web|url=https://epoca.globo.com/tempo/filtro/noticia/2015/09/dilma-na-onu-governo-e-sociedade-brasileiros-nao-toleram-corrupcao.html|título = Dilma na ONU: "Governo brasileiro e sociedade não toleram corrupção"|autor=''[[Época (revista)|Época]]''|data=28 de setembro de 2015}}</ref>
+|-
+|{{SWE}}
+|[[Estocolmo]]
+|[[18 de outubro|18]] - [[19 de outubro]]
+|[[Carlos XVI Gustavo da Suécia|Carlos XVI Gustavo]] /[[Stefan Löfven]]
+|Em Estocolmo, Dilma reuniu-se com o rei Carlos XVI Gustavo e o primeiro-ministro Stefan Löfven, além de ter visitado a fábrica da [[Saab AB|Saab]].<ref>{{Citar web|url=https://g1.globo.com/mundo/noticia/2015/10/na-suecia-dilma-entra-em-caca-gripen-ao-visitar-fabrica-da-saab.html|título = Na Suécia, Dilma entra em caça Gripen ao visitar fábrica da Saab"|autor=''[[G1]]''|data=19 de outubro de 2015}}</ref>
+|-
+|{{FIN}}
+|[[Helsínquia|Helsinque]]
+|[[20 de outubro]]
+|[[Sauli Niinistö]] / [[Juha Sipilä]]
+|Reuniu-se com o presidente Sauli Niinistö e o primeiro-ministro Juha Sipilä.<ref>{{Citar web|url=https://agenciabrasil.ebc.com.br/politica/noticia/2015-10/dilma-quer-ampliar-cooperacao-com-finlandia-para-formacao-de-professores|título =  Dilma quer ampliar cooperação com Finlândia para formação de professores "|autor=''[[Agência Brasil]]''|data=20 de outubro de 2015}}</ref>
+|-
+|{{TUR}}
+|[[Antália]]
+|[[14 de novembro|14]] - [[15 de novembro]]
+|[[Recep Tayyip Erdoğan]]
+|Dilma participou da [[10.ª reunião de cúpula do G20]].<ref>{{Citar web|url=http://observer.com/2015/11/is-president-dilma-rousseff-the-comeback-kid-of-brazil/|título=Is President Dilma Rousseff the comeback kid of Brazil?|autor=Pimenta, Angela|publicado='' The New York Observer''|data=23 de novembro de 2015}}</ref>
+|-
+|{{FRA}}
+|[[Paris]]
+|[[29 de novembro|29]] - [[30 de novembro]]
+|[[François Hollande]]
+|Participou da [[Conferência das Nações Unidas sobre as Mudanças Climáticas de 2015|Conferência das Nações Unidas sobre as Mudanças Climáticas de 2015.]]<ref>{{Citar web|url=https://g1.globo.com/natureza/noticia/2015/11/alinhada-uniao-europeia-dilma-pede-acordo-do-clima-com-forca-legal.html|título =  Dilma pede acordo do clima que seja transformado em lei dentro dos países "|autor=''[[H1]]''|data=30 de novembro de 2015}}</ref>
+|-
+|{{ARG}}
+|[[Buenos Aires]]
+|[[10 de dezembro]]
+|[[Mauricio Macri]]
+|Dilma participou da cerimônia de posse de Mauricio Macri como [[Presidente da Argentina]].<ref>{{Citar web|url=http://www.infobae.com/2015/12/10/1775689-dilma-rousseff-la-investidura-mauricio-macri-la-relacion-argentina-es-la-maxima-prioridad-brasil|título=Dilma Rousseff, tras la investidura de Mauricio Macri: 'La relación con Argentina es la máxima prioridad para Brasil'|publicado=''Infobae''|data=10 de dezembro de 2015}}</ref>
+|-
+|{{flag|Paraguai}}
+|[[Assunção]]
+|21 de dezembro de 2015
+|[[Horacio Cartes]]
+|Participou da reunião de cúpula dos chefes de Estado do [[MERCOSUL]].<ref>http://g1.globo.com/politica/noticia/2015/12/dilma-desembarca-em-assuncao-para-cupula-do-mercosul.html</ref>
+|}
+
+== 2016 ==
+{| class="wikitable" width=100%
+!width=13%|País
+!width=12%|Cidade/Região
+!width=15%|Período
+!width=13%|Anfitrião
+!width=60%|Notas
+|-
+|{{ECU}}
+|[[Quito]]
+|[[26 de janeiro|26]] - [[27 de janeiro]]
+|[[Rafael Correa]]
+|Dilma participou da IV Cúpula de Chefes de Estado e de Governo da [[Comunidade de Estados Latino-Americanos e Caribenhos|CELAC]].<ref name="planalto2016">{{Citar web|url=http://www2.planalto.gov.br/area-de-imprensa/relatorios-da-secretaria-de-imprensa/viagens-internacionais-2016.pdf|título=Viagens Internacionais da Presidenta da República em 2016|publicado=Palácio do Planalto|data=27 de janeiro de 2016}}</ref>
+|-
+|{{CHL}}
+|[[Santiago]]
+|[[27 de fevereiro]]
+|[[Michelle Bachelet]]
+|Dilma reuniu-se com a Presidente Michelle Bachelet na capital chilena e participou da reunião de cúpula da [[Comissão Econômica para a América Latina e o Caribe|CEPAL]].<ref name="planalto2016"/> No fim da viagem, reuniu-se com empresários brasileiros sobre investimentos no Chile.<ref>{{Citar web|url=http://g1.globo.com/politica/noticia/2016/02/dilma-se-reune-com-bachelet-em-visita-ao-chile.html|título=Dilma se reúne com Bachelet em visita ao Chile|publicado=''[[G1]]''|data=26 de fevereiro de 2016}}</ref>
+|-
+|{{EUA}}
+|[[Nova Iorque|Nova York]]
+|[[21 de abril|21]] - [[23 de abril]]
+|[[Barack Obama]]
+|Assinatura do Acordo de Paris sobre o clima, na sede da Organização das Nações Unidas ('''[[Organização das Nações Unidas|ONU]]''').<ref>{{Citar web|url=http://g1.globo.com/politica/processo-de-impeachment-de-dilma/noticia/2016/04/em-discurso-nos-eua-dilma-deve-dizer-que-e-vitima-de-golpe-no-brasil.html|titulo=Dilma deve viajar aos EUA e dizer que é vítima de 'golpe' no Brasil|data=2016-04-20|acessodata=2018-12-31|obra=Processo de Impeachment de Dilma|ultimo=G1|primeiro=Do|ultimo2=Brasília|primeiro2=em|lingua=pt-br}}</ref><ref>{{Citar web|url=https://oglobo.globo.com/sociedade/sustentabilidade/dilma-garante-que-acordo-do-clima-entra-em-vigor-de-imediato-no-brasil-19143912|titulo=Dilma garante que acordo do clima entra em vigor de imediato no Brasil|data=2016-04-22|acessodata=2018-12-31|obra=O Globo|lingua=pt-BR}}</ref>
+|}
+
+== Eventos multilaterais ==
+
+{| class="wikitable" style="font-size:80%; text-align:center;" width="70%"
+|-
+|}
+{| class="wikitable" style="font-size:80%; text-align:center;" width="70%"
+! rowspan="2" | Grupo
+! colspan="6" | Ano
+|-
+!2011
+!2012
+!2013
+!2014
+!2015
+!2016
+|-
+![[Comunidade dos Estados Latino-Americanos e Caribenhos|CELAC]]
+|01–02 de dezembro, {{VENb}} [[Caracas]]
+| style="background-color:#f7f7f7;" |
+''Nenhum''
+|26 de janeiro, {{CHLb}} [[Santiago]]
+|28 de janeiro, {{CUBb}} [[Havana]]
+|28–29 de janeiro, {{CRIb}} [[San José (Costa Rica)|San José]]
+|26–27 de janeiro, {{EQUb}} [[Quito]]
+|-
+![[UNASUL]]
+| style="background-color:#ffcfbc;" |
+29 de outubro, {{PARb}} [[Assunção]]
+| style="background-color:#ffcfbc;" |
+30 de novembro, {{PERb}} [[Lima]]
+|30 de agosto, {{SURb}} [[Paramaribo]]
+|04 de dezembro, {{EQUb}} [[Quito]]
+| style="background-color:#f7f7f7;" |
+''Nenhum''
+| style="background-color:#f7f7f7;" |
+''Nenhum''
+|-
+![[G20]]
+|03–04 de novembro, {{FRAb}} [[Cannes]]
+|18–19 de junho, {{MEXb}} [[Los Cabos]]
+|05–06 de setembro, {{RUSb}} [[São Petesburgo]]
+|15–16 de novembro, {{AUSb}} [[Brisbane]]
+|15–16 de novembro, {{TURb}} [[Antalya]]
+| style="background-color:#d6c9a7;" |
+04–05 de dezembro, {{CHNb}} [[Hancheu]]
+|-
+![[BRICS]]
+|14 de abril, {{CHNb}} [[Sanya]]
+|29 de março, {{INDb}} [[Nova Délhi]]
+|26–27 de março, {{RSAb}} [[Durban]]
+|15 de julho, {{BRAb}} [[Fortaleza]]
+|09 de julho, {{RUSb}} [[Ufá]]
+| style="background-color:#d6c9a7;" |
+15–16 de outubro, {{INDb}} [[Goa]]
+|-
+!rowspan=2| [[Mercado Comum do Sul|MERCOSUL]]
+|28–29 de junho, {{PARb}} [[Assunção]]
+|28–29 de junho, {{ARGb}} [[Mendoza]]
+| rowspan=2| 11–12 de julho, {{URUb}} [[Montevidéu]]
+|29 de julho, {{VENb}} [[Caracas]]
+|17 de julho, {{BRAb}} [[Brasília]]
+|rowspan=2 style="background-color:#f7f7f7;" |
+''Cancelado''
+|-
+|20 de dezembro, {{URUb}} [[Montevidéu]]
+|03–04 de dezembro, {{BRAb}} [[Brasília]]
+|17 de dezembro, {{ARGb}} [[Paraná (Argentina)|Paraná]]
+| style="background-color:#;" |
+21 de dezembro, {{PARb}} [[Assunção]]
+|-
+![[Organização dos Estados Americanos|OEA]]
+| style="background-color:#f7f7f7;" |
+''Nenhum''
+|14–15 de abril, {{COLb}} [[Cartagena das Índias]]
+| style="background-color:#f7f7f7;" |
+''Nenhum''
+| style="background-color:#f7f7f7;" |
+''Nenhum''
+|10–11 de abril, {{PANb}} [[Cidade do Panamá]]
+| style="background-color:#f7f7f7;" |
+''Nenhum''
+|-
+![[Organização dos Estados Ibero-americanos|OEI]]
+| style="background-color:#ffcfbc;" |
+28–29 de outubro, {{PARb}} [[Assunção]]
+|16–18 de novembro, {{ESPb}} [[Cádiz]]
+| style="background-color:#ffcfbc;" |
+16–18 de outubro, {{PANb}} [[Cidade do Panamá]]
+| style="background-color:#ffcfbc;" |
+8–9 de dezembro, {{MEXb}} [[Veracruz (cidade)|Veracruz]]
+| style="background-color:#f7f7f7;" |
+''Nenhum''
+| style="background-color:#d6c9a7;" |
+28–29 de outubro, {{COLb}} [[Cartagena das Índias]]
+|-
+![[Comunidade dos Países de Língua Portuguesa|CPLP]]
+| style="background-color:#f7f7f7;" |
+''Nenhum''
+| style="background-color:#ffcfbc;" |
+20 de julho, {{MOZb}} [[Maputo]]
+| style="background-color:#f7f7f7;" |
+''Nenhum''
+| style="background-color:#ffcfbc;" |
+23 de julho, {{TIMb}} [[Díli]]
+| style="background-color:#f7f7f7;" |
+''Nenhum''
+| style="background-color:#d6c9a7;" |
+17–18 de julho, {{BRAb}} [[Brasília]]
+|-
+![[Organização das Nações Unidas|ONU]]
+|18–22 de setembro, {{EUAb}} [[Nova Iorque]]
+|25 de setembro–01 de outubro, {{EUAb}} [[Nova Iorque]]
+|23–25 de setembro, {{EUAb}} [[Nova Iorque]]
+|24–30 de setembro, {{EUAb}} [[Nova Iorque]]
+|28 de setembro–03 de outubro, {{EUAb}} [[Nova Iorque]]
+| style="background-color:#d6c9a7;" |
+18–21 de setembro, {{EUAb}} [[Nova Iorque]]
+|-
+![[Fórum Econômico Mundial|FEM]]
+| style="background-color:#ffcfbc;" |
+26 de janeiro, {{SUIb}} [[Davos]]
+| style="background-color:#ffcfbc;" |
+25 de janeiro, {{SUIb}} [[Davos]]
+| style="background-color:#ffcfbc;" |
+23 de janeiro, {{SUIb}} [[Davos]]
+|23–24 de janeiro, {{SUIb}} [[Davos]]
+| style="background-color:#ffcfbc;" |
+23–25 de janeiro, {{SUIb}} [[Davos]]
+| style="background-color:#ffcfbc;" |
+20–23 de janeiro, {{SUIb}} [[Davos]]
+|}
+
+{{legenda|#ffcfbc|'''Não compareceu'''|borda=1px solid #808080;}}
+{{legenda|#d6c9a7|'''Afastada da presidência'''<ref>https://www.uol/noticias/especiais/impeachment-dilma-afastada.htm</ref>|borda=1px solid #808080;}}
+
+</center>
+{{caixa de sucessão
+| caixa  = sim
+| antes  = [[Lista de viagens presidenciais de Luiz Inácio Lula da Silva|Luiz Inácio Lula da Silva]]<br>{{Small|(2003-2010)}}
+| título = [[File:Coat of arms of Brazil.svg|80px]]<hr>[[Visita de Estado|Viagens diplomáticas]] de [[Lista de presidentes do Brasil|presidentes do Brasil]]<br>Dilma Rousseff<br>{{Small|(2011-2016)}}
+| depois = [[Lista de viagens presidenciais de Michel Temer |Michel Temer ]]<br>{{Small|(2016-2018)}}
+}}
+
+== Ver também ==
+
+* [[Lista de viagens presidenciais de Lula da Silva]]
+* [[Lista de viagens presidenciais de Michel Temer]]
+
+{{Referências|col=2}}
+{{caixa de sucessão
+| caixa  = sim
+| antes  = [[Lista de viagens presidenciais de Luiz Inácio Lula da Silva|Lula da Silva]]
+| título = [[Ficheiro:Coat of arms of Brazil.svg|80px]]<br>[[Visita de Estado|Viagens diplomáticas]] de [[Lista de presidentes do Brasil|Presidentes do Brasil]]<br>Dilma Rousseff
+| depois = [[Lista de viagens presidenciais de Michel Temer|Michel Temer]]
+}}
+{{Dilma Rousseff}}
+{{Governo Dilma Rousseff}}
+
+[[Categoria:Relações exteriores do Brasil]]
+[[Categoria:Governo Dilma Rousseff]]
+[[Categoria:Listas de viagens diplomáticas|Rousseff]]
+[[Categoria:Visitas diplomáticas por chefes de Estado|Rousseff]]
+[[Categoria:Visitas diplomáticas de presidentes brasileiros]]

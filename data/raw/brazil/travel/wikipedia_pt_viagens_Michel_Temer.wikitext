@@ -1,0 +1,310 @@
+Esta é uma '''lista de viagens presidenciais de [[Michel Temer]]''', o [[Lista de presidentes do Brasil|37º]] [[Presidente do Brasil]], empossado em [[31 de agosto]] de [[2016]] após o [[Impeachment de Dilma Rousseff|impeachment]] de [[Dilma Rousseff]].<ref>{{Citar web |url=http://www2.camara.leg.br/camaranoticias/noticias/POLITICA/515675-MICHEL-TEMER-TOMA-POSSE-COMO-PRESIDENTE-DA-REPUBLICA.html |título=Michel Temer toma posse como presidente da República |publicado=[[Câmara dos Deputados]] |acessadoem=21 de agosto de 2017}}</ref> Nesta lista constam as viagens de caráter diplomático realizadas por Michel Temer desde a sua [[Posse de Michel Temer|posse]], em 31 de agosto de 2016, até o fim do mandato, em 1 de janeiro de 2019.
+
+== Viagens por país ==
+<center>
+[[Ficheiro:Viagens presidenciais de Michel Temer.svg|thumb|600px|center|Viagens internacionais realizadas por Michel Temer como Presidente do Brasil (2016–2019).]]
+{| class="wikitable" width=80%
+! width="20%" | Número de visitas
+! width="80%" | País
+|-
+! 1 visita
+| {{hlist|{{ZAF}}|{{DEU}}|{{CPV}}|{{CHL}}|{{GUA}}|{{IND}}|{{JPN}}|{{MEX}}|{{NOR}}|{{PER}}|{{RUS}}|{{SUI}}|{{URU}}}}
+|-
+! 2 visitas
+| {{hlist|{{CHN}}|{{POR}}}}
+|-
+! 3 visitas
+| {{hlist|{{ARG}}|{{EUA}}|{{PRY}}}}
+|}
+</center>
+
+== 2016 ==
+{| class="wikitable" style="width: 100%; text-align: center; font-size: 100%; vertical-align: middle;"
+! class="unsortable" style="width:200px;" scope="col" colspan="2" | Imagem
+! style="width:15%;" scope="col" | País
+! style="width:15%;" scope="col" | Localidade
+! style="width:15%;" scope="col" | Período
+! style="width:55%;" scope="col" | Detalhes
+|-
+! 1
+| [[Ficheiro:Michel Temer e Xi Jinping.jpg|200px|Temer e o Presidente chinês Xi Jinping, em setembro de 2016.|alt=Dois homens apertando mãos e sorrindo.]]
+| {{CHN}}
+| [[Hangzhou]]<br />[[Xangai]]
+| [[2 de setembro|2–]][[5 de setembro]]
+| align="left" | Em 2 de setembro, Temer realizou sua primeira viagem como Presidente efetivo à China onde foi recebido pelo presidente da República Popular da China, [[Xi Jinping]] e participou da cúpula do [[G20]].<ref>{{Citar web |url=http://g1.globo.com/politica/processo-de-impeachment-de-dilma/noticia/2016/08/temer-embarca-para-china-e-participara-da-cupula-do-g20.html|título=Temer embarca para a China e participará da Cúpula do G20 |publicado=[[Portal G1]] |acessadoem=21 de agosto de 2017}}</ref> 
+|-
+! 2
+| [[Ficheiro:Michel Temer na ONU em 2016.jpg|200px|Temer discursa na Assembleia Geral das Nações Unidas, em setembro de 2016.|alt=Homem discursando ao microfone em tribuna.]]
+| {{EUA}}
+| [[Nova Iorque]]
+| [[18 de setembro|18–]][[21 de setembro]]
+| align="left" | Temer participou do Debate Geral da 71ª Sessão da [[Assembleia Geral das Nações Unidas]].<ref>{{Citar web |url=http://g1.globo.com/mundo/noticia/2016/09/temer-discursa-na-abertura-da-71-assembleia-geral-da-onu.html|título=Na ONU, Temer diz que impeachment de Dilma respeitou a Constituição |publicado=[[Portal G1]] |acessadoem=21 de agosto de 2017}}</ref> 
+|-
+! rowspan="2" | 3
+| rowspan="2" | [[Ficheiro:Macri Temer 7.jpg|200px|Temer e o Presidente argentino Mauricio Macri, em outubro de 2017|alt=Dois homens apertando mãos e sorrindo.]]
+| {{ARG}}
+| [[Buenos Aires]]
+| rowspan="2" | [[3 de outubro]]
+| align="left" | Temer foi recebido pelo [[Presidente da Argentina]], [[Mauricio Macri]], para uma série de reuniões sobre as relações comerciais entre os dois países. Entre os temas discutidos na primeira viagem oficial aos vizinhos da [[América do Sul]] estavam a situação fronteiriça dos países, a política interna do [[Mercosul]] e acordos internacionais do bloco.<ref>{{Citar web|url=http://g1.globo.com/politica/noticia/2016/10/temer-embarca-para-argentina-onde-fara-1-visita-oficial-como-presidente.html|título=Temer viaja para a Argentina e se reúne com Macri em Buenos Aires|publicado=[[Portal G1]] |acessadoem=21 de agosto de 2017}}</ref> 
+|-
+| {{PAR}}
+| [[Assunção (Paraguai)|Assunção]]
+| align="left" | Visita relâmpago com o objetivo, segundo o presidente de "intensificar as relações e aumentar o grau de amizade".<ref>{{Citar web|url=http://g1.globo.com/politica/noticia/2016/10/temer-viaja-ao-paraguai-para-visita-relampago-apos-agenda-na-argentina.html |título=Temer chega ao Paraguai para visita-relâmpago após agenda na Argentina|publicado=[[Portal G1]] |acessadoem=21 de agosto de 2017}}</ref> 
+|-
+! rowspan="2" | 4
+| [[Ficheiro:Brazilian President Michel Temer in Goa (2).jpg|200px|Temer e o Primeiro-ministro indiano Narendra Modi, em outubro de 2016.|alt=Dois homens apertando mãos e saudando.]]
+| {{IND}}
+| [[Goa]]
+| [[15 de outubro|15–]][[17 de outubro]]
+| align="left" | Temer participou da Reunião de Chefes de Estado e de Governo do [[BRICS]].<ref>{{Citar web |url=http://www.bbc.com/portuguese/brasil-37667750 |título=Temer estreia no Brics: cinco destaques da cúpula de Goa |publicado=[[BBC]] |acessadoem=21 de agosto de 2017}}</ref> 
+|-
+| [[Ficheiro:19 10 2016 - Encontro com Sua Majestade o Imperador Akihito (35673961812).jpg|200px|Temer e o Imperador Akihito no Palácio Imperial de Tóquio, em outubro de 2016.|alt=Dois homens sentados dialogando de mãos cruzadas.]]
+| {{JAP}}
+| [[Tóquio]]
+| [[18 de outubro|18–]][[19 de outubro]]
+| align="left" | A viagem de Temer ao Japão foi a primeira de um chefe de Estado brasileiro ao país em 11 anos.<ref>{{Citar web |url=http://g1.globo.com/mundo/noticia/2016/10/apos-cupula-na-india-temer-chega-toquio-para-visita-de-tres-dias.html |título=Após cúpula na Índia, Temer chega a Tóquio para visita de três diaso |publicado=[[Portal G1]] |acessadoem=21 de agosto de 2017}}</ref> 
+|}
+== 2017 ==
+{| class="wikitable" style="width: 100%; text-align: center; font-size: 100%; vertical-align: middle;"
+! class="unsortable" style="width:200px;" scope="col" colspan="2" | Imagem
+! style="width:15%;" scope="col" | País
+! style="width:15%;" scope="col" | Localidade
+! style="width:15%;" scope="col" | Período
+! style="width:55%;" scope="col" | Detalhes
+|-
+! 5
+| [[Ficheiro:Exéquias do ex-Presidente da República Portuguesa, Mário Soares 03.png|200px|Temer participa de funeral do Presidente português Mário Soares, em janeiro de 2017.]]
+| {{POR}}
+| [[Lisboa]]
+| [[10 de janeiro]]
+| Temer foi recebido oficialmente pelo [[Presidente de Portugal]], [[Marcelo Rebelo de Sousa]], para assistir ao funeral de Estado do ex-Presidente da República Portuguesa, [[Mário Soares]].<ref>{{Citar web |url=http://www1.folha.uol.com.br/poder/2017/01/1848268-em-meio-a-acao-de-cassacao-temer-viaja-com-mendes-para-portugal.shtml |título=Em meio a ação de cassação, Temer viaja com Mendes para Portugal
+|publicado=Folha de S. Paulo |acessadoem=21 de agosto de 2017}}</ref>
+|-
+! rowspan="2" | 6
+| [[Ficheiro:Vladimir Putin and Michel Temer (2017-06-21) 01.jpg|200px|O Presidente Michel Temer e o Presidente da Rússia, Vladimir Putin em 2017.]]
+| {{RUS}}
+| [[Moscou]]
+| [[20 de junho|20–]][[22 de junho]]
+| O presidente e a comitiva brasileira assistiram a uma apresentação do Balé Bolshoi, um dos mais famosos do mundo. Temer foi recebido pelo [[Presidente da Rússia]], [[Vladimir Putin]], para uma reunião bilateral para tratar de acordos comerciais e cooperação em diversas áreas estratégicas para os dois países.<ref>{{Citar web |url=http://g1.globo.com/politica/noticia/temer-desembarca-na-russia-para-visita-oficial-de-dois-dias.ghtml |título=Temer desembarca na Rússia para visita oficial de dois dias
+|publicado=[[Portal G1]] |acessadoem=21 de agosto de 2017}}</ref>
+|-
+| [[Ficheiro:Encontro com a Primeira-Ministra da Noruega, Erna Solberg.jpg|200px|Temer e a Primeira-ministra norueguesa Erna Solberg, em junho de 2017.]]
+| {{NOR}}
+| [[Oslo]]
+| [[22 de junho|22–]][[23 de junho]]
+| Temer e a [[Primeira-ministra da Noruega]], [[Erna Solberg]], discutiram comércio e meio ambiente.<ref>{{Citar web |url=http://g1.globo.com/mundo/noticia/temer-encontra-primeira-ministra-da-noruega-e-grupo-faz-manifestacao.ghtml |título=Encontro de Temer com primeira-ministra da Noruega tem manifestação em Oslo
+|publicado=''[[Portal G1]]''|acessadoem=21 de agosto de 2017}}</ref> 
+|-
+! 7
+| [[Ficheiro:Angela Merkel welcomes Michel Temer in Hamburg, July 2017 (2).jpg|200px|Temer e a Chanceler alemã Angela Merkel, em julho de 2017.]]
+| {{DEU}}
+| [[Berlim]]
+| [[7 de julho|7–]][[8 de julho]]
+| Presidente participou de reunião dos Chefes de Estado e de Governo do [[BRICS]] e sessão de trabalho da Cúpula do [[G20]].<ref>{{Citar web |url=https://noticias.uol.com.br/politica/ultimas-noticias/2017/07/06/temer-viaja-para-g20-na-alemanha-eunicio-assume-pela-primeira-vez.htm |título=Temer viaja para G20 na Alemanha; Eunício assume pela primeira vez
+|publicado=[[UOL]] |acessadoem=21 de agosto de 2017}}</ref> 
+|-
+! 8
+| [[Ficheiro:21-07-2017 - Foto oficial da Cúpula do Mercosul (35962563732).jpg|200px|Temer e líderes regionais na Cúpula do Mercosul, em julho de 2017.]]
+| {{ARG}}
+| [[Mendoza (Argentina)|Mendonza]]
+| [[21 de julho]]
+| Temer participou da 50ª Reunião do Conselho do Mercado Comum e Cúpula do Mercosul e Estados Associados, em Mendoza, na Argentina.<ref>{{Citar web |url=http://agenciabrasil.ebc.com.br/politica/noticia/2017-07/com-temer-brasil-assume-presidencia-temporaria-do-mercosul |título=Com Temer, Brasil assume presidência temporária do Mercosul
+|publicado=[[Portal EBC]] |acessadoem=21 de agosto de 2017}}</ref> 
+|-
+! rowspan="2"|9
+| [[Ficheiro:Encontro com Presidente da República Portuguesa, Marcelo Rebelo de Sousa.jpg|200px|Temer e o Presidente português Marcelo Rebelo de Sousa, em agosto de 2017.]]
+| {{POR}}
+| [[Lisboa]]
+| [[29 de agosto|29–]][[30 de agosto]]
+| Encontro com o [[Presidente da República Portuguesa]], [[Marcelo Rebelo de Sousa]].
+|-
+| [[Ficheiro:Michel Temer e Xi Jinping 2017.jpg|200px|Temer e o Presidente chinês Xi Jinping durante a Cúpula do BRICS, em agosto de 2017.]]
+| {{CHN}}
+| [[Pequim]]<br />[[Xiamen|Xiamei]]
+| [[31 de agosto|3 de agosto–]][[4 de setembro]]
+| Temer participou da 50ª Reunião do Conselho do Mercado Comum e Cúpula do Brics e falou com empresários do Brics.<ref>{{Citar web |url=http://g1.globo.com/politica/noticia/presidente-michel-temer-decide-antecipar-volta-ao-brasil.ghtml |título=Em viagem à China, Michel Temer decide antecipar volta ao Brasil
+|publicado=[[Portal G1]] |acessadoem=16 de novembro de 2017}}</ref>
+|-
+! 10
+| [[Ficheiro:19 09 2017 Abertura do Debate Geral da 72ª Sessão da Assembleia Geral da ONU (36946233750).jpg|200px|Temer discursa na Assembleia Geral das Nações Unidas, em setembro de 2017.]]
+| {{EUA}}
+| [[Nova Iorque]]
+| [[18 de setembro|18–]][[21 de setembro]]
+| Temer participou do Debate Geral da 72ª Sessão da [[Assembleia Geral das Nações Unidas]].<ref>{{Citar web |url=http://agenciabrasil.ebc.com.br/politica/noticia/2017-09/temer-embarca-para-os-eua-onde-tera-jantar-com-trump-e-discursara-na-onu |título=Temer viaja a Nova York para jantar com Trump e discursar na ONU
+|publicado=[[Portal EBC]] |acessadoem=16 de novembro de 2017}}</ref> 
+|-
+! 11
+| [[Ficheiro:MC11 opening ceremony, 10 December 2017 (27205294199).jpg|200px|Temer e o Presidente argentino Mauricio Macri, em dezembro de 2017.]]
+| {{ARG}}
+| [[Buenos Aires]]
+| [[10 de dezembro]]
+| Sessão de Abertura da XI Reunião Ministerial da Organização Mundial do Comércio.
+|}
+== 2018 ==
+{| class="wikitable" style="width: 100%; text-align: center; font-size: 100%; vertical-align: middle;"
+! class="unsortable" style="width:200px;" scope="col" colspan="2" | Imagem
+! style="width:15%;" scope="col" | País
+! style="width:15%;" scope="col" | Localidade
+! style="width:15%;" scope="col" | Período
+! style="width:55%;" scope="col" | Detalhes
+|-
+! 12
+| [[Ficheiro:Interview Arthur Gregg Sulzberger and Michel Temer - Davos - 24012018.jpg|200px|Temer concede entrevista durante o Fórum Econômico Mundial, em janeiro de 2018.]]
+| {{SUI}}
+| [[Davos]]
+| [[22 de janeiro|22–]][[25 de janeiro]]
+| Discurso na Sessão Plenária do Fórum Econômico Mundial.<ref>{{Citar web|titulo=Temer chega à Suíça para participar do Fórum Econômico Mundial|url=https://g1.globo.com/politica/noticia/temer-chega-a-suica-para-participar-do-forum-economico-mundial.ghtml|obra=G1|acessodata=2019-11-21|lingua=pt-br}}</ref>
+|-
+! 13
+| [[Ficheiro:Cambio de Mando 2018 (25881900747).jpg|200px|Temer participa da posse presidencial de Sebastián Piñera, em março de 2018.]]
+| {{CHL}}
+| [[Valparaíso (Chile)|Valparaíso]]
+| [[11 de março]]
+| align="left" | O presidente esteve presente na cerimônia de posse de Piñera. Fez encontros bilaterais com [[Mauricio Macri]], Presidente da Argentina e com [[Pedro Pablo Kuczynski]], Presidente do Peru, para conversar sobre Mercosul e Aliança do Pacífico. <ref>{{Citar periódico|titulo=Temer viaja neste domingo para posse de Sebastián Piñera como presidente do Chile|url=https://g1.globo.com/politica/noticia/temer-viaja-neste-domingo-para-posse-de-sebastian-pinera-como-presidente-do-chile.ghtml|jornal=G1|lingua=pt-BR}}</ref><ref>{{Citar periódico|data=2018-03-11|titulo=Temer teve três encontros bilaterais com líderes sul-americanos no Chile|url=https://oglobo.globo.com/economia/temer-teve-tres-encontros-bilaterais-com-lideres-sul-americanos-no-chile-22478356|jornal=O Globo|lingua=pt-BR}}</ref>
+|-
+! 14
+| [[Ficheiro:Clausura de la VIII Cumbre de las Américas (40566366845).jpg|200px|Temer participa da Cúpula das Américas, em abril de 2018.]]
+| {{PER}}
+| [[Lima]]
+| [[13 de abril|13–]][[14 de abril]] 
+| align="left" | O presidente foi a Lima onde reuniu-se com os outros presidentes da América Latina para a 8ª [[Cúpula das Américas]]. <ref>{{Citar periódico|titulo=Cúpula das Américas: novo governo do Peru mantém Maduro excluído|url=https://oglobo.globo.com/mundo/cupula-das-americas-novo-governo-do-peru-mantem-maduro-excluido-22553743|jornal=O Globo|lingua=pt-BR}}</ref>
+|-
+! 15
+| 
+| {{PRY}}
+| [[Assunção (Paraguai)|Assunção]]
+| [[18 de junho]]
+| align="left" | Sessão Plenária dos Presidentes dos Estados Partes do [[Mercado Comum do Sul|Mercosul]], Estados Associados e Convidados Especiais.
+|-
+! 16
+| [[Ficheiro:17 07 2018 Abertura Oficial da Conferência de Chefes de Estado e de Governo da CPLP (45569006372).jpg|200px|Temer discursa na Cúpula da CPLP, em julho de 2018.]]
+| {{CPV}}
+| [[Ilha do Sal]]
+| [[17 de julho|17–]][[18 de julho]]
+| align="left" | Conferência de Chefes de Estado e de Governo da [[Comunidade dos Países de Língua Portuguesa|CPLP]].<ref>{{Citar web|titulo=Temer transfere para Cabo Verde presidência da Comunidade dos Países de Língua Portuguesa|url=https://g1.globo.com/politica/noticia/temer-passa-para-cabo-verde-presidencia-da-comunidade-dos-paises-de-lingua-portuguesa.ghtml|obra=G1|acessodata=2019-11-21|lingua=pt-br}}</ref>
+|-
+! 17
+| 
+| {{MEX}}
+| [[Puerto Vallarta]]
+| [[23 de julho|23–]][[24 de julho]]
+| align="left" | Reunião dos Chefes de Estado do Mercosul e da Aliança do Pacífico.<ref>{{Citar web|titulo=Temer viaja para o México nesta segunda-feira; Cármen Lúcia assume Presidência da República pela 4ª vez|url=https://g1.globo.com/politica/noticia/2018/07/23/temer-viaja-para-o-mexico-nesta-segunda-feira-carmen-lucia-assume-presidencia-da-republica-pela-4a-vez.ghtml|obra=G1|acessodata=2019-11-21|lingua=pt-br}}</ref>
+|-
+! 18
+| [[Ficheiro:Foto de família dos Chefes de Estado e Governo do BRICS 2018-2.jpg|200px|Temer e líderes do BRICS, em julho de 2018.]]
+| {{ZAF}}
+| [[Joanesburgo]]
+| [[25 de julho|25–]][[27 de julho]]
+| align="left" | Esteve presente na [[Décima cúpula do BRICS|10.ª Cúpula]] de Chefes de Estado e de Governo do [[BRICS]].<ref>{{Citar web|titulo=Temer desembarca na África do Sul para participar da cúpula do Brics|url=https://g1.globo.com/politica/noticia/2018/07/25/temer-desembarca-na-africa-do-sul-para-participar-da-cupula-do-brics.ghtml|obra=G1|acessodata=2019-11-21|lingua=pt-br}}</ref>
+|-
+! 19
+| [[Ficheiro:15 08 2018 Cumprimentos ao Presidente e Vice-Presidente do Paraguai (44735264195).jpg|200px|Temer e o Presidente paraguaio Mario Abdo Benítez, em agosto de 2018.]]
+| {{PAR}} 
+| [[Assunção]]
+| [[15 de agosto]]
+| align="left" | Participou da cerimônia de posse do novo Presidente do Paraguai.<ref>{{Citar web|titulo=Temer viaja ao Paraguai para posse de Mario Benítez; Cármen Lúcia assume a Presidência da República pela 5ª vez|url=https://g1.globo.com/politica/noticia/2018/08/15/temer-viaja-ao-paraguai-para-posse-de-mario-benitez-carmen-lucia-assume-a-presidencia-da-republica-pela-5a-vez.ghtml|obra=G1|acessodata=2019-11-21|lingua=pt-br}}</ref>
+|-
+! 20
+| [[Ficheiro:25 09 2018 Abertura do Debate Geral da 73ª Sessão da Assembléia Geral da ONU (45665124291).jpg|200px|Temer discursa na Assembleia Geral das Nações Unidas, em setembro de 2018.]]
+| {{EUA}}
+| [[Nova Iorque]]
+| [[23 de setembro|23–]][[25 de setembro]]
+| align="left" | Temer participou do Debate Geral da 73ª Sessão da [[Assembleia Geral das Nações Unidas]].<ref>{{Citar web|titulo=Na abertura da Assembleia Geral da ONU, Michel Temer defende integração entre países|url=https://g1.globo.com/jornal-nacional/noticia/2018/09/25/na-abertura-da-assembleia-geral-da-onu-michel-temer-defende-integracao-entre-paises.ghtml|obra=G1|acessodata=2019-11-21|lingua=pt-br}}</ref>
+|-
+! 21
+| [[Ficheiro:15 11 2018 Chegada à Cidade da Guatemala (45909620641).jpg|200px|Temer na Cidade da Guatemala, em novembro de 2018.]]
+| {{GUA}}
+| [[Cidade da Guatemala]]
+| [[15 de novembro|15–]][[16 de novembro]]
+| align="left" | O presidente participou da cúpula da [[OEI]].
+|-
+! 22
+| [[Ficheiro:18 12 2018 Chegada ao Edifício MERCOSUL (45492684805).jpg|200px|Temer e o Presidente uruguaio Tabaré Vázquez na sede do Mercosul, em dezembro de 2018.]]
+| {{flag|Uruguai}}
+| [[Montevidéu]]
+| [[18 de dezembro]]
+| align="left" | Participou da cúpula do [[Mercosul]]. Encontro com os presidentes [[Tabaré Vázquez]], [[Mauricio Macri]] e [[Mario Abdo Benítez]].
+|}
+== Eventos multilaterais ==
+Temer compareceu aos seguintes eventos multilaterais durante seu mandato presidencial:
+<center>
+{| class="wikitable" style="font-size:90%; text-align:center;"
+! rowspan="2" | Organização
+! rowspan="2" | Evento
+! colspan="3" | [[Governo Temer]] (2016–2019)
+|-
+! [[2016]]
+! [[2017]]
+! [[2018]]
+|-
+! [[Organização das Nações Unidas|Nações Unidas]]
+| '''[[Assembleia Geral das Nações Unidas|Assembleia Geral]]'''
+| [[20 de setembro]],<br />{{EUAb}} [[Nova Iorque]]
+| [[19 de setembro]],<br />{{EUAb}} [[Nova Iorque]]
+| [[25 de setembro]],<br />{{EUAb}} [[Nova Iorque]]
+|-
+! [[G20]]
+| '''[[Reuniões de cúpula do G20|Cúpula do G20]]'''
+| [[11.ª reunião de cúpula do G20|4–5 de setembro]],<br />{{CHNb}} [[Hangzhou]]
+| [[12.ª reunião de cúpula do G20|7–8 de julho]],<br />{{DEUb}} [[Hamburgo]]
+| [[13.ª reunião de cúpula do G20|30 de novembro–1 de dezembro]],<br />{{ARGb}} [[Buenos Aires]]
+|-
+! [[BRICS]]
+| '''[[BRICS|Cúpula dos BRICS]]'''
+| [[Oitava cúpula do BRICS|15–16 de outubro]],<br />{{INDb}} [[Goa]]
+| [[Nona cúpula do BRICS|5–7 de setembro]],<br />{{CHNb}} [[Xiamen]]
+| [[Décima cúpula do BRICS|25–27 de julho]],<br />{{ZAFb}} [[Joanesburgo]]
+|-
+! [[Organização dos Estados Americanos|OEA]]
+| '''[[Cúpula das Américas]]'''
+| style="background:#D3D3D3;" colspan="2" | &mdash;
+| [[8.ª Cúpula das Américas|13–14 de abril]],<br />{{PERb}} [[Lima]]
+|-
+|-
+! rowspan="2" | [[Mercosul]]
+| rowspan="2" | '''[[Reuniões do Conselho do Mercado Comum|Cúpula do Mercosul]]'''
+| style="background:#D3D3D3;" rowspan="2" | &mdash;
+| [[21 de julho]],<br />{{ARGb}} [[Mendoza]]
+| [[18 de junho]],<br />{{PRYb}} [[Assunção (Paraguai)|Assunção]]
+|-
+| [[21 de dezembro]],<br />{{BRAb}} [[Brasília]]
+| [[18 de dezembro]],<br />{{URYb}} [[Montevidéu]]
+|-
+! [[Organização dos Estados Ibero-Americanos|OEI]]
+| '''[[Organização dos Estados Ibero-Americanos|Cúpula Ibero-Americana]]'''
+| style="background:#ffcccb;" | [[28 de outubro|28–]][[29 de outubro]],<br />{{COLb}} [[Cartagena das Índias]]
+| style="background:#D3D3D3;" | &mdash;
+| [[15 de novembro|15–]][[16 de novembro]],<br />{{GUAb}} [[Cidade da Guatemala]]
+|-
+! [[Comunidade dos Países de Língua Portuguesa|CPLP]]
+| '''[[Comunidade dos Países de Língua Portuguesa#Cimeiras/Cúpulas|Cúpula da CPLP]]'''
+| [[17 de julho|17–]][[18 de julho]],<br />{{BRAb}} [[Brasília]]
+| style="background:#D3D3D3;" | &mdash;
+| [[XII Conferência de Chefes de Estado e de Governo da Comunidade dos Países de Língua Portuguesa|17–18 de julho]],<br />{{CPVb}} [[Ilha do Sal]]
+|-
+! colspan="5" | {{legend|#90ee90|Evento anunciado ou previsto.}}{{legend|#D3D3D3|Evento não previsto ou cancelado.}}{{legend|#ffcccb|O dignitário não compareceu ao evento.}}
+|}
+</center>
+{{caixa de sucessão
+| caixa  = sim
+| antes  = [[Lista de viagens presidenciais de Dilma Rousseff|Dilma Rousseff]]<br>{{Small|(2011-2016)}}
+| título = [[File:Coat of arms of Brazil.svg|80px]]<hr>[[Visita de Estado|Viagens diplomáticas]] de [[Lista de presidentes do Brasil|presidentes do Brasil]]<br>Michel Temer<br>{{Small|(2016-2018)}}
+| depois = [[Lista de viagens presidenciais de Jair Bolsonaro|Jair Bolsonaro ]]<br>{{Small|(2019-2022)}}
+}}
+
+== Ver também ==
+* [[Lista de viagens presidenciais de Dilma Rousseff]]
+* [[Lista de viagens presidenciais de Jair Bolsonaro]]
+{{referências}}
+{{caixa de sucessão
+| caixa  = sim
+| antes  = [[Lista de viagens presidenciais de Dilma Rousseff|Dilma Rousseff]]
+| título = [[Ficheiro:Coat of arms of Brazil.svg|80px]]<br>[[Visita de Estado|Viagens diplomáticas]] de [[Lista de presidentes do Brasil|Presidentes do Brasil]]<br>Michel Temer
+| depois = [[Lista de viagens presidenciais de Jair Bolsonaro|Jair Bolsonaro]]
+}}
+{{Michel Temer}}
+{{Governo Michel Temer}}
+[[Categoria:Relações exteriores do Brasil]]
+[[Categoria:Visitas diplomáticas por chefes de Estado|Temer, Michel]]
+[[Categoria:Governo Michel Temer]]
+[[Categoria:Visitas diplomáticas de presidentes brasileiros]]
