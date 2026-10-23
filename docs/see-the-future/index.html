@@ -211,6 +211,7 @@ button.ghost{background:transparent; color:var(--muted); border:1.5px solid var(
     <p class="sub">Escolha até 3. São frases reais tiradas do programa de governo registrado no TSE — o modelo já simula o programa completo de qualquer forma, isso é só pra focar a sua leitura dos resultados.</p>
     <div class="policy-count">Selecionadas: <b id="policy-count">0</b>/3</div>
     <div class="policy-grid" id="policy-grid"></div>
+    <div class="preview-banner" id="scenario-preview" style="border-color:var(--accent-green);"></div>
     <div class="nav-row"><button class="ghost" onclick="goStep(0)">Voltar</button><button class="primary" onclick="goStep(2)">Continuar</button></div>
   </section>
 
@@ -485,6 +486,10 @@ function togglePolicy(id){
 }
 function updatePolicyCount(){
   document.getElementById('policy-count').textContent = state.policies.length;
+  const scenario = scenarioFromPicks(state.cand, state.policies);
+  document.getElementById('scenario-preview').innerHTML =
+    '<b>Com essas prioridades, vamos simular:</b> ' + CAND_META[state.cand].name + ' ' + SCENARIO_LABEL[scenario] +
+    (state.policies.length===0 ? ' <i>(o padrão do programa dele — escolha prioridades pra ver se isso muda)</i>' : '');
 }
 
 function setCorruption(v){
