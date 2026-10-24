@@ -4,6 +4,11 @@ Classify every country by how close it is to a "minimal state" and explore it ag
 
 Companion to the report "O Estado Mínimo: conceito, história e peso da iniciativa privada".
 
+## Live dashboards
+
+- [World dashboard](https://augustofm.github.io/minimal-state-world-dashboard/dashboard/index.html) — the cross-country minimal-state map and scores above.
+- [Brazil fiscal-scenario dashboard](https://augustofm.github.io/minimal-state-world-dashboard/dashboard/brazil.html) — Monte Carlo comparison of reduction/expansion scenarios vs the status-quo baseline, with the back-test gate verdict attached.
+
 ## Quick start
 ```
 pip install pandas requests
