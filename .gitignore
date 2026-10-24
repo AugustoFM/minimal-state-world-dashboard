@@ -9,6 +9,10 @@ data/processed/brazil/microdata/
 
 # Monte Carlo draw-level files are large and reproducible from the seed; only summaries are versioned.
 outputs/runs/draws/
+outputs/runs/*/draws/draw_results.csv.gz
+
+# graphify knowledge-graph cache: regenerable via `graphify update .`, not project content.
+graphify-out/
 
 # F1: full PLDO metas-fiscais annexes are 7-22 MB; only the extracted evaluation sections are versioned (hashes of both in SOURCES.md).
 data/raw/brazil/fiscal_delivery/*_anexo_iv_metas_fiscais.pdf

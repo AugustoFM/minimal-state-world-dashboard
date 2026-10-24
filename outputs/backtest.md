@@ -8,17 +8,21 @@
 
 No coefficient was tuned to improve these results. Calculations are offline and use checked-in observations and fixed model parameters.
 
+**Debt-level context (diagnostic, not a point forecast).** Tier 2 is expected to keep failing: its dominant residual is discretionary Treasury/BNDES/BCB stock-flow operations with no macro antecedent (see the Stock-flow adjustment section below). Rather than chase a point fix, `python -m src.debt_level_diagnostics` (`outputs/debt_level_diagnostics.md`) reports, with ranges: the probability of S0 breaching stated debt/GDP thresholds; the primary balance that would stabilise debt at each horizon's own rates and the gap to S0's actual projected balance; debt-level bands under Brazil's own stock-flow-adjustment history versus a cross-country emerging-panel alternative; and two off-to-the-side diagnostic variants of S0 itself (an estimated fiscal-reaction-function path, a nonlinear risk-premium path) -- never mixed into the R/E-vs-S0 policy grid. This does not and cannot make Tier 2 pass; it answers `outputs/debt_panel.md`'s "Implications for a lead-developer decision" with evidence instead of leaving them unimplemented.
+
 ## Gate v2
 
 | Tier | Test | Statistic | Tolerance / benchmark | Verdict |
 |---|---|---:|---:|---|
 | 1: differences vs S0 | Debt engine, one step ahead (2011-2024) | MAE 2.054 pp | <= 2.5 pp | PASS |
-| 1: differences vs S0 | Growth block (2006-2019) | absolute mean error 0.165 pp/yr | <= 0.5 pp/yr | PASS |
+| 1: differences vs S0 | Growth block, genuinely out-of-sample (2006-2019, TFP from 1996-2005) | absolute mean error 0.036 pp/yr | <= 0.5 pp/yr | PASS |
 | 1: differences vs S0 | C7 channel A OOS (2015-2024) | RMSE 3.004 pp | naive RMSE 3.881 pp; must be lower | PASS |
 | 2: levels | 2017-anchor zero-SFA recursion, 2024 | error +16.061 pp | absolute error <= 5 pp | FAIL (reported only) |
 | 2: levels | 2017-anchor with-SFA recursion, 2024 | error +12.472 pp | absolute error <= 5 pp | FAIL |
 
 All gate rules are lead-developer decisions dated 2026-10-21 in `config/d2_inputs_proposed.yaml`. C7 audit rows are read from `data/brazil/c7_backtest.csv`, not re-estimated.
+
+**Claude review (2026-10-23), fixed 2026-10-24:** the original growth-block Tier 1 check was not held out: its fixed TFP growth rate was the PWT CAGR over 2000-2019 (`config/parameters.yaml`), a window that fully contains the 2006-2019 test period, so a PASS there demonstrated internal consistency, not held-out predictive skill. That check is kept in the statistics table below as `growth_block` (`not_rated`, used only for the episode narrative), and the Tier 1 gate now rates a second statistic, `growth_block_oos`, which fixes TFP at the 1996-2005 window instead: the same equations, the same test period, but a TFP input estimated entirely before it, matching the debt one-step check (an accounting identity, no fitted parameter) and the C7 channel-A OOS check (fit 2000-2014, tested 2015-2024) in being genuinely held out.
 
 The level tolerance is absolute 2024 debt error <= 5 pp of GDP.
 
@@ -30,7 +34,8 @@ The level tolerance is absolute 2024 debt error <= 5 pp of GDP.
 | debt_engine_one_step | 1.358 | 2.054 | 2.390 | 0.991 | 0.707 | PASS |
 | debt_engine_zero_sfa_oos | 8.825 | 8.825 | 10.312 | 0.610 | 16.061 | FAIL |
 | debt_engine_with_sfa_oos | 7.071 | 7.071 | 8.223 | 0.701 | 12.472 | FAIL |
-| growth_block | 0.165 | 1.734 | 2.238 | 0.772 | 0.952 | PASS |
+| growth_block | 0.165 | 1.734 | 2.238 | 0.772 | 0.952 | not_rated |
+| growth_block_oos | -0.036 | 1.709 | 2.233 | 0.772 | 0.751 | PASS |
 | multiplier_total | -0.044 | 2.619 | 3.466 | -0.108 | -4.651 | not_rated |
 | multiplier_categories | 0.115 | 3.681 | 4.570 | -0.161 | -5.518 | not_rated |
 | inflation_pass_through | -0.890 | 1.751 | 2.047 | 0.505 | -1.270 | not_rated |
@@ -75,7 +80,7 @@ The operation labels provide balance-sheet context; they are not fitted annual v
 
 ## Growth accounting plus external block
 
-Observed PWT investment-derived capital accumulation, human capital and employment are used each year. TFP is fixed at the C2 central 2000-2019 rate and C6 is unchanged.
+Observed PWT investment-derived capital accumulation, human capital and employment are used each year. TFP is fixed at the C2 central 2000-2019 rate and C6 is unchanged. This is the `growth_block` row (in-sample consistency check, `not_rated`); the episode and annual-residual tables below use it because it matches the central C2 projection. The Tier 1 gate above is rated on the separate, genuinely out-of-sample `growth_block_oos` row (TFP fixed at the pre-2006 1996-2005 window) in the statistics table that follows.
 
 | Episode | Actual cumulative growth | Fixed-TFP factor model | C6 addition | Model total | Model - actual |
 |---|---:|---:|---:|---:|---:|

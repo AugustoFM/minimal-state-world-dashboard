@@ -333,6 +333,42 @@ def test_s0_debt_path_equals_textbook_recursion_with_sourced_inputs():
     assert s0["debt_gdp"].tolist() == pytest.approx(expected)
 
 
+def test_sfa_adjustment_is_sign_flipped_uniform_across_scenarios_and_additive():
+    baseline, population, scenarios, parameters, inputs = (
+        _baseline(), _population(), _scenarios(), _parameters(), _inputs()
+    )
+    plain = run_corner(baseline, population, scenarios, parameters, inputs, "central", "transitory")
+    # D2 convention: positive SFA = observed debt grew more than the identity implies (debt-increasing).
+    sfa = {2026: 2.0, 2027: -1.0}
+    with_sfa = run_corner(
+        baseline, population, scenarios, parameters, inputs, "central", "transitory",
+        sfa_adjustment_by_year=sfa,
+    )
+    s0_plain = plain.loc[plain["scenario"].eq("S0")].set_index("year")["debt_gdp"]
+    s0_sfa = with_sfa.loc[with_sfa["scenario"].eq("S0")].set_index("year")["debt_gdp"]
+    s1_plain = plain.loc[plain["scenario"].eq("S1")].set_index("year")["debt_gdp"]
+    s1_sfa = with_sfa.loc[with_sfa["scenario"].eq("S1")].set_index("year")["debt_gdp"]
+    # A positive (debt-increasing) SFA raises debt_gdp by exactly that amount in the year it hits,
+    # before any subsequent compounding, and does so identically regardless of scenario.
+    assert (s0_sfa.loc[2026] - s0_plain.loc[2026]) == pytest.approx(2.0)
+    assert (s1_sfa.loc[2026] - s1_plain.loc[2026]) == pytest.approx(2.0)
+    # A scenario-specific debt_adjustment_by_year (e.g. privatisation) stays additive with it.
+    adjusted_scenarios = copy.deepcopy(scenarios)
+    adjusted_scenarios["scenarios"]["R_mod"]["debt_adjustment_by_year"] = {2026: 0.5}
+    with_both = run_corner(
+        baseline, population, adjusted_scenarios, parameters, inputs, "central", "transitory",
+        sfa_adjustment_by_year=sfa,
+    )
+    with_adjustment_only = run_corner(
+        baseline, population, adjusted_scenarios, parameters, inputs, "central", "transitory",
+    )
+    r_mod_both = with_both.loc[with_both["scenario"].eq("R_mod")].set_index("year")["debt_gdp"]
+    r_mod_adjustment_only = with_adjustment_only.loc[
+        with_adjustment_only["scenario"].eq("R_mod")
+    ].set_index("year")["debt_gdp"]
+    assert (r_mod_both.loc[2026] - r_mod_adjustment_only.loc[2026]) == pytest.approx(2.0)
+
+
 def test_real_rate_path_zero_and_constant_offsets_match_scalar_rate():
     base = _inputs()
     zero = copy.deepcopy(base)

@@ -1,0 +1,581 @@
+<title>Veja o Futuro</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* layout: single-page wizard — urna eletrônica candidate picker, then stacked steps swapped via [hidden], then a reveal screen */
+:root{
+  --bg:#0b1220; --surface:#121b2e; --surface-2:#182544; --fg:#eef2f7; --muted:#8fa0b8;
+  --accent:#f2c14e; --accent-green:#2f9e5c; --accent-blue:#4f8fd1; --bad:#e2675c; --line:#243254;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:light){
+  :root:not([data-theme="dark"]){
+    --bg:#f6f3ea; --surface:#ffffff; --surface-2:#f0ece0; --fg:#171c26; --muted:#5c6577;
+    --accent:#a9710a; --accent-green:#1f7a44; --accent-blue:#1c5fae; --bad:#c0392b; --line:#e2dcc8;
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#f6f3ea; --surface:#ffffff; --surface-2:#f0ece0; --fg:#171c26; --muted:#5c6577;
+  --accent:#a9710a; --accent-green:#1f7a44; --accent-blue:#1c5fae; --bad:#c0392b; --line:#e2dcc8;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--fg); margin:0;
+  font-family:'Inter',system-ui,sans-serif; font-size:17px;
+  padding-left:max(16px, env(safe-area-inset-left,0px));
+  padding-right:max(16px, env(safe-area-inset-right,0px));
+}
+.wrap{max-width:720px; margin:0 auto; padding-block:28px 60px;}
+h1,h2,h3{font-family:'Fraunces',Georgia,serif; text-wrap:balance; margin:0;}
+.eyebrow{font-size:14px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); font-weight:600;}
+.lede{color:var(--muted); font-size:18px; line-height:1.55; max-width:62ch;}
+.preview-banner{
+  background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:14px 16px;
+  font-size:15px; color:var(--muted); margin-bottom:22px; line-height:1.55;
+}
+.preview-banner b{color:var(--fg)}
+header.hero{padding-block:4px 30px; display:flex; flex-direction:column; gap:14px;}
+header.hero h1{font-size:46px; line-height:1.03; letter-spacing:-.01em;}
+.flag-rule{height:3px; width:56px; border-radius:3px;
+  background:linear-gradient(90deg,var(--accent-green),var(--accent),var(--accent-blue));}
+
+.progress{display:flex; gap:6px; margin-bottom:22px;}
+.progress span{height:5px; flex:1; border-radius:3px; background:var(--line);}
+.progress span.active{background:var(--accent);}
+.progress span.done{background:var(--accent-green);}
+
+section.step{display:flex; flex-direction:column; gap:18px;}
+.step h2{font-size:28px;}
+.step .sub{color:var(--muted); font-size:16.5px; line-height:1.5; margin-top:-8px;}
+
+/* --- urna eletrônica --- */
+.urna{background:#2b2f33; border-radius:20px; padding:20px; display:flex; flex-direction:column; gap:16px;
+  box-shadow:0 10px 28px rgba(0,0,0,.3); max-width:460px; width:100%; margin:0 auto;}
+.urna-brand{color:#cfd6c6; font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.1em; text-align:center;}
+.urna-screen{background:#cfd6c6; border-radius:6px; padding:18px; display:flex; flex-direction:column; gap:10px;
+  min-height:128px; border:4px solid #15171a; justify-content:center;}
+.urna-screen-row{display:flex; justify-content:space-between; align-items:baseline; gap:8px;}
+.urna-label{font-family:'JetBrains Mono',monospace; font-size:13px; color:#1b2a1b;}
+.urna-digits{font-family:'JetBrains Mono',monospace; font-size:44px; font-weight:700; color:#15241a; letter-spacing:7px;}
+.urna-candidate{display:flex; gap:14px; align-items:center;}
+.urna-avatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'Fraunces',serif;font-weight:700;color:#fff;font-size:19px;flex:none;}
+.urna-cand-name{font-family:'Fraunces',serif; font-weight:600; color:#15241a; font-size:22px; line-height:1.15;}
+.urna-cand-party{font-family:'JetBrains Mono',monospace; font-size:13px; color:#3a4a3a;}
+.urna-msg{font-family:'JetBrains Mono',monospace; font-size:13px; color:#3a4a3a;}
+.urna-hint{text-align:center; font-size:13.5px; color:var(--muted);}
+.urna-keypad{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+.urna-keypad button{
+  padding:24px 0; border-radius:8px; border:none; background:#e9e9e9; color:#15171a;
+  font-family:'JetBrains Mono',monospace; font-weight:700; font-size:28px; cursor:pointer;
+}
+.urna-keypad button:active{transform:translateY(1px);}
+.urna-corrige{background:#dd8a2c!important; color:#241600!important; font-size:15px!important;}
+.urna-confirma{background:#3fae53!important; color:#06220f!important; font-size:15px!important;}
+.urna-confirma:disabled{opacity:.4; cursor:not-allowed;}
+
+.policy-count{font-size:15px; color:var(--muted); font-variant-numeric:tabular-nums;}
+.policy-count b{color:var(--accent);}
+.policy-grid{display:grid; grid-template-columns:1fr; gap:12px;}
+.policy-card{
+  background:var(--surface); border:1.5px solid var(--line); border-radius:14px; padding:16px;
+  display:flex; gap:14px; align-items:flex-start; cursor:pointer; text-align:left; color:var(--fg); font:inherit;
+  transition:border-color .15s;
+}
+.policy-card.selected{border-color:var(--accent-green); background:var(--surface-2);}
+.policy-card .box{
+  width:24px; height:24px; min-width:24px; border-radius:6px; border:1.5px solid var(--muted); margin-top:2px;
+  display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--bg);
+}
+.policy-card.selected .box{background:var(--accent-green); border-color:var(--accent-green); color:#fff;}
+.policy-card .txt b{font-size:17px;}
+.policy-card .txt p{margin:5px 0 0; font-size:15px; color:var(--muted); line-height:1.5;}
+.quote{font-style:italic;}
+
+.corruption-card{
+  background:linear-gradient(155deg, var(--surface-2), var(--surface));
+  border:1.5px solid var(--accent); border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:14px;
+}
+.corruption-card h3{font-size:21px;}
+.toggle-row{display:flex; gap:10px; flex-wrap:wrap;}
+.toggle-btn{
+  flex:1; min-width:150px; padding:17px 14px; border-radius:10px; border:1.5px solid var(--line); background:var(--surface);
+  color:var(--fg); font:inherit; font-weight:600; cursor:pointer; font-size:16.5px;
+}
+.toggle-btn.on-selected{border-color:var(--accent-green); background:rgba(47,158,92,.15);}
+.toggle-btn.off-selected{border-color:var(--bad); background:rgba(226,103,92,.12);}
+
+.horizon-row{display:flex; gap:10px; flex-wrap:wrap;}
+.horizon-btn{
+  flex:1; min-width:78px; padding:20px 8px; border-radius:10px; border:1.5px solid var(--line);
+  background:var(--surface); color:var(--fg); font-weight:700; cursor:pointer; text-align:center;
+  font-family:'JetBrains Mono',monospace; font-size:24px;
+}
+.horizon-btn.selected{border-color:var(--accent); background:var(--surface-2); color:var(--accent);}
+.horizon-btn small{display:block; font-family:'Inter',sans-serif; font-weight:400; font-size:13px; color:var(--muted); margin-top:4px;}
+
+.nav-row{display:flex; justify-content:space-between; gap:10px; margin-top:4px;}
+button.primary, button.ghost{
+  font:inherit; font-weight:700; border-radius:10px; padding:16px 24px; cursor:pointer; font-size:17px;
+}
+button.primary{background:var(--accent); color:#1a1304; border:none;}
+button.primary:disabled{opacity:.35; cursor:not-allowed;}
+button.ghost{background:transparent; color:var(--muted); border:1.5px solid var(--line);}
+
+.reveal-wrap{display:flex; flex-direction:column; gap:18px; align-items:center; text-align:center;}
+.spinner{
+  width:64px; height:64px; border-radius:50%; border:4px solid var(--line); border-top-color:var(--accent);
+  animation:spin 0.9s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.reveal-head{font-family:'Fraunces',serif; font-size:17px; color:var(--muted);}
+.result-meta{font-size:15.5px; color:var(--muted); line-height:1.6;}
+.result-meta b{color:var(--fg);}
+
+.story{
+  background:var(--surface); border:1.5px solid var(--line); border-left:4px solid var(--accent); border-radius:10px;
+  padding:18px; text-align:left; font-size:16px; line-height:1.6; width:100%;
+}
+.story .story-label{font-size:13px; text-transform:uppercase; letter-spacing:.06em; color:var(--accent); font-weight:700; margin-bottom:8px;}
+
+.grid6{display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%;}
+@media (max-width:420px){.grid6{grid-template-columns:1fr;}}
+.ind-tile{
+  background:var(--surface); border:1.5px solid var(--line); border-radius:14px; padding:16px; text-align:left;
+  display:flex; flex-direction:column; gap:5px;
+}
+.ind-tile .label{font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.03em; line-height:1.35;}
+.ind-tile .val{font-family:'JetBrains Mono',monospace; font-size:26px; font-variant-numeric:tabular-nums; font-weight:600; line-height:1.2;}
+.ind-tile .val.good{color:var(--accent-green);}
+.ind-tile .val.bad{color:var(--bad);}
+.ind-tile .ctx{font-size:13px; color:var(--muted);}
+
+.footer-note{font-size:13.5px; color:var(--muted); line-height:1.6; margin-top:10px; border-top:1px solid var(--line); padding-top:14px;}
+[hidden]{display:none!important;}
+</style>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">Simulador eleitoral &middot; Brasil 2026</div>
+    <h1>Veja o Futuro</h1>
+    <div class="flag-rule"></div>
+    <p class="lede">Vote como na urna. Escolha até 3 prioridades do programa do seu candidato, e veja uma projeção do Brasil em 5, 10, 15 ou 20 anos — traduzida em pessoas, reais e crianças, não só em porcentagem.</p>
+    <div class="preview-banner">
+      <b>Dados reais do modelo.</b> Cada rodada sorteia um resultado de verdade entre as simulações de Monte Carlo rodadas para esse candidato, essas prioridades e esse combate à corrupção — não são números inventados.
+    </div>
+  </header>
+
+  <div class="progress">
+    <span data-dot="0" class="active"></span><span data-dot="1"></span><span data-dot="2"></span>
+    <span data-dot="3"></span><span data-dot="4"></span>
+  </div>
+
+  <!-- STEP 0: urna -->
+  <section class="step" data-step="0">
+    <h2>Digite o número do seu candidato</h2>
+    <div class="urna">
+      <div class="urna-brand">URNA ELETRÔNICA &middot; ELEIÇÃO 2026 &middot; 2º TURNO</div>
+      <div class="urna-screen">
+        <div class="urna-screen-row">
+          <span class="urna-label">NÚMERO</span>
+          <span class="urna-digits" id="urna-digits">_ _</span>
+        </div>
+        <div class="urna-candidate" id="urna-candidate-preview" hidden>
+          <div class="urna-avatar" id="urna-avatar"></div>
+          <div>
+            <div class="urna-cand-name" id="urna-cand-name"></div>
+            <div class="urna-cand-party" id="urna-cand-party"></div>
+          </div>
+        </div>
+        <div class="urna-msg" id="urna-msg">Digite o número e aperte CONFIRMA</div>
+      </div>
+      <div class="urna-keypad">
+        <button onclick="urnaDigit('1')">1</button><button onclick="urnaDigit('2')">2</button><button onclick="urnaDigit('3')">3</button>
+        <button onclick="urnaDigit('4')">4</button><button onclick="urnaDigit('5')">5</button><button onclick="urnaDigit('6')">6</button>
+        <button onclick="urnaDigit('7')">7</button><button onclick="urnaDigit('8')">8</button><button onclick="urnaDigit('9')">9</button>
+        <button class="urna-corrige" onclick="urnaClear()">CORRIGE</button>
+        <button onclick="urnaDigit('0')">0</button>
+        <button class="urna-confirma" id="urna-confirma" onclick="urnaConfirm()" disabled>CONFIRMA</button>
+      </div>
+    </div>
+    <p class="urna-hint">Use o número oficial do partido no TSE para o 2º turno de 2026.</p>
+  </section>
+
+  <!-- STEP 1: policies -->
+  <section class="step" data-step="1" hidden>
+    <h2 id="policy-title">Quais promessas mais importam pra você?</h2>
+    <p class="sub">Escolha até 3. São frases reais tiradas do programa de governo registrado no TSE — o modelo já simula o programa completo de qualquer forma, isso é só pra focar a sua leitura dos resultados.</p>
+    <div class="policy-count">Selecionadas: <b id="policy-count">0</b>/3</div>
+    <div class="policy-grid" id="policy-grid"></div>
+    <div class="preview-banner" id="scenario-preview" style="border-color:var(--accent-green);"></div>
+    <div class="nav-row"><button class="ghost" onclick="goStep(0)">Voltar</button><button class="primary" onclick="goStep(2)">Continuar</button></div>
+  </section>
+
+  <!-- STEP 2: corruption toggle -->
+  <section class="step" data-step="2" hidden>
+    <h2>E se a promessa de combate à corrupção for cumprida de verdade?</h2>
+    <p class="sub">Os dois programas prometem medidas de integridade. O modelo testa isso à parte: menos desvio de recursos, compras públicas mais baratas, blindagem contra fraude no INSS e menor chance de um escândalo cortar o crescimento.</p>
+    <div class="corruption-card">
+      <h3 id="corruption-cand-name">Combate à corrupção</h3>
+      <div class="toggle-row">
+        <button class="toggle-btn" id="btn-corrupt-yes" onclick="setCorruption(true)">Cumpre a promessa</button>
+        <button class="toggle-btn" id="btn-corrupt-no" onclick="setCorruption(false)">Fica só no discurso</button>
+      </div>
+    </div>
+    <div class="nav-row"><button class="ghost" onclick="goStep(1)">Voltar</button><button class="primary" id="btn-to-3" disabled onclick="goStep(3)">Continuar</button></div>
+  </section>
+
+  <!-- STEP 3: horizon -->
+  <section class="step" data-step="3" hidden>
+    <h2>Quantos anos no futuro?</h2>
+    <p class="sub">O modelo compara cada cenário com o Brasil seguindo como está hoje (status quo), no mesmo horizonte.</p>
+    <div class="horizon-row">
+      <button class="horizon-btn" data-h="5" onclick="setHorizon(5)">5<small>2030</small></button>
+      <button class="horizon-btn" data-h="10" onclick="setHorizon(10)">10<small>2035</small></button>
+      <button class="horizon-btn" data-h="15" onclick="setHorizon(15)">15<small>2040</small></button>
+      <button class="horizon-btn" data-h="20" onclick="setHorizon(20)">20<small>2045</small></button>
+    </div>
+    <div class="nav-row"><button class="ghost" onclick="goStep(2)">Voltar</button><button class="primary" id="btn-reveal" disabled onclick="reveal()">Ver o futuro</button></div>
+  </section>
+
+  <!-- STEP 4: reveal -->
+  <section class="step" data-step="4" hidden>
+    <div class="reveal-wrap">
+      <div id="reveal-loading">
+        <div class="spinner"></div>
+        <p class="reveal-head">sorteando um dos futuros possíveis…</p>
+      </div>
+      <div id="reveal-result" hidden style="width:100%; display:flex; flex-direction:column; gap:16px; align-items:center;">
+        <h2 id="result-title" style="font-size:22px;"></h2>
+        <p class="result-meta" id="result-meta"></p>
+        <div class="story" id="result-story">
+          <div class="story-label">O que aconteceu nesses anos</div>
+          <div id="result-story-text"></div>
+        </div>
+        <div class="grid6" id="result-grid"></div>
+        <p class="result-meta" style="max-width:52ch;">Este é só <b>um</b> dos futuros possíveis sorteado pelo modelo — jogue de novo e o número muda, porque o futuro é incerto, não uma previsão exata.</p>
+        <div class="nav-row" style="width:100%;">
+          <button class="ghost" onclick="resetAll();">Jogar de novo</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    Comparação de propostas, não um endosso a nenhum candidato. Modelo de Monte Carlo (demografia do IBGE, fiscal do Tesouro, parâmetros de 20+ estudos revisados) comparando cada programa com o Brasil seguindo a política atual. Reais e pessoas são conversões aproximadas a partir do PIB per capita e da população projetada do IBGE para cada ano, não números oficiais do governo.
+  </div>
+</div>
+
+<script>
+// ---- plain-language policy menu, grounded in the real TSE programme text (config/programs_2026.yaml) ----
+// `lean` ties a card to a real model fork: picking it nudges which actual simulated scenario gets used.
+// Lula: L3/L4 lean toward "continuing his 2022-2025 spending trend" (P_lula_record); L2/L5/L6/L7 lean
+// toward "sticking to the new fiscal rule" (P_lula_rule, the default on a tie).
+// Flávio: F2 (deep administrative cuts) leans toward the high-intensity cut; F8 (new programmes) leans
+// toward the low-intensity cut; the rest (tax cuts, infrastructure, privatisation, INSS) are already part
+// of all three intensities, so they don't move the dial.
+const POLICIES = {
+  lula: [
+    {id:'L2', t:'Salário mínimo real', lean:'rule', d:'“Continuar a política de valorização real do salário mínimo” — ganho real de 0,6% a 2,5% ao ano.'},
+    {id:'L3', t:'Bolsa Família e transferências', lean:'record', d:'“Manter e ampliar o Bolsa Família, Pé-de-Meia, Farmácia Popular, Gás do Povo.”'},
+    {id:'L4', t:'Investimento público (Novo PAC)', lean:'record', d:'“Segunda edição do Novo PAC; continuidade das concessões.”'},
+    {id:'L5', t:'Justiça tributária', lean:'rule', d:'“Mais imposto sobre quem ganha mais, menos renúncias fiscais, reforma do consumo.”'},
+    {id:'L6', t:'Nenhum corte na Previdência', lean:'rule', d:'“Sem cortes de benefícios; diversificar o financiamento previdenciário.”'},
+    {id:'L7', t:'Pisos de saúde e educação', lean:'rule', d:'“Manter os pisos constitucionais de saúde e educação.”'},
+  ],
+  flavio: [
+    {id:'F2', t:'Tesourão no governo', lean:'high', d:'“Reforma administrativa: corte de ao menos 10 ministérios, fim dos supersalários.”'},
+    {id:'F3', t:'Brasil Mais Barato', lean:null, d:'“Reduzir a alíquota do novo imposto sobre consumo; cortar impostos sobre energia e combustíveis.”'},
+    {id:'F4', t:'Infraestrutura via PPP', lean:null, d:'“R$ 900 bi em 4 anos em transporte, via concessões, PPPs e BNDES.”'},
+    {id:'F5', t:'Privatizações', lean:null, d:'“Retomar o Programa Nacional de Desestatização, caso a caso.”'},
+    {id:'F6', t:'Fim da fila do INSS', lean:null, d:'“Pacote antifraude na Previdência; fim da fila do benefício.”'},
+    {id:'F8', t:'Novos programas sociais', lean:'low', d:'“Vale-creche, Casa Verde e Amarela, correção da tabela do SUS.”'},
+  ],
+};
+const BALLOT = {'13':'lula', '22':'flavio'};
+const CAND_META = {
+  lula:   {name:'Lula',              party:'13 · PT', avatarColor:'var(--accent-green)'},
+  flavio: {name:'Flávio Bolsonaro',  party:'22 · PL',  avatarColor:'var(--accent-blue)'},
+};
+const SCENARIO_LABEL = {
+  P_lula_rule:   'seguindo a nova regra fiscal (LC 200)',
+  P_lula_record: 'no ritmo de gastos que ele manteve em 2022-2025',
+  P_flavio_low:  'com um corte leve (1,0 pp do PIB)',
+  P_flavio_mid:  'com um corte médio (1,5 pp do PIB)',
+  P_flavio_high: 'com um corte profundo (2,0 pp do PIB)',
+};
+// Picks -> the real simulated scenario. Ties default to the candidate's own stated platform (rule / mid).
+function scenarioFromPicks(cand, picks){
+  const leans = picks.map(id => POLICIES[cand].find(p=>p.id===id).lean);
+  if(cand === 'lula'){
+    const record = leans.filter(l=>l==='record').length, rule = leans.filter(l=>l==='rule').length;
+    return record > rule ? 'P_lula_record' : 'P_lula_rule';
+  }
+  const high = leans.filter(l=>l==='high').length, low = leans.filter(l=>l==='low').length;
+  if(high > low) return 'P_flavio_high';
+  if(low > high) return 'P_flavio_low';
+  return 'P_flavio_mid';
+}
+
+// ---- real IBGE A2 population projections (data/brazil/population.csv, 2024 revision) and 2025 GDP anchors
+// (config/parameters.yaml: base_gdp_per_capita R$59,687.49/yr 2025; IBGE SIDRA 1846 GDP R$12,738.6bn 2025) ----
+const POP_TOTAL   = {2030:216973093, 2035:219367247, 2040:220386440, 2045:220045691};
+const POP_AGE0     = {2030:2248982,  2035:2135115,   2040:2043253,   2045:1952779};
+const POP_WORKING  = {2030:148758847,2035:149594746, 2040:148048781, 2045:143802877};
+const GDP_PER_CAPITA_2025_YEAR = 59687.49; // R$/person/year, 2025, IBGE
+
+function fmtBRL(v){
+  const s = Math.abs(v).toLocaleString('pt-BR', {maximumFractionDigits:0});
+  return (v<0?'-R$ ':'+R$ ') + s;
+}
+function fmtPeople(v){
+  const a = Math.abs(v);
+  let s;
+  if(a>=1000000) s = (a/1000000).toLocaleString('pt-BR',{maximumFractionDigits:2}) + ' milhões';
+  else if(a>=1000) s = (a/1000).toLocaleString('pt-BR',{maximumFractionDigits:1}) + ' mil';
+  else s = Math.round(a).toLocaleString('pt-BR');
+  return (v<0?'-':'+') + s;
+}
+function fmtChildren(v){
+  const a = Math.round(Math.abs(v));
+  return (v<0?'-':'+') + a.toLocaleString('pt-BR');
+}
+
+// INDICATORS: each raw placeholder draw carries a structural value in %, pp or points; `convert` turns it
+// into something concrete for the given horizon year, using the real population/GDP anchors above.
+const INDICATORS = [
+  {key:'gdp', label:'Produção por pessoa, por mês',
+    convert:(v,year)=> (v/100) * (GDP_PER_CAPITA_2025_YEAR/12),
+    fmt:fmtBRL, good:v=>v>0, ctx:'em termos de hoje, por pessoa — equivalente ao PIB per capita, não é renda disponível'},
+  {key:'debt', label:'Dívida pública por brasileiro',
+    convert:(v,year)=> (v/100) * GDP_PER_CAPITA_2025_YEAR,
+    fmt:fmtBRL, good:v=>v<0, ctx:'em termos de hoje, por pessoa, valor acumulado'},
+  {key:'unemp', label:'Pessoas sem emprego',
+    convert:(v,year)=> (v/100) * (POP_WORKING[year] || POP_WORKING[2035]),
+    fmt:fmtPeople, good:v=>v<0, ctx:'variação no número de pessoas em idade ativa sem trabalho'},
+  {key:'poverty', label:'Brasileiros vivendo na pobreza',
+    convert:(v,year)=> (v/100) * (POP_TOTAL[year] || POP_TOTAL[2035]),
+    fmt:fmtPeople, good:v=>v<0, ctx:'linha de pobreza de R$759/mês (Banco Mundial)'},
+  {key:'imr', label:'Crianças que não completam 1 ano, por ano',
+    convert:(v,year)=> (v/1000) * (POP_AGE0[year] || POP_AGE0[2035]),
+    fmt:fmtChildren, good:v=>v<0, ctx:'estimativa aproximada, usando nascimentos projetados pelo IBGE'},
+  {key:'gini', label:'Desigualdade (Gini)',
+    convert:(v,year)=> v,
+    fmt:v=>(v>0?'+':'')+v.toFixed(3), good:v=>v<0, ctx:'escala de 0 (renda igual p/ todos) a 1 (1 pessoa tem tudo)'},
+];
+
+// ---- narrative templates per candidate x corruption-toggle, grounded in the real package composition
+// (config/programs_2026.yaml model_parameters) and governance channels (docs/governance.md, docs/w3_anticorruption.md) ----
+const STORY = {
+  lula_true: "O programa de Lula simulado aqui comprime principalmente despesas discricionárias e subsídios — por regra, os pisos de saúde e educação e os benefícios previdenciários ficam protegidos. Com o combate à corrupção funcionando de verdade, uma fatia maior do dinheiro que historicamente se perdia no caminho (entre 2,8% e 13% dos gastos sociais, segundo auditorias da CGU) chega a quem precisa, e cai o risco de um escândalo do tamanho da Lava Jato (estimada em 1% a 3,6% do PIB) travar o crescimento. Neste sorteio, isso ajudou a {imr_phrase} e {gdp_phrase}.",
+  lula_false: "O programa de Lula simulado aqui comprime principalmente despesas discricionárias e subsídios — por regra, os pisos de saúde e educação e os benefícios previdenciários ficam protegidos. Sem um combate à corrupção mais forte, o vazamento histórico de 2,8% a 13% dos gastos sociais (CGU) continua do jeito que está, e um escândalo do tamanho da Lava Jato (1% a 3,6% do PIB, por estimativa) permanece tão provável quanto hoje. Neste sorteio, isso significou {imr_phrase} e {gdp_phrase}.",
+  flavio_true: "O programa de Flávio simulado aqui tira metade do ajuste de aposentadorias e benefícios e 30% de eficiência/administração de saúde e educação — mais perto do SUS do que no programa de Lula. Com o combate à corrupção funcionando de verdade, parte desse aperto é compensada: menos dinheiro se perde no caminho e cai o risco de um escândalo custar crescimento. Neste sorteio, isso significou {imr_phrase} e {gdp_phrase}.",
+  flavio_false: "O programa de Flávio simulado aqui tira metade do ajuste de aposentadorias e benefícios e 30% de eficiência/administração de saúde e educação — a parte do orçamento mais perto do SUS e da escola pública. Sem um combate à corrupção mais forte para compensar, esse corte chega mais direto aos serviços, e o risco histórico de um grande escândalo (1% a 3,6% do PIB, como a Lava Jato) segue no mesmo nível de hoje. Neste sorteio, isso significou {imr_phrase} e {gdp_phrase}.",
+};
+
+function seededSample(seed){
+  let s = seed >>> 0;
+  return ()=>{ s = (s*1664525+1013904223)>>>0; return s/4294967296; };
+}
+function makePlaceholderDraws(cand, corrupt, horizon, n){
+  const base = {
+    lula:   {gdp:-0.3, debt:-2, unemp:-0.1, poverty:-0.4, gini:-0.004, imr:-0.05},
+    flavio: {gdp:0.4, debt:-6, unemp:0.15, poverty:0.3, gini:0.003, imr:0.03},
+  }[cand];
+  const horizonScale = horizon/10;
+  const corruptBonus = corrupt ? {gdp:0.3, debt:-1.5, unemp:-0.05, poverty:-0.3, gini:-0.002, imr:-0.08} : {gdp:0,debt:0,unemp:0,poverty:0,gini:0,imr:0};
+  const rnd = seededSample(cand.length*97 + (corrupt?13:7) + horizon*31 + Math.floor(Math.random()*1e6));
+  const draws = [];
+  for(let i=0;i<n;i++){
+    const d = {persistent: rnd()<0.5};
+    INDICATORS.forEach(ind=>{
+      const centre = (base[ind.key]+corruptBonus[ind.key]) * horizonScale * (d.persistent?1:0.3);
+      const noise = (rnd()-0.5) * Math.abs(centre||0.5) * 1.6;
+      d[ind.key] = centre + noise;
+    });
+    draws.push(d);
+  }
+  return draws;
+}
+
+let state = {cand:null, policies:[], corrupt:null, horizon:null};
+let urnaBuffer = '', urnaPending = null;
+let REAL_DATA = null;
+(async function loadRealData(){
+  try{
+    const res = await fetch('game_data.json');
+    if(res.ok) REAL_DATA = await res.json();
+  }catch(e){ /* no real data published yet — placeholder draws are used instead */ }
+})();
+
+function goStep(n){
+  document.querySelectorAll('section.step').forEach(s=>s.hidden = (+s.dataset.step !== n));
+  document.querySelectorAll('.progress span').forEach((s,i)=>{
+    s.classList.remove('active','done');
+    if(i<n) s.classList.add('done'); else if(i===n) s.classList.add('active');
+  });
+  if(n===1) renderPolicies();
+  if(n===2) document.getElementById('corruption-cand-name').textContent = 'Combate à corrupção — ' + CAND_META[state.cand].name;
+}
+
+function urnaDigit(d){
+  if(urnaBuffer.length>=2) return;
+  urnaBuffer += d;
+  renderUrna();
+}
+function urnaClear(){ urnaBuffer=''; renderUrna(); }
+function renderUrna(){
+  document.getElementById('urna-digits').textContent = (urnaBuffer+'__').slice(0,2).split('').join(' ');
+  const confirmBtn = document.getElementById('urna-confirma');
+  const preview = document.getElementById('urna-candidate-preview');
+  const msg = document.getElementById('urna-msg');
+  if(urnaBuffer.length===2){
+    const key = BALLOT[urnaBuffer];
+    if(key){
+      preview.hidden=false;
+      document.getElementById('urna-avatar').textContent = key==='lula'?'L':'F';
+      document.getElementById('urna-avatar').style.background = CAND_META[key].avatarColor;
+      document.getElementById('urna-cand-name').textContent = CAND_META[key].name;
+      document.getElementById('urna-cand-party').textContent = CAND_META[key].party;
+      msg.textContent='Aperte CONFIRMA para votar';
+      confirmBtn.disabled=false;
+      urnaPending = key;
+    } else {
+      preview.hidden=true;
+      msg.textContent='NÚMERO INVÁLIDO — aperte CORRIGE';
+      confirmBtn.disabled=true;
+      urnaPending = null;
+    }
+  } else {
+    preview.hidden=true;
+    msg.textContent='Digite o número e aperte CONFIRMA';
+    confirmBtn.disabled=true;
+    urnaPending=null;
+  }
+}
+function urnaConfirm(){
+  if(!urnaPending) return;
+  state.cand = urnaPending; state.policies = []; state.corrupt = null;
+  document.getElementById('policy-title').textContent = 'Quais promessas de ' + CAND_META[state.cand].name + ' mais importam pra você?';
+  urnaBuffer=''; urnaPending=null;
+  goStep(1);
+}
+
+function renderPolicies(){
+  const grid = document.getElementById('policy-grid');
+  grid.innerHTML = '';
+  POLICIES[state.cand].forEach(p=>{
+    const sel = state.policies.includes(p.id);
+    const btn = document.createElement('button');
+    btn.className = 'policy-card' + (sel?' selected':'');
+    btn.innerHTML = `<div class="box">${sel?'✓':''}</div><div class="txt"><b>${p.t}</b><p class="quote">${p.d}</p></div>`;
+    btn.onclick = ()=>togglePolicy(p.id);
+    grid.appendChild(btn);
+  });
+  updatePolicyCount();
+}
+function togglePolicy(id){
+  const i = state.policies.indexOf(id);
+  if(i>=0){ state.policies.splice(i,1); }
+  else if(state.policies.length<3){ state.policies.push(id); }
+  renderPolicies();
+}
+function updatePolicyCount(){
+  document.getElementById('policy-count').textContent = state.policies.length;
+  const scenario = scenarioFromPicks(state.cand, state.policies);
+  document.getElementById('scenario-preview').innerHTML =
+    '<b>Com essas prioridades, vamos simular:</b> ' + CAND_META[state.cand].name + ' ' + SCENARIO_LABEL[scenario] +
+    (state.policies.length===0 ? ' <i>(o padrão do programa dele — escolha prioridades pra ver se isso muda)</i>' : '');
+}
+
+function setCorruption(v){
+  state.corrupt = v;
+  document.getElementById('btn-corrupt-yes').classList.toggle('on-selected', v===true);
+  document.getElementById('btn-corrupt-no').classList.toggle('off-selected', v===false);
+  document.getElementById('btn-to-3').disabled = false;
+}
+
+function setHorizon(h){
+  state.horizon = h;
+  document.querySelectorAll('.horizon-btn').forEach(el=>el.classList.toggle('selected', +el.dataset.h===h));
+  document.getElementById('btn-reveal').disabled = false;
+}
+
+function reveal(){
+  goStep(4);
+  document.getElementById('reveal-loading').hidden = false;
+  document.getElementById('reveal-result').hidden = true;
+  setTimeout(()=>{
+    const year = 2025+state.horizon;
+    const scenario = scenarioFromPicks(state.cand, state.policies);
+    const corruptKey = state.corrupt ? 'on' : 'off';
+    const realRows = REAL_DATA && REAL_DATA[scenario] && REAL_DATA[scenario][corruptKey] && REAL_DATA[scenario][corruptKey][String(state.horizon)];
+    let draw, isReal;
+    if(realRows && realRows.length){
+      const row = realRows[Math.floor(Math.random()*realRows.length)];
+      draw = {gdp:row[0], debt:row[1], unemp:row[2], poverty:row[3], imr:row[4], gini:row[5], persistent: row[6]===1};
+      isReal = true;
+    } else {
+      const draws = makePlaceholderDraws(state.cand, state.corrupt, state.horizon, 24);
+      draw = draws[Math.floor(Math.random()*draws.length)];
+      isReal = false;
+    }
+    document.getElementById('result-title').textContent = CAND_META[state.cand].name + ' em ' + year;
+    document.getElementById('result-meta').innerHTML =
+      'Simulação: <b>' + CAND_META[state.cand].name + ' ' + SCENARIO_LABEL[scenario] + '</b><br>' +
+      'Combate à corrupção: <b>' + (state.corrupt?'cumprida':'não cumprida') + '</b> &middot; ' +
+      'horizonte: <b>' + state.horizon + ' anos</b> &middot; comparado ao status quo<br>' +
+      'Efeito do ajuste fiscal na economia, neste sorteio: <b>' +
+      (draw.persistent ? 'permanente — virou o novo normal' : 'temporário — passou em poucos anos') + '</b>' +
+      (isReal ? '' : ' &middot; <span style="color:var(--bad)">dados de exemplo — simulação real ainda não carregada</span>');
+
+    const converted = {};
+    INDICATORS.forEach(ind=>{ converted[ind.key] = ind.convert(draw[ind.key], year); });
+
+    const grid = document.getElementById('result-grid');
+    grid.innerHTML = '';
+    INDICATORS.forEach(ind=>{
+      const v = converted[ind.key];
+      const tile = document.createElement('div');
+      tile.className = 'ind-tile';
+      tile.innerHTML = `<div class="label">${ind.label}</div><div class="val ${ind.good(v)?'good':'bad'}">${ind.fmt(v)}</div><div class="ctx">${ind.ctx}</div>`;
+      grid.appendChild(tile);
+    });
+
+    const imrAbs = Math.round(Math.abs(converted.imr));
+    const imrPhrase = Math.abs(converted.imr) < 1
+      ? 'manter a mortalidade infantil quase sem mudança'
+      : (converted.imr < 0
+          ? `evitar a morte de cerca de ${imrAbs} crianças por ano antes de completarem 1 ano`
+          : `cerca de ${imrAbs} crianças a mais morrendo por ano antes de completarem 1 ano`);
+    const gdpAbs = Math.abs(converted.gdp).toLocaleString('pt-BR',{maximumFractionDigits:0});
+    const gdpPhrase = Math.abs(converted.gdp) < 1
+      ? 'quase nenhuma mudança na produção por pessoa — neste sorteio, o efeito foi tratado como temporário e já tinha passado'
+      : (converted.gdp >= 0
+          ? `uma produção cerca de R$ ${gdpAbs} maior por pessoa, por mês`
+          : `uma produção cerca de R$ ${gdpAbs} menor por pessoa, por mês`);
+    const storyKey = state.cand + '_' + state.corrupt;
+    document.getElementById('result-story-text').textContent =
+      STORY[storyKey].replace('{imr_phrase}', imrPhrase).replace('{gdp_phrase}', gdpPhrase);
+
+    document.getElementById('reveal-loading').hidden = true;
+    document.getElementById('reveal-result').hidden = false;
+  }, 900);
+}
+
+function resetAll(){
+  state = {cand:null, policies:[], corrupt:null, horizon:null};
+  urnaBuffer=''; urnaPending=null;
+  renderUrna();
+  document.getElementById('btn-to-3').disabled = true;
+  document.getElementById('btn-reveal').disabled = true;
+  document.querySelectorAll('.toggle-btn').forEach(el=>el.classList.remove('on-selected','off-selected'));
+  document.querySelectorAll('.horizon-btn').forEach(el=>el.classList.remove('selected'));
+  goStep(0);
+}
+renderUrna();
+</script>

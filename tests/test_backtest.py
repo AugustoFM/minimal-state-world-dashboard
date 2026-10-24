@@ -53,6 +53,7 @@ def test_result_rows_are_unique_and_complete() -> None:
         "debt_engine_zero_sfa_oos": 8,
         "debt_engine_with_sfa_oos": 8,
         "growth_block": 14,
+        "growth_block_oos": 14,
         "multiplier_total": 15,
         "multiplier_categories": 15,
         "inflation_pass_through": 20,
@@ -120,12 +121,37 @@ def test_two_tier_gate_logic(
 ) -> None:
     stats = pd.DataFrame([
         {"test": "debt_engine_one_step", "mae": one_step_mae},
-        {"test": "growth_block", "mean_error": growth_mean},
+        {"test": "growth_block_oos", "mean_error": growth_mean},
         {"test": "c7_channel_a_oos", "rmse": c7_rmse, "naive_rmse": naive_rmse},
         {"test": "debt_engine_with_sfa_oos", "final_error": sfa_final},
     ])
     verdicts = backtest.gate_verdicts(stats, backtest._yaml(backtest.DEFAULT_PATHS["d2"]))
     assert verdicts == {"tier_1_differences_vs_s0": tier1, "tier_2_levels": tier2}
+
+
+def test_growth_block_oos_tfp_window_is_disjoint_from_test_period() -> None:
+    parameters = backtest._yaml(backtest.DEFAULT_PATHS["parameters"])
+    tfp_periods = parameters["growth_calibration"]["tfp_periods"]
+    test_start, test_end = 2006, 2019
+
+    in_sample_start, in_sample_end = (int(x) for x in tfp_periods["central"])
+    assert in_sample_start <= test_end and in_sample_end >= test_start, (
+        "growth_block's TFP window is documented as overlapping the test period; "
+        "if this changes, the 'in-sample consistency check' framing in outputs/backtest.md is stale"
+    )
+
+    oos_start, oos_end = (int(x) for x in tfp_periods["pre_2006_backtest_oos"])
+    assert oos_end < test_start, "growth_block_oos's TFP window must end strictly before the test period starts"
+
+
+def test_build_growth_test_rates_only_the_oos_window() -> None:
+    parameters = backtest._yaml(backtest.DEFAULT_PATHS["parameters"])
+    wide = backtest.observed_wide(backtest.DEFAULT_PATHS["observed"])
+    results = backtest.build_growth_test(wide, parameters, backtest.DEFAULT_PATHS["pwt"])
+    stats = backtest.statistics_table(results, backtest._yaml(backtest.DEFAULT_PATHS["d2"]))
+    lookup = stats.set_index("test")
+    assert lookup.loc["growth_block", "status"] == "not_rated"
+    assert lookup.loc["growth_block_oos", "status"] in {"PASS", "FAIL"}
 
 
 def test_sfa_estimation_stops_at_2017_and_zero_mean_reproduces_zero_sfa() -> None:

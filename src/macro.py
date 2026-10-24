@@ -742,8 +742,19 @@ def run_corner(
     inputs: Mapping,
     variant: str,
     persistence: str,
+    sfa_adjustment_by_year: Mapping[int, float] | None = None,
 ) -> pd.DataFrame:
-    """Evaluate one aligned low/central/high parameter corner."""
+    """Evaluate one aligned low/central/high parameter corner.
+
+    `sfa_adjustment_by_year` (pp GDP, keyed by year) is a stock-flow-adjustment
+    noise term applied identically to every scenario, on top of any
+    scenario-specific `debt_adjustment_by_year` (e.g. privatisation): it
+    represents historical debt-level reconciliation uncertainty, not a policy
+    choice. It is not an exact cancellation in differences vs S0 over
+    multiple years, because each scenario's own GDP effect feeds the
+    nominal-growth denominator of the debt recursion, but the shock itself
+    does not favour any scenario.
+    """
     spending, package_gaps = build_spending_paths(annual_baseline, scenarios, variant)
     multipliers = multiplier_by_package(parameters, variant)
     if multipliers["revenue"].get("configured") is False and (
@@ -752,6 +763,13 @@ def run_corner(
         raise ValueError("A scenario sets revenue_by_year but no total_revenue multiplier is configured")
     effects = multiplier_level_effect(package_gaps, multipliers, persistence)
     frame = spending.merge(effects, on=["year", "scenario"], validate="one_to_one")
+    if sfa_adjustment_by_year:
+        # sfa_adjustment_by_year follows D2's sign (positive = observed debt
+        # higher than the one-step prediction, i.e. debt-increasing), while
+        # debt_adjustment_pp is debt retired (positive = debt-reducing), so
+        # it enters with the opposite sign.
+        sfa = frame["year"].map(sfa_adjustment_by_year).fillna(0.0)
+        frame["debt_adjustment_pp"] = frame["debt_adjustment_pp"] - sfa
     start_year, end_year = int(frame["year"].min()), int(frame["year"].max())
     growth = baseline_real_gdp_path(population, start_year, end_year, inputs, variant)
     frame = frame.merge(growth, on="year", how="left", validate="many_to_one")

@@ -50,7 +50,7 @@ cpi_sensitivity:
   phase_in_method: linear
   cross_country_cpi_sd_points: 20.0
   cross_country_cpi_sd_status: to_verify
-  cross_country_cpi_sd_note: "placeholder on the modern 0-100 CPI scale; verify before reporting results"
+  cross_country_cpi_sd_note: "placeholder on the modern 0-100 CPI scale; verify before reporting results. Claude review (2026-10-23): Transparency International's published methodology deliberately rescales each year's sources against the 2012 baseline so that baseline-year scores have mean ~45 and SD ~20 (transparency.org CPI methodology); this corroborates 20 as plausible but is the baseline design target, not a direct computation from a current-year CPI dataset, so the flag stays to_verify."
   source: "Gründler and Potrafke (2019), ifo Working Paper 309; European Journal of Political Economy"
   source_flag: "paper estimate; CPI scale conversion input to_verify"
   scope: "one standard deviation of the reversed CPI is associated with about 17% cumulative long-run real GDP per capita"

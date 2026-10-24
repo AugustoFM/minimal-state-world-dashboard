@@ -316,13 +316,25 @@ def growth_backtest_pwt(
     return pd.DataFrame(records).loc[lambda x: x["year"].between(start_year, end_year)].reset_index(drop=True)
 
 
+def _tfp_window_cagr(pwt: pd.DataFrame, parameters: Mapping, window_key: str) -> float:
+    tfp_start, tfp_end = (int(x) for x in parameters["growth_calibration"]["tfp_periods"][window_key])
+    tfp = pwt.set_index("year")["rtfpna"]
+    return ((float(tfp.loc[tfp_end]) / float(tfp.loc[tfp_start])) ** (1.0 / (tfp_end - tfp_start)) - 1.0) * 100.0
+
+
 def build_growth_test(wide: pd.DataFrame, parameters: Mapping, pwt_path: str | Path) -> pd.DataFrame:
+    """Two growth-block checks over the same 2006-2019 window.
+
+    ``growth_block`` fixes TFP at the C2 central rate (PWT 2000-2019 CAGR), a
+    window that contains the test period: it is an in-sample consistency
+    check, kept for the episode narrative in the report, and is not what the
+    Tier 1 gate is keyed on. ``growth_block_oos`` fixes TFP at a window ending
+    in 2005, strictly before the test period starts, and is the statistic
+    ``gate_verdicts`` actually rates (see the 2026-10-23 lead-developer review
+    noting the original check was not genuinely held out).
+    """
     pwt = read_pwt_brazil_growth(pwt_path)
     start, end = 2006, 2019
-    tfp_start, tfp_end = (int(x) for x in parameters["growth_calibration"]["tfp_periods"]["central"])
-    tfp = pwt.set_index("year")["rtfpna"]
-    tfp_central = ((float(tfp.loc[tfp_end]) / float(tfp.loc[tfp_start])) ** (1.0 / (tfp_end - tfp_start)) - 1.0) * 100.0
-    base = growth_backtest_pwt(pwt, start, end, tfp_growth_pct=tfp_central)
 
     tot = wide["net_barter_terms_of_trade"].loc[start - 1:end]
     changes = np.log(tot).diff().dropna() * 100.0
@@ -330,20 +342,37 @@ def build_growth_test(wide: pd.DataFrame, parameters: Mapping, pwt_path: str | P
     effects = gdp_and_inflation_effects(path, parameters).set_index("step")
     levels = pd.Series([0.0] + effects["external_gdp_level_pct"].tolist(), index=range(start - 1, end + 1))
     ext_growth = ((1.0 + levels.loc[start:end] / 100.0).to_numpy() / (1.0 + levels.loc[start - 1:end - 1] / 100.0).to_numpy() - 1.0) * 100.0
-    predicted = ((1.0 + base["predicted_growth_pct"].to_numpy() / 100.0) * (1.0 + ext_growth / 100.0) - 1.0) * 100.0
     observed = wide.loc[start:end, "gdp_growth_pct"].to_numpy()
-    return pd.DataFrame({
-        "test": "growth_block",
-        "year": base["year"],
-        "observed_value": observed,
-        "predicted_value": predicted,
-        "residual": predicted - observed,
-        "baseline_prediction": base["predicted_growth_pct"],
-        "external_contribution": predicted - base["predicted_growth_pct"].to_numpy(),
-        "input_change": changes.to_numpy(),
-        "unit": "percentage_points_per_year",
-        "note": "fixed C2 central TFP; input_change is observed ToT log change (%)",
-    })
+
+    def _frame(test_name: str, tfp_growth_pct: float, note: str) -> pd.DataFrame:
+        base = growth_backtest_pwt(pwt, start, end, tfp_growth_pct=tfp_growth_pct)
+        predicted = ((1.0 + base["predicted_growth_pct"].to_numpy() / 100.0) * (1.0 + ext_growth / 100.0) - 1.0) * 100.0
+        return pd.DataFrame({
+            "test": test_name,
+            "year": base["year"],
+            "observed_value": observed,
+            "predicted_value": predicted,
+            "residual": predicted - observed,
+            "baseline_prediction": base["predicted_growth_pct"],
+            "external_contribution": predicted - base["predicted_growth_pct"].to_numpy(),
+            "input_change": changes.to_numpy(),
+            "unit": "percentage_points_per_year",
+            "note": note,
+        })
+
+    in_sample = _frame(
+        "growth_block",
+        _tfp_window_cagr(pwt, parameters, "central"),
+        "fixed C2 central TFP (2000-2019; overlaps the 2006-2019 test window, so this is an "
+        "in-sample consistency check, not the Tier 1 gated statistic); input_change is observed ToT log change (%)",
+    )
+    out_of_sample = _frame(
+        "growth_block_oos",
+        _tfp_window_cagr(pwt, parameters, "pre_2006_backtest_oos"),
+        "fixed TFP from a window ending in 2005, strictly before the 2006-2019 test period "
+        "(genuinely held out; this is the statistic gate_verdicts rates for Tier 1); input_change is observed ToT log change (%)",
+    )
+    return pd.concat([in_sample, out_of_sample], ignore_index=True)
 
 
 def _growth_from_level_effect(level: pd.Series) -> pd.Series:
@@ -570,6 +599,8 @@ def statistics_table(results: pd.DataFrame, d2: Mapping) -> pd.DataFrame:
             tol = float(d2["tolerances"]["debt_final_year_absolute_error_pp_gdp"]["value"])
             record["status"] = "PASS" if abs(record["final_error"]) <= tol else "FAIL"
         elif test == "growth_block":
+            record["status"] = "not_rated"
+        elif test == "growth_block_oos":
             tol = float(d2["tolerances"]["growth_absolute_mean_error_pp_per_year"]["value"])
             record["status"] = "PASS" if abs(record["mean_error"]) <= tol else "FAIL"
         elif test == "debt_engine_one_step":
@@ -594,7 +625,7 @@ def gate_verdicts(stats: pd.DataFrame, d2: Mapping) -> dict[str, str]:
     debt_tol = float(d2["tolerances"]["debt_final_year_absolute_error_pp_gdp"]["value"])
     tier1_checks = [
         float(lookup.loc["debt_engine_one_step", "mae"]) <= one_step_tol,
-        abs(float(lookup.loc["growth_block", "mean_error"])) <= growth_tol,
+        abs(float(lookup.loc["growth_block_oos", "mean_error"])) <= growth_tol,
         float(lookup.loc["c7_channel_a_oos", "rmse"]) < float(lookup.loc["c7_channel_a_oos", "naive_rmse"]),
     ]
     tier2_pass = abs(float(lookup.loc["debt_engine_with_sfa_oos", "final_error"])) <= debt_tol
@@ -737,16 +768,28 @@ def render_report(
         f"**Tier 1 - differences vs S0: {gates['tier_1_differences_vs_s0']}.** This is the gate for publishing scenario effects.", "",
         f"**Tier 2 - debt/GDP levels: {gates['tier_2_levels']}.** The verdict uses the out-of-sample recursion with the pre-2018 mean SFA; the zero-SFA result is reported alongside it.", "",
         "No coefficient was tuned to improve these results. Calculations are offline and use checked-in observations and fixed model parameters.", "",
+        "**Debt-level context (diagnostic, not a point forecast).** Tier 2 is expected to keep failing: its "
+        "dominant residual is discretionary Treasury/BNDES/BCB stock-flow operations with no macro antecedent "
+        "(see the Stock-flow adjustment section below). Rather than chase a point fix, `python -m "
+        "src.debt_level_diagnostics` (`outputs/debt_level_diagnostics.md`) reports, with ranges: the probability "
+        "of S0 breaching stated debt/GDP thresholds; the primary balance that would stabilise debt at each "
+        "horizon's own rates and the gap to S0's actual projected balance; debt-level bands under Brazil's own "
+        "stock-flow-adjustment history versus a cross-country emerging-panel alternative; and two off-to-the-side "
+        "diagnostic variants of S0 itself (an estimated fiscal-reaction-function path, a nonlinear risk-premium "
+        "path) -- never mixed into the R/E-vs-S0 policy grid. This does not and cannot make Tier 2 pass; it "
+        "answers `outputs/debt_panel.md`'s \"Implications for a lead-developer decision\" with evidence instead "
+        "of leaving them unimplemented.", "",
         "## Gate v2", "",
         "| Tier | Test | Statistic | Tolerance / benchmark | Verdict |",
         "|---|---|---:|---:|---|",
         f"| 1: differences vs S0 | Debt engine, one step ahead (2011-2024) | MAE {lookup.loc['debt_engine_one_step', 'mae']:.3f} pp | <= {d2['tolerances']['debt_one_step_mae_pp_gdp']['value']:g} pp | {lookup.loc['debt_engine_one_step', 'status']} |",
-        f"| 1: differences vs S0 | Growth block (2006-2019) | absolute mean error {abs(lookup.loc['growth_block', 'mean_error']):.3f} pp/yr | <= {d2['tolerances']['growth_absolute_mean_error_pp_per_year']['value']:g} pp/yr | {lookup.loc['growth_block', 'status']} |",
+        f"| 1: differences vs S0 | Growth block, genuinely out-of-sample (2006-2019, TFP from 1996-2005) | absolute mean error {abs(lookup.loc['growth_block_oos', 'mean_error']):.3f} pp/yr | <= {d2['tolerances']['growth_absolute_mean_error_pp_per_year']['value']:g} pp/yr | {lookup.loc['growth_block_oos', 'status']} |",
         f"| 1: differences vs S0 | C7 channel A OOS (2015-2024) | RMSE {lookup.loc['c7_channel_a_oos', 'rmse']:.3f} pp | naive RMSE {lookup.loc['c7_channel_a_oos', 'naive_rmse']:.3f} pp; must be lower | {lookup.loc['c7_channel_a_oos', 'status']} |",
         f"| 2: levels | 2017-anchor zero-SFA recursion, 2024 | error {lookup.loc['debt_engine_zero_sfa_oos', 'final_error']:+.3f} pp | absolute error <= {d2['tolerances']['debt_final_year_absolute_error_pp_gdp']['value']:g} pp | {lookup.loc['debt_engine_zero_sfa_oos', 'status']} (reported only) |",
         f"| 2: levels | 2017-anchor with-SFA recursion, 2024 | error {lookup.loc['debt_engine_with_sfa_oos', 'final_error']:+.3f} pp | absolute error <= {d2['tolerances']['debt_final_year_absolute_error_pp_gdp']['value']:g} pp | {lookup.loc['debt_engine_with_sfa_oos', 'status']} |",
         "",
         "All gate rules are lead-developer decisions dated 2026-10-21 in `config/d2_inputs_proposed.yaml`. C7 audit rows are read from `data/brazil/c7_backtest.csv`, not re-estimated.", "",
+        "**Claude review (2026-10-23), fixed 2026-10-24:** the original growth-block Tier 1 check was not held out: its fixed TFP growth rate was the PWT CAGR over 2000-2019 (`config/parameters.yaml`), a window that fully contains the 2006-2019 test period, so a PASS there demonstrated internal consistency, not held-out predictive skill. That check is kept in the statistics table below as `growth_block` (`not_rated`, used only for the episode narrative), and the Tier 1 gate now rates a second statistic, `growth_block_oos`, which fixes TFP at the 1996-2005 window instead: the same equations, the same test period, but a TFP input estimated entirely before it, matching the debt one-step check (an accounting identity, no fitted parameter) and the C7 channel-A OOS check (fit 2000-2014, tested 2015-2024) in being genuinely held out.", "",
         f"The level tolerance is absolute 2024 debt error <= {d2['tolerances']['debt_final_year_absolute_error_pp_gdp']['value']:g} pp of GDP.", "",
         "## All annual test statistics", "",
         "| Block | Mean error | MAE | RMSE | Correlation | Final error | Verdict |",
@@ -780,7 +823,7 @@ def render_report(
         "",
         "The operation labels provide balance-sheet context; they are not fitted annual values. The OOS comparison recursively applies zero SFA or the fixed 2011-2017 mean during 2018-2024.", "",
         "## Growth accounting plus external block", "",
-        "Observed PWT investment-derived capital accumulation, human capital and employment are used each year. TFP is fixed at the C2 central 2000-2019 rate and C6 is unchanged.", "",
+        "Observed PWT investment-derived capital accumulation, human capital and employment are used each year. TFP is fixed at the C2 central 2000-2019 rate and C6 is unchanged. This is the `growth_block` row (in-sample consistency check, `not_rated`); the episode and annual-residual tables below use it because it matches the central C2 projection. The Tier 1 gate above is rated on the separate, genuinely out-of-sample `growth_block_oos` row (TFP fixed at the pre-2006 1996-2005 window) in the statistics table that follows.", "",
         "| Episode | Actual cumulative growth | Fixed-TFP factor model | C6 addition | Model total | Model - actual |",
         "|---|---:|---:|---:|---:|---:|",
     ]

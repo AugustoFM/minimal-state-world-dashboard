@@ -1,0 +1,95 @@
+{
+  "seed": 20261023,
+  "n_draws": 100,
+  "variants": [
+    "default",
+    "pension_only",
+    "efficiency_only",
+    "investment_also_cut_stress",
+    "compensating_transfers"
+  ],
+  "tax_incidence": "instrument",
+  "privatisation_package": "f5",
+  "persistence": [
+    "transitory",
+    "persistent"
+  ],
+  "horizons": [
+    5,
+    10,
+    15,
+    20
+  ],
+  "base_year": 2025,
+  "sampled": {
+    "multiplier_public_investment": "triangular(low, central, high) from fiscal_multipliers_brazil.accumulated",
+    "multiplier_social_benefits": "triangular(low, central, high) from fiscal_multipliers_brazil.accumulated",
+    "multiplier_subsidies": "triangular(low, central, high) from fiscal_multipliers_brazil.accumulated",
+    "multiplier_other_expenditures": "triangular(low, central, high) from fiscal_multipliers_brazil.accumulated",
+    "effective_real_interest_rate": "triangular(low, central, high) from parameters.yaml macro inputs (C2)",
+    "gdp_deflator_growth": "triangular(low, central, high) from parameters.yaml macro inputs (C2)",
+    "tfp_growth": "triangular(low, central, high) from parameters.yaml macro inputs (C2)",
+    "human_capital_growth": "triangular(low, central, high) from parameters.yaml macro inputs (C2)",
+    "investment_rate": "triangular(low, central, high) from parameters.yaml macro inputs (C2)",
+    "okun_coefficient": "triangular(low, central, high) from parameters.yaml macro inputs (C2)",
+    "efficiency_output_effect": "triangular(low, central, high) from macro_modelling_choices",
+    "service_cut_fraction": "triangular(low, central, high) from social_modelling_choices",
+    "imr_elasticity": "triangular(low, central, high) from social_outcome_elasticities",
+    "pension_gdp_per_worker_weight": "uniform(low, high), snapped to a 0.025 grid",
+    "health_output_pct": "uniform(0, 4) from long_run_feedback.health_to_output (two conflicting studies)",
+    "public_capital_elasticity": "triangular(0.083, 0.106, 0.122) from long_run_feedback.public_capital",
+    "sovereign_risk_bp": "triangular(2, 5, 7) from long_run_feedback.sovereign_risk_premium; deviation vs base-year debt capped at 50 pp (choice)",
+    "revenue_elasticity": "uniform(0.92, 0.98) from revenue_elasticity_to_gdp (IFI EE16 long run; C2 deterministic rule is 1.0)",
+    "leakage_share": "uniform(low, high) from governance.leakage_share_of_spending (cancels in scenario-vs-S0 comparisons; drives the leakage_halved sensitivity)",
+    "profile_year": "discrete, equal probability over profile_years.values",
+    "education_capacity_elasticity": "uniform(0, 0.04), separate stream [seed, 6]",
+    "innovation_capacity_elasticity": "uniform(0, 0.02), separate stream [seed, 6]",
+    "firm_npl_rate_coefficient": "normal(0.460, (0.664 - 0.256) / 3.92), separate stream [seed, 7]",
+    "firm_exit_rate_coefficient": "normal(0.713, (1.512 + 0.085) / 3.92), separate stream [seed, 7]; imprecise, CI includes zero"
+  },
+  "corruption": "G2 major-scandal shock: annual probability uniform(0.03, 0.08), GDP level loss triangular(1.0, 2.25, 3.6)%, 2-year build-up, 4-year recovery half-life; one event sequence per draw shared by every scenario and programme (stream [seed, 4]); included in external_gdp_level_pct and the *_with_external outputs",
+  "stock_flow_adjustment": "Claude review (2026-10-23), following D2's Tier 2 FAIL: block bootstrap (3-year blocks) of the observed 2011-2024 implied stock-flow adjustment (D2 sfa_summary.values_by_year; dominated by discretionary Treasury<->BNDES loan operations and BCB result transfers, not predictable from covariates), demeaned so it adds historical-sized debt-level noise rather than a trend; one path per draw applied identically to every scenario (stream [seed, 9]), on top of any scenario-specific debt_adjustment_by_year (e.g. privatisation); included in debt_gdp, debt_gdp_with_external and debt_gdp_with_feedback. Not an exact cancellation in debt_gdp_vs_s0_pp over multiple years (each scenario's own GDP effect feeds the nominal-growth denominator of the debt recursion), but the shock does not favour any scenario. Does not change D2's historical backtest point-error, which is a separate, non-stochastic identity check.",
+  "fixed": {
+    "life_expectancy_elasticity": "central only (point estimate)",
+    "point_inputs": "every macro input with low = central = high (initial debt, revenue/GDP, capital share, K/Y, depreciation, GDP anchors)",
+    "c1_category_shares": "point values (COFOG 2024)"
+  },
+  "external": "C7 output channel: block bootstrap (3-year blocks) of joint 2001-2024 commodity export price, world growth (both demeaned) and BRL/USD changes, same path for every scenario in a draw (stream [seed, 1]); channel-A coefficient set drawn per draw from the two prespecified estimation windows (stream [seed, 3])",
+  "choices": [
+    "triangular sampling for ranges is a modelling choice (fiscal_multipliers_brazil.sampling_rule), not a sourced distribution",
+    "parameters are sampled independently: no sourced correlations",
+    "persistence (transitory/persistent) is reported as a dimension, not sampled",
+    "percentiles describe parameter uncertainty only, not forecast error or external shocks"
+  ],
+  "not_modelled": {},
+  "education_sensitivity": "none",
+  "firm_distress": "BK NPL and exit-rate indicators are associational and indicator-only; they do not feed back to GDP or debt. The exit-rate CI includes zero.",
+  "micro_outputs": "C3 distribution indicators are changes versus S0; poverty outputs include all-person, age 0-14, age 65+, and people living with a 65+ pension/BPC recipient headcounts for both poverty lines",
+  "programmes": {
+    "scenarios": [
+      "P_lula_rule",
+      "P_lula_record",
+      "P_flavio_low",
+      "P_flavio_mid",
+      "P_flavio_high"
+    ],
+    "variant": "default",
+    "sampling": "unstated sizes uniform over their ranges, T uniform over whole years 2-6; central run uses midpoints (T = 4)",
+    "stream": "separate random stream [seed, 2]",
+    "privatisation_package": "f5",
+    "privatisation_stream": "separate random stream [seed, 5]",
+    "composition": "programme-specific assumed compositions (programs_2026.yaml)",
+    "status": "unpublished until the D2 gate and lead/user review"
+  },
+  "anti_corruption": {
+    "selection": "lula",
+    "mapping": "programme",
+    "config": "config/w3_anticorruption.yaml",
+    "stream": "separate random stream [seed, 8]",
+    "parameters_identical_between_programmes": true,
+    "procurement_accounting": "positive non-tax primary-balance item; no household tax incidence or multiplier"
+  },
+  "inputs_commit": "de8c2e2ca7dafab829be2e61046bca9edac91595",
+  "created_utc": "2026-10-23T20:34:49+00:00",
+  "runtime_seconds": 1564.4
+}

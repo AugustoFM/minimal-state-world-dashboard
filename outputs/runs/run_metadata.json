@@ -8,6 +8,8 @@
     "investment_also_cut_stress",
     "compensating_transfers"
   ],
+  "tax_incidence": "instrument",
+  "privatisation_package": "f5",
   "persistence": [
     "transitory",
     "persistent"
@@ -39,9 +41,14 @@
     "sovereign_risk_bp": "triangular(2, 5, 7) from long_run_feedback.sovereign_risk_premium; deviation vs base-year debt capped at 50 pp (choice)",
     "revenue_elasticity": "uniform(0.92, 0.98) from revenue_elasticity_to_gdp (IFI EE16 long run; C2 deterministic rule is 1.0)",
     "leakage_share": "uniform(low, high) from governance.leakage_share_of_spending (cancels in scenario-vs-S0 comparisons; drives the leakage_halved sensitivity)",
-    "profile_year": "discrete, equal probability over profile_years.values"
+    "profile_year": "discrete, equal probability over profile_years.values",
+    "education_capacity_elasticity": "uniform(0, 0.04), separate stream [seed, 6]",
+    "innovation_capacity_elasticity": "uniform(0, 0.02), separate stream [seed, 6]",
+    "firm_npl_rate_coefficient": "normal(0.460, (0.664 - 0.256) / 3.92), separate stream [seed, 7]",
+    "firm_exit_rate_coefficient": "normal(0.713, (1.512 + 0.085) / 3.92), separate stream [seed, 7]; imprecise, CI includes zero"
   },
   "corruption": "G2 major-scandal shock: annual probability uniform(0.03, 0.08), GDP level loss triangular(1.0, 2.25, 3.6)%, 2-year build-up, 4-year recovery half-life; one event sequence per draw shared by every scenario and programme (stream [seed, 4]); included in external_gdp_level_pct and the *_with_external outputs",
+  "stock_flow_adjustment": "Claude review (2026-10-23), following D2's Tier 2 FAIL: block bootstrap (3-year blocks) of the observed 2011-2024 implied stock-flow adjustment (D2 sfa_summary.values_by_year; dominated by discretionary Treasury<->BNDES loan operations and BCB result transfers, not predictable from covariates), demeaned so it adds historical-sized debt-level noise rather than a trend; one path per draw applied identically to every scenario (stream [seed, 9]), on top of any scenario-specific debt_adjustment_by_year (e.g. privatisation); included in debt_gdp, debt_gdp_with_external and debt_gdp_with_feedback. Not an exact cancellation in debt_gdp_vs_s0_pp over multiple years (each scenario's own GDP effect feeds the nominal-growth denominator of the debt recursion), but the shock does not favour any scenario. Does not change D2's historical backtest point-error, which is a separate, non-stochastic identity check.",
   "fixed": {
     "life_expectancy_elasticity": "central only (point estimate)",
     "point_inputs": "every macro input with low = central = high (initial debt, revenue/GDP, capital share, K/Y, depreciation, GDP anchors)",
@@ -55,7 +62,10 @@
     "percentiles describe parameter uncertainty only, not forecast error or external shocks"
   ],
   "not_modelled": {},
-  "inputs_commit": "aa22b54bd6665a64e1a2625c3fce7c57448a0b41",
-  "created_utc": "2026-10-21T14:11:02+00:00",
-  "runtime_seconds": 13772.0
+  "education_sensitivity": "none",
+  "firm_distress": "BK NPL and exit-rate indicators are associational and indicator-only; they do not feed back to GDP or debt. The exit-rate CI includes zero.",
+  "micro_outputs": "C3 distribution indicators are changes versus S0; poverty outputs include all-person, age 0-14, age 65+, and people living with a 65+ pension/BPC recipient headcounts for both poverty lines",
+  "inputs_commit": "de8c2e2ca7dafab829be2e61046bca9edac91595",
+  "created_utc": "2026-10-23T10:30:10+00:00",
+  "runtime_seconds": 8478.1
 }

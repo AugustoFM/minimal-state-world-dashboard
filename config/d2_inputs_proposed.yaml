@@ -62,7 +62,12 @@ inflation_target_pct:
     2023: 3.25
     2024: 3.0
 method_choices:
-  growth_tfp: C2 central 2000-2019 PWT CAGR, held constant; not tuned to the back-test
+  growth_tfp: Two statistics reported. 'growth_block' (not_rated, descriptive) fixes
+    TFP at the C2 central 2000-2019 PWT CAGR, held constant; not tuned to the back-test,
+    but this window contains the 2006-2019 test period so it is an in-sample consistency
+    check, not out-of-sample. 'growth_block_oos' (the Tier 1 gated statistic, 2026-10-24
+    fix) fixes TFP at the 1996-2005 PWT CAGR window instead, which ends before the
+    test period starts.
   growth_external: Unchanged C6 terms-of-trade level-effect equation applied to observed
     annual log changes
   multiplier_trend: 2010-2024 arithmetic mean observed real GDP growth

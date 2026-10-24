@@ -511,6 +511,7 @@ def load_context(
         "feedback_defaults": _feedback_defaults(parameters_path, scenarios_path),
         "micro": _micro_context(data),
         "tax_incidence": "instrument",
+        "sfa_changes": external.historical_sfa_changes(),
         "corruption": corruption.load_config("config/corruption_proposed.yaml"),
         "education": education.monte_carlo_channel_inputs(),
         "education_sensitivity": "none",
@@ -915,7 +916,8 @@ def evaluate_draw(draw: Mapping, context: Mapping, external_effects: pd.DataFram
             variant_scenarios = with_programmes(variant_scenarios, annual, draw_inputs, draw, context)
         for persistence in PERSISTENCE_VARIANTS:
             corner = run_corner(
-                annual, context["population"], variant_scenarios, draw_parameters, draw_inputs, "central", persistence
+                annual, context["population"], variant_scenarios, draw_parameters, draw_inputs, "central", persistence,
+                sfa_adjustment_by_year=draw.get("sfa_debt_adjustment_by_year"),
             )
             effects = external_effects
             if effects is None:
@@ -1006,6 +1008,8 @@ def run(
     education_rng = np.random.default_rng([seed, 6])  # ED responses; leaves every existing stream unchanged
     firm_rng = np.random.default_rng([seed, 7])  # BK coefficients; leaves every existing stream unchanged
     w3_rng = np.random.default_rng([seed, 8]) if context.get("w3") else None
+    sfa_rng = np.random.default_rng([seed, 9])  # SFA debt-level noise; leaves every existing stream unchanged
+    sfa_changes = context.get("sfa_changes")
     steps = max(context["target_years"]) - base_year
     draws, results = [], []
     started = time.monotonic()
@@ -1029,6 +1033,13 @@ def run(
             effects = external.gdp_and_inflation_effects(path, parameters)
             draw["external_tot_cumulative_change_pct"] = float(path["tot_change_pct"].sum())
         draw["external_fx_cumulative_change_pct"] = float(path["fx_change_pct"].sum())
+        if sfa_changes is not None:
+            sfa_path = external.bootstrap_path(sfa_rng, sfa_changes, steps)
+            draw["sfa_debt_adjustment_by_year"] = {
+                base_year + int(step): float(value)
+                for step, value in zip(sfa_path["step"], sfa_path["sfa_pp"])
+            }
+            draw["sfa_cumulative_pp"] = float(sfa_path["sfa_pp"].sum())
         if corruption_config is not None:
             shock = corruption.draw_path(corruption_rng, steps, corruption_config)
             effects = effects.merge(shock[["step", "corruption_gdp_level_pct"]], on="step", validate="one_to_one")
@@ -1097,6 +1108,18 @@ def run(
             "G2 major-scandal shock: annual probability uniform(0.03, 0.08), GDP level loss triangular(1.0, 2.25, 3.6)%, "
             "2-year build-up, 4-year recovery half-life; one event sequence per draw shared by every scenario and "
             "programme (stream [seed, 4]); included in external_gdp_level_pct and the *_with_external outputs"
+        ),
+        "stock_flow_adjustment": (
+            "Claude review (2026-10-23), following D2's Tier 2 FAIL: block bootstrap (3-year blocks) of the observed "
+            "2011-2024 implied stock-flow adjustment (D2 sfa_summary.values_by_year; dominated by discretionary "
+            "Treasury<->BNDES loan operations and BCB result transfers, not predictable from covariates), demeaned "
+            "so it adds historical-sized debt-level noise rather than a trend; one path per draw applied identically "
+            "to every scenario (stream [seed, 9]), on top of any scenario-specific debt_adjustment_by_year "
+            "(e.g. privatisation); included in debt_gdp, debt_gdp_with_external and debt_gdp_with_feedback. "
+            "Not an exact cancellation in debt_gdp_vs_s0_pp over multiple years (each scenario's own GDP effect "
+            "feeds the nominal-growth denominator of the debt recursion), but the shock does not favour any "
+            "scenario. Does not change D2's historical backtest point-error, which is a separate, non-stochastic "
+            "identity check."
         ),
         "fixed": {
             "life_expectancy_elasticity": "central only (point estimate)",

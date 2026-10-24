@@ -350,6 +350,8 @@ growth_calibration:
     low: [2010, 2019]
     central: [2000, 2019]
     high: [2004, 2013]
+    pre_2006_backtest_oos: [1996, 2005]
+  pre_2006_backtest_oos_note: "D2 growth-block out-of-sample check only (src/backtest.py); not a C2 projection corner (only low/central/high are read by src/macro.py). The window must end before the 2006-2019 D2 test period starts; 1996-2005 is the ~10-year pre-sample window immediately preceding it, the same length as the existing high/low windows (2004-2013, 2010-2019)."
   human_capital_periods:
     low: [2004, 2013]
     central: [2000, 2019]

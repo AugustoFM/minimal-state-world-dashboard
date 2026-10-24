@@ -25,6 +25,7 @@ from typing import Mapping
 
 import numpy as np
 import pandas as pd
+import yaml
 
 from src.macro import debt_step, macro_input, nominal_rate_from_real, real_interest_rate_for_year
 
@@ -45,6 +46,25 @@ def historical_changes(path: str | Path = "data/brazil/backtest_observed.csv") -
     wide = table.pivot(index="year", columns="indicator", values="value")[[TOT, FX]].dropna()
     changes = np.log(wide).diff().dropna() * 100.0
     changes.columns = ["tot_change_pct", "fx_change_pct"]
+    return changes
+
+
+def historical_sfa_changes(d2_path: str | Path = "config/d2_inputs_proposed.yaml") -> pd.DataFrame:
+    """Observed annual stock-flow adjustment (pp GDP), demeaned, for a later block bootstrap.
+
+    Source: D2's `sfa_summary.values_by_year` (observed debt minus the
+    one-step debt-engine prediction; 2011-2024). The series is dominated by
+    discretionary Treasury<->BNDES loan operations and BCB result transfers,
+    which are not predictable from macro covariates, so it is demeaned here:
+    a bootstrap draw adds historical-sized shocks to a scenario's debt level,
+    not a trend, because future stock-flow operations are unknown.
+    """
+    with Path(d2_path).open(encoding="utf-8") as handle:
+        d2 = yaml.safe_load(handle)
+    values = {int(year): float(value) for year, value in d2["sfa_summary"]["values_by_year"].items()}
+    years = sorted(values)
+    changes = pd.DataFrame({"sfa_pp": [values[year] for year in years]}, index=pd.Index(years, name="year"))
+    changes["sfa_pp"] = changes["sfa_pp"] - changes["sfa_pp"].mean()
     return changes
 
 

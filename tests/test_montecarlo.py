@@ -110,6 +110,37 @@ def test_sampling_is_reproducible_and_percentiles_ordered(context) -> None:
     assert gaps[["p10", "p50", "p90"]].isna().all().all()
 
 
+def test_sfa_uses_a_dedicated_stream_and_only_perturbs_debt(context) -> None:
+    small = dict(context)
+    small["variant_configs"] = {"default": context["variant_configs"]["default"]}
+    with_sfa, draws_with, _ = mc.run(4, seed=11, context=small)
+    without = dict(small)
+    without.pop("sfa_changes")
+    without_sfa, draws_without, _ = mc.run(4, seed=11, context=without)
+    assert "sfa_cumulative_pp" in draws_with.columns
+    assert "sfa_cumulative_pp" not in draws_without.columns
+    assert draws_with["sfa_cumulative_pp"].abs().gt(0).any()
+    # Every other stream (parameters, external C6/C7, education, firm coefficients) is untouched:
+    # turning the new [seed, 9] stream on or off does not perturb them.
+    unrelated = [
+        c for c in draws_with.columns
+        if c not in {"sfa_debt_adjustment_by_year", "sfa_cumulative_pp"} and c in draws_without.columns
+    ]
+    pd.testing.assert_frame_equal(draws_with[unrelated], draws_without[unrelated])
+    # Debt differs (directly, and through the risk-premium feedback it drives); GDP-side
+    # indicators that do not route through debt stay untouched.
+    assert not with_sfa["debt_gdp"].equals(without_sfa["debt_gdp"])
+    pd.testing.assert_series_equal(with_sfa["gdp_level_vs_s0_pct"], without_sfa["gdp_level_vs_s0_pct"])
+
+
+def test_central_draw_has_no_sfa_noise(context) -> None:
+    # central_draw/evaluate_draw (used for the published macro.csv/social.csv and for
+    # reference_paths' boom/neutral/bust diagnostic) never sets this key, so it is
+    # unaffected by SFA regardless of what load_context() provides.
+    draw = mc.central_draw(context["parameters"], context["inputs"])
+    assert "sfa_debt_adjustment_by_year" not in draw
+
+
 def test_samples_stay_inside_configured_ranges(context) -> None:
     rng = np.random.default_rng(1)
     params, inputs = context["parameters"], context["inputs"]
