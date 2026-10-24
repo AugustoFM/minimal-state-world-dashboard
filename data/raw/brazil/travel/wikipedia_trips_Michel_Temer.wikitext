@@ -1,0 +1,295 @@
+{{Short description|none}}
+
+This is a '''list of presidential trips of [[Michel Temer]]''', the [[List of presidents of Brazil|37th]] [[President of Brazil]], who took office on 31 August 2016 after the [[Impeachment of Dilma Rousseff|impeachment]] of [[Dilma Rousseff]].<ref>{{cite web |url=http://www2.camara.leg.br/camaranoticias/noticias/POLITICA/515675-MICHEL-TEMER-TOMA-POSSE-COMO-PRESIDENTE-DA-REPUBLICA.html |title=Michel Temer toma posse como presidente da República |publisher=[[Chamber of Deputies (Brazil)|Chamber of Deputies]] |access-date=21 August 2017 |language=pt}}</ref> This list covers the diplomatic trips made by Michel Temer from his [[Presidency of Michel Temer|inauguration]] on 31 August 2016 until the end of his term on 1 January 2019.
+
+== Trips by country ==
+[[File:Viagens presidenciais de Michel Temer.svg|thumb|600px|center|International trips made by Michel Temer as President of Brazil (2016–2019).]]
+{| class="wikitable" width=80% style="margin:1em auto;"
+! width="20%" | Number of visits
+! width="80%" | Country
+|-
+! 1 visit
+| {{hlist|{{ZAF}}|{{DEU}}|{{CPV}}|{{CHL}}|{{GUA}}|{{IND}}|{{JPN}}|{{MEX}}|{{NOR}}|{{PER}}|{{RUS}}|{{SUI}}|{{URU}}}}
+|-
+! 2 visits
+| {{hlist|{{CHN}}|{{POR}}}}
+|-
+! 3 visits
+| {{hlist|{{ARG}}|{{USA}}|{{PRY}}}}
+|}
+
+== 2016 ==
+{| class="wikitable" style="width: 100%; text-align: center; font-size: 100%; vertical-align: middle;"
+! class="unsortable" style="width:200px;" scope="col" colspan="2" | Image
+! style="width:15%;" scope="col" | Country
+! style="width:15%;" scope="col" | Location
+! style="width:15%;" scope="col" | Dates
+! style="width:55%;" scope="col" | Details
+|-
+! 1
+| [[File:Michel Temer e Xi Jinping.jpg|200px|Temer and Chinese President Xi Jinping, in September 2016.|alt=Two men shaking hands and smiling.]]
+| {{CHN}}
+| [[Hangzhou]]<br />[[Shanghai]]
+| [[2 September|2–]][[5 September]]
+| align="left" | On 2 September, Temer made his first trip as full President to China, where he was received by the President of the People's Republic of China, [[Xi Jinping]], and took part in the [[G20]] summit.<ref>{{cite web |url=http://g1.globo.com/politica/processo-de-impeachment-de-dilma/noticia/2016/08/temer-embarca-para-china-e-participara-da-cupula-do-g20.html |title=Temer embarca para a China e participará da Cúpula do G20 |publisher=[[G1 (Brazilian website)|Portal G1]] |access-date=21 August 2017 |language=pt}}</ref>
+|-
+! 2
+| [[File:Michel Temer na ONU em 2016.jpg|200px|Temer speaks at the United Nations General Assembly, in September 2016.|alt=Man speaking at a microphone from a podium.]]
+| {{USA}}
+| [[New York City|New York]]
+| [[18 September|18–]][[21 September]]
+| align="left" | Temer took part in the General Debate of the 71st Session of the [[United Nations General Assembly]].<ref>{{cite web |url=http://g1.globo.com/mundo/noticia/2016/09/temer-discursa-na-abertura-da-71-assembleia-geral-da-onu.html |title=Na ONU, Temer diz que impeachment de Dilma respeitou a Constituição |publisher=[[G1 (Brazilian website)|Portal G1]] |access-date=21 August 2017 |language=pt}}</ref>
+|-
+! rowspan="2" | 3
+| rowspan="2" | [[File:Macri Temer 7.jpg|200px|Temer and Argentine President Mauricio Macri, in October 2017|alt=Two men shaking hands and smiling.]]
+| {{ARG}}
+| [[Buenos Aires]]
+| rowspan="2" | [[3 October]]
+| align="left" | Temer was received by the [[President of Argentina]], [[Mauricio Macri]], for a series of meetings on trade relations between the two countries. Topics discussed on the first official trip to Brazil's [[South America]]n neighbours included the countries' border situation, the internal politics of [[Mercosur]] and the bloc's international agreements.<ref>{{cite web |url=http://g1.globo.com/politica/noticia/2016/10/temer-embarca-para-argentina-onde-fara-1-visita-oficial-como-presidente.html |title=Temer viaja para a Argentina e se reúne com Macri em Buenos Aires |publisher=[[G1 (Brazilian website)|Portal G1]] |access-date=21 August 2017 |language=pt}}</ref>
+|-
+| {{PAR}}
+| [[Asunción]]
+| align="left" | A lightning visit aimed, in the president's words, at "intensifying relations and increasing the degree of friendship".<ref>{{cite web |url=http://g1.globo.com/politica/noticia/2016/10/temer-viaja-ao-paraguai-para-visita-relampago-apos-agenda-na-argentina.html |title=Temer chega ao Paraguai para visita-relâmpago após agenda na Argentina |publisher=[[G1 (Brazilian website)|Portal G1]] |access-date=21 August 2017 |language=pt}}</ref>
+|-
+! rowspan="2" | 4
+| [[File:Brazilian President Michel Temer in Goa (2).jpg|200px|Temer and Indian Prime Minister Narendra Modi, in October 2016.|alt=Two men shaking hands and greeting.]]
+| {{IND}}
+| [[Goa]]
+| [[15 October|15–]][[17 October]]
+| align="left" | Temer took part in the Meeting of Heads of State and Government of [[BRICS]].<ref>{{cite web |url=http://www.bbc.com/portuguese/brasil-37667750 |title=Temer estreia no Brics: cinco destaques da cúpula de Goa |publisher=[[BBC]] |access-date=21 August 2017 |language=pt}}</ref>
+|-
+| [[File:19 10 2016 - Encontro com Sua Majestade o Imperador Akihito (35673961812).jpg|200px|Temer and Emperor Akihito at the Tokyo Imperial Palace, in October 2016.|alt=Two men seated in conversation with hands clasped.]]
+| {{JPN}}
+| [[Tokyo]]
+| [[18 October|18–]][[19 October]]
+| align="left" | Temer's trip to Japan was the first by a Brazilian head of state to the country in 11 years.<ref>{{cite web |url=http://g1.globo.com/mundo/noticia/2016/10/apos-cupula-na-india-temer-chega-toquio-para-visita-de-tres-dias.html |title=Após cúpula na Índia, Temer chega a Tóquio para visita de três diaso |publisher=[[G1 (Brazilian website)|Portal G1]] |access-date=21 August 2017 |language=pt}}</ref>
+|}
+== 2017 ==
+{| class="wikitable" style="width: 100%; text-align: center; font-size: 100%; vertical-align: middle;"
+! class="unsortable" style="width:200px;" scope="col" colspan="2" | Image
+! style="width:15%;" scope="col" | Country
+! style="width:15%;" scope="col" | Location
+! style="width:15%;" scope="col" | Dates
+! style="width:55%;" scope="col" | Details
+|-
+! 5
+| [[File:Exéquias do ex-Presidente da República Portuguesa, Mário Soares 03.png|200px|Temer attends the funeral of Portuguese former President Mário Soares, in January 2017.]]
+| {{POR}}
+| [[Lisbon]]
+| [[10 January]]
+| Temer was officially received by the [[President of Portugal]], [[Marcelo Rebelo de Sousa]], to attend the state funeral of former Portuguese President [[Mário Soares]].<ref>{{cite web |url=http://www1.folha.uol.com.br/poder/2017/01/1848268-em-meio-a-acao-de-cassacao-temer-viaja-com-mendes-para-portugal.shtml |title=Em meio a ação de cassação, Temer viaja com Mendes para Portugal |publisher=Folha de S. Paulo |access-date=21 August 2017 |language=pt}}</ref>
+|-
+! rowspan="2" | 6
+| [[File:Vladimir Putin and Michel Temer (2017-06-21) 01.jpg|200px|President Michel Temer and Russian President Vladimir Putin in 2017.]]
+| {{RUS}}
+| [[Moscow]]
+| [[20 June|20–]][[22 June]]
+| The president and the Brazilian delegation watched a performance by the Bolshoi Ballet, one of the most famous in the world. Temer was received by the [[President of Russia]], [[Vladimir Putin]], for a bilateral meeting on trade agreements and cooperation in several areas strategic to both countries.<ref>{{cite web |url=http://g1.globo.com/politica/noticia/temer-desembarca-na-russia-para-visita-oficial-de-dois-dias.ghtml |title=Temer desembarca na Rússia para visita oficial de dois dias |publisher=[[G1 (Brazilian website)|Portal G1]] |access-date=21 August 2017 |language=pt}}</ref>
+|-
+| [[File:Encontro com a Primeira-Ministra da Noruega, Erna Solberg.jpg|200px|Temer and Norwegian Prime Minister Erna Solberg, in June 2017.]]
+| {{NOR}}
+| [[Oslo]]
+| [[22 June|22–]][[23 June]]
+| Temer and the [[Prime Minister of Norway]], [[Erna Solberg]], discussed trade and the environment.<ref>{{cite web |url=http://g1.globo.com/mundo/noticia/temer-encontra-primeira-ministra-da-noruega-e-grupo-faz-manifestacao.ghtml |title=Encontro de Temer com primeira-ministra da Noruega tem manifestação em Oslo |website=[[G1 (Brazilian website)|G1]] |date=23 June 2017 |access-date=21 August 2017 |language=pt}}</ref>
+|-
+! 7
+| [[File:Angela Merkel welcomes Michel Temer in Hamburg, July 2017 (2).jpg|200px|Temer and German Chancellor Angela Merkel, in July 2017.]]
+| {{DEU}}
+| [[Berlin]]
+| [[7 July|7–]][[8 July]]
+| The president took part in a meeting of the Heads of State and Government of [[BRICS]] and a working session of the [[G20]] Summit.<ref>{{cite web |url=https://noticias.uol.com.br/politica/ultimas-noticias/2017/07/06/temer-viaja-para-g20-na-alemanha-eunicio-assume-pela-primeira-vez.htm |title=Temer viaja para G20 na Alemanha; Eunício assume pela primeira vez |publisher=[[Universo Online|UOL]] |access-date=21 August 2017 |language=pt}}</ref>
+|-
+! 8
+| [[File:21-07-2017 - Foto oficial da Cúpula do Mercosul (35962563732).jpg|200px|Temer and regional leaders at the Mercosur Summit, in July 2017.]]
+| {{ARG}}
+| [[Mendoza, Argentina|Mendonza]]
+| [[21 July]]
+| Temer took part in the 50th Meeting of the Common Market Council and the Summit of Mercosur and Associated States, in Mendoza, Argentina.<ref>{{cite web |url=http://agenciabrasil.ebc.com.br/politica/noticia/2017-07/com-temer-brasil-assume-presidencia-temporaria-do-mercosul |title=Com Temer, Brasil assume presidência temporária do Mercosul |publisher=[[Agência Brasil|Portal EBC]] |access-date=21 August 2017 |language=pt}}</ref>
+|-
+! rowspan="2"|9
+| [[File:Encontro com Presidente da República Portuguesa, Marcelo Rebelo de Sousa.jpg|200px|Temer and Portuguese President Marcelo Rebelo de Sousa, in August 2017.]]
+| {{POR}}
+| [[Lisbon]]
+| [[29 August|29–]][[30 August]]
+| Meeting with the [[President of Portugal|President of the Portuguese Republic]], [[Marcelo Rebelo de Sousa]].
+|-
+| [[File:Michel Temer e Xi Jinping 2017.jpg|200px|Temer and Chinese President Xi Jinping during the BRICS Summit, in August 2017.]]
+| {{CHN}}
+| [[Beijing]]<br />[[Xiamen|Xiamei]]
+| [[31 August|3 August–]][[4 September]]
+| Temer took part in the 50th Meeting of the Common Market Council and the BRICS Summit, and spoke with BRICS business leaders.<ref>{{cite web |url=http://g1.globo.com/politica/noticia/presidente-michel-temer-decide-antecipar-volta-ao-brasil.ghtml |title=Em viagem à China, Michel Temer decide antecipar volta ao Brasil |publisher=[[G1 (Brazilian website)|Portal G1]] |access-date=16 November 2017 |language=pt}}</ref>
+|-
+! 10
+| [[File:19 09 2017 Abertura do Debate Geral da 72ª Sessão da Assembleia Geral da ONU (36946233750).jpg|200px|Temer speaks at the United Nations General Assembly, in September 2017.]]
+| {{USA}}
+| [[New York City|New York]]
+| [[18 September|18–]][[21 September]]
+| Temer took part in the General Debate of the 72nd Session of the [[United Nations General Assembly]].<ref>{{cite web |url=http://agenciabrasil.ebc.com.br/politica/noticia/2017-09/temer-embarca-para-os-eua-onde-tera-jantar-com-trump-e-discursara-na-onu |title=Temer viaja a Nova York para jantar com Trump e discursar na ONU |publisher=[[Agência Brasil|Portal EBC]] |access-date=16 November 2017 |language=pt}}</ref>
+|-
+! 11
+| [[File:MC11 opening ceremony, 10 December 2017 (27205294199).jpg|200px|Temer and Argentine President Mauricio Macri, in December 2017.]]
+| {{ARG}}
+| [[Buenos Aires]]
+| [[10 December]]
+| Opening session of the 11th Ministerial Conference of the [[World Trade Organization]].
+|}
+
+== 2018 ==
+{| class="wikitable" style="width: 100%; text-align: center; font-size: 100%; vertical-align: middle;"
+! class="unsortable" style="width:200px;" scope="col" colspan="2" | Image
+! style="width:15%;" scope="col" | Country
+! style="width:15%;" scope="col" | Location
+! style="width:15%;" scope="col" | Dates
+! style="width:55%;" scope="col" | Details
+|-
+! 12
+| [[File:Interview Arthur Gregg Sulzberger and Michel Temer - Davos - 24012018.jpg|200px|Temer gives an interview during the World Economic Forum, in January 2018.]]
+| {{SUI}}
+| [[Davos]]
+| [[22 January|22–]][[25 January]]
+| Speech at the Plenary Session of the [[World Economic Forum]].<ref>{{cite news |title=Temer chega à Suíça para participar do Fórum Econômico Mundial |url=https://g1.globo.com/politica/noticia/temer-chega-a-suica-para-participar-do-forum-economico-mundial.ghtml |work=G1 |access-date=2019-11-21 |language=pt-br}}</ref>
+|-
+! 13
+| [[File:Cambio de Mando 2018 (25881900747).jpg|200px|Temer attends the presidential inauguration of Sebastián Piñera, in March 2018.]]
+| {{CHL}}
+| [[Valparaíso]]
+| [[11 March]]
+| align="left" | The president attended Piñera's inauguration ceremony. He held bilateral meetings with [[Mauricio Macri]], President of Argentina, and with [[Pedro Pablo Kuczynski]], President of Peru, to discuss Mercosur and the Pacific Alliance.<ref>{{cite news |title=Temer viaja neste domingo para posse de Sebastián Piñera como presidente do Chile |url=https://g1.globo.com/politica/noticia/temer-viaja-neste-domingo-para-posse-de-sebastian-pinera-como-presidente-do-chile.ghtml |work=G1 |language=pt-BR}}</ref><ref>{{cite news |date=2018-03-11 |title=Temer teve três encontros bilaterais com líderes sul-americanos no Chile |url=https://oglobo.globo.com/economia/temer-teve-tres-encontros-bilaterais-com-lideres-sul-americanos-no-chile-22478356 |work=O Globo |language=pt-BR}}</ref>
+|-
+! 14
+| [[File:Clausura de la VIII Cumbre de las Américas (40566366845).jpg|200px|Temer takes part in the Summit of the Americas, in April 2018.]]
+| {{PER}}
+| [[Lima]]
+| [[13 April|13–]][[14 April]]
+| align="left" | The president went to Lima, where he met with the other Latin American presidents for the 8th [[Summit of the Americas]].<ref>{{cite news |title=Cúpula das Américas: novo governo do Peru mantém Maduro excluído |url=https://oglobo.globo.com/mundo/cupula-das-americas-novo-governo-do-peru-mantem-maduro-excluido-22553743 |work=O Globo |language=pt-BR}}</ref>
+|-
+! 15
+| 
+| {{PRY}}
+| [[Asunción]]
+| [[18 June]]
+| align="left" | Plenary Session of the Presidents of the States Parties of [[Mercosur]], Associated States and Special Guests.
+|-
+! 16
+| [[File:17 07 2018 Abertura Oficial da Conferência de Chefes de Estado e de Governo da CPLP (45569006372).jpg|200px|Temer speaks at the CPLP Summit, in July 2018.]]
+| {{CPV}}
+| [[Sal, Cape Verde|Sal Island]]
+| [[17 July|17–]][[18 July]]
+| align="left" | Conference of Heads of State and Government of the [[Community of Portuguese Language Countries|CPLP]].<ref>{{cite news |title=Temer transfere para Cabo Verde presidência da Comunidade dos Países de Língua Portuguesa |url=https://g1.globo.com/politica/noticia/temer-passa-para-cabo-verde-presidencia-da-comunidade-dos-paises-de-lingua-portuguesa.ghtml |work=G1 |access-date=2019-11-21 |language=pt-br}}</ref>
+|-
+! 17
+| 
+| {{MEX}}
+| [[Puerto Vallarta]]
+| [[23 July|23–]][[24 July]]
+| align="left" | Meeting of the Heads of State of Mercosur and the Pacific Alliance.<ref>{{cite news |title=Temer viaja para o México nesta segunda-feira; Cármen Lúcia assume Presidência da República pela 4ª vez |url=https://g1.globo.com/politica/noticia/2018/07/23/temer-viaja-para-o-mexico-nesta-segunda-feira-carmen-lucia-assume-presidencia-da-republica-pela-4a-vez.ghtml |work=G1 |access-date=2019-11-21 |language=pt-br}}</ref>
+|-
+! 18
+| [[File:Foto de família dos Chefes de Estado e Governo do BRICS 2018-2.jpg|200px|Temer and BRICS leaders, in July 2018.]]
+| {{ZAF}}
+| [[Johannesburg]]
+| [[25 July|25–]][[27 July]]
+| align="left" | Attended the [[10th BRICS summit|10th Summit]] of Heads of State and Government of [[BRICS]].<ref>{{cite news |title=Temer desembarca na África do Sul para participar da cúpula do Brics |url=https://g1.globo.com/politica/noticia/2018/07/25/temer-desembarca-na-africa-do-sul-para-participar-da-cupula-do-brics.ghtml |work=G1 |access-date=2019-11-21 |language=pt-br}}</ref>
+|-
+! 19
+| [[File:15 08 2018 Cumprimentos ao Presidente e Vice-Presidente do Paraguai (44735264195).jpg|200px|Temer and Paraguayan President Mario Abdo Benítez, in August 2018.]]
+| {{PAR}} 
+| [[Asunción]]
+| [[15 August]]
+| align="left" | Attended the inauguration ceremony of the new President of Paraguay.<ref>{{cite news |title=Temer viaja ao Paraguai para posse de Mario Benítez; Cármen Lúcia assume a Presidência da República pela 5ª vez |url=https://g1.globo.com/politica/noticia/2018/08/15/temer-viaja-ao-paraguai-para-posse-de-mario-benitez-carmen-lucia-assume-a-presidencia-da-republica-pela-5a-vez.ghtml |work=G1 |access-date=2019-11-21 |language=pt-br}}</ref>
+|-
+! 20
+| [[File:25 09 2018 Abertura do Debate Geral da 73ª Sessão da Assembléia Geral da ONU (45665124291).jpg|200px|Temer speaks at the United Nations General Assembly, in September 2018.]]
+| {{USA}}
+| [[New York City|New York]]
+| [[23 September|23–]][[25 September]]
+| align="left" | Temer took part in the General Debate of the 73rd Session of the [[United Nations General Assembly]].<ref>{{cite news |title=Na abertura da Assembleia Geral da ONU, Michel Temer defende integração entre países |url=https://g1.globo.com/jornal-nacional/noticia/2018/09/25/na-abertura-da-assembleia-geral-da-onu-michel-temer-defende-integracao-entre-paises.ghtml |work=G1 |access-date=2019-11-21 |language=pt-br}}</ref>
+|-
+! 21
+| [[File:15 11 2018 Chegada à Cidade da Guatemala (45909620641).jpg|200px|Temer in Guatemala City, in November 2018.]]
+| {{GUA}}
+| [[Guatemala City]]
+| [[15 November|15–]][[16 November]]
+| align="left" | The president took part in the summit of the [[Organization of Ibero-American States|OEI]].
+|-
+! 22
+| [[File:18 12 2018 Chegada ao Edifício MERCOSUL (45492684805).jpg|200px|Temer and Uruguayan President Tabaré Vázquez at the Mercosur headquarters, in December 2018.]]
+| {{flag|Uruguay}}
+| [[Montevideo]]
+| [[18 December]]
+| align="left" | Took part in the [[Mercosur]] summit. Meeting with presidents [[Tabaré Vázquez]], [[Mauricio Macri]] and [[Mario Abdo Benítez]].
+|}
+
+== Multilateral events ==
+Temer attended the following multilateral events during his presidential term:
+{| class="wikitable" style="margin:1em auto; font-size:90%; text-align:center;"
+! rowspan="2" | Organization
+! rowspan="2" | Event
+! colspan="3" | [[Presidency of Michel Temer|Temer government]] (2016–2019)
+|-
+! [[2016]]
+! [[2017]]
+! [[2018]]
+|-
+! [[United Nations]]
+| '''[[United Nations General Assembly|General Assembly]]'''
+| [[20 September]],<br />{{flagicon|USA}} [[New York City|New York]]
+| [[19 September]],<br />{{flagicon|USA}} [[New York City|New York]]
+| [[25 September]],<br />{{flagicon|USA}} [[New York City|New York]]
+|-
+! [[G20]]
+| '''[[List of G20 summits|G20 summit]]'''
+| [[2016 G20 Hangzhou summit|4–5 September]],<br />{{flagicon|CHN}} [[Hangzhou]]
+| [[2017 G20 Hamburg summit|7–8 July]],<br />{{flagicon|DEU}} [[Hamburg]]
+| [[2018 G20 Buenos Aires summit|30 November–1 December]],<br />{{flagicon|ARG}} [[Buenos Aires]]
+|-
+! [[BRICS]]
+| '''[[BRICS|BRICS summit]]'''
+| [[8th BRICS summit|15–16 October]],<br />{{flagicon|IND}} [[Goa]]
+| [[9th BRICS summit|3–5 September]],<br />{{flagicon|CHN}} [[Xiamen]]
+| [[10th BRICS summit|25–27 July]],<br />{{flagicon|ZAF}} [[Johannesburg]]
+|-
+! [[Organization of American States|OAS]]
+| '''[[Summit of the Americas]]'''
+| style="background:#D3D3D3;" colspan="2" | &mdash;
+| [[8th Summit of the Americas|13–14 April]],<br />{{flagicon|PER}} [[Lima]]
+|-
+! rowspan="2" | [[Mercosur]]
+| rowspan="2" | '''[[Common Market Council|Mercosur summit]]'''
+| style="background:#D3D3D3;" rowspan="2" | &mdash;
+| [[21 July]],<br />{{flagicon|ARG}} [[Mendoza, Argentina|Mendoza]]
+| [[18 June]],<br />{{flagicon|PRY}} [[Asunción]]
+|-
+| [[21 December]],<br />{{flagicon|BRA}} [[Brasília]]
+| [[18 December]],<br />{{flagicon|URY}} [[Montevideo]]
+|-
+! [[Organization of Ibero-American States|OEI]]
+| '''[[Ibero-American Summit]]'''
+| style="background:#ffcccb;" | [[28 October|28–]][[29 October]],<br />{{flagicon|COL}} [[Cartagena, Colombia|Cartagena de Indias]]
+| style="background:#D3D3D3;" | &mdash;
+| [[15 November|15–]][[16 November]],<br />{{flagicon|GTM}} [[Guatemala City]]
+|-
+! [[Community of Portuguese Language Countries|CPLP]]
+| '''[[Community of Portuguese Language Countries#Summits|CPLP Summit]]'''
+| [[17 July|17–]][[18 July]],<br />{{flagicon|BRA}} [[Brasília]]
+| style="background:#D3D3D3;" | &mdash;
+| [[12th Conference of Heads of State and Government of the Community of Portuguese Language Countries|17–18 July]],<br />{{flagicon|CPV}} [[Sal, Cape Verde|Sal Island]]
+|-
+! colspan="5" | {{legend|#90ee90|Event announced or planned.}}{{legend|#D3D3D3|Event not planned or cancelled.}}{{legend|#ffcccb|Did not attend.}}
+|}
+
+== See also ==
+* [[List of international presidential trips made by Dilma Rousseff]], his predecessor 
+* [[List of international presidential trips made by Jair Bolsonaro]], his successor
+
+== References ==
+{{reflist}}
+{{Foreign relations of Brazil}}
+
+[[Category:21st century in international relations]]
+[[Category:Foreign relations of Brazil]]
+[[Category:2016 in international relations]]
+[[Category:2017 in international relations]]
+[[Category:2018 in international relations]]
+[[Category:Lists of 21st-century diplomatic visits]]
+[[Category:Diplomatic visits by heads of state|Temer, Michel]]

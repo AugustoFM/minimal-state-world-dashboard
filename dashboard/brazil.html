@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brazil state-size scenarios</title>
+<style>
+:root{--bg:#f6f5f1;--panel:#fff;--ink:#1d1d1b;--mut:#6b6a63;--line:#e3e1d9;--acc:#0b5d6b;--bad:#9b2226;--band:#cfe5e8}
+*{box-sizing:border-box}html,body{margin:0;font:14px/1.4 system-ui,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+header{padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--line)}
+header h1{font:400 22px Georgia,serif;margin:0 0 2px}
+header .sub{color:var(--mut);font-size:12px}
+.gatebar{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-top:8px;padding:8px 10px;border-radius:6px;background:#fdf4e3;border:1px solid #e9c46a;font-size:12.5px}
+.gatebar b.pass{color:#2a7a2a}.gatebar b.fail{color:var(--bad)}
+main{max-width:1180px;margin:0 auto;padding:14px 16px 40px;display:flex;flex-direction:column;gap:16px}
+.card{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--panel)}
+.card h2{font-size:15px;margin:0 0 8px}
+.card h3{font-size:13px;margin:0 0 6px}
+.controls{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end}
+.controls label{display:block;font-size:11.5px;color:var(--mut);margin-bottom:3px}
+select{padding:5px 8px;border:1px solid var(--line);border-radius:6px;font:inherit;background:#fff}
+.note{font-size:11.5px;color:var(--mut)}
+.caveat{font-size:11.5px;color:var(--bad);background:#fbeaea;border:1px solid #e8b4b4;border-radius:6px;padding:6px 8px;margin-top:6px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:4px 6px;border-bottom:1px solid var(--line);text-align:left}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tr.s0 td{color:var(--mut)}
+.chip{display:inline-block;padding:1px 6px;border-radius:10px;font-size:10.5px;background:#eee;color:var(--mut)}
+svg text{font-size:10.5px;fill:var(--mut)}
+.legendrow{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;margin-top:4px}
+.legendrow i{display:inline-block;width:14px;height:3px;margin-right:5px;vertical-align:middle}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.grid2{grid-template-columns:1fr}}
+footer{max-width:1180px;margin:0 auto;padding:0 16px 30px;color:var(--mut);font-size:11.5px}
+</style></head><body>
+<header>
+ <h1>Brazil: reducing, holding or expanding the state</h1>
+ <div class="sub">Monte Carlo scenario comparison (status-quo baseline S0 vs. reductions/expansions), with the model's own historical back-test verdict attached to every debt-level view.</div>
+ <div class="gatebar" id="gatebar"></div>
+</header>
+<main>
+ <div class="card">
+  <h2>Compare a scenario against S0</h2>
+  <div class="controls">
+   <div><label for="indicator">Indicator</label><select id="indicator"></select></div>
+   <div><label for="scenario">Scenario</label><select id="scenario"></select></div>
+   <div><label for="persistence">Multiplier persistence</label><select id="persistence">
+    <option value="transitory">Transitory (effect fades)</option>
+    <option value="persistent">Persistent (effect is lasting)</option>
+   </select></div>
+   <div><label for="variant">Reduction/expansion composition</label><select id="variant"></select></div>
+  </div>
+  <div id="chartwrap" style="margin-top:10px"></div>
+  <div class="legendrow"><span><i style="background:#0b5d6b"></i>Median</span><span><i style="background:#cfe5e8;height:10px"></i>p10&ndash;p90 range (parameter uncertainty only)</span></div>
+  <div class="note" style="margin-top:6px">Percentiles describe uncertainty in the model's own parameters, not forecast error or external shocks (unless the indicator says "with external"/"with feedback"). Differences are paired within each Monte Carlo draw against S0.</div>
+  <div class="caveat" id="debtcaveat" style="display:none">This indicator is a debt/GDP level or a quantity derived from one. The back-test's Tier 2 (absolute debt levels) verdict is <b>FAIL</b> — see the gate banner above and the diagnostics panel below before reading any level as validated.</div>
+ </div>
+
+ <div class="card">
+  <h2>All scenarios at one horizon</h2>
+  <div class="controls">
+   <div><label for="horizon">Horizon</label><select id="horizon"></select></div>
+  </div>
+  <table id="scenariotable" style="margin-top:8px"></table>
+  <div class="note" style="margin-top:6px">S0 is the ageing, no-policy-change baseline (not a forecast); every other row is a paired difference against it in the same draw.</div>
+ </div>
+
+ <div class="card" id="d4card">
+  <h2>Debt-level diagnostics (D4, follow-up to the back-test)</h2>
+  <div class="caveat">The back-test's Tier 2 (absolute debt/GDP levels) verdict is <b>FAIL</b>, and is expected to stay FAIL: its dominant residual is discretionary Treasury/BNDES/Central Bank balance-sheet operations with no macro antecedent this or any similar model could predict in advance (see <code>docs/sfa.md</code>). The panels below report that uncertainty honestly instead of hiding it; they are not a validated debt forecast.</div>
+  <div class="controls" style="margin-top:8px">
+   <div><label for="d4horizon">Horizon</label><select id="d4horizon"></select></div>
+  </div>
+  <div class="grid2" style="margin-top:8px">
+   <div>
+    <h3>Probability S0 debt/GDP exceeds a threshold</h3>
+    <table id="breachtable"></table>
+   </div>
+   <div>
+    <h3>Stabilising primary balance vs. S0's actual path</h3>
+    <table id="gaptable"></table>
+   </div>
+  </div>
+  <div style="margin-top:12px">
+   <h3>S0-only diagnostic variants (never policy-comparison scenarios)</h3>
+   <table id="varianttable"></table>
+   <div class="note" style="margin-top:4px"><code>frf_emerging</code>/<code>frf_brazil_robustness</code>: an estimated fiscal-reaction-function path, from the emerging-market panel and from Brazil's own (oppositely signed) history respectively — the latter is a robustness check, not a "more realistic" path. <code>premium_nonlinear</code>: a capped, fiscal-fatigue-style risk-premium shape, a labelled modelling choice, not an estimated ceiling. Full method: <code>docs/d4_debt_level_diagnostics.md</code>.</div>
+  </div>
+ </div>
+</main>
+<footer>
+ Source: <code>outputs/runs/summary_percentiles.csv</code> and <code>data/brazil/debt_level_diagnostics.csv</code>, built by <code>scripts/build_brazil_dashboard.py</code>. Companion written report: <code>outputs/report_brazil.md</code>. Regenerate after any Monte Carlo re-run; do not hand-edit <code>brazil_data.js</code>.
+</footer>
+<script src="brazil_data.js"></script>
+<script>
+const D = window.BRAZIL_DATA;
+const gb = document.getElementById("gatebar");
+gb.innerHTML = `<span>Back-test gate (<code>outputs/backtest.md</code>):</span>
+ <span>Tier 1 (scenario differences vs S0): <b class="${D.d2.tier1==='PASS'?'pass':'fail'}">${D.d2.tier1}</b></span>
+ <span>Tier 2 (absolute debt/GDP levels): <b class="${D.d2.tier2==='PASS'?'pass':'fail'}">${D.d2.tier2}</b></span>
+ <span class="chip">${D.meta.n_draws} draws · seed ${D.meta.seed} · inputs ${String(D.meta.inputs_commit||'').slice(0,8)}</span>`;
+
+const indicatorSel = document.getElementById("indicator");
+Object.entries(D.indicators).forEach(([key, info]) => indicatorSel.add(new Option(info.label, key)));
+
+const scenarioSel = document.getElementById("scenario");
+D.scenario_order.forEach(code => scenarioSel.add(new Option(`${code} — ${D.scenarios[code].description}`, code)));
+
+const variantSel = document.getElementById("variant");
+const VARIANT_LABELS = {
+ default: "Default (40% pension/indexation, 25% subsidies, 20% efficiency, 15% other)",
+ pension_only: "Pension/indexation only",
+ efficiency_only: "Administrative efficiency only",
+ investment_also_cut_stress: "Stress: public investment also cut",
+ compensating_transfers: "Means-tested transfers increased to offset part of the cut",
+};
+[...new Set(D.results.map(r => r.variant))].forEach(v => variantSel.add(new Option(VARIANT_LABELS[v] || v, v)));
+
+const horizons = [...new Set(D.results.map(r => r.horizon))].sort((a, b) => a - b);
+const horizonSel = document.getElementById("horizon");
+horizons.forEach(h => horizonSel.add(new Option(`${h} years`, h)));
+
+function lookup(filters) {
+ return D.results.filter(r => Object.entries(filters).every(([k, v]) => String(r[k]) === String(v)));
+}
+function fmt(value, decimals) {
+ if (value === null || value === undefined) return "not modelled";
+ return value.toFixed(decimals);
+}
+function cell(row, decimals) {
+ if (!row || row.p50 === null) return "not modelled";
+ return `${fmt(row.p50, decimals)} [${fmt(row.p10, decimals)}, ${fmt(row.p90, decimals)}]`;
+}
+
+function chart() {
+ const indicator = indicatorSel.value, scenario = scenarioSel.value;
+ const persistence = document.getElementById("persistence").value, variant = variantSel.value;
+ document.getElementById("debtcaveat").style.display = indicator.startsWith("debt_gdp") ? "block" : "none";
+ const rows = lookup({ indicator, scenario, persistence, variant }).sort((a, b) => a.horizon - b.horizon);
+ const info = D.indicators[indicator];
+ const W = 760, H = 220, p = { l: 56, r: 14, t: 14, b: 30 };
+ const xs = rows.map(r => r.horizon);
+ const ys = rows.flatMap(r => [r.p10, r.p50, r.p90]).filter(v => v !== null);
+ if (!ys.length) { document.getElementById("chartwrap").innerHTML = "<div class='note'>not modelled for this combination</div>"; return; }
+ const y0 = Math.min(0, ...ys), y1 = Math.max(0, ...ys);
+ const sx = v => p.l + (v - xs[0]) / (xs[xs.length - 1] - xs[0]) * (W - p.l - p.r);
+ const sy = v => H - p.b - (v - y0) / (y1 - y0 || 1) * (H - p.t - p.b);
+ const band = rows.map(r => [sx(r.horizon), sy(r.p10)]).concat(rows.slice().reverse().map(r => [sx(r.horizon), sy(r.p90)]));
+ let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%">`;
+ svg += `<line x1="${p.l}" y1="${sy(0)}" x2="${W - p.r}" y2="${sy(0)}" stroke="#ccc"/>`;
+ svg += `<polygon points="${band.map(pt => pt.join(",")).join(" ")}" fill="var(--band)" fill-opacity="0.7"/>`;
+ svg += `<polyline points="${rows.map(r => `${sx(r.horizon)},${sy(r.p50)}`).join(" ")}" fill="none" stroke="var(--acc)" stroke-width="2"/>`;
+ rows.forEach(r => svg += `<circle cx="${sx(r.horizon)}" cy="${sy(r.p50)}" r="3" fill="var(--acc)"><title>${r.horizon}y (${r.year}): ${fmt(r.p50, info.decimals)} [${fmt(r.p10, info.decimals)}, ${fmt(r.p90, info.decimals)}]</title></circle>`);
+ xs.forEach(x => svg += `<text x="${sx(x)}" y="${H - p.b + 14}" text-anchor="middle">${x}y</text>`);
+ [y0, (y0 + y1) / 2, y1].forEach(v => svg += `<text x="${p.l - 6}" y="${sy(v) + 3}" text-anchor="end">${fmt(v, info.decimals)}</text>`);
+ svg += `<text x="${p.l}" y="12" font-weight="600">${info.label} — ${scenario}</text>`;
+ svg += "</svg>";
+ document.getElementById("chartwrap").innerHTML = svg;
+}
+
+function scenarioTable() {
+ const horizon = +horizonSel.value;
+ const indicator = indicatorSel.value, persistence = document.getElementById("persistence").value, variant = variantSel.value;
+ const info = D.indicators[indicator];
+ const rows = D.scenario_order.map(code => {
+  const row = lookup({ indicator, scenario: code, persistence, variant, horizon })[0];
+  return `<tr><td>${code}</td><td>${D.scenarios[code].description}</td><td class="n">${cell(row, info.decimals)}</td></tr>`;
+ });
+ const s0 = `<tr class="s0"><td>S0</td><td>status-quo baseline (ageing drift; not a forecast)</td><td class="n">—</td></tr>`;
+ document.getElementById("scenariotable").innerHTML =
+  `<tr><th>Scenario</th><th>Definition</th><th class="n">${info.label}, p50 [p10,p90]</th></tr>${s0}${rows.join("")}`;
+}
+
+function d4Panel() {
+ if (!D.d4) { document.getElementById("d4card").style.display = "none"; return; }
+ const h = +document.getElementById("d4horizon").value;
+ const e = D.d4.by_horizon[String(h)];
+ document.getElementById("breachtable").innerHTML =
+  `<tr><th>Threshold</th><th class="n">No SFA</th><th class="n">SFA (Brazil)</th><th class="n">SFA (emerging)</th></tr>` +
+  [90, 100, 120].map(t => `<tr><td>&gt;${t}% of GDP</td>` +
+   `<td class="n">${(e[`p_breach_${t}_no_sfa`] * 100).toFixed(1)}%</td>` +
+   `<td class="n">${(e[`p_breach_${t}_sfa_brazil`] * 100).toFixed(1)}%</td>` +
+   `<td class="n">${(e[`p_breach_${t}_sfa_emerging`] * 100).toFixed(1)}%</td></tr>`).join("");
+ document.getElementById("gaptable").innerHTML =
+  `<tr><th></th><th class="n">p50 [p10,p90], pp GDP</th></tr>` +
+  `<tr><td>Stabilising primary balance</td><td class="n">${cell(e.stabilising_primary_balance_pp, 2)}</td></tr>` +
+  `<tr><td>S0 actual primary balance</td><td class="n">${cell(e.primary_balance_gdp_actual, 2)}</td></tr>` +
+  `<tr><td>Fiscal gap (stabilising − actual)</td><td class="n">${cell(e.fiscal_gap_pp, 2)}</td></tr>`;
+ document.getElementById("varianttable").innerHTML =
+  `<tr><th>Path</th><th class="n">Debt/GDP, p50 [p10,p90]</th></tr>` +
+  `<tr><td>Plain S0 (no SFA)</td><td class="n">${cell(e.debt_gdp_s0, 1)}</td></tr>` +
+  `<tr><td>S0 + SFA (Brazil, default)</td><td class="n">${cell(e.debt_gdp_s0_sfa_brazil, 1)}</td></tr>` +
+  `<tr><td>S0 + SFA (emerging panel)</td><td class="n">${cell(e.debt_gdp_s0_sfa_emerging, 1)}</td></tr>` +
+  `<tr><td>frf_emerging</td><td class="n">${cell(e.debt_gdp_frf_emerging, 1)}</td></tr>` +
+  `<tr><td>frf_brazil_robustness</td><td class="n">${cell(e.debt_gdp_frf_brazil_robustness, 1)}</td></tr>` +
+  `<tr><td>premium_nonlinear</td><td class="n">${cell(e.debt_gdp_premium_nonlinear, 1)}</td></tr>`;
+}
+
+function refresh() { chart(); scenarioTable(); }
+["indicator", "scenario", "persistence", "variant"].forEach(id => document.getElementById(id).onchange = refresh);
+horizonSel.onchange = scenarioTable;
+if (D.d4) {
+ Object.keys(D.d4.by_horizon).map(Number).sort((a, b) => a - b).forEach(h => document.getElementById("d4horizon").add(new Option(`${h} years`, h)));
+ document.getElementById("d4horizon").onchange = d4Panel;
+}
+indicatorSel.value = "debt_gdp_vs_s0_pp"; scenarioSel.value = "R_amb"; horizonSel.value = "10"; variantSel.value = "default";
+refresh(); d4Panel();
+</script>
+</body></html>

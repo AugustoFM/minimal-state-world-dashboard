@@ -1,0 +1,23 @@
+{
+  "dataset": "pof",
+  "edition": "POF 2017-2018, Morador (resident) table",
+  "layout": "data/raw/brazil/layouts/pof_2017_2018_documentation.zip -> Dicionarios de variaveis.xls, sheet Morador; reading programs in pof_2017_2018_reading_programs.zip",
+  "approved": "2026-10-20, Claude (lead), codes transcribed from the official dictionary; microdata not yet downloaded",
+  "columns": {
+    "UF": "state_code",
+    "TIPO_SITUACAO_REG": "urban_rural",
+    "V0403": "age",
+    "V0404": "sex",
+    "NIVEL_INSTRUCAO": "education_level",
+    "PESO_FINAL": "survey_weight",
+    "RENDA_TOTAL": "household_income_brl"
+  },
+  "household_key_columns": ["COD_UPA", "NUM_DOM", "NUM_UC"],
+  "constant_columns": {"year": "2017-2018 (reference date 15 January 2018)"},
+  "notes": {
+    "household_key_columns": "read only to count residents per consumption unit (household_size); dropped before export by the loader",
+    "household_income_brl": "RENDA_TOTAL = gross total monthly income of the consumption unit (UC), R$; per capita = RENDA_TOTAL / household_size",
+    "income_tables": "Rendimento do Trabalho and Outros Rendimentos tables carry V9001 (income type, see Cadastro de Produtos.xls) and V8500_DEFLA (deflated amount); their benefit-code mapping is a C3 task",
+    "year": "the loader requires a year column; add it as a constant when exporting with the official reading program"
+  }
+}

@@ -1,0 +1,129 @@
+module: ED
+status: proposal_not_monte_carlo_wired
+base_year: 2025
+end_year: 2060
+
+variants:
+  low:
+    capacity_elasticity: 0.0
+    innovation_elasticity: 0.0
+    pe_de_meia_dropout_effect_pp: -3.25
+    homicide_association_fraction: 0.0
+    applied_research_effectiveness: -0.10
+  central:
+    capacity_elasticity: 0.02
+    innovation_elasticity: 0.01
+    pe_de_meia_dropout_effect_pp: -6.5
+    homicide_association_fraction: 0.5
+    applied_research_effectiveness: 0.0
+  high:
+    capacity_elasticity: 0.04
+    innovation_elasticity: 0.02
+    pe_de_meia_dropout_effect_pp: -6.5
+    homicide_association_fraction: 1.0
+    applied_research_effectiveness: 0.10
+
+parameters:
+  capacity_phase_in_years: 15
+  rd_depreciation: 0.15
+  real_discount_rate: 0.03
+  if_baseline_campi: 682
+  if_new_campi: 100
+  if_construction_cost_brl_bn: 3.9
+  pe_de_meia_annual_cost_brl_bn: 12.0
+  pe_de_meia_beneficiaries_mn: 5.6
+  pbia_total_cost_brl_bn: 23.0
+  pbia_years: 5
+  if_cost_model_years: 2
+  avoided_dropout_school_years: 1.5
+  cnpj_local_effect_pp_per_school_year: 0.02
+
+scenarios:
+  P_lula_rule:
+    programme: lula_pt
+    programme_scenario: P_lula_rule
+    university_record_fraction: 0.0
+    mcti_record_fraction: 0.0
+    note: programme package path; all 2025-budget measures are already in S0
+  P_lula_record:
+    programme: lula_pt
+    programme_scenario: P_lula_record
+    university_record_fraction: 0.0
+    mcti_record_fraction: 0.0
+    note: programme record-trend package path; all 2025-budget measures are already in S0
+  P_flavio_low:
+    programme: flavio_bolsonaro_pl
+    programme_scenario: P_flavio_low
+    university_record_fraction: 0.0
+    mcti_record_fraction: 0.0
+    note: low package size; governance move has no stated budget
+  P_flavio_mid:
+    programme: flavio_bolsonaro_pl
+    programme_scenario: P_flavio_mid
+    university_record_fraction: 0.0
+    mcti_record_fraction: 0.0
+    note: mid package size; governance move has no stated budget
+  P_flavio_high:
+    programme: flavio_bolsonaro_pl
+    programme_scenario: P_flavio_high
+    university_record_fraction: 0.0
+    mcti_record_fraction: 0.0
+    note: high package size; governance move has no stated budget
+  P_flavio_mid_half_record:
+    programme: flavio_bolsonaro_pl
+    programme_scenario: P_flavio_mid
+    university_record_fraction: 0.5
+    mcti_record_fraction: 0.5
+    note: sensitivity, not in the programme
+  P_flavio_mid_record_repeat:
+    programme: flavio_bolsonaro_pl
+    programme_scenario: P_flavio_mid
+    university_record_fraction: 1.0
+    mcti_record_fraction: 1.0
+    note: central historical-record sensitivity, not in the programme
+  P_lula_rule_half_recomposition:
+    programme: lula_pt
+    programme_scenario: P_lula_rule
+    university_record_fraction: 0.5
+    mcti_record_fraction: 0.5
+    note: symmetric sensitivity using half the 2022-2024 recomposition, not a forecast
+  P_lula_rule_record_recomposition:
+    programme: lula_pt
+    programme_scenario: P_lula_rule
+    university_record_fraction: 1.0
+    mcti_record_fraction: 1.0
+    note: symmetric sensitivity using the 2022-2024 recomposition, not a forecast
+
+assumptions:
+  - number: 1.5
+    unit: completed school years per prevented dropout
+    parameter: avoided_dropout_school_years
+    basis: midpoint of the remaining one-to-three secondary-school years for a student aged 15-17; sensitivity is proportional
+  - number: 0.02
+    unit: percentage points of CNPJ-employer share per additional school year
+    parameter: cnpj_local_effect_pp_per_school_year
+    basis: deliberately small positive sensitivity around the default zero local-campus effect; Bergmann's preferred employer-rate estimates are statistically zero and IZA DP 14655 supports only the sign
+  - number: -0.10/0/+0.10
+    unit: proportional capacity-channel effectiveness
+    parameter: applied_research_effectiveness
+    basis: symmetric sensitivity because the programme states an applied-research direction but the evidence supplies no effect size
+  - number: 0/0.5/1
+    unit: fraction of the state-panel association magnitude
+    parameter: homicide_association_fraction
+    basis: low is no quantified effect; central is half; high uses the full association magnitude, with the causal literature imposing a non-positive sign
+
+source_parameters:
+  capacity_elasticity: "0/0.02/0.04: Valero and Van Reenen upper bound 0.04; central halves it for relocation; Bergmann zero"
+  innovation_elasticity: "0/0.01/0.02: evidence review section 6"
+  pe_de_meia_dropout_effect_pp: "-3.25/-6.5/-6.5: half and full Paes de Barros et al. ex-ante effect"
+  capacity_phase_in_years: "15 years: fixed midpoint of the review's 10-20 year evidence window"
+  rd_depreciation: "15%: fixed in tasks/ED.md"
+  real_discount_rate: "3%: fixed in tasks/ED.md"
+  if_baseline_campi: "682 in 2024, programme_facts.csv"
+  if_new_campi: "100 under Novo PAC, programme_facts.csv"
+  if_construction_cost_brl_bn: "R$3.9bn, programme_facts.csv"
+  pe_de_meia_annual_cost_brl_bn: "R$12bn, programme_facts.csv"
+  pe_de_meia_beneficiaries_mn: "5.6m administrative figure, programme_facts.csv"
+  pbia_total_cost_brl_bn: "R$23bn over 2024-2028, programme_facts.csv"
+  baseline_accounting: "Pé-de-Meia, PBIA through 2028, the 100 IF campi under construction, and current university/MCTI budgets are in S0; none is added again"
+  package_cases: "all five paths from src.programs.build_programme_scenarios; C5 central services allocation and service-loss fraction; R&D receives the same proportional package change"

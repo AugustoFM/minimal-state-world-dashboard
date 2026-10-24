@@ -2,3 +2,5 @@ pandas
 requests
 openpyxl
 pycountry
+pyyaml
+pytest

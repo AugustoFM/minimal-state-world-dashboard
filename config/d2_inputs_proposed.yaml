@@ -1,0 +1,102 @@
+status: lead_developer_decision_2026_10_21
+backtest_periods:
+  debt:
+  - 2010
+  - 2024
+  growth:
+  - 2006
+  - 2019
+  multiplier:
+  - 2010
+  - 2024
+  inflation:
+  - 2005
+  - 2024
+tolerances:
+  debt_final_year_absolute_error_pp_gdp:
+    value: 5.0
+    decided_by: lead developer 2026-10-21
+  debt_one_step_mae_pp_gdp:
+    value: 2.5
+    decided_by: lead developer 2026-10-21
+  growth_absolute_mean_error_pp_per_year:
+    value: 0.5
+    decided_by: lead developer 2026-10-21
+  c7_channel_a_oos_rmse:
+    rule: below_naive_benchmark
+    period:
+    - 2015
+    - 2024
+    decided_by: lead developer 2026-10-21
+  multiplier:
+    rated: false
+    reason: 'Weak diagnostic with no tolerance supplied: spending changes are not
+      identified fiscal shocks.'
+  inflation:
+    rated: false
+    reason: 'Diagnostic with no tolerance supplied: the one-variable pass-through
+      block omits expectations, slack and administered prices.'
+inflation_target_pct:
+  source: Conselho Monetario Nacional (CMN) resolutions
+  verification: transcribed_without_network_check
+  note: Proposed D2 input only; verify the resolutions before publication.
+  by_year:
+    2005: 4.5
+    2006: 4.5
+    2007: 4.5
+    2008: 4.5
+    2009: 4.5
+    2010: 4.5
+    2011: 4.5
+    2012: 4.5
+    2013: 4.5
+    2014: 4.5
+    2015: 4.5
+    2016: 4.5
+    2017: 4.5
+    2018: 4.5
+    2019: 4.25
+    2020: 4.0
+    2021: 3.75
+    2022: 3.5
+    2023: 3.25
+    2024: 3.0
+method_choices:
+  growth_tfp: Two statistics reported. 'growth_block' (not_rated, descriptive) fixes
+    TFP at the C2 central 2000-2019 PWT CAGR, held constant; not tuned to the back-test,
+    but this window contains the 2006-2019 test period so it is an in-sample consistency
+    check, not out-of-sample. 'growth_block_oos' (the Tier 1 gated statistic, 2026-10-24
+    fix) fixes TFP at the 1996-2005 PWT CAGR window instead, which ends before the
+    test period starts.
+  growth_external: Unchanged C6 terms-of-trade level-effect equation applied to observed
+    annual log changes
+  multiplier_trend: 2010-2024 arithmetic mean observed real GDP growth
+  multiplier_rule: C2 transitory response, evaluated with both total-expenditure and
+    default-package category multipliers
+  debt_primary_balance: BCB observed primary result, sign-converted because the source
+    records surpluses as negative
+  debt_interest: Tesouro GFS interest payable as percent of GDP divided by lagged
+    BCB gross debt as percent of GDP
+sfa_summary:
+  definition: observed debt minus one-step debt-engine prediction, pp GDP
+  estimation_years:
+  - 2011
+  - 2017
+  mean_2011_2017: -0.49998414152389714
+  sd_2011_2017: 2.4197372647202444
+  sd_definition: sample standard deviation (ddof=1)
+  values_by_year:
+    2011: 1.705118831528175
+    2012: 2.9287977702934853
+    2013: -1.8323471812113894
+    2014: 0.02492990096726544
+    2015: 0.2127601664987111
+    2016: -3.822637061636769
+    2017: -2.7165114171067586
+    2018: -2.6258416560161777
+    2019: -3.9103337281388235
+    2020: -0.9245267083856845
+    2021: -2.359451037567311
+    2022: -3.3655835669594723
+    2023: -1.621876900604775
+    2024: -0.7065374147997829

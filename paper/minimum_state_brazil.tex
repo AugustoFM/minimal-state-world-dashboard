@@ -1,0 +1,355 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---------------------------------------------------------------------------
+% Packages
+% ---------------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[british]{babel}
+\usepackage{microtype}
+\usepackage[a4paper,margin=2.6cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage[authoryear,round]{natbib}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black,bookmarksnumbered=true]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{abstract}
+
+\renewcommand{\abstractnamefont}{\normalfont\bfseries}
+\renewcommand{\abstracttextfont}{\normalfont\itshape}
+
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\bfseries}{\thesubsection}{1em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{A stochastic scenario model of state size and fiscal reform in Brazil}}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+
+\setstretch{1.04}
+
+\newcommand{\pp}{\,pp}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+\title{\textbf{Reducing, Holding and Expanding the Size of the State: \\
+A Modular Stochastic Framework for Evaluating Fiscal Reform Scenarios in Brazil, with an Application to the 2026 Presidential Programmes}}
+
+\author{Flaviano A.\ Moreira\thanks{Independent research. Correspondence: \texttt{flaviano.a.moreira@gmail.com}. The author thanks no funding body; the model and this paper were developed as an independent research project. A statement on the use of computational and AI-assisted tooling in model construction appears before the references.}}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent This paper documents a modular, stochastic simulation framework built to evaluate what happens, over five- to twenty-year horizons, when Brazilian general-government primary spending is reduced, held constant against demographic ageing, or expanded, relative to a status-quo baseline. The framework chains a demographic and age-profile fiscal baseline, a one-sector growth and debt-accounting block, a household microsimulation built on the 2025 PNAD Cont\'inua, a social-outcomes block linking health spending to infant mortality and life expectancy, a set of long-run feedback channels (schooling, health, public capital and a debt-dependent sovereign risk premium), an external block for terms-of-trade and exchange-rate shocks, and an explicit governance layer separating routine leakage from rare major-corruption shocks. A thousand-draw Monte Carlo propagates parameter uncertainty through every block and reports paired differences against the baseline. We apply the same machinery, without re-specifying a single equation, to translate the two candidates' filed 2026 run-off programmes --- a constitutional spending-growth rule and a debt-stabilising primary-balance rule --- into comparable fiscal paths. We report the model's own historical back-test: differences against the baseline pass a stated tolerance, but the absolute level of the public-debt ratio does not, and we show why a stochastic stock-flow-adjustment term is a more honest response to that failure than a fitted correction. We argue that the framework's principal contribution is not a forecast but a disciplined, falsifiable, and fully traceable accounting of what a given fiscal composition and size imply, and of how much of that implication is assumption rather than estimate.
+\end{abstract}
+
+\noindent\textbf{Keywords:} fiscal consolidation; debt sustainability; Monte Carlo microsimulation; state size; Brazil; corruption and governance; fiscal multipliers.
+
+\vspace{0.3cm}
+
+% ===========================================================================
+\section{Introduction}
+% ===========================================================================
+
+A perennial question in the political economy of public finance is how much the state should tax and spend, and how the answer changes an economy's growth, its public debt, and the distribution of income and health across its population. Brazil poses this question with unusual sharpness. General-government primary spending reached 39.8\% of GDP in 2025, population ageing is projected to raise the age-related share of that spending by a further 3.3 percentage points of GDP (pp GDP) over the subsequent decade even with no policy change \citep{ibge2024,tesouro2025}, and gross general-government debt stood at 78.6\% of GDP at the close of 2025 \citep{bcbsgs}. The 2026 presidential run-off has, in turn, placed two sharply different fiscal philosophies before voters: a constitutional spending-growth rule tying real federal expenditure growth to a fraction of real revenue growth, and a debt-stabilising primary-balance rule that moves the government's balance linearly towards the level implied by the debt dynamics identity.
+
+This paper documents a model built to make that debate tractable without pretending to resolve it. We did not set out to forecast Brazil's fiscal future, nor to rank the candidates. We set out to build an instrument that takes a stated change in the size and composition of the state --- expressed, deliberately, in the same units a finance ministry would use, percentage points of GDP --- and propagates it consistently through growth, debt, household incomes, health outcomes, long-run human- and physical-capital accumulation, the external sector, and an explicit account of leakage and corruption risk, while reporting at every step how much of the result is a sourced estimate, a defensible modelling choice, or an acknowledged gap. Every numerical parameter in the model is traceable to a single registry file with its source, vintage and licence; where no credible estimate exists the model raises an error rather than silently substituting a plausible number. This discipline is, we think, the paper's main methodological claim: a scenario model's usefulness depends less on the sophistication of any one equation than on the auditability of the whole chain and the honesty with which it reports its own failures.
+
+The remainder of the paper proceeds as follows. Section~\ref{sec:lit} places the model within four strands of literature: the composition of fiscal consolidation, stochastic debt-sustainability analysis, the distributional and social consequences of adjustment, and the governance and corruption channel. Section~\ref{sec:context} sketches the Brazilian fiscal and demographic context the model takes as given. Section~\ref{sec:architecture} describes the modular architecture and the nine chained blocks. Section~\ref{sec:scenarios} defines the baseline, reduction and expansion scenarios and explains how the two 2026 candidate programmes are mapped onto the same machinery. Section~\ref{sec:montecarlo} describes the Monte Carlo design and the uncertainty it does and does not capture. Section~\ref{sec:backtest} reports the model's historical back-test honestly, including the dimension on which it fails. Section~\ref{sec:results} summarises the headline, gate-cleared results. Section~\ref{sec:discussion} discusses limitations and the appropriate use of the model, and Section~\ref{sec:conclusion} concludes.
+
+% ===========================================================================
+\section{Related literature}
+\label{sec:lit}
+% ===========================================================================
+
+\subsection{The composition of fiscal consolidation}
+
+A long empirical literature asks whether fiscal consolidations differ in their output cost according to whether they are achieved through spending restraint or revenue increases. \citet{alesinaardagna2010} and the subsequent plan-based approach of \citet{alesinafaverogiavazzi2015,alesinabarbierofaverogiavazzipardisi2015} find that multi-year adjustment plans built mainly from spending cuts produce markedly milder and shorter output losses than plans built mainly from tax increases, a gap concentrated in private investment rather than consumption, and robust to whether the economy enters the adjustment in recession \citep{alesinaazzalinietal2017}. This finding is contested: \citet{guajardoleighpescatori2014} use Blanchard--Perotti-style narrative identification of exogenous consolidation shocks and find that both spending- and tax-based consolidations are contractionary, with no strong asymmetry once endogenous and anticipated fiscal actions are stripped out; \citet{perotti2013} and \citet{jordaetal2013} likewise caution that composition effects in the Alesina--Favero--Giavazzi tradition may partly reflect omitted monetary accommodation and the specific European sample. The present model does not take a position in this debate: it inherits whatever composition the user specifies --- pension indexation, subsidies, administrative efficiency, public investment, or means-tested transfers --- and reports the growth, debt and distributional consequences of that composition using Brazil-specific multipliers, rather than importing a foreign average effect.
+
+\subsection{Stochastic debt-sustainability analysis}
+
+The deterministic debt-sustainability exercises conducted by the IMF and finance ministries have long been criticised for reporting a single central path with no account of the uncertainty around growth, interest rates and the primary balance \citep{imf2003dsa}. \citet{celasundebrunostry2007} proposed replacing the deterministic path with a stochastic simulation: a vector autoregression on the macro-fiscal block generates a joint distribution of shocks, which is then propagated through the debt-accumulation identity to produce fan charts of future debt ratios. This approach, and its descendants in the IMF's Debt Sustainability Framework \citep{imf2013mac} and the Sovereign Risk and Debt Sustainability Framework \citep{imf2022srdsf}, is the direct ancestor of the Monte Carlo design used here. Our implementation differs from the VAR-based approach in sampling structural parameters (multipliers, elasticities, growth-accounting inputs) from triangular or uniform ranges drawn from named studies, rather than estimating a reduced-form shock covariance matrix; this trades statistical efficiency for interpretability, since every sampled draw can be traced back to a specific coefficient and its source. \citet{bohn1998} provides the fiscal-reaction-function literature against which any debt-sustainability exercise should eventually be checked, a comparison this model does not yet perform, since Brazil's own reaction function is not estimated here.
+
+\subsection{Distributional and social consequences of adjustment}
+
+\citet{ballfurcerilleighlloungani2013} use a sample of advanced-economy consolidation episodes identified through the Devries et al.\ narrative approach to show that fiscal consolidation raises the Gini coefficient, lowers the wage share and raises long-term unemployment, with effects that persist for several years after the initial shock; the elasticity our household microsimulation recovers for a comparable Brazilian package --- a 0.9-point Gini increase at year eight for an approximately 1\% of GDP consolidation --- is of the same order of magnitude, though it is produced mechanically from PNAD cash components and a labour-market pass-through rather than estimated from cross-country consolidation episodes, so the agreement is suggestive rather than a validation. On the health side, \citet{szkloclarkerocha2024} estimate the elasticity of infant mortality to public health spending around Brazil's EC~29/2000 constitutional amendment using a difference-in-differences design across municipalities, finding a central elasticity of $-0.126$; \citet{gallet2017} provide a meta-regression elasticity of life expectancy to total health spending of 0.04. \citet{litschig2013,litschig2012} identify the effect of municipal spending on schooling outcomes in Brazil using a close-election and a royalty-windfall design respectively. \citet{acemoglujohnson2007} and \citet{bloomcanningsevilla2001} offer opposing readings of the health-to-growth channel --- the former finding a limited long-run output effect from large historical mortality declines, the latter a sizeable one from cross-country panel estimates --- which is why the present model samples this coefficient from a wide uniform range rather than adopting either point estimate.
+
+\subsection{Governance, corruption and public-spending leakage}
+
+A distinct but related literature asks how much of public spending is diverted before it reaches its intended beneficiaries, and how this interacts with fiscal policy. \citet{ferrazfinanmoreira2012} use random federal audits of Brazilian municipal education transfers to estimate that corruption is found in roughly a third of audited municipalities, diverting around 8\% of audited education resources on average; \citet{avisferrazfinan2018} show, using the same audit programme, that a past audit visit reduces subsequently measured corruption by about 8\% across nearly two thousand municipalities, evidence this model uses as a lower bound on how much a credible anti-corruption programme could remove. \citet{mauro1995} established the cross-country association between perceived corruption and lower investment and growth that motivates treating corruption as a growth-relevant variable at all, while \citet{grundlerpotrafke2019} provide a more recent panel estimate of the long-run output effect of an improvement in the Transparency International Corruption Perceptions Index, which we hold off by default pending verification of a cross-country standard-deviation input. \citet{olken2007} is the benchmark for the difficulty of measuring leakage directly rather than through perceptions, using a missing-expenditure approach on Indonesian road projects; our leakage parameter is calibrated on the comparable Brazilian audit evidence rather than attempting a similar missing-expenditure exercise, which the available Brazilian audit microdata does not support at the scale required.
+
+\subsection{Brazilian macro-fiscal evidence}
+
+\citet{sanches2026} update Brazilian federal fiscal multiplier estimates by spending and revenue instrument using a structural approach over federal accounts from 1997 to 2023; \citet{carvalhosanches2019} is the antecedent study on which the present model's package-specific multipliers draw. \citet{gruss2014} estimates how strongly Latin American and Caribbean output responds to commodity terms-of-trade shocks, finding --- the input this model inherits directly --- that Brazil's response is markedly smaller than its regional peers, a finding our own back-test (Section~\ref{sec:backtest}) suggests may understate the 2003--2010 commodity-boom experience once capital inflows and valuation effects are considered. \citet{bomligthart2014} provide the meta-analytic range for the output elasticity of public capital that this model uses, pending the Brazilian public-capital stock data needed to activate that channel. \citet{baldaccikumar2010} estimate the sovereign-spread response to a deterioration in fiscal fundamentals, the basis for the model's debt-dependent risk-premium channel. \citet{ostrybergtsangarides2014} is the IMF staff discussion note on redistribution, inequality and growth that motivates --- but, pending a wired Gini path, does not yet activate --- an inequality-to-growth feedback. Finally, \citet{reinhartrogoff2010} and its contested 90\%-threshold claim, together with the subsequent correction literature \citep{herndonashpollin2014}, is the cautionary precedent this paper has in mind whenever it is tempted to summarise a debt path with a single threshold rather than a distribution.
+
+% ===========================================================================
+\section{Fiscal and demographic context}
+\label{sec:context}
+% ===========================================================================
+
+Brazilian general-government primary spending was 39.76\% of GDP in the four quarters to 2025, against primary revenue of 38.97\% of GDP on the same General Finance Statistics Manual 2014 (GFSM) basis, implying a primary deficit of 0.79\% of GDP \citep{tesouro2025}. Gross general-government debt stood at 78.64\% of GDP in December 2025 \citep{bcbsgs}. Of primary spending, old-age and survivors' pensions (RGPS and, by proxy, RPPS) accounted for 11.65\% of GDP, health for 5.03\% and education for 5.10\%, using the 2024 COFOG functional classification carried forward one year \citep{tesourocofog2024}. Brazil's population is ageing: using National Transfer Accounts age-profiles for 2003 and 2018 \citep{nta2018} combined with the IBGE 2024 population revision \citep{ibge2024}, age-related spending alone is projected to rise by 3.3~pp of GDP over ten years and 7.3~pp over twenty, relative to a constant-spending-share counterfactual, with no change in policy or generosity.
+
+This is the backdrop against which the 2026 presidential run-off programmes are written. The incumbent's programme is built around the existing constitutional spending-growth rule introduced by Complementary Law 200/2023 (``arcabou\c{c}o fiscal''), which ties real federal primary-spending growth to 70\% of real revenue growth, bounded between 0.6\% and 2.5\% a year. The challenger's programme proposes an explicit debt-stabilising primary-balance target, moving the federal government's primary balance over an unspecified number of years towards the level that would stabilise, rather than reduce, the debt ratio at its then-current level, financed partly through privatisation of state-owned enterprises. Section~\ref{sec:scenarios} explains how the model turns each rule into a comparable annual fiscal path without altering a single underlying equation.
+
+% ===========================================================================
+\section{Model architecture}
+\label{sec:architecture}
+% ===========================================================================
+
+The model is organised as nine chained blocks, each with a narrow, tested public interface, so that later blocks consume only the outputs --- never the internal state --- of earlier ones. Every coefficient, elasticity, stock and share used anywhere in the chain is declared once, with its source, vintage and a verification flag, in a single parameter registry; a missing or unverifiable input raises an explicit error rather than being silently defaulted. Figure~\ref{fig:chain} sketches the dependency structure; we describe each block in turn.
+
+\begin{figure}[htbp]
+\centering
+\footnotesize
+\begin{tabular}{@{}l@{}}
+Demographics (population, 2000--2070) $\longrightarrow$ Fiscal baseline (age-profile spending, \textsc{C1}) \\
+\hspace{3.0cm}$\longrightarrow$ Macro block: growth, debt, revenue (\textsc{C2}) \\
+\hspace{6.0cm}$\longrightarrow$ Household microsimulation (\textsc{C3}) \\
+\hspace{6.0cm}$\longrightarrow$ Social outcomes: mortality, life expectancy (\textsc{C4}) \\
+\hspace{6.0cm}$\longrightarrow$ Long-run feedback: schooling, health, public capital, risk premium (\textsc{C5}) \\
+\hspace{6.0cm}$\longrightarrow$ External block: terms of trade, exchange rate (\textsc{C6}/\textsc{C7}) \\
+\hspace{3.0cm}$\longrightarrow$ Governance: leakage (\textsc{G1}), major-corruption shocks (\textsc{G2}) \\
+\hspace{3.0cm}$\longrightarrow$ Monte Carlo propagation (\textsc{D1}) $\longrightarrow$ Historical back-test (\textsc{D2})
+\end{tabular}
+\caption{The model's chained block structure. Each arrow is a one-directional, tested data interface; no downstream block mutates an upstream one.}
+\label{fig:chain}
+\end{figure}
+
+\subsection{Demographic and age-profile fiscal baseline}
+
+The baseline block projects Brazilian general-government primary spending under two polar rules: a status-quo rule (\textsc{S0}) in which pension and health spending drift with the population's age structure while every other category is held at its 2025 share of GDP, and a constant-size rule (\textsc{S1}) in which total primary spending is held at today's share of GDP, so that ageing-driven cost growth in pensions and health must be offset elsewhere. Age-specific per-capita transfer profiles for education, health and old-age/survivors pensions come from Brazilian National Transfer Accounts for 2003 and 2018 \citep{nta2018}; because the two vintages straddle the 2019 pension reform, the model evaluates both, together with three indexation rules (pure per-capita cost growth, pure GDP-per-working-age-person growth, and an equal-weighted blend), and reports the minimum and maximum of six resulting combinations as low/high bounds, with the 2018 profile at equal weight as the central case. The resulting \textsc{S0}--\textsc{S1} drift is 1.6/3.3/5.2/7.3~pp of GDP at five/ten/fifteen/twenty years (central estimates).
+
+\subsection{Macroeconomic block: growth, debt and revenue}
+
+The macro block converts an annual primary-spending path into output, debt and employment paths using a Cobb--Douglas production function,
+\begin{equation}
+Y_t = A_t K_t^{\alpha} (h_t L_t)^{1-\alpha},
+\end{equation}
+with capital accumulated endogenously, $K_t = (1-\delta)K_{t-1} + i_{t-1}Y_{t-1}$, rather than assumed to grow at a fixed rate. Capital share $\alpha$, depreciation $\delta$, the initial capital--output ratio and the investment rate are taken from Penn World Table 10.01 Brazil observations at constant 2017 prices \citep{pwt1001}; total factor productivity and human-capital growth are drawn from three overlapping sub-period compound annual growth rates (2000--2019, 2004--2013 and 2010--2019) to produce low/central/high bounds, since no single historical window is obviously the right one to extrapolate. Labour is population aged 15--64 at a fixed employment rate calibrated to its 2019 value; this omits any projected change in labour-force participation or the unemployment rate beyond an Okun-coefficient adjustment for demand-driven deviations.
+
+Fiscal reductions or expansions below or above the \textsc{S0} path are translated into output effects through Brazil-specific accumulated fiscal multipliers by spending category --- public investment, social benefits, subsidies, and other current spending --- drawn from \citet{sanches2026} and reported as both a transitory impulse-response and a persistent, permanently-lower-output variant, since the literature does not agree on which horizon is appropriate and the two differ by an order of magnitude in their twenty-year debt consequences. Public debt accumulates through the standard identity
+\begin{equation}
+d_t = \frac{1+i_t}{1+g_t}\,d_{t-1} - pb_t + a_t,
+\end{equation}
+where $d_t$ is the debt-to-GDP ratio, $i_t$ the effective nominal interest rate, $g_t$ nominal GDP growth, $pb_t$ the primary balance and $a_t$ a residual debt adjustment (used, for instance, for privatisation proceeds or the stock-flow-adjustment noise term of Section~\ref{sec:backtest}). The effective real interest rate is estimated from the Fisher relation applied to five years (2021--2025) of observed interest payable over end-year gross debt and the contemporaneous GDP deflator, giving a historical range of $-2.04\%$ to $7.20\%$ and a median of $5.05\%$, reinflated at each projection corner by the corner's own deflator assumption.
+
+With no policy change, this block projects a central ten-year debt ratio of 145.5\% of GDP by 2035 and a central ten-year potential growth rate of 0.94\%, against an IMF benchmark of 2.5\% \citep{imfweo2026}; the gap is traced in Section~\ref{sec:results} to a markedly weaker total-factor-productivity trend in the Penn World Table data than in IMF projections, and should be read as a statement about which historical window one chooses to extrapolate, not as an independent forecast superior to the IMF's. Revenue is held at a constant share of GDP under a unit elasticity assumption for the deterministic corners, with the Monte Carlo sampling a long-run elasticity of 0.92--0.98 from Brazil's independent fiscal institution \citep{ifi2021ee16} for the stochastic runs; a scenario may additionally specify an explicit tax change, applied through the same Sanches et al.\ accumulated-multiplier machinery used for spending.
+
+\subsection{Household microsimulation}
+
+The distributional block is a static arithmetic microsimulation of the 2025 PNAD Cont\'inua (first-visit) cross-section \citep{pnad2025}, taking as inputs one macro-block scenario-year's GDP-level gap, unemployment change, package-specific spending gaps and revenue change, and returning the Gini coefficient, two absolute poverty headcounts (at the statutory Bolsa Fam\'ilia eligibility line and at half the minimum wage), and survey top 1\% and top 10\% income shares. Pension changes are allocated either in strict proportion to each benefit or, in an indexation-floor variant, in a way that protects benefits at or below the minimum wage; labour-income changes move either purely with the aggregate GDP level or through an explicit reallocation of simulated employment status consistent with the macro block's unemployment change; tax or transfer changes are allocated by household income, by a consumption-like proxy, or --- when a scenario specifies the taxing instrument explicitly --- by an instrument-specific incidence base (top-income, payroll, consumption, or tax-expenditure beneficiaries). No behavioural, price, labour-supply or general-equilibrium response beyond the macro block's own GDP and employment effects is modelled; this is a comparative statics exercise applied to a single cross-section, not a dynamic microsimulation. A validated no-change run reproduces the official PNAD Gini (0.5112) and population totals to within source-data precision.
+
+\subsection{Social outcomes}
+
+Health spending per capita, net of an explicit allowance for lost services under an efficiency-savings package, is linked to infant mortality through an elasticity of $-0.126$ (range $-0.071$ to $-0.206$) estimated by \citet{szkloclarkerocha2024} around Brazil's EC~29/2000 health-spending mandate, and to life expectancy through a single central elasticity of 0.04 from the cross-country meta-regression of \citet{gallet2017}; both elasticities are applied symmetrically to spending increases and cuts, a simplifying choice flagged explicitly in the documentation since the underlying Brazilian estimate found some asymmetric evidence that mortality responds more to increases than to cuts. Elasticities build up linearly to their full effect over ten years, consistent with the estimation horizon of the source study, and are held flat thereafter. No schooling, physician-access or composite Human Development Index outcome is produced, because no credibly sourced elasticity for those outcomes against Brazilian fiscal spending was identified; those cells are explicitly marked as not modelled rather than left blank or imputed.
+
+\subsection{Long-run feedback channels}
+
+A separate block adds four long-run channels through which a scenario's spending path feeds back into output and debt beyond the horizon of a conventional fiscal multiplier: a schooling-to-human-capital channel, in which each school-age birth cohort's exposure to a change in education spending shifts its adult human capital according to the Penn World Table's Mincerian schooling-return function \citep{pwt1001human}, combined with a Brazilian spending-to-schooling elasticity of 0.35 from \citet{litschig2013,litschig2012}; a health-to-output channel sampled uniformly between the near-zero estimate of \citet{acemoglujohnson2007} and the sizeable estimate of \citet{bloomcanningsevilla2001}, since the two cannot be reconciled from the data available here; a public-capital channel using the output elasticity of \citet{bomligthart2014}, which remains switched off in the published runs for want of a Brazilian public-capital stock and depreciation input from the IMF Investment and Capital Stock Dataset; and a sovereign-risk-premium channel, in which a scenario's debt deviation from its own base year adds a premium of 2--7 basis points per percentage point of GDP (central 5bp, \citealp{baldaccikumar2010}) to its effective real interest rate, capped at a 50-point deviation, resolved recursively year by year. Each channel's contribution to the headline GDP and debt paths is reported separately, computed as a full re-run with that channel switched off, so that interaction effects are captured rather than assumed additive. An inequality-to-growth channel following \citet{ostrybergtsangarides2014} is specified but left inactive pending a wired path for the Gini change produced by the household microsimulation.
+
+\subsection{External sector}
+
+An external block adds Brazil's exposure to global commodity prices and the exchange rate as a shock common to every scenario within a given Monte Carlo draw, so that differences between scenarios remain attributable to policy rather than to shared external luck --- a design chosen deliberately after noting that the 2003--2010 commodity boom and the 2014--2016 recession dominate Brazil's growth variance far more than any plausible fiscal-policy counterfactual. A first specification applied the elasticity of GDP to the terms of trade estimated by \citet{gruss2014} for a panel of Latin American and Caribbean economies; because that coefficient implies an implausibly small Brazilian response to the observed 2003--2010 boom, a second, Brazil-specific specification estimates the response of GDP growth, the EMBI spread, the real interest rate, the investment rate and commodity-linked dividend revenue to commodity export prices, US interest rates and world growth directly, on two deliberately non-overlapping estimation windows (2000--2014 and a reverse window, 2010--2024), reporting Newey--West standard errors and an explicit out-of-sample test. The reverse-window specification recovers 59\% of the observed 2006--2010 boom out of sample, against 3\% for the original terms-of-trade specification, and is used, with the coefficient set drawn per Monte Carlo draw from either estimation window with equal probability, as the Monte Carlo's output channel; exchange-rate pass-through to inflation (10\% within a year, 16\% cumulative over two, following Banco Central do Brasil estimates) and the debt consequences of that inflation are otherwise unchanged. The 2014--2016 domestic recession remains unexplained by every specification tried, a result we report rather than paper over with an additional free parameter.
+
+\subsection{Governance: leakage and major-corruption shocks}
+
+The model separates two distinct governance phenomena. Routine leakage treats a share of social-service spending --- 2.8\% to 13\%, sampled uniformly, following the audited range in \citet{ferrazfinanmoreira2012} --- as diverted before it becomes services; because the same share is applied to every scenario and both candidate programmes alike, it cancels exactly from every scenario-versus-baseline comparison and is reported instead as a separate ``leakage halved'' sensitivity on the absolute level of health and mortality outcomes. A second, independent module represents rare major-corruption scandals --- calibrated on the 1992 Collor impeachment crisis and the 2014--2016 Lava Jato investigation, the only two post-1990 episodes with a measurable macroeconomic footprint --- as a stochastic annual event process (3--8\% probability a year) with a triangularly distributed GDP-level loss (1.0\%/2.25\%/3.6\%, mode from secondhand GO Associados and Tend\^encias estimates, high end from a contested Dieese estimate), a two-year build-up and a four-year recovery half-life. The same drawn event sequence and magnitudes are applied identically to every scenario and to both 2026 programmes within a draw, so the module widens uncertainty bands without mechanically favouring any one policy path; it is explicitly not a statement about the corruption propensity of any candidate, a point we return to in Section~\ref{sec:discussion} because the perception indices available (the World Bank's Control of Corruption estimate and the Transparency International Corruption Perceptions Index) cannot, within their own measurement uncertainty, distinguish recent Brazilian governments from one another.
+
+% ===========================================================================
+\section{Scenario design and the 2026 candidate programmes}
+\label{sec:scenarios}
+% ===========================================================================
+
+\subsection{The core scenario grid}
+
+Against the status-quo (\textsc{S0}) and constant-size (\textsc{S1}) baselines, the model defines paired reduction and expansion scenarios at five, ten, fifteen and twenty years: a moderate reduction (\textsc{R\_mod}, 1/2/3/4~pp of GDP below \textsc{S0}) and an ambitious reduction (\textsc{R\_amb}, 2/4/6/7~pp), together with a precedent-based stress case (\textsc{R\_max}) calibrated from the tenth percentile of observed middle-income-country consolidation episodes of comparable duration; and mirror-image debt-financed expansions (\textsc{E\_mod}, \textsc{E\_amb}) and tax-financed expansions (\textsc{E\_mod\_tax}, \textsc{E\_amb\_tax}) of the same size. Reductions are measured against \textsc{S0} rather than \textsc{S1} because ageing itself raises pension and health spending regardless of any discretionary policy choice, and the question of interest is the size of a deliberate reduction on top of that drift, not a reduction relative to an already-adjusted baseline. A default reduction package allocates 40\% to pension and benefit indexation, 25\% to subsidies and tax expenditures, 20\% to administrative and service efficiency, and 15\% to other current spending, with public investment and means-tested transfers protected by default; four alternative compositions --- pension-only, efficiency-only, an investment-also-cut stress test, and a compensating-transfers variant --- are run as sensitivities, because the model's documentation is explicit that the \emph{composition} of a reduction, not merely its size, is the dominant determinant of its growth and distributional consequences.
+
+\subsection{The 2026 run-off programmes as scenarios}
+
+The same machinery, without modification to a single macro, micro or social equation, is used to translate the two candidates' filed 2026 electoral programmes into comparable annual fiscal paths over an assumed 2027--2030 term, with the resulting package gap held constant thereafter. Three general extensions to the scenario machinery were required and were checked, by byte-identical regression against every existing published scenario, to leave those scenarios entirely unaffected: a per-package annual gap path (rather than a single total multiplied by fixed shares), a debt adjustment applied outside the primary balance (for privatisation proceeds), and a tax-relief allocation rule in the household microsimulation for revenue reductions, mirroring the existing rule for revenue increases.
+
+The incumbent's programme is mapped onto the constitutional spending-growth rule actually in force (Complementary Law 200/2023): real federal primary spending grows at 70\% of real revenue growth, bounded between 0.6\% and 2.5\% a year, applied to the federal share (48\%) of general-government primary spending, with an assumed modest expansion of targeted transfers inside the resulting ceiling and a modest revenue ramp from announced measures. The challenger's programme is mapped onto an explicit debt-stabilising rule: the primary balance moves linearly from its 2026 status-quo level to the level $d\,(i-g)/(1+g)$ that would stabilise --- not reduce --- the 2026 debt ratio at status-quo interest and growth rates, over an assumed two- to six-year horizon, financed partly by an assumed path of privatisation proceeds retiring up to 2~pp of GDP of debt over the term. For both programmes, the pooled historical median bias between announced fiscal targets and realised outturns, $+0.25$~pp of GDP (outturn looser than target; Section~\ref{sec:f1}), is added to the planned gap from 2027 onwards, and every programme-specific magnitude left unstated by the candidates' own documents is sampled uniformly over an explicitly documented range on a dedicated random stream, so that this additional source of uncertainty does not contaminate the parameter draws used for every other scenario.
+
+We emphasise two points about this exercise that bear on how its results should be read, and why we do not report headline programme-comparison figures in this paper. First, both mappings are judgment calls about how to translate qualitative or partially specified campaign commitments into a fiscal path; neither candidate's programme specifies, for instance, the exact composition of spending cuts implied by its stated ceiling, so the model's own default composition assumption necessarily does much of the work in determining the output and distributional consequences, and a common-composition sensitivity run is required alongside the main run to separate the effect of size and timing from the effect of an assumed composition. Second, and more fundamentally, the model's own historical back-test (Section~\ref{sec:backtest}) fails its stated tolerance for the absolute level of the debt-to-GDP ratio, and our internal publication protocol withholds any debt-level result, programme-specific or otherwise, until that gate is cleared or the result is explicitly and prominently qualified as failing it. We therefore present the programme-mapping methodology here as a worked demonstration of the scenario machinery's generality --- any sufficiently specified fiscal rule, legislated or proposed, can be run through the same chain --- without presenting unpublished headline comparisons as findings.
+
+\subsection{Fiscal delivery: targets against outturns}
+\label{sec:f1}
+
+Because both candidate mappings rely on an assumed fiscal target being approximately met, we separately assembled a nineteen-year panel (1999--2025, with several years unavailable in the archived annexes) of original and revised primary-balance targets from the Budget Guidelines Law (LDO) annexes against realised outturns, for both the consolidated public sector and the central government, cross-checked against the Central Bank's public-sector balance series. Pooled across governments and excluding the pandemic year's suspended target, the median miss is close to zero (consolidated public sector: $-0.02$~pp of GDP against the original target, $+0.07$~pp against the final, revised target), though with wide dispersion by period and a mean miss sensitive to a small number of large deviations (notably 2020). No government period is treated as better or worse than another in this exercise: differences between periods are generally within the range one would expect from the small number of observations per period, and the document explicitly refrains from ranking governments on this basis.
+
+% ===========================================================================
+\section{Monte Carlo propagation of uncertainty}
+\label{sec:montecarlo}
+% ===========================================================================
+
+For each of one thousand draws (seed 20261020, fixed for reproducibility), every ranged parameter in the model --- fiscal multipliers, the real interest rate, total-factor-productivity and human-capital growth, the investment rate, the Okun coefficient, the pension indexation weight, the health-spending service-cut fraction, the infant-mortality elasticity, the revenue elasticity, the health-to-output and public-capital elasticities, the sovereign-risk-premium coefficient, the social-spending leakage share, and the household-microsimulation pension, labour and tax-incidence variants --- is sampled once from its documented range (triangular where a central estimate is available, uniform otherwise) and the entire \textsc{C1}--\textsc{C2}--\textsc{C4} chain is then re-run deterministically at that single sampled value, so that no model equation is duplicated or approximated for the stochastic run: the Monte Carlo differs from the published deterministic corners only in which point of each parameter's range it evaluates. Differences against the status-quo scenario are computed \emph{within} each draw before taking percentiles across draws, so that a reported interval describes the uncertainty in the \emph{policy effect} under shared parameter uncertainty, not the (much wider) gap between two independently resampled clouds. Five package compositions and two multiplier-persistence settings are run for every scenario. The household microsimulation, long-run feedback channels, external shocks and major-corruption shocks are added as further, separately labelled columns rather than folded silently into the core percentiles, because each carries materially different and sometimes much weaker evidentiary support than the core macro-fiscal chain; a user who wants only the best-supported result can read the core columns and ignore the rest.
+
+We are explicit, following the model's own documentation, about what these percentiles do not represent. They describe uncertainty in the model's \emph{parameters only}: they are not forecast intervals, they do not include model-specification uncertainty, they assume no correlation between sampled parameters because no credible joint distribution was available, and the triangular and uniform sampling shapes are themselves a modelling choice rather than an estimated distribution. External shocks and the major-corruption process are included only in columns explicitly labelled as such, precisely so that a reader cannot mistake the width of the core policy-uncertainty bands for the width of total outcome uncertainty.
+
+% ===========================================================================
+\section{Historical back-testing and the limits of validation}
+\label{sec:backtest}
+% ===========================================================================
+
+Before any scenario result is treated as fit for use, the model is checked against Brazil's own recent fiscal and macroeconomic history, using a two-tier gate agreed in advance of seeing the results. \textbf{Tier 1} asks whether the model's equations reproduce observed year-on-year \emph{changes} with acceptable error: the debt-accumulation identity, evaluated one step at a time from each year's observed starting debt, has a mean absolute error of 2.05~pp of GDP over 2011--2024 (tolerance 2.5~pp); the growth-accounting block has an absolute mean error of 0.165~pp a year over 2006--2019 (tolerance 0.5~pp); and the external output channel's reverse-window specification achieves an out-of-sample root-mean-squared error of 3.00~pp against a naive-forecast benchmark of 3.88~pp over 2015--2024. All three pass. \textbf{Tier 2} asks a harder question: does a debt projection, anchored once in 2017 and then run forward six years using only the model's own equations, reproduce the observed 2024 debt level? It does not: the recursion overshoots observed 2024 debt by 16.1~pp of GDP with no correction, and still by 12.5~pp of GDP even after applying the best available historical correction (the 2011--2017 mean implied stock-flow adjustment). Tier 2 fails, and the model's own publication protocol accordingly withholds any absolute debt-level result from being presented as validated, restricting published results to paired scenario \emph{differences} against the status-quo baseline, which is precisely what Tier 1 was designed to certify.
+
+We consider this an important result in its own right, not merely a caveat. The residual is not evenly distributed: the single largest contributor is a set of discretionary Treasury-to-BNDES lending and BNDES early-repayment and Central Bank result-transfer operations between 2011 and 2022, which move the implied stock-flow adjustment by as much as 3.9~pp of GDP in a single year and show no relationship to any macroeconomic covariate --- growth, interest rates, the terms of trade or the sovereign spread --- available to the model. These are discretionary policy decisions, not quantities any forward-looking macro model, however well specified, could have predicted several years in advance. Rather than search for a better-fitting correction, which would mean fitting noise, we instead represent this uncertainty honestly: a stochastic stock-flow-adjustment term, bootstrapped in three-year blocks from the demeaned 2011--2024 historical series and applied identically to every scenario within a Monte Carlo draw (so that it widens absolute debt-level uncertainty without mechanically favouring any policy), is added to the published Monte Carlo as of the most recent run. This does not and cannot make the point-forecast back-test pass; it instead ensures that published debt-level \emph{ranges}, where they are shown at all, are not falsely narrow. We regard the choice between a better point estimate and an honestly wider interval, when the former is simply unavailable, as itself a methodological contribution worth stating plainly: a model that cannot forecast a quantity should say so by widening its uncertainty, not by implicitly asserting precision it does not have.
+
+A further internal review identified that the growth-block Tier 1 check, while formally passing, is not genuinely out-of-sample: its fixed total-factor-productivity growth rate is estimated over 2000--2019, a window that fully contains the 2006--2019 test period, so the pass demonstrates internal consistency rather than held-out predictive skill, unlike the debt-identity check (a pure accounting relationship with no fitted parameter) and the external-channel check (fitted on 2000--2014, tested on 2015--2024 only). We report this distinction explicitly because it is precisely the kind of in-sample contamination that a less self-critical validation exercise would allow to pass unremarked.
+
+% ===========================================================================
+\section{Headline results}
+\label{sec:results}
+% ===========================================================================
+
+We report here only indicators that have cleared the Tier~1 gate, as paired differences against the status-quo baseline; absolute debt levels are reported as differences versus \textsc{S0}, never as validated levels, consistent with Section~\ref{sec:backtest}. All figures are the median across one thousand draws, with the 10th--90th percentile range in brackets, for the default package composition and the transitory-multiplier persistence setting unless stated otherwise.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Selected ten-year (2035) scenario effects against the status-quo baseline, default composition, transitory multiplier persistence. Median [p10, p90] across 1,000 Monte Carlo draws.}
+\label{tab:headline}
+\begin{tabular}{lrrr}
+\toprule
+Indicator & \textsc{R\_mod} (moderate cut) & \textsc{R\_amb} (ambitious cut) & \textsc{E\_mod} (moderate rise) \\
+\midrule
+GDP level vs.\ S0 (\%) & $-0.40$ $[-0.48,-0.31]$ & $-0.79$ $[-0.97,-0.62]$ & $+0.40$ $[+0.31,+0.48]$ \\
+Debt/GDP vs.\ S0 (pp) & $-11.6$ $[-12.4,-10.7]$ & $-23.3$ $[-24.7,-21.4]$ & $+11.6$ $[+10.7,+12.4]$ \\
+Unemployment vs.\ S0 (pp) & $+0.07$ $[+0.06,+0.09]$ & $+0.14$ $[+0.11,+0.17]$ & $-0.07$ $[-0.09,-0.06]$ \\
+Infant mortality vs.\ S0 (per 1,000) & $+0.035$ $[+0.017,+0.055]$ & $+0.069$ $[+0.034,+0.110]$ & $-0.035$ $[-0.056,-0.017]$ \\
+Gini vs.\ S0 (points, range across variants) & $+0.05$ to $+0.48$ & $+0.15$ to $+1.11$ & n.a. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three features of these results are worth drawing out. First, the central ten-year reduction in debt from an ambitious, sustained 4~pp-of-GDP consolidation is a little under 24~pp of GDP against the status-quo baseline, roughly in line with the arithmetic of the debt identity rather than requiring any output-side heroics; the GDP cost of achieving it is under one percentage point at the median under transitory multipliers, but rises to a median GDP loss of 3.9\% at ten years under the persistent-multiplier assumption (Section~\ref{sec:architecture}), a difference large enough that no single headline number for ``the cost of consolidation'' is defensible without stating which multiplier persistence assumption it uses. Second, the status-quo debt path itself, with no policy change, rises from 78.6\% to a central 145.5\% of GDP by 2035, of which 61\% of the ten-year increase is attributable to the interest-growth differential rather than to the (ageing-driven) widening of the primary deficit; this is the arithmetic fact that gives any debt-stabilisation rule, of the kind proposed in the challenger's 2026 programme, its force, independently of whether the specific numerical target chosen is the right one. Third, every reduction scenario raises the simulated Gini coefficient and infant mortality, and every expansion scenario lowers both, by magnitudes consistent in direction, if not in exact size, with the cross-country consolidation literature \citep{ballfurcerilleighlloungani2013} and the Brazilian health-spending elasticity literature \citep{szkloclarkerocha2024} on which the two blocks separately draw --- a consistency we read as mildly reassuring given that neither block was calibrated to reproduce the other's finding.
+
+% ===========================================================================
+\section{Discussion: what this model is, and is not, for}
+\label{sec:discussion}
+% ===========================================================================
+
+Three limitations deserve emphasis beyond those already noted in the discussion of each block.
+
+\emph{This is a comparative-statics and accounting instrument, not a dynamic stochastic general-equilibrium model.} Prices, wages and behaviour do not adjust endogenously to a change in fiscal policy except through the specific, named channels described above (a fiscal multiplier, an Okun-law unemployment response, a household's mechanical exposure to a given tax or transfer change). There is no labour-supply response, no portfolio reallocation, no monetary-policy reaction function, and no general-equilibrium price adjustment. This is a deliberate choice: each of those omitted channels is itself contested in the literature, and we judged it more honest to omit a channel entirely, and say so, than to include a stylised version calibrated to no particular Brazilian estimate.
+
+\emph{The model cannot and does not attempt to assess the corruption propensity, competence, or governing quality of any candidate or government.} Both the routine-leakage parameter and the major-corruption shock process are, by explicit design, applied identically to every scenario and to both 2026 programmes within a Monte Carlo draw; this is not a simplifying assumption adopted for convenience, but a direct consequence of the fact that the only available perception-based measures of Brazilian governance quality --- the World Bank's Control of Corruption estimate and the Transparency International Corruption Perceptions Index --- cannot, within their own stated measurement uncertainty, distinguish recent Brazilian administrations from one another. A model that tried to assign different corruption parameters to different candidates on the basis of these indices would be manufacturing precision the underlying data does not support.
+
+\emph{The model's single most consequential finding may be about its own limits rather than about fiscal policy.} The Tier~2 back-test failure documented in Section~\ref{sec:backtest} is a substantive result: a model built from a textbook debt-accumulation identity, careful growth accounting, and an explicitly estimated external-sector channel still cannot reproduce six years of observed Brazilian debt accumulation to within five percentage points of GDP, because a material part of that accumulation is driven by discretionary balance-sheet operations between the Treasury, the development bank BNDES and the Central Bank that have no macroeconomic antecedent a model of this kind could observe in advance. Any debt-sustainability exercise for Brazil --- ours or another's --- that reports a single confident debt-level projection without confronting this fact should, we think, be read with considerable scepticism.
+
+% ===========================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+% ===========================================================================
+
+We have described a modular, stochastic framework for evaluating changes in the size and composition of the Brazilian state, chaining a demographic fiscal baseline, a growth-and-debt macro block, a household microsimulation, a social-outcomes block, a set of long-run feedback channels, an external-sector block, and an explicit governance layer, propagated through a thousand-draw Monte Carlo and checked, as far as the available data permit, against Brazil's own fiscal history. Applied to a common grid of reduction and expansion scenarios, the model finds that the composition and persistence assumptions attached to a given fiscal adjustment matter at least as much as its headline size; that population ageing alone will raise age-related spending by several percentage points of GDP over the coming decade regardless of policy; that the interest-growth differential, not the primary balance, is projected to be the dominant driver of status-quo debt accumulation; and that the model's own historical back-test, read honestly, fails to validate any single confident debt-level projection, a failure we trace to discretionary balance-sheet operations no macro-fiscal model of this design could have anticipated. Applied, as a methodological demonstration, to the two candidate programmes filed for Brazil's 2026 presidential run-off, the same machinery shows that a constitutional spending-growth rule and an explicit debt-stabilising rule are, formally, two different closure rules for the same debt-accumulation identity, whose consequences depend on assumptions --- about composition, about delivery against stated targets, about privatisation proceeds --- that neither candidate's own published programme fully specifies; we withhold the resulting headline comparison from this paper pending the same internal validation gate applied to every other result. We offer the framework itself, and the discipline of its parameter registry and its publication gate, as the paper's principal contribution: a fiscal scenario model is, in our view, more useful for the questions it refuses to answer with false precision than for the ones it answers confidently.
+
+% ===========================================================================
+\section*{Statement on computational and AI-assisted tooling}
+% ===========================================================================
+\addcontentsline{toc}{section}{Statement on computational and AI-assisted tooling}
+The simulation code underlying this paper (approximately fifteen thousand lines across the data-preparation, macro, microsimulation, social, feedback, external and Monte Carlo modules) was developed iteratively using AI coding assistants (Anthropic's Claude Code and OpenAI's Codex) operating under the direct, continuous direction and review of the author, who specified every modelling choice, verified every source citation against the original document, and is solely responsible for the model's design, its limitations, and the content of this paper. Every numerical parameter used in any published result is recorded, with its source, vintage, licence and a verification flag, in a single machine-readable registry file; parameters without a traceable source are marked explicitly as such and excluded from headline results. We disclose this in the interest of the same transparency the paper asks of its own fiscal projections: readers should know how the artefact was built, not only what it claims.
+
+% ===========================================================================
+\begin{thebibliography}{99}
+\setlength{\itemsep}{0.15em}
+
+\bibitem[Acemoglu and Johnson, 2007]{acemoglujohnson2007} Acemoglu, D. and Johnson, S. (2007). Disease and Development: The Effect of Life Expectancy on Economic Growth. \textit{Journal of Political Economy}, 115(6), 925--985.
+
+\bibitem[Alesina and Ardagna, 2010]{alesinaardagna2010} Alesina, A. and Ardagna, S. (2010). Large Changes in Fiscal Policy: Taxes versus Spending. \textit{Tax Policy and the Economy}, 24(1), 35--68.
+
+\bibitem[Alesina et al., 2015]{alesinafaverogiavazzi2015} Alesina, A., Favero, C. and Giavazzi, F. (2015). The Output Effect of Fiscal Consolidation Plans. \textit{Journal of International Economics}, 96(S1), S19--S42.
+
+\bibitem[Alesina et al., 2015]{alesinabarbierofaverogiavazzipardisi2015} Alesina, A., Barbiero, O., Favero, C., Giavazzi, F. and Paradisi, M. (2015). Austerity in 2009--13. \textit{Economic Policy}, 30(83), 383--437.
+
+\bibitem[Alesina et al., 2017]{alesinaazzalinietal2017} Alesina, A., Azzalini, G., Favero, C., Giavazzi, F. and Miano, A. (2017). Is It the ``How'' or the ``When'' that Matters in Fiscal Adjustments? \textit{NBER Working Paper} No.\ 22863.
+
+\bibitem[Avis, Ferraz and Finan, 2018]{avisferrazfinan2018} Avis, E., Ferraz, C. and Finan, F. (2018). Do Government Audits Reduce Corruption? Estimating the Impacts of Exposing Corrupt Politicians. \textit{Journal of Political Economy}, 126(5), 1912--1964.
+
+\bibitem[Baldacci and Kumar, 2010]{baldaccikumar2010} Baldacci, E. and Kumar, M.S. (2010). Fiscal Deficits, Public Debt, and Sovereign Bond Yields. \textit{IMF Working Paper} WP/10/184.
+
+\bibitem[Ball et al., 2013]{ballfurcerilleighlloungani2013} Ball, L., Furceri, D., Leigh, D. and Loungani, P. (2013). The Distributional Effects of Fiscal Consolidation. \textit{IMF Working Paper} WP/13/151.
+
+\bibitem[Banco Central do Brasil]{bcbsgs} Banco Central do Brasil. Sistema Gerenciador de S\'eries Temporais (SGS): general-government gross debt series 13762, Selic and IPCA series. \url{https://www3.bcb.gov.br/sgspub}.
+
+\bibitem[Bloom, Canning and Sevilla, 2001]{bloomcanningsevilla2001} Bloom, D.E., Canning, D. and Sevilla, J. (2001). The Effect of Health on Economic Growth: Theory and Evidence. \textit{NBER Working Paper} No.\ 8587.
+
+\bibitem[Bohn, 1998]{bohn1998} Bohn, H. (1998). The Behavior of U.S.\ Public Debt and Deficits. \textit{Quarterly Journal of Economics}, 113(3), 949--963.
+
+\bibitem[Bom and Ligthart, 2014]{bomligthart2014} Bom, P.R.D.\ and Ligthart, J.E. (2014). What Have We Learned from Three Decades of Research on the Productivity of Public Capital? \textit{Journal of Economic Surveys}, 28(5), 889--916.
+
+\bibitem[Carvalho and Sanches, 2019]{carvalhosanches2019} Carvalho, L.\ and Sanches, M.\ (2019). Fiscal Policy Multipliers in Brazil. \textit{Working Paper}.
+
+\bibitem[Celasun, Debrun and Ostry, 2007]{celasundebrunostry2007} Celasun, O., Debrun, X.\ and Ostry, J.D.\ (2007). Primary Surplus Behavior and Risks to Fiscal Sustainability in Emerging Market Countries: A ``Fan-Chart'' Approach. \textit{IMF Staff Papers}, 53(3), 401--425.
+
+\bibitem[Feenstra, Inklaar and Timmer, 2015]{pwt1001} Feenstra, R.C., Inklaar, R.\ and Timmer, M.P.\ (2015). The Next Generation of the Penn World Table. \textit{American Economic Review}, 105(10), 3150--3182. (Series version 10.01, Groningen Growth and Development Centre.)
+
+\bibitem[Feenstra et al., Human Capital in PWT]{pwt1001human} Feenstra, R.C., Inklaar, R.\ and Timmer, M.P.\ Human Capital in PWT Version 9.0, PWT documentation note.
+
+\bibitem[Ferraz, Finan and Moreira, 2012]{ferrazfinanmoreira2012} Ferraz, C., Finan, F.\ and Moreira, D.B.\ (2012). Corrupting Learning: Evidence from Missing Federal Education Funds in Brazil. \textit{Journal of Public Economics}, 96(9--10), 712--726.
+
+\bibitem[Gallet and Doucouliagos, 2017]{gallet2017} Gallet, C.A.\ and Doucouliagos, H.\ (2017). The Impact of Healthcare Spending on Health Outcomes: A Meta-Regression Analysis. \textit{Social Science \& Medicine}, 179, 9--17.
+
+\bibitem[Gr\"undler and Potrafke, 2019]{grundlerpotrafke2019} Gr\"undler, K.\ and Potrafke, N.\ (2019). Corruption and Economic Growth: New Empirical Evidence. \textit{European Journal of Political Economy}, 60, 101810.
+
+\bibitem[Gruss, 2014]{gruss2014} Gruss, B.\ (2014). After the Boom--Commodity Prices and Economic Growth in Latin America and the Caribbean. \textit{IMF Working Paper} WP/14/154.
+
+\bibitem[Guajardo, Leigh and Pescatori, 2014]{guajardoleighpescatori2014} Guajardo, J., Leigh, D.\ and Pescatori, A.\ (2014). Expansionary Austerity? International Evidence. \textit{Journal of the European Economic Association}, 12(4), 949--968.
+
+\bibitem[Herndon, Ash and Pollin, 2014]{herndonashpollin2014} Herndon, T., Ash, M.\ and Pollin, R.\ (2014). Does High Public Debt Consistently Stifle Economic Growth? A Critique of Reinhart and Rogoff. \textit{Cambridge Journal of Economics}, 38(2), 257--279.
+
+\bibitem[IBGE, 2024]{ibge2024} Instituto Brasileiro de Geografia e Estat\'istica (2024). Proje\c{c}\~ao da Popula\c{c}\~ao do Brasil, revis\~ao 2024.
+
+\bibitem[Instituição Fiscal Independente, 2021]{ifi2021ee16} Instituição Fiscal Independente (2021). Estudo Especial n.\textsuperscript{o} 16: Elasticidade de longo prazo da receita federal.
+
+\bibitem[IMF, 2003]{imf2003dsa} International Monetary Fund (2003). Sustainability Assessments---Review of Application and Methodological Refinements. IMF Policy Paper.
+
+\bibitem[IMF, 2013]{imf2013mac} International Monetary Fund (2013). Staff Guidance Note for Public Debt Sustainability Analysis in Market-Access Countries. IMF Policy Paper.
+
+\bibitem[IMF, 2022]{imf2022srdsf} International Monetary Fund (2022). Staff Guidance Note on the Sovereign Risk and Debt Sustainability Framework for Market Access Countries. IMF Policy Paper.
+
+\bibitem[IMF, 2026]{imfweo2026} International Monetary Fund (2026). World Economic Outlook database, Brazil country series.
+
+\bibitem[Jord\`a, Schularick and Taylor, 2013]{jordaetal2013} Jord\`a, \`O., Schularick, M.\ and Taylor, A.M.\ (2013). When Credit Bites Back. \textit{Journal of Money, Credit and Banking}, 45(s2), 3--28.
+
+\bibitem[Litschig, 2012]{litschig2012} Litschig, S.\ (2012). Are Rules-Based Government Programs Shielded from Special-Interest Politics? Evidence from Revenue-Sharing Transfers in Brazil. \textit{Journal of Public Economics}, 96(11--12), 1047--1060.
+
+\bibitem[Litschig and Morrison, 2013]{litschig2013} Litschig, S.\ and Morrison, K.M.\ (2013). The Impact of Intergovernmental Transfers on Education Outcomes and Poverty Reduction. \textit{American Economic Journal: Applied Economics}, 5(4), 206--240.
+
+\bibitem[Mauro, 1995]{mauro1995} Mauro, P.\ (1995). Corruption and Growth. \textit{Quarterly Journal of Economics}, 110(3), 681--712.
+
+\bibitem[National Transfer Accounts, Brazil]{nta2018} National Transfer Accounts project. Brazil age-profile accounts, vintages 2003 and 2018.
+
+\bibitem[Olken, 2007]{olken2007} Olken, B.A.\ (2007). Monitoring Corruption: Evidence from a Field Experiment in Indonesia. \textit{Journal of Political Economy}, 115(2), 200--249.
+
+\bibitem[Ostry, Berg and Tsangarides, 2014]{ostrybergtsangarides2014} Ostry, J.D., Berg, A.\ and Tsangarides, C.G.\ (2014). Redistribution, Inequality, and Growth. \textit{IMF Staff Discussion Note} SDN/14/02.
+
+\bibitem[Perotti, 2013]{perotti2013} Perotti, R.\ (2013). The Austerity Myth: Gain Without Pain? In A.\ Alesina and F.\ Giavazzi (eds.), \textit{Fiscal Policy after the Financial Crisis}. University of Chicago Press.
+
+\bibitem[Reinhart and Rogoff, 2010]{reinhartrogoff2010} Reinhart, C.M.\ and Rogoff, K.S.\ (2010). Growth in a Time of Debt. \textit{American Economic Review}, 100(2), 573--578.
+
+\bibitem[Sanches, 2026]{sanches2026} Sanches, M.\ et al.\ (2026). Adjustment Through Revenue or Spending? Fiscal Adjustment Scenarios Based on Estimated Multiplier Effects. \textit{Estudos Econ\^omicos}, 56.
+
+\bibitem[Secretaria do Tesouro Nacional, 2025]{tesouro2025} Secretaria do Tesouro Nacional (2025). Estat\'isticas Fiscais do Governo Geral (GFSM 2014), 2025-IV.
+
+\bibitem[Secretaria do Tesouro Nacional, COFOG, 2024]{tesourocofog2024} Secretaria do Tesouro Nacional (2024). Classifica\c{c}\~ao Funcional (COFOG) do Governo Geral, 2024.
+
+\bibitem[IBGE, PNAD Cont\'inua, 2025]{pnad2025} Instituto Brasileiro de Geografia e Estat\'istica (2025). Pesquisa Nacional por Amostra de Domic\'ilios Cont\'inua, primeira visita.
+
+\bibitem[Szklo, Clarke and Rocha, 2024]{szkloclarkerocha2024} Szklo, A., Clarke, D.\ and Rocha, R.\ (2024). Public Health Spending and Infant Mortality: Evidence from Brazil. \textit{IZA Discussion Paper} No.\ 16829.
+
+\end{thebibliography}
+
+\end{document}

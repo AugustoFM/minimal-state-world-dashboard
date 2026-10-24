@@ -1,0 +1,3 @@
+# Archived downloads are kept byte-for-byte (SHA-256 recorded in data/raw/SOURCES.md)
+data/raw/** -text
+data/raw/**/*.md text

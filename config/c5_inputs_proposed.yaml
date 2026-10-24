@@ -1,0 +1,26 @@
+# C5 inputs for the public-capital channel (filled by Claude 2026-10-20 from the archived IMF ICSD 2021;
+# see data/raw/SOURCES.md 'Public capital (for C5)').
+public_capital:
+  initial_stock_gdp:
+    central: 0.769
+    unit: ratio_of_gdp
+    country: BRA
+    year: 2019
+    source:
+      name: IMF Investment and Capital Stock Dataset 2021 (kgov_n / GDP_n, nominal national currency)
+      file: data/raw/brazil/public_capital/IMFInvestmentandCapitalStockDataset2021.xlsx
+      url: https://infrastructuregovern.imf.org/content/dam/PIMA/Knowledge-Hub/dataset/IMFInvestmentandCapitalStockDataset2021.xlsx
+    note: "Real (constant 2017 PPP) ratio is 0.820; nominal used for consistency with the model's nominal shares. Latest year in the dataset is 2019."
+    status: sourced
+  depreciation_rate:
+    central: 0.0344
+    unit: share_per_year
+    country: BRA
+    year: 2010-2019
+    source:
+      name: IMF ICSD 2021, implied by K_t = (1 - d) K_(t-1) + I_t on kgov_rppp and igov_rppp
+      file: data/raw/brazil/public_capital/IMFInvestmentandCapitalStockDataset2021.xlsx
+    note: "Median of the implied annual rates 2010-2019 (range 2.2%-4.5%); derived by Claude, not published as such."
+    status: derived
+
+downloads_needed: []

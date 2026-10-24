@@ -1,0 +1,107 @@
+task: D3
+status: proposals_only_not_read_by_model
+fiscal_reaction:
+  sample_definition: GDP-deflator inflation below 15% in that year, 2000-2024
+  rho:
+    proposed: 0.033401447300978465
+    derivation: Emerging-country FE coefficient on lagged debt
+    output: data/debt_panel/frf_estimates.csv
+  phi:
+    proposed: 0.6803187161606061
+    derivation: Emerging-country FE coefficient on lagged primary balance
+    output: data/debt_panel/frf_estimates.csv
+  long_run:
+    proposed: 0.10448358721481853
+    derivation: rho/(1-phi), emerging-country FE
+    output: data/debt_panel/frf_estimates.csv
+r_minus_g_pct:
+  sample_definition: GDP-deflator inflation below 15% in that year, 2000-2024
+  emerging:
+    n: 571
+    mean: -2.4199778421831595
+    median: -2.502967524874156
+    sd: 5.62019307375784
+    p10: -8.957402457509371
+    p90: 3.454762405328408
+    derivation: Annual effective-rate r-g observations, emerging sample
+    output: data/debt_panel/r_minus_g.csv
+  brazil:
+    n: 25
+    mean: 2.83113222688923
+    median: 2.7558862379028404
+    sd: 4.550349228840028
+    p10: -1.538572960869178
+    p90: 6.7267446286931785
+    derivation: Annual effective-rate r-g observations for Brazil
+    output: data/debt_panel/r_minus_g.csv
+stock_flow_adjustment_pp:
+  sample_definition: GDP-deflator inflation below 15% in that year, 2000-2024
+  emerging:
+    n: 573
+    mean: 1.420585489910878
+    median: 1.108454534574644
+    sd: 3.8763766605666845
+    p10: -1.6754706462630342
+    p90: 5.025066251706848
+  brazil:
+    n: 25
+    mean: 3.108281896011531
+    median: 2.3159842212014006
+    sd: 4.288503004349932
+    p10: -0.1395508557436867
+    p90: 6.403130161618452
+  derivation: Annual debt-decomposition residuals
+  output: data/debt_panel/decomposition.csv
+  warning: Heavy-tailed residual including crises, valuation changes, definition changes
+    and cross-source mismatch; use robust sensitivity ranges.
+full_sample_not_for_calibration:
+  reason: High-inflation observations combine an FPP interest series that behaves
+    like real/operational interest with an inflation correction that lands in SFA,
+    strongly biasing r-g and SFA.
+  r_minus_g_pct:
+    emerging:
+      n: 1127
+      mean: -9.221959616969404
+      median: -5.0274592597814625
+      sd: 16.26098780110956
+      p10: -25.139350624575872
+      p90: 2.7685512589912817
+    brazil:
+      n: 40
+      mean: -7.8331215180060125
+      median: 1.6376745801241093
+      sd: 21.012501082813312
+      p10: -36.91105963089438
+      p90: 7.087311058949883
+  stock_flow_adjustment_pp:
+    emerging:
+      n: 1133
+      mean: 6.154778937185347
+      median: 1.9161430347535775
+      sd: 19.57862518429038
+      p10: -1.7377820828947703
+      p90: 14.390088540655613
+    brazil:
+      n: 40
+      mean: 8.389773216414245
+      median: 3.1556888177055527
+      sd: 11.095988015490276
+      p10: -0.03333348382255147
+      p90: 25.06734960581321
+  fiscal_reaction_emerging:
+    rho: 0.011437119450854951
+    phi: 0.6968814174975342
+    long_run: 0.03773150216140877
+  r_minus_g_debt_feedback_per_debt_pp: -0.06537596254073294
+debt_and_feedback:
+  historical_p99_debt_pct_gdp: 197.81559085186495
+  historical_p95_debt_pct_gdp: 119.64027578822494
+  derivation: 99th percentile of observed annual debt in the fixed 50-country panel;
+    descriptive bound, not a sustainability threshold
+  output: data/debt_panel/panel.csv
+  r_minus_g_debt_feedback_per_debt_pp: -0.041169932625893774
+  feedback_derivation: Within-country FE slope of r-g on lagged debt, GDP-deflator
+    inflation below 15%, 2000-2024
+  feedback_output: data/debt_panel/r_minus_g.csv
+  warning: Association is not an identified risk-premium equation; no evidence-based
+    hard feedback ceiling is estimated.

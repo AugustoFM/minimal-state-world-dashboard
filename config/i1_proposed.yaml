@@ -1,0 +1,134 @@
+task: I1
+status: proposal_only_not_read_by_model
+long_run_real_policy_rate_pct:
+  central: 5.0
+  low: 4.5
+  high: 6.0
+  source: BCB neutral-rate estimate and review range; see docs/interest_rates_review.md
+focus_inputs_latest_survey:
+  2026:
+    selic_pct: 13.25
+    ipca_pct: 5.219
+    real_policy_pct: 7.632651897470999
+  2027:
+    selic_pct: 12.0
+    ipca_pct: 4.3206
+    real_policy_pct: 7.3613456977816405
+  2028:
+    selic_pct: 10.5
+    ipca_pct: 3.75
+    real_policy_pct: 6.506024096385521
+  2029:
+    selic_pct: 10.0
+    ipca_pct: 3.5
+    real_policy_pct: 6.280193236715004
+pass_through:
+  current_year: 0.4046662533104197
+  lagged_year: 0.024764687247400774
+  long_run: 0.4294309405578205
+  year1_share: 0.9423313857747836
+  sample: 2010-2025, n=15 after the Selic lag
+  derivation: implicit nominal rate = interest payable / average current-prior December
+    DBGG; OLS on current and lagged annual-average Selic
+anchors:
+  year: 2025
+  implicit_real_rate_pct: 8.632767017827248
+  real_policy_rate_pct: 9.737494152384718
+  prior_year_real_policy_rate_pct: 5.827723422175435
+  s0_debt_pct_gdp: 78.64
+  fixed_model_comparator_pct: 5.05
+fiscal_term:
+  coefficient_real_rate_pp_per_debt_pp: 0.00160627164289473
+  ci95_low: -0.02501402803764398
+  ci95_high: 0.02822657132343344
+  formula: coefficient * (scenario_expected_debt_pct_gdp - 2025_S0_debt_pct_gdp)
+  application: identical equation and coefficient for every scenario; association,
+    not causal
+  debt_measure_note: The estimated coefficient uses Focus expected DLSP because the
+    fixed primary specification requires it, while the scenario anchor is DBGG; this
+    concept mismatch is flagged and should be tested with the DBGG robustness estimate.
+s0_path_before_fiscal_term:
+- year: 2026
+  real_policy_rate_pct: 7.632651897470999
+  implicit_real_debt_rate_pct: 7.8778326380645325
+  difference_from_fixed_5_05_pp: 2.8278326380645327
+- year: 2027
+  real_policy_rate_pct: 7.3613456977816405
+  implicit_real_debt_rate_pct: 7.715918414588299
+  difference_from_fixed_5_05_pp: 2.6659184145882993
+- year: 2028
+  real_policy_rate_pct: 6.506024096385521
+  implicit_real_debt_rate_pct: 7.363079813592275
+  difference_from_fixed_5_05_pp: 2.3130798135922754
+- year: 2029
+  real_policy_rate_pct: 6.280193236715004
+  implicit_real_debt_rate_pct: 7.250511913773015
+  difference_from_fixed_5_05_pp: 2.200511913773015
+- year: 2030
+  real_policy_rate_pct: 6.024154589372003
+  implicit_real_debt_rate_pct: 7.141309083039503
+  difference_from_fixed_5_05_pp: 2.091309083039503
+- year: 2031
+  real_policy_rate_pct: 5.768115942029002
+  implicit_real_debt_rate_pct: 7.031358165891846
+  difference_from_fixed_5_05_pp: 1.9813581658918462
+- year: 2032
+  real_policy_rate_pct: 5.5120772946860015
+  implicit_real_debt_rate_pct: 6.921407248744189
+  difference_from_fixed_5_05_pp: 1.8714072487441893
+- year: 2033
+  real_policy_rate_pct: 5.256038647343001
+  implicit_real_debt_rate_pct: 6.811456331596532
+  difference_from_fixed_5_05_pp: 1.7614563315965324
+- year: 2034
+  real_policy_rate_pct: 5.0
+  implicit_real_debt_rate_pct: 6.701505414448875
+  difference_from_fixed_5_05_pp: 1.6515054144488754
+- year: 2035
+  real_policy_rate_pct: 5.0
+  implicit_real_debt_rate_pct: 6.695164697424178
+  difference_from_fixed_5_05_pp: 1.6451646974241783
+- year: 2036
+  real_policy_rate_pct: 5.0
+  implicit_real_debt_rate_pct: 6.695164697424178
+  difference_from_fixed_5_05_pp: 1.6451646974241783
+- year: 2037
+  real_policy_rate_pct: 5.0
+  implicit_real_debt_rate_pct: 6.695164697424178
+  difference_from_fixed_5_05_pp: 1.6451646974241783
+- year: 2038
+  real_policy_rate_pct: 5.0
+  implicit_real_debt_rate_pct: 6.695164697424178
+  difference_from_fixed_5_05_pp: 1.6451646974241783
+- year: 2039
+  real_policy_rate_pct: 5.0
+  implicit_real_debt_rate_pct: 6.695164697424178
+  difference_from_fixed_5_05_pp: 1.6451646974241783
+- year: 2040
+  real_policy_rate_pct: 5.0
+  implicit_real_debt_rate_pct: 6.695164697424178
+  difference_from_fixed_5_05_pp: 1.6451646974241783
+- year: 2041
+  real_policy_rate_pct: 5.0
+  implicit_real_debt_rate_pct: 6.695164697424178
+  difference_from_fixed_5_05_pp: 1.6451646974241783
+- year: 2042
+  real_policy_rate_pct: 5.0
+  implicit_real_debt_rate_pct: 6.695164697424178
+  difference_from_fixed_5_05_pp: 1.6451646974241783
+- year: 2043
+  real_policy_rate_pct: 5.0
+  implicit_real_debt_rate_pct: 6.695164697424178
+  difference_from_fixed_5_05_pp: 1.6451646974241783
+- year: 2044
+  real_policy_rate_pct: 5.0
+  implicit_real_debt_rate_pct: 6.695164697424178
+  difference_from_fixed_5_05_pp: 1.6451646974241783
+- year: 2045
+  real_policy_rate_pct: 5.0
+  implicit_real_debt_rate_pct: 6.695164697424178
+  difference_from_fixed_5_05_pp: 1.6451646974241783
+path_derivation: 2026-2029 latest Focus Fisher real rates; 2030-2034 five equal annual
+  steps to 5%; thereafter 5%. Starting from the 2025 implicit real debt rate, annual
+  changes apply current and lagged pass-through to current and lagged changes in the
+  real-policy rate; the 2026 lag uses observed 2024-2025 rates.

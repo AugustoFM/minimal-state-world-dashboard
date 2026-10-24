@@ -1,0 +1,30 @@
+status: proposal_only_not_wired
+scope: identical equation and parameters for every scenario
+scenario_real_rate_assumption:
+  equation: base real rate + I1 offset where used + C5 risk premium
+  source: tasks/BK.md step 5
+output_gap_assumption:
+  coefficient: 0.0
+  reason: monthly regression controls for observed 12-month log IBC-Br growth; it
+    does not identify a scenario output-gap coefficient
+  treatment: retain as an explicit zero placeholder until separately estimated and
+    reviewed
+firm_npl_rate:
+  equation: delta12_npl_pp = cumulative_real_rate_response * delta12_scenario_real_rate_pp
+    + activity_control
+  coefficient_p50: 0.4598334704451492
+  coefficient_ci95_low: 0.2559170469258743
+  coefficient_ci95_high: 0.6637498939644242
+  unit: pp of firm free-credit NPL rate per pp of ex-ante real rate
+  source: data/brazil/bankruptcy_estimates.csv primary_real_rate cumulative_rate_response
+exit_rate_index:
+  normalization: 100 in the scenario base year
+  equation: index change = current_real_rate_coefficient * scenario_real_rate_deviation_pp
+  coefficient_p50: 0.7131488162884267
+  coefficient_ci95_low: -0.0852636316699994
+  coefficient_ci95_high: 1.5115612642468528
+  unit: pp of firm exit rate per pp of annual mean ex-post real Selic
+  source: data/brazil/bankruptcy_estimates.csv firm_exit_rate current real-rate term
+uncertainty_assumption: A future integration must propagate coefficient uncertainty
+  and report p10/p50/p90; no single path is a forecast.
+causal_status: Associational coefficients; do not interpret as causal effects.

@@ -1,0 +1,118 @@
+# W3 anti-corruption sensitivity. Off by default in src/montecarlo.py.
+# Effect sizes are identical for both programmes; only the text-based channel
+# mapping differs. Qualitative commitments do not identify causal magnitudes.
+
+policy_start_year: 2027
+
+channel_order:
+  - leakage_reduction
+  - procurement_savings
+  - inss_fraud_protection
+  - scandal_probability
+
+cli_programme_names:
+  lula_pt: lula
+  flavio_bolsonaro_pl: flavio
+
+scenario_programmes:
+  P_lula_rule: lula_pt
+  P_lula_record: lula_pt
+  P_flavio_low: flavio_bolsonaro_pl
+  P_flavio_mid: flavio_bolsonaro_pl
+  P_flavio_high: flavio_bolsonaro_pl
+
+programme_mapping:
+  lula_pt:
+    - leakage_reduction
+    - scandal_probability
+  flavio_bolsonaro_pl:
+    - leakage_reduction
+    - inss_fraud_protection
+    - scandal_probability
+
+programme_texts:
+  lula_pt:
+    file: data/raw/brazil/programs_2026/lula_pt_280002542548.pdf
+    quotations:
+      - page: 15
+        channel: leakage_reduction
+        quote: "Vamos aprofundar a participação. o controle social nas políticas públicas e continuaremos realizando conferências para implantar e aprimorar políticas e programas sob responsabilidade federal."
+      - pages: "15-16"
+        channel: leakage_reduction
+        quote: "As emendas impositivas e o orçamento secreto são práticas que mudaram as relações entre o Executivo e o Legislativo, sequestram o orçamento público, dispersam os recursos e reduzem a eficiência alocativa."
+      - page: 18
+        channels: [leakage_reduction, scandal_probability]
+        quote: "Vamos dar sequência às medidas de controle e integridade da administração pública e ao combate à corrupção. O Plano de Integridade e Combate à Corrupção 2025–2027 representa um avanço institucional que será aprofundado, fortalecendo a prevenção, a investigação e a responsabilização de corruptos e corruptores, inclusive os do andar de cima, com pleno respeito à independência das instituições."
+      - page: 18
+        channel: leakage_reduction
+        quote: "O Portal da Transparência receberá investimentos para evoluir para uma plataforma inteligente baseada em dados abertos e inteligência artificial. Fortaleceremos ainda mais organismos como a Ouvidoria-Geral da União"
+  flavio_bolsonaro_pl:
+    file: data/raw/brazil/programs_2026/flavio_bolsonaro_pl_280002551544.pdf
+    quotations:
+      - page: 12
+        channels: [leakage_reduction, scandal_probability]
+        quote: "Tesouraço nos gastos públicas: equilíbrio fiscal, reforma do Estado, combate à corrupção e menos impostos."
+      - page: 69
+        channel: leakage_reduction
+        quote: "daremos mais transparência, controle e rastreabilidade às emendas parlamentares, priorizando sua alocação em políticas públicas prioritárias do Plano Plurianual, aprovado pelo parlamento."
+      - page: 70
+        channel: scandal_probability
+        quote: "Nas empresas públicas, essa proteção tem nome: a Lei das Estatais, de 2016, criada depois da Lava Jato para blindar as estatais da indicação política, com exigência de qualificação técnica e quarentena para quem vem de campanha eleitoral. Tentaram enfraquecê-la; nós vamos fortalecê-la."
+      - page: 70
+        channel: scandal_probability
+        quote: "Vamos blindar os fundos de pensão das estatais da indicação política, porque a aposentadoria do trabalhador não pode virar cofre de projeto de poder."
+      - page: 71
+        channel: leakage_reduction
+        quote: "uma agenda permanente de transparência e avaliação de políticas públicas, identificando quem são os beneficiários de cada programa e medindo o impacto real de cada gasto."
+      - page: 72
+        channel: inss_fraud_protection
+        quote: "Reeditaremos um pacote antifraude na Previdência, nos moldes do que fizemos em 2019, e não pouparemos esforços para coibir qualquer nova tentativa de roubar o dinheiro de quem já deu sua contribuição ao país."
+      - page: 72
+        channel: inss_fraud_protection
+        quote: "Vamos mudar a governança do consignado para que a fraude não se repita, revendo quem opera esses descontos e como são autorizados, com mais transparência"
+
+channels:
+  leakage_reduction:
+    fraction_removed:
+      distribution: triangular
+      low: 0.08
+      mode: 0.25
+      high: 0.50
+    low_basis: "Avis, Ferraz & Finan, JPE 2018: a past random CGU audit reduced future measured corruption by 8% in 1,949 municipalities"
+    mode_basis: "modelling choice"
+    high_basis: "existing leakage-halved sensitivity in config/parameters.yaml"
+    accounting: "same gross social-service spending produces more effective health and education services; no fiscal saving"
+  procurement_savings:
+    saving_fraction:
+      distribution: triangular
+      low: 0.00
+      mode: 0.01
+      high: 0.03
+    purchases_share_gdp_2024: 0.6983927925468266
+    purchases_value_brl_2024: 82265440000
+    gdp_value_brl_2024: 11779251000000
+    derivation: "sum of 2024 GASTO - USO DE BENS E SERVICOS in data/raw/brazil/education/tesouro_cofog_gc_2010_2024_aggregated.csv.gz divided by IBGE SIDRA 1846 nominal GDP"
+    ramp_by_elapsed_year: {0: 0.0, 1: 0.0, 2: 0.25, 3: 0.50, 4: 0.75, 5: 1.0, 20: 1.0}
+    evidence: "weak: a 2007 federal report stated 12.7% price savings in electronic auctions relative to reference prices; case-study evidence does not identify a model-wide causal effect"
+    accounting: "positive non-tax revenue/primary-balance item; no household incidence, tax multiplier, or service loss"
+    mapping: "symmetric optional add-on only under --anti-corruption-mapping full; neither programme quantifies procurement savings"
+  inss_fraud_protection:
+    annual_brl_billion:
+      distribution: triangular
+      low: 0.0
+      mode: 0.5
+      high: 1.0
+    evidence: "2019-2024 associative-deduction fraud: CGU/PF estimate R$6.3bn; CPMI majority report R$3.3bn; deductions ended by law in November 2025"
+    accounting: "annual income protected, spread equally over weighted retirement/pension recipients aged 65+; no Treasury or primary-balance effect"
+  scandal_probability:
+    probability_reduction_fraction:
+      distribution: triangular
+      low: 0.0
+      mode: 0.25
+      high: 0.50
+    source_flag: "judgment; no programme-specific causal estimate"
+    accounting: "thin the shared G2 event sequence with one uniform per event and reuse that thinning for every enabled programme scenario"
+
+optional_cpi_improvement:
+  enabled: false
+  status: "not part of W3 runs; config/corruption_proposed.yaml input remains to_verify"

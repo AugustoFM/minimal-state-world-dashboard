@@ -1,12 +1,749 @@
-# Each value needs low/central/high and a source. Filled in task B2.
-# Seed values from reviewed papers (verify against the source before use):
-multipliers_brazil_cumulative:        # Sanches, Santos, Martins (2026), SVAR
-  public_investment: {central: 2.6, source: "Sanches et al. 2026"}
-  social_benefits:   {central: 2.15, source: "Sanches et al. 2026"}
-  subsidies:         {central: null, note: "low; value to extract", source: "Sanches et al. 2026"}
+# Model parameters (task B2). Every value has low/central/high, unit and source.
+# Rules: never add a number without a source; when a paper gives only a point estimate, low/high are
+# null and `range_basis` says so (the Monte Carlo must then use a documented fallback, not a guess).
+# `verified` = how the number was checked:
+#   full_text  - read in the paper's own table/text on the date given
+#   abstract   - read in the abstract or an author/publisher summary only
+#   secondary  - taken from the literature review doc, not yet re-checked against the source
+# Literature review: Claude Doc "Brazil: state-size reform scenarios - literature review and execution plan".
+# Checked: 2026-10-20. Source registry (URL, retrieval date, licence) for these papers goes in
+# data/raw/SOURCES.md under "B2 parameter sources".
+
+# --- Macro block (C2) ---------------------------------------------------------------------------
+fiscal_multipliers_brazil:
+  # Sanches, Santos, Martins (2026), Estudos Economicos 56(1), DOI 10.1590/1980-53575612mhg.
+  # SVAR (Blanchard-Perotti), federal accounts, baseline monthly 1997-2023 excl. 2020-21.
+  # Federal government only; applying to general government is an assumption to state in outputs.
+  # Horizons (footnote 7): 25 months for public investment and social benefits (higher persistence),
+  # 15 months for all other components and revenue. Quarterly spec E1 uses 8 / 5 quarters (~24 / ~15 months).
+  # `specs` keeps every published estimate with its specification. The paper reports no standard errors
+  # (only 5% significance stars), so low/high are the min/max across specifications at the SAME horizon:
+  # specification uncertainty, NOT a confidence interval.
+  source: "Sanches, Santos & Martins 2026, Table 2 (baseline); Tables C1 (full sample), D1 (1997-2019), E1 (quarterly), F1 (controls)"
+  url: "https://www.scielo.br/j/ee/a/pjHsgbX5bB3Zms7hxsK6txg/?lang=en"
+  verified: full_text
+  unit: "R$ change in GDP per R$ of spending change, accumulated"
+  sampling_rule: "triangular(low, central, high) - modelling choice by Claude (B2), not from the source; D1 must report it"
+  accumulated:
+    public_investment:  {horizon_months: 25, low: 1.9,   central: 2.6,   high: 3.5,  range_basis: "min/max across specs", specs: {baseline: 2.6, C1: 2.43, D1: 2.7, E1_q8: 3.5, F1: 1.9}, significant_5pct: {baseline: true, F1: false}, note: "F1 significant at 10% only"}
+    social_benefits:    {horizon_months: 25, low: 1.75,  central: 2.15,  high: 3.1,  range_basis: "min/max across specs", specs: {baseline: 2.15, C1: 2.1, D1: 2.25, E1_q8: 3.1, F1: 1.75}, significant_5pct: {baseline: true}}
+    subsidies:          {horizon_months: 15, low: -1.87, central: 0.52,  high: 1.5,  range_basis: "min/max across specs", specs: {baseline: 0.52, C1: -0.06, D1: 0.02, E1_q5: -1.87, F1: 1.5}, significant_5pct: {baseline: false}, note: "not significant in any spec"}
+    personnel:          {horizon_months: 15, low: -2.0,  central: -1.18, high: 0.38, range_basis: "min/max across specs", specs: {baseline: -1.18, C1: -0.51, D1: -1.23, E1_q5: 0.38, F1: -2.0}, significant_5pct: {baseline: false}, note: "not significant; negative sign implausible as structural - C2 must not rely on it"}
+    other_expenditures: {horizon_months: 15, low: -0.4,  central: 0.28,  high: 0.28, range_basis: "min/max across specs", specs: {baseline: 0.28, C1: 0.12, D1: -0.4, E1_q5: -0.18, F1: -0.3}, significant_5pct: {baseline: false}}
+    total_expenditure:  {horizon_months: 15, low: 0.16,  central: 0.5,   high: 0.76, range_basis: "min/max across specs", specs: {baseline: 0.5, C1: 0.16, D1: 0.22, E1_q5: 0.76, F1: 0.3}, significant_5pct: {baseline: false}}
+    total_revenue:      {horizon_months: 15, low: -0.7,  central: -0.55, high: -0.33, range_basis: "min/max across specs", specs: {baseline: -0.55, C1: -0.7, D1: -0.6, E1_q5: -0.38, F1: -0.33}, significant_5pct: {baseline: false}, note: "impact multiplier -0.43 significant"}
+  accumulated_12_months:
+    # Table 2 last column; the paper uses these for its one-year simulations. Baseline spec only:
+    # no robustness table reports a 12-month value, so low/high are null. C2 must not draw these
+    # deterministically; use the `accumulated` ranges scaled by (value_12m / central) or treat as central only.
+    public_investment:  {horizon_months: 12, low: null, central: 2.4,   high: null, range_basis: "baseline only"}
+    social_benefits:    {horizon_months: 12, low: null, central: 1.81,  high: null, range_basis: "baseline only"}
+    subsidies:          {horizon_months: 12, low: null, central: 0.5,   high: null, range_basis: "baseline only"}
+    personnel:          {horizon_months: 12, low: null, central: -1.14, high: null, range_basis: "baseline only"}
+    other_expenditures: {horizon_months: 12, low: null, central: 0.27,  high: null, range_basis: "baseline only"}
+    total_expenditure:  {horizon_months: 12, low: null, central: 0.47,  high: null, range_basis: "baseline only"}
+    total_revenue:      {horizon_months: 12, low: null, central: -0.53, high: null, range_basis: "baseline only"}
+
+macro_modelling_choices:
+  # Lead-developer decisions for C2 (2026-10-20). These are modelling choices, not estimates: each is
+  # labelled `choice` and must be shown as such in outputs. Change only with a note in tasks/STATUS.md.
+  package_to_multiplier_category:
+    # config/scenarios.yaml package_shares -> fiscal_multipliers_brazil.accumulated categories
+    pension_and_indexation: social_benefits          # pensions are social-benefit cash transfers
+    subsidies_and_tax_expenditures: subsidies
+    efficiency_health_education_admin: efficiency    # see efficiency_output_effect below
+    other_current: other_expenditures
+    public_investment: public_investment             # protected by default; used in the investment-cut stress variant
+    means_tested_transfers: social_benefits          # protected by default; used in compensating-transfer variant
+  efficiency_output_effect:
+    # An efficiency saving delivers the same services with less spending, so by construction it has no
+    # demand multiplier at central; the high bound treats it like `other_expenditures` (partial failure).
+    low: 0.0
+    central: 0.0
+    high: 0.28
+    status: choice
+    range_basis: "0 = pure efficiency; high = other_expenditures central multiplier (Sanches et al. 2026 Table 2)"
+  multiplier_persistence:
+    # How a permanent spending cut moves the GDP level over 5-20 years. Sources give multipliers only up to
+    # 15-25 months, so persistence beyond that is a choice; both variants run in D1.
+    variants:
+      transitory: "each year's spending change has its accumulated multiplier effect spread over horizon_months, then fades to zero (pure demand effect; lower bound on losses)"
+      persistent: "output level gap = accumulated multiplier x spending gap for as long as the gap lasts (upper bound on losses)"
+    default: transitory
+    status: choice
+  personnel_multiplier:
+    rule: "do not use the negative point estimate; personnel cuts use other_expenditures range"
+    status: choice
+    reason: "Sanches et al. personnel multiplier is insignificant in every specification and negative (implausible as structural)"
+  revenue_to_gdp:
+    rule: "revenue/GDP held at base-year share; revenue moves one-for-one with nominal GDP (elasticity 1)"
+    status: choice
+
+fiscal_multipliers_lac_benchmark:
+  # Cross-check only, not used directly.
+  expenditure_2yr: {low: 0.5, central: null, high: 1.1, source: "IMF Western Hemisphere REO May 2018, ch. 4", verified: abstract, range_basis: "range stated in source"}
+  public_investment_2yr: {low: null, central: 1.5, high: null, source: "IMF Western Hemisphere REO May 2018, ch. 4 ('almost 1.5')", verified: abstract, range_basis: "point estimate only"}
+
+austerity_growth_effect_oecd:
+  # Alesina, Favero, Giavazzi (2018), NBER WP 24246; narrative shocks, 16 OECD countries 1978-2014.
+  spending_based_1pct_gdp_growth_pp: {low: null, central: -0.5, high: null, duration_years: "<2", source: "Alesina, Favero & Giavazzi 2018", verified: secondary, range_basis: "point estimate only"}
+  tax_based_1pct_gdp_cumulative_pct_gdp: {low: null, central: -2.0, high: null, source: "Alesina, Favero & Giavazzi 2018", verified: secondary, range_basis: "point estimate only"}
+  transferability: "OECD sample; use only as a cross-check for Brazil"
+
 growth_threshold_government_consumption_pct_gdp:
-  developing_countries: {central: 19.12, source: "Asimakopoulos & Karavias 2015"}
+  # Asimakopoulos & Karavias (2015), Granger Centre DP 15/02; dynamic panel threshold GMM, 129 countries 1980-2009.
+  all_countries:        {low: null, central: 18.04, high: null, source: "Asimakopoulos & Karavias 2015", verified: secondary, range_basis: "point estimate only"}
+  developing_countries: {low: null, central: 19.12, high: null, source: "Asimakopoulos & Karavias 2015", verified: secondary, range_basis: "point estimate only"}
+  note: "Government consumption, not primary spending; causality contested. Context only, not a model input."
+
+long_run_output_fiscal_mix:
+  # Tourinho & Brum (2020), Estudos Economicos 50(1); deterministic DGE calibrated to Brazil.
+  per_capita_output_gain_pct: {low: null, central: 2.0, high: null, source: "Tourinho & Brum 2020", verified: abstract, range_basis: "point estimate only ('about 2%')", applies_to: "lower gov. consumption + lower capital tax, or higher investment financed by lower transfers"}
+
+# --- Ageing / baseline context (C1) -------------------------------------------------------------
 ageing_pension_health_pct_gdp_no_reform:
+  # Cuevas, Karpowicz, Mulas-Granados & Soto (2017), IMF WP 17/99. Pre-EC 103/2019 reform; benchmark for C1, not an input.
+  source: "Cuevas et al. 2017, IMF WP 17/99"
+  verified: secondary
   y2015: 16
   y2025: 21
   y2050: 40
+  note: "Projection made before the 2019 pension reform (EC 103/2019); C1 should land below this path."
+
+pension_reform_horizon_years:
+  # Freitas & Paes (2023), PPP 67; OLG with EC 103/2019 transition.
+  deficit_relief_years: {low: 10, central: null, high: 15, source: "Freitas & Paes 2023", verified: secondary, range_basis: "range stated in source"}
+
+# --- Distribution (C3) --------------------------------------------------------------------------
+consolidation_gini_effect:
+  # Ball, Furceri, Leigh & Loungani (2013), IMF WP 13/151; local projections, 17 OECD countries, 173 episodes 1978-2009.
+  # Effect of a consolidation episode (~1% of GDP) on the Gini, in Gini points on a 0-100 scale.
+  source: "Ball et al. 2013, IMF WP 13/151, section III and Figure 5"
+  url: "https://www.imf.org/external/pubs/ft/wp/2013/wp13151.pdf"
+  verified: full_text
+  unit: "Gini points (0-100) per ~1% GDP consolidation"
+  year_1: {low: null, central: 0.1, high: null, range_basis: "point estimate only"}
+  year_8: {low: 0.8, central: 0.9, high: 1.0, range_basis: "lag-length robustness (5 lags to 0 lags), Figure 5"}
+  # Composition: the paper gives two specifications that disagree; keep both.
+  #  (a) Figure 6, separate start-date dummies: spending- and tax-based effects "similar" in short and
+  #      medium term (no numbers in text; figure not digitised). Paper cautions most episodes are mixed.
+  #  (b) Section IV text, episodes split by which component was larger (Guajardo et al. 2011 method):
+  #      ~1.0 pp spending-based vs ~0.6 pp tax-based at year 8.
+  # C3 default: use year_8 for both compositions (spec a); spec (b) only as a sensitivity variant.
+  year_8_by_composition_spec_a: {spending_based: "similar to year_8", tax_based: "similar to year_8", source_locator: "Figure 6 and text"}
+  year_8_spending_based_spec_b: {low: null, central: 1.0, high: null, range_basis: "point estimate only", source_locator: "Section IV.A text"}
+  year_8_tax_based_spec_b: {low: null, central: 0.6, high: null, range_basis: "point estimate only", source_locator: "Section IV.A text"}
+  wage_income_share_pp_gdp: {low: null, central: -0.8, high: null, range_basis: "point estimate only"}
+  long_term_unemployment_pct: {low: null, central: 0.5, high: null, range_basis: "point estimate only", note: "'about 0.5 percent over the medium term'"}
+  note: "Effect fades after year 8; insignificant by year 10 (footnote 9). OECD sample."
+
+fiscal_incidence_brazil_2008:
+  # Higgins & Pereira (2013), CEQ WP 7; POF 2008-09. Base for C3 calibration, not a behavioural parameter.
+  source: "Higgins & Pereira 2013, CEQ WP 7"
+  verified: secondary
+  gini_market_income: 0.574
+  gini_after_direct_taxes_transfers: 0.542
+  gini_final_income: 0.464
+  share_direct_transfers_to_non_poor: 0.74
+
+top_income_share_brazil:
+  # Souza & Medeiros (2015); tax returns + PNAD, 1928-2012.
+  top1_share_pct: {low: 10, central: 15, high: 20, source: "Souza & Medeiros 2015", verified: secondary, range_basis: "historical range stated in source, not uncertainty"}
+
+# --- Privatisation variant ----------------------------------------------------------------------
+privatisation_wage_effects:
+  # Arnold (2022), "The Impact of Privatization of State-Owned Enterprises on Workers", AEJ: Applied 14(4).
+  # 1996-2000 Brazilian privatisations; matched employer-employee data (RAIS).
+  source: "Arnold 2022, AEJ: Applied; 2019 Princeton WP for the alternative"
+  url: "https://www.aeaweb.org/doi/10.1257/app.20190428"
+  verified: abstract
+  incumbent_worker_wage_pct: {low: -26, central: -25, high: null, range_basis: "central = published; low = WP 30 log points (= -26%)"}
+  aggregate_formal_wage_pct: {low: -4.4, central: -3.0, high: null, range_basis: "central = published; low = WP 4.5 log points (= -4.4%)"}
+  share_indirect_spillover: {low: 0.67, central: 0.67, high: 0.75, range_basis: "published ~2/3; WP ~3/4"}
+
+# --- Efficiency variant ------------------------------------------------------------------------
+state_spending_efficiency_dea:
+  # Gagliardi, Marinho & de Paula (2023), PPE 53(1); DEA-BCC, 26 states, 2015.
+  mean_efficiency_score: {low: 0.55, central: null, high: 0.83, source: "Gagliardi et al. 2023", verified: secondary, range_basis: "range across DEA models"}
+  note: "Relative efficiency; an upper bound on savings without output loss, not a forecast of achievable savings."
+
+# --- Social block (C4) --------------------------------------------------------------------------
+social_modelling_choices:
+  # Lead-developer decisions for C4 (2026-10-20). Choices, not estimates; outputs must label them.
+  health_spending_measure: "real public health spending per capita = health share of GDP (C1 path minus the health part of any reduction) x real GDP per capita (C2)"
+  reduction_hitting_health_education:
+    # The scenarios.yaml package puts 20% of each reduction on 'efficiency_health_education_admin'.
+    # Split between health and education in proportion to their 2024 COFOG shares (5.03 / 5.10% GDP);
+    # administration is ignored, which over-allocates to services (conservative for outcomes).
+    allocation: cofog_2024_proportional
+    service_cut_fraction: {low: 0.0, central: 0.5, high: 1.0, status: choice,
+      range_basis: "0 = pure efficiency (same services, less money, no outcome effect, consistent with C2 efficiency_output_effect central 0); 1 = the cut removes services one-for-one"}
+  elasticity_build_up:
+    rule: "effect of a sustained spending change ramps linearly from 0 to the full elasticity over 10 years, then stays"
+    status: choice
+    basis: "Szklo, Clarke & Rocha 2024: elasticity near 0 just after the reform, about -0.2 after 10 years"
+  cuts_vs_increases:
+    rule: "apply the same elasticity to cuts as to increases"
+    status: choice
+    caveat: "Szklo et al. find mortality more sensitive to increases than to declines (noisy); symmetric use may overstate harm from cuts. Must be shown in outputs."
+  life_expectancy_to_hdi:
+    rule: "UNDP HDI health index = (LE - 20) / (85 - 20)"
+    source: "UNDP HDR technical notes (goalposts 20 and 85 years)"
+  not_modelled:
+    - "expected years of schooling: no sourced elasticity (see social_outcome_elasticities.missing)"
+    - "mean years of schooling: elasticity now available (schooling_years_wrt_local_public_spending, proxy) but C4 does not yet model the cohort replacement needed to reach the adult measure - next C4 task"
+    - "physicians per 1,000 and other health-access measures: no sourced elasticity"
+    - "HDI education index and overall HDI: depend on schooling, so only the health index is produced"
+
+social_outcome_elasticities:
+  # Not in the original 20 papers; added in B2 (2026-10-20). Elasticity = % change in outcome per 1% change
+  # in public health spending per capita.
+  infant_mortality_wrt_public_health_spending:
+    # Szklo, Clarke & Rocha (2024), IZA DP 16829; EC 29/2000 as natural experiment, Brazilian municipalities
+    # 2000-2010, 64,481 municipality-year cells. Back-of-envelope elasticity (eq. 4), block-bootstrap CIs.
+    source: "Szklo, Clarke & Rocha 2024, IZA DP 16829, Table B.2 and section 5.2.3"
+    url: "https://docs.iza.org/dp16829.pdf"
+    verified: full_text
+    low: -0.206
+    central: -0.126
+    high: -0.071
+    range_basis: "min/max across Table B.2 specifications (FINBRA cols 1-4, SIOPS cols 5-8); central = col 7 cited by authors"
+    bounds_from_text: "near 0 just after reform to about -0.2 after 10 years; CIs rule out values beyond -0.5 at 10 years"
+    asymmetry: "paper finds mortality more sensitive to spending increases than declines (Figure B.5, noisy). Applying this to cuts is an extrapolation; C4 must flag it."
+    horizon: "effect builds over ~10 years"
+  life_expectancy_wrt_health_spending:
+    # Gallet & Doucouliagos (2017), Social Science & Medicine 179: 9-17; meta-regression of 65 studies 1969-2014.
+    # Mostly cross-country, total (not only public) health spending.
+    source: "Gallet & Doucouliagos 2017, Soc Sci Med 179"
+    url: "https://ideas.repec.org/a/eee/socmed/v179y2017icp9-17.html"
+    verified: abstract
+    low: null
+    central: 0.04
+    high: null
+    range_basis: "point estimate only (abstract: 'near to +0.04'); sensitive to age at which LE is measured and to endogeneity controls"
+  mortality_wrt_health_spending_meta:
+    source: "Gallet & Doucouliagos 2017, Soc Sci Med 179"
+    verified: abstract
+    low: null
+    central: -0.13
+    high: null
+    range_basis: "point estimate only (abstract)"
+    note: "Consistent with Szklo et al. 2024 central -0.126 for Brazil"
+  schooling_years_wrt_local_public_spending:
+    # Litschig & Morrison (2013), AEJ: Applied 5(4): 206-240 (working paper Litschig 2012, UPF 1142);
+    # RDD on FPM transfer cutoffs, Brazilian municipalities, 1982-85 funding, 1991 census outcomes.
+    # +~20% local public spending per capita for 4 years -> school-age cohorts +~0.3 years of schooling
+    # per capita (+~7%). Elasticity = 7 / 20 = 0.35 (our division of two published point estimates).
+    source: "Litschig & Morrison 2013; Litschig 2012 UPF WP 1142, abstract and section on education outcomes"
+    url: "https://econ-papers.upf.edu/papers/1142.pdf"
+    verified: full_text
+    low: null
+    central: 0.35
+    high: null
+    range_basis: "point estimate only (ratio of two published point estimates)"
+    proxy: "spending is TOTAL municipal spending (education, transport, housing/urban), not education spending; applying it to education spending overstates the dose, so the effect is likely an upper bound per R$ of education spending"
+    applies_to: "years of schooling of school-age cohorts exposed to the spending; reaches HDI mean years of schooling (adults 25+) only through cohort replacement"
+    persistence: "gains attenuated but persisted to 2000 (de Carvalho Filho & Litschig 2022, JHR 57(3)); no long-run elasticity published"
+    long_run_url: "https://jhr.uwpress.org/content/wpjhr/57/3/868.full.pdf"
+  # GAP: no sourced elasticity for physicians per 1,000 or other health-access measures. Szklo, Clarke &
+  # Rocha (2024) show EC 29 raised health inputs and access but report them only as standardised indices
+  # (Table A.2), not per-capita elasticities. Expected years of schooling also has no sourced elasticity.
+  missing: [education_spending_to_expected_years_schooling, health_spending_to_physicians_per_1000]
+
+# C1 age-profile baseline inputs. All values below are sourced or explicitly
+# marked as modelling assumptions; this is the sole runtime parameter source.
+baseline:
+  pension_gdp_share:
+    low: 11.65005863811359
+    central: 11.65005863811359
+    high: 11.65005863811359
+    source: "Tesouro Nacional, COFOG_GG_2024.xlsx, sheet '1.5.a': Q4=2024, Q77 (COFOG 10.2 Old age)=8.86420230043415% of GDP plus Q78 (COFOG 10.3 Survivors)=2.7858563376794394%; carried to model base year 2025."
+  health_gdp_share:
+    low: 5.031903317955291
+    central: 5.031903317955291
+    high: 5.031903317955291
+    source: "Tesouro Nacional, COFOG_GG_2024.xlsx, sheet '1.5.a': Q4=2024 and Q52 (COFOG 07 Health)=5.031903317955291% of GDP; carried to model base year 2025."
+  education_gdp_share:
+    low: 5.101686126613569
+    central: 5.101686126613569
+    high: 5.101686126613569
+    source: "Tesouro Nacional, COFOG_GG_2024.xlsx, sheet '1.5.a': Q4=2024 and Q66 (COFOG 09 Education)=5.101686126613569% of GDP; carried to model base year 2025."
+  profile_years:
+    values: [2003, 2018]
+    source: "NTA_Brasil.xlsx, sheet 'Per capita Normalized'; single-age profiles for 2003 and 2018 define the sensitivity envelope."
+  central_profile_year:
+    value: 2018
+    source: "NTA_Brasil.xlsx, sheet 'Per capita Normalized'; 2018 is the latest available vintage and is central."
+  pension_gdp_per_worker_weight:
+    low: 0.0
+    central: 0.5
+    high: 1.0
+    source: "C1 sensitivity assumption: weight 0 uses GDP-per-capita indexation; weight 1 uses GDP-per-working-age-person indexation; 0.5 is the geometric midpoint. Not an empirical estimate."
+  working_age_min:
+    low: 15
+    central: 15
+    high: 15
+    source: "Correa, Gutierrez and Turra (2023), Contas Nacionais de Transferência: working age is 15–64."
+  working_age_max:
+    low: 64
+    central: 64
+    high: 64
+    source: "Correa, Gutierrez and Turra (2023), Contas Nacionais de Transferência: working age is 15–64."
+
+# C2 macro inputs (moved from config/c2_inputs_proposed.yaml, 2026-10-20). Sourced values with
+# locators; raw files and hashes in data/raw/SOURCES.md. Sole runtime source for src/macro.py.
+fiscal_calibration:
+  base_year: 2025
+  workbook:
+    path: data/raw/brazil/demonstrativos-governo-geral.xlsx
+    sheet: 1.2.a
+    label_row_iloc: 3
+    rows_iloc:
+      total_revenue: 4
+      interest_receivable: 15
+      total_expense: 17
+      interest_payable: 22
+      primary_balance: 33
+    unit_in_workbook: fraction_of_gdp
+    source:
+      name: Tesouro Nacional, Estatisticas Fiscais do Governo Geral
+      url: https://www.tesourotransparente.gov.br/publicacoes/estatisticas-fiscais-do-governo-geral/2021/22
+      table_series_code: "sheet 1.2.a; Q4 rolling-12-month column labels in iloc row 3; 2025-IV is iloc column 65"
+    verified: local_workbook
+  gross_debt_gdp_history:
+    path: data/raw/brazil/macro/bcb_sgs_13762_dbgg_pct_gdp.json
+    years: [2021, 2022, 2023, 2024, 2025]
+  gross_debt_history_unit: percent_of_gdp
+  gross_debt_history_range_basis: "point estimates only; exact December observations read from the untouched SGS JSON"
+  gross_debt_history_source:
+    name: Banco Central do Brasil, annual Fiscal Statistics releases; SGS 13762
+    url: https://api.bcb.gov.br/dados/serie/bcdata.sgs.13762/dados?formato=json
+    table_series_code: end-December GGGD/DBGG, BCB concept; SGS 13762
+    verified: local_json
+
+interest_rate_calibration:
+  use_legacy_nominal_rate_fallback: false
+  years: [2021, 2022, 2023, 2024, 2025]
+  gdp_deflator_history_pct:
+    2021: 13.0
+    2022: 8.6
+    2023: 5.2
+    2024: 3.8
+    2025: 5.73
+  range_basis: "For each year, exact Fisher conversion of the same-year Tesouro/BCB implicit nominal rate and IBGE GDP-deflator inflation; projection low/central/high is min/median/max of the five real rates"
+  source:
+    name: IBGE national accounts, annual GDP implicit deflator
+    annual_table_url: https://anuario.ibge.gov.br/images/aeb/2024/s7/2_pdf/s7t5102.pdf
+    sidra_table_url: https://sidra.ibge.gov.br/tabela/6784
+    sidra_files: ["data/raw/brazil/macro/ibge_sidra_6784.json (2020-2023 deflator)", "data/raw/brazil/macro/ibge_sidra_1846_gdp_current_2024.json", "data/raw/brazil/macro/ibge_sidra_1846_gdp_current_2025.json", "data/raw/brazil/macro/ibge_sidra_5932_gdp_real_growth_2025.json"]
+    table_series_code: "2021-2023: SIDRA 6784 'PIB - deflator - variacao anual' (13.0/8.6/5.2, matches); 2024: AEB table 7.5.1.2 (3.8; not yet in SIDRA 6784); 2025: derived = (GDP 2025 / GDP 2024 at current prices, SIDRA 1846) / (1 + real growth 2.3%, SIDRA 5932 v6563) - 1 = 5.71% (5.73 used; difference is rounding of the 2.3% real growth)"
+  verified: "local_json for 2021-2023 and 2025 (checked by Claude 2026-10-20); 2024 secondary (IBGE yearbook PDF, not archived)"
+  downloads_needed: []
+  note: "Setting use_legacy_nominal_rate_fallback=true deliberately restores the old nominal-rate projection behavior."
+
+growth_calibration:
+  path: data/raw/brazil/macro/pwt1001.dta
+  countrycode: BRA
+  base_year: 2019
+  labour_measure: emp
+  tfp_periods:
+    low: [2010, 2019]
+    central: [2000, 2019]
+    high: [2004, 2013]
+    pre_2006_backtest_oos: [1996, 2005]
+  pre_2006_backtest_oos_note: "D2 growth-block out-of-sample check only (src/backtest.py); not a C2 projection corner (only low/central/high are read by src/macro.py). The window must end before the 2006-2019 D2 test period starts; 1996-2005 is the ~10-year pre-sample window immediately preceding it, the same length as the existing high/low windows (2004-2013, 2010-2019)."
+  human_capital_periods:
+    low: [2004, 2013]
+    central: [2000, 2019]
+    high: [2010, 2019]
+  investment_rate_periods:
+    low: [2015, 2019]
+    central: [2000, 2019]
+    high: [2004, 2013]
+  source:
+    name: Penn World Table 10.01
+    url: https://dataverse.nl/api/access/datafile/354098
+    doi: 10.34894/QT5BCC
+    licence: CC BY 4.0
+    variables: rgdpna, rnna, delta, emp, avh, hc, labsh, rtfpna
+  range_basis: "TFP and human capital use configured compound averages; investment low/central/high are arithmetic averages of annual PWT-implied rates for 2015-2019 / 2000-2019 / 2004-2013"
+  note: "Projection alpha=1-labsh, delta, K/Y and the employment anchor use the 2019 Brazil row. Investment is derived on the same PWT constant-2017-national-price basis as K and Y. Historical validation dynamically accumulates K from its 2000 level."
+
+macro:
+  initial_debt_gdp:
+    low: null
+    central: null
+    high: null
+    unit: percent_of_gdp
+    year: 2025
+    range_basis: "point estimate only"
+    source:
+      name: Banco Central do Brasil, SGS 13762
+      url: https://api.bcb.gov.br/dados/serie/bcdata.sgs.13762/dados?formato=json
+      table_series_code: December 2025 GGGD/DBGG, BCB concept
+    verified: local_json
+  effective_nominal_interest_rate:
+    unit: percent_per_year
+    years: 2021-2025
+    range_basis: "minimum / median / maximum of workbook interest payable divided by same-year end-December GGGD for the five complete years 2021-2025"
+    source:
+      name: Tesouro workbook sheet 1.2.a interest payable and BCB GGGD
+      url: https://www.tesourotransparente.gov.br/publicacoes/estatisticas-fiscais-do-governo-geral/2021/22
+      alternate_url: https://www.bcb.gov.br/estatisticas/estatisticasfiscais
+      table_series_code: "interest payable iloc row 22, Q4 columns 2021-IV to 2025-IV; debt is fiscal_calibration.gross_debt_gdp_history"
+    verified: calculated_from_full_text_and_local_workbook
+    note: "Historical calibration only. Projection uses effective_real_interest_rate reinflated by the projected GDP deflator unless the explicitly labelled legacy fallback flag is enabled."
+  effective_real_interest_rate:
+    low: null
+    central: null
+    high: null
+    unit: percent_per_year
+    years: 2021-2025
+    range_basis: "minimum / median / maximum of same-year Fisher real rates"
+    source:
+      name: Derived from Tesouro/BCB nominal implicit rates and IBGE GDP deflator
+      formula: "(1 + nominal implicit rate_t) / (1 + GDP deflator inflation_t) - 1"
+    verified: calculated_from_sourced_observations
+  revenue_gdp:
+    unit: percent_of_gdp
+    year: 2025
+    range_basis: "point estimate only"
+    source:
+      name: Tesouro Nacional, Estatisticas Fiscais do Governo Geral
+      url: https://www.tesourotransparente.gov.br/publicacoes/estatisticas-fiscais-do-governo-geral/2021/22
+      table_series_code: "sheet 1.2.a, 2025-IV column (iloc 65): total revenue iloc row 4 minus interest receivable iloc row 15"
+    verified: calculated_from_local_workbook
+    note: "src.macro.load_macro_inputs reads this value from the untouched workbook; it is not hand-entered."
+  gdp_deflator_growth:
+    low: 3.0
+    central: 3.0
+    high: 3.8
+    unit: percent_per_year
+    year: 2024-2026
+    range_basis: "3.0% current continuous inflation target (low/central); 3.8% latest sourced annual GDP deflator observation (high)"
+    sources:
+      target:
+        name: Banco Central do Brasil, inflation targeting regime
+        url: https://www.bcb.gov.br/en/monetarypolicy/inflationtargeting
+        table_series_code: continuous target from January 2025, 3.0 percent
+      observed:
+        name: IBGE, Anuario Estatistico do Brasil 2024
+        url: https://anuario.ibge.gov.br/images/aeb/2024/s7/2_pdf/s7t5102.pdf
+        table_series_code: Tabela 7.5.1.2, deflator implicito, variacao anual
+    verified: full_text
+    note: "The target is the central long-run assumption; the latest sourced observed deflator supplies the upper sensitivity bound."
+  tfp_growth:
+    low: null
+    central: null
+    high: null
+    unit: percent_per_year
+    range_basis: "calculated from PWT rtfpna sub-period compound averages configured in growth_calibration"
+    source: {name: Penn World Table 10.01, variable: rtfpna}
+    verified: calculated_from_local_stata
+  human_capital_growth:
+    low: null
+    central: null
+    high: null
+    unit: percent_per_year
+    range_basis: "sorted compound-average growth rates across the three growth_calibration sub-periods"
+    source: {name: Penn World Table 10.01, variable: hc}
+    verified: calculated_from_local_stata
+  capital_share:
+    low: null
+    central: null
+    high: null
+    unit: share
+    year: 2019
+    range_basis: "point estimate only; 1 minus PWT labour share"
+    source: {name: Penn World Table 10.01, variable: labsh}
+    verified: calculated_from_local_stata
+  investment_rate:
+    low: null
+    central: null
+    high: null
+    unit: percent_of_gdp
+    price_basis_id: pwt1001_constant_2017_national_prices
+    range_basis: "PWT-implied gross investment arithmetic averages: low 2015-2019; central 2000-2019; high 2004-2013"
+    source:
+      name: Penn World Table 10.01
+      variables: "(rnna[t] - (1-delta[t])*rnna[t-1]) / rgdpna[t]"
+    verified: calculated_from_local_stata
+  capital_output_ratio:
+    low: null
+    central: null
+    high: null
+    unit: ratio
+    price_basis_id: pwt1001_constant_2017_national_prices
+    year: 2019
+    range_basis: "point estimate only; PWT rnna divided by rgdpna"
+    source: {name: Penn World Table 10.01, variables: rnna / rgdpna}
+    verified: calculated_from_local_stata
+  contextual_indicators_not_used:
+    ibge_nominal_investment_rate:
+      value: 16.8
+      unit: percent_of_gdp
+      year: 2025
+      label: "not used: different price basis"
+      source:
+        name: IBGE, Quarterly National Accounts, fourth quarter 2025
+        url: "https://apisidra.ibge.gov.br/values/t/1846/n1/all/v/585/p/202501,202502,202503,202504/c11255/90707?formato=json"
+        local_file: "data/raw/brazil/macro/ibge_sidra_1846_gdp_current_2025.json (Q1-Q4 sum R$12,738,566 million)"
+        table_series_code: 2025 investment rate (GFCF/GDP)
+      verified: full_text
+  depreciation_rate:
+    low: null
+    central: null
+    high: null
+    unit: percent_per_year
+    year: 2019
+    range_basis: "point estimate only"
+    source: {name: Penn World Table 10.01, variable: delta}
+    verified: calculated_from_local_stata
+  okun_coefficient:
+    low: 0.140473
+    central: 0.1878
+    high: 0.2055
+    unit: unemployment_percentage_points_per_output_gap_percent
+    year: 1980Q1-2015Q2
+    range_basis: "range across sourced estimates from two Brazil studies"
+    source:
+      name: Jin and Harper (2019); Pessoa (2014), estimates for Brazil
+      url: https://scholar.valpo.edu/cba_fac_pub/72/
+      alternate_url: https://mpra.ub.uni-muenchen.de/56388/1/MPRA_paper_56388.pdf
+      table_series_code: reported Okun coefficients
+    verified: abstract
+    note: Low is Jin-Harper; central/high are the lower/upper Pessoa estimates.
+  base_real_gdp:
+    low: 12738600
+    central: 12738600
+    high: 12738600
+    unit: million_2025_brl
+    year: 2025
+    range_basis: "point estimate only"
+    source:
+      name: IBGE, Quarterly National Accounts, fourth quarter 2025
+      url: "https://apisidra.ibge.gov.br/values/t/1846/n1/all/v/585/p/202501,202502,202503,202504/c11255/90707?formato=json"
+      local_file: "data/raw/brazil/macro/ibge_sidra_1846_gdp_current_2025.json (Q1-Q4 sum R$12,738,566 million)"
+      table_series_code: Section III and Table III.1, 2025 GDP at current prices, R$12,738.6 billion
+    verified: full_text
+    note: "Current-price 2025 GDP anchors the model's real index; subsequent changes are real growth-accounting changes."
+  base_gdp_per_capita:
+    low: 59687.49
+    central: 59687.49
+    high: 59687.49
+    unit: 2025_brl_per_person
+    year: 2025
+    range_basis: "point estimate only"
+    source:
+      name: IBGE, Quarterly National Accounts, fourth quarter 2025
+      url: https://agenciadenoticias.ibge.gov.br/agencia-sala-de-imprensa/2013-agencia-de-noticias/releases/45968-pib-cresce-2-3-em-2025-e-fecha-o-ano-em-r-12-7-trilhoes
+      table_series_code: PIB per capita 2025
+    verified: full_text
+
+published_potential_growth_benchmark:
+  central: 2.5
+  unit: percent_per_year
+  year: 2025
+  range_basis: "point estimate only"
+  source:
+    name: IMF, Brazil 2025 Article IV Consultation
+    url: https://www.imf.org/-/media/files/publications/cr/2025/english/1braea2025001-source-pdf.pdf
+    table_series_code: medium-term real GDP growth forecast, described as convergence to potential
+  verified: full_text
+
+# --- Long-run feedback block (C5) -------------------------------------------------------------
+# Added 2026-10-20 (Claude). Four channels through which spending choices change potential growth or
+# financing costs over 5-20 years. Two favour keeping spending (human capital, public capital), one can
+# cut either way (inequality), one favours lower debt (risk premium). All run as a variant on top of C2,
+# never as the only path, and each can be switched off to show its contribution.
+long_run_feedback:
+  human_capital_from_schooling:
+    # Links C4 schooling change to the PWT human-capital index used in C2 growth accounting.
+    mapping: "hc = exp(phi(s)); phi piecewise linear in mean years of schooling s"
+    returns_per_year_of_schooling: {up_to_4_years: 0.134, years_4_to_8: 0.101, above_8_years: 0.068}
+    source: "Penn World Table, 'Human capital in PWT 9.0' (Feenstra, Inklaar & Timmer), eq. 1; rates from Psacharopoulos (1994)"
+    url: "https://www.rug.nl/ggdc/docs/human_capital_in_pwt_90.pdf"
+    verified: full_text
+    note: "Brazil adult mean schooling is above 8 years, so the marginal return is 0.068. Requires C4 to turn cohort schooling gains into adult mean years (cohort replacement) - C5 task."
+  health_to_output:
+    # Effect of one extra year of life expectancy on output (labour productivity).
+    unit: "% change in output per +1 year of life expectancy"
+    low: 0.0
+    central: null
+    high: 4.0
+    range_basis: "two conflicting studies; no central value is defensible, so sample uniform[low, high] (choice)"
+    sources:
+      high: "Bloom, Canning & Sevilla (2001) NBER WP 8587, abstract and conclusion: +1 year LE -> +4% output (cross-country production function)"
+      low: "Acemoglu & Johnson (2007) 'Disease and Development' (JPE 115(6)), abstract: estimates exclude positive effects of life expectancy on GDP per capita within 40-60 year horizons"
+    urls: ["https://www.nber.org/system/files/working_papers/w8587/w8587.pdf", "https://baselinescenario.com/wp-content/uploads/2009/08/disease-and-development.pdf"]
+    verified: full_text
+  public_capital:
+    # Output elasticity of the public capital stock; investment changes accumulate into it.
+    unit: "elasticity of output to public capital stock"
+    low: 0.083
+    central: 0.106
+    high: 0.122
+    range_basis: "Bom & Ligthart (2014) meta-analysis headline estimates: short-run 0.083, sample average 0.106, long-run 0.122 (central-government public capital)"
+    source: "Bom & Ligthart (2014), Journal of Economic Surveys 28(5): 889-916; 578 estimates from 68 studies"
+    url: "https://ucrisportal.univie.ac.at/en/publications/what-have-we-learned-from-three-decades-of-research-on-the-produc/"
+    verified: abstract
+    note: "Core infrastructure at regional/local level roughly doubles these (abstract) - not used. Needs an initial Brazil public capital stock and depreciation (e.g. IMF Investment and Capital Stock Dataset) - data to download in C5."
+  sovereign_risk_premium:
+    # Change in long-term government borrowing rate per percentage point of GDP change in public debt.
+    unit: "basis points per 1 pp of GDP change in debt/GDP"
+    low: 2
+    central: 5
+    high: 7
+    range_basis: "low/high = literature range summarised in Baldacci & Kumar (2010) section II (2-7 bp); central = their own panel estimate (~5 bp, 31 advanced and emerging economies, 1980-2008)"
+    source: "Baldacci & Kumar (2010), IMF WP 10/184"
+    url: "https://www.imf.org/external/pubs/ft/wp/2010/wp10184.pdf"
+    verified: full_text
+    deficit_channel_note: "Same paper: +1 pp GDP deficit -> +20 (nominal) to +30 (real) bp; up to 50 bp with high initial deficits/debt or low saving. Use the debt channel only, to avoid double counting; report the deficit channel as a sensitivity."
+    applies_to: "deviation of debt/GDP from its base-year level (all scenarios, S0 included), added to the real implicit rate in the debt recursion"
+    deviation_cap_pp: 50   # choice (2026-10-20): out-of-sample guard; the estimate comes from much smaller debt changes. Uncapped run reported as sensitivity.
+  inequality_to_growth:
+    # Effect of net (after taxes and transfers) Gini on growth. Needs C3; switched off until C3 exists.
+    unit: "pp of annual GDP growth per +1 net Gini point (0-100 scale)"
+    low: null
+    central: -0.1
+    high: null
+    range_basis: "point estimate only: Ostry, Berg & Tsangarides (2014) net Gini 37 -> 42 lowers growth ~0.5 pp/yr (section III.A), i.e. -0.1 per point"
+    duration_effect: "+1 Gini point -> ~7% shorter expected growth spell (same paper, section III.B); not used"
+    source: "Ostry, Berg & Tsangarides (2014), IMF Staff Discussion Note 14/02"
+    url: "https://www.imf.org/external/pubs/ft/sdn/2014/sdn1402.pdf"
+    verified: full_text
+    caveat: "Cross-country panel association; causality contested. Off by default; run as a separate variant once C3 produces net Gini paths."
+    status: "inactive until C3"
+long_run_feedback_choices:
+  # Lead-developer choices for C5 (status: choice).
+  run_as: "variant 'with_feedback' alongside 'without_feedback' for every scenario; never replaces C2 results"
+  channels_default_on: [human_capital_from_schooling, health_to_output, public_capital, sovereign_risk_premium]
+  channels_default_off: [inequality_to_growth]
+  symmetry: "every channel applies to spending increases and cuts alike (same evidence standard for both)"
+  attribution: "report each channel's contribution separately (one-at-a-time switch-off), so the dashboard can show which channel drives the gap"
+
+# --- External block (C6) ----------------------------------------------------------------------
+# Added 2026-10-20 (Claude) after reviewing 2003-2010: exports, reserves, FDI, the exchange rate and
+# falling interest rates moved with a ~37% rise in the terms of trade (WDI, 2005-2011). The model was
+# a closed economy; C6 adds the external environment as an exogenous, uncertain driver.
+external_block:
+  gdp_model: c7_channel_a   # c7_channel_a (default since 2026-10-21) or c6_terms_of_trade
+  output_channel_c7:
+    status: "choice (lead developer 2026-10-21); C7 channel A verdict 'supported' (outputs/c7_backtest.md)"
+    equation: "growth deviation (pp) = b0 dlnP_t + b1 dlnP_t-1 + b2 (world growth - mean); dlnP = 100 x change in ln Brazil commodity export price index (IMF PCTOT); level effect = cumulated deviations"
+    source: "data/brazil/c7_estimates.csv (OLS, Newey-West; constants not used)"
+    coefficient_sets:
+      primary_2000_2014: {dlnP: 0.125351, dlnP_lag: -0.006986, world_gdp_growth_pct: 0.520133}
+      reverse_2010_2024: {dlnP: 0.082437, dlnP_lag: 0.064964, world_gdp_growth_pct: 0.762034}
+    sampling: "one set per Monte Carlo draw, equal probability (separate random stream [seed, 3]); central = average of the two sets"
+    bootstrap_inputs: "joint 2001-2024 changes of dlnP, world growth and BRL/USD (3-year blocks); dlnP and world growth demeaned over the sample so draws add shocks, not a trend"
+    replaces: "gdp_wrt_commodity_prices below for the GDP level effect (kept for the C6 option and the D2 growth block); FX pass-through unchanged"
+    not_wired: "C7 channels B (spread/interest: not supported) and C (investment: part of A's total response)"
+    dividend_revenue:
+      lnP: 0.837985
+      source: "C7 D_dividends (fit 2010-2017, out-of-sample RMSE 0.231 vs naive 0.285, supported); data/brazil/c7_estimates.csv"
+      use: "general-government dividends change by lnP x cumulative change in ln commodity export prices (pp GDP), same for every scenario; added to the primary balance in the external debt path (debt_gdp_with_external only; C5 does not carry external effects)"
+      decided: "lead developer 2026-10-21 at the user's request (best guess from the back-tests); payout policy held at current law for every scenario"
+  gdp_wrt_commodity_prices:
+    unit: "% change in Brazil GDP level per 1% change in its commodity price index (3-year horizon)"
+    low: null
+    central: 0.033
+    high: null
+    range_basis: "derived point estimate: Gruss (2014) GVAR, a 1% fall in China GDP lowers LAC commodity price indices ~3% on impact (Figure 12) and Brazil GDP ~0.1% after three years (Figure 13); 0.1 / 3 = 0.033 (our division; includes non-price China spillovers)"
+    source: "Gruss (2014), IMF WP 14/154, section IV.B"
+    url: "https://www.imf.org/external/pubs/ft/wp/2014/wp14154.pdf"
+    verified: full_text
+    brazil_note: "Brazil is 'a much less open economy' with a smaller response than LAC peers, and one of two countries without a further projected slowdown under stable prices (same paper)."
+  potential_vs_actual_output:
+    rule: "commodity terms-of-trade swings move actual output about twice as much as potential output; the drag on potential growth is about one third of the drag on actual growth"
+    source: "IMF World Economic Outlook, October 2015, Chapter 2 'Where Are Commodity Exporters Headed?' (summary)"
+    url: "https://www.tralac.org/images/docs/8180/weo2015-chapter-2-where-are-commodity-exporters-headed-october-2015.pdf"
+    verified: abstract
+    use: "split C6 effects into a transitory (actual) and a persistent (potential) part"
+  exchange_rate_pass_through:
+    unit: "pp of cumulative IPCA inflation per 1% BRL depreciation"
+    horizon_12m: {low: null, central: 0.10, high: null}
+    horizon_24m: {low: null, central: 0.16, high: null}
+    range_basis: "point estimates; 90% CIs shown only in figures and described as 'quite wide' (not digitised)"
+    source: "Banco Central do Brasil, Monetary Policy Report March 2026, box 'exchange rate pass-through' (local projections, Jul 2006 - Dec 2025, commodity prices controlled)"
+    url: "https://www.bcb.gov.br/content/ri/inflationreport/202603/rpm202603b8i.pdf"
+    verified: full_text
+  external_paths:
+    rule: "external environment (commodity terms of trade, exchange rate) drawn as whole historical paths by block bootstrap of observed annual changes, not invented scenarios"
+    data: "data/brazil/backtest_observed.csv (WDI net barter terms of trade 2005-2024, BRL/USD 2000-2024); a longer terms-of-trade series (e.g. FUNCEX via IPEAData) is needed for 2003-2004 and for a richer sample"
+    status: choice
+  gaps:
+    - "revenue from commodities (oil royalties, special participations) beyond revenue moving with GDP: not yet sourced"
+    - "FX-linked share of public debt (valuation effect of the exchange rate on debt): data to download from BCB"
+    - "capital flows / FDI response: not modelled; FDI shown as context only"
+external_block_choices:
+  run_as: "dimension 'external' in D1: historical-bootstrap paths sampled per draw, plus fixed 'boom' / 'neutral' / 'bust' reference paths reported separately"
+  symmetry: "the same external paths apply to every policy scenario, so external luck is not credited to or blamed on a policy"
+  back_test: "D2 must feed observed 2003-2015 and 2017-2022 external paths and report whether the model reproduces actual GDP growth, debt and inflation before any projection is published"
+
+# --- Governance / corruption (added 2026-10-20, Claude) ------------------------------------------
+# Party-neutral: corruption enters as leakage of public spending before it becomes services, applied
+# identically to every scenario and programme. Perception indices by government period are context
+# only (data/brazil/governance_brazil.csv): they mix actual corruption with its exposure (e.g. Lava
+# Jato 2014-17) and differences between recent governments are within their error bands.
+governance:
+  leakage_share_of_spending:
+    unit: "share of social-service spending that does not become services (diverted)"
+    low: 0.028
+    central: null
+    high: 0.13
+    sampling: "uniform[low, high] (choice; the two bounds come from different measures, no central is defensible)"
+    range_basis: "low = Ferraz, Finan & Moreira (2012): corruption in education detected in 35% of audited municipalities, 8% of audited education resources diverted there -> 0.35 x 0.08 = 0.028 expected (our multiplication); high = lower end of Transparência Brasil (2005) estimate that 13-55% of FUNDEF 2001-03 was lost to fraud, as cited in the same paper (fn. 13, secondary)"
+    source: "Ferraz, Finan & Moreira (2012), J. Public Economics 96; NBER WP 18150, section 3.1 and fn. 13"
+    url: "https://www.nber.org/system/files/working_papers/w18150/w18150.pdf"
+    verified: full_text
+    scope: "municipal education transfers 2001-2005; applied to health and education as a proxy"
+    model_effect: "scales services per real spent in every scenario; cancels out of scenario-vs-S0 comparisons unless a policy changes it"
+  leakage_reduction_sensitivity:
+    fraction_of_leakage_removed: 0.5
+    status: "choice: illustrative 'leakage halved' sensitivity available to any scenario; neither 2026 programme quantifies its anti-fraud measures"
+  corruption_learning_association:
+    value_sd: -0.35
+    se: 0.076
+    source: "Ferraz, Finan & Moreira (2012), Table 4 col. 1: students in municipalities with detected education corruption score 0.35 SD lower (association, not causal)"
+    use: "context only; not wired into C4"
+  perception_indices:
+    wgi_control_of_corruption: "World Bank WGI, GOV_WGI_CC.EST (-2.5 to 2.5), Brazil 1996-2025"
+    cpi: "Transparency International CPI 2012-2025 (0-100), with standard errors"
+    use: "context only; not a model input"
+
+# --- Revenue response to GDP (added 2026-10-20, Claude; used by the revenue-path extension, P1) ---
+revenue_elasticity_to_gdp:
+  # IFI (Senado) Estudo Especial no 16, Nov 2021: central-government recurring revenue, quarterly 1997-2021,
+  # cointegration (long run) and error-correction (short run) estimates split by sign of the output gap.
+  source: "IFI Estudo Especial no 16 (Nov 2021), Tables 2-4"
+  url: "https://www12.senado.leg.br/ifi/pdf/estudo-especial-no-16-a-elasticidade-da-receita-em-relacao-ao-pib-nov-2021"
+  verified: full_text
+  scope: "federal (central-government) total revenue; applied to general-government revenue as a proxy"
+  long_run_total_revenue: {negative_gap: 0.92, positive_gap: 0.98}
+  short_run_total_revenue: {negative_gap: 1.17, positive_gap: 1.51}
+  error_correction_per_quarter: -0.63
+  annual_use: "the error correction closes most of the short-run overshoot within a year, so the annual model uses the long-run values: low 0.92, high 0.98 (central null; sample uniform). The current C2 rule (revenue a fixed share of GDP) is elasticity 1.0, slightly above both."
+  low: 0.92
+  central: null
+  high: 0.98
+  status: "sourced; not yet wired (revenue-path task)"
+
+# --- Fiscal delivery (F1; added 2026-10-21, Claude) ----------------------------------------------
+fiscal_delivery:
+  # Outturn minus ORIGINAL LDO primary target, consolidated public sector, pp of GDP (surplus positive).
+  # data/brazil/fiscal_delivery.csv (19 archived years; consolidated values available for 14). 2020 excluded
+  # (pandemic; targets suspended under the state of calamity), leaving 13 years.
+  source: "data/brazil/fiscal_delivery.csv (LDO compliance annexes; outturns match BCB SGS 5793)"
+  concept: consolidated_public_sector
+  years: [2008, 2010, 2011, 2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023, 2024, 2025]
+  miss_vs_original_pp_gdp: [0.27, -0.68, 0.25, -2.96, -2.97, 0.49, 0.33, 0.95, 4.49, 3.27, -1.63, -0.28, -0.39]
+  summary: {mean: 0.09, median: 0.25, p10: -2.69, p90: 2.81}
+  default_use: "P1 applies the pooled median bias (about zero) to both programmes' promised primary paths: on average governments since 2008 delivered their original target"
+  sensitivity_use: "empirical bootstrap of the 13 misses, same draws for both programmes; labelled as including macro surprises"
+  own_record_sensitivity: "by-government misses in fiscal_delivery.csv; Flávio Bolsonaro has no presidential record (Jair Bolsonaro 2019-22 is a weak proxy); Lula I-II has only 2 of 8 years archived"
+  caveats:
+    - "a miss mixes fiscal management with macro surprises (2015-16 recession; 2021-22 inflation and commodity revenue); the model already draws GDP and external shocks, so the full spread double-counts them"
+    - "missing years 2001, 2003-2007, 2009, 2013 are mostly Lula I-II; the sample under-represents that period"
+    - "targets were revised in several years (2015, 2016, 2017, 2018); misses vs final targets are smaller (median 0.13)"
+  status: choice

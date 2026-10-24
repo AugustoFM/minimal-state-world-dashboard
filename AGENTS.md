@@ -10,3 +10,6 @@
 - Read PLAN_BRAZIL.md, then take tasks marked Codex from `tasks/`. Claude reviews PRs.
 - Model parameters come only from `config/parameters.yaml` (each with a source); scenario sizes from `config/scenarios.yaml`.
 - Outputs are ranges (p10/p50/p90). Never present a single path as a forecast.
+
+- Log progress in `tasks/STATUS.md` after every task (status, branch, problems). Ask Claude for review by setting status to `PR open`.
+- Scenario defaults are in `config/scenarios.yaml`; do not change them without recording why in STATUS.md.

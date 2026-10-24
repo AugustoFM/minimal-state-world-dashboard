@@ -1,0 +1,11 @@
+analysis,specification,term,estimate,std_error,nobs,unit,note,clusters
+composition,2016_to_2025_fixed_2012_2025_rates,employer_rate_change_pp,0.35897839579500795,,56,percentage points,descriptive composition arithmetic; not causal,
+education_gradient,employer_rate_pct,below_fundamental,2.811941410958532,,12,percent of occupied in level,national annual mean,
+education_gradient,employer_rate_pct,fundamental_secondary_incomplete,3.188384020647822,,12,percent of occupied in level,national annual mean,
+education_gradient,employer_rate_pct,higher_complete,7.951806273493234,,12,percent of occupied in level,national annual mean,
+education_gradient,employer_rate_pct,secondary_higher_incomplete,4.180079973374081,,12,percent of occupied in level,national annual mean,
+education_gradient,cnpj_employer_rate_pct,below_fundamental,1.555265858568333,,12,percent of occupied in level,national annual mean,
+education_gradient,cnpj_employer_rate_pct,fundamental_secondary_incomplete,2.31276771919208,,12,percent of occupied in level,national annual mean,
+education_gradient,cnpj_employer_rate_pct,higher_complete,7.228427457721593,,12,percent of occupied in level,national annual mean,
+education_gradient,cnpj_employer_rate_pct,secondary_higher_incomplete,3.495157896668451,,12,percent of occupied in level,national annual mean,
+crime_association,state_and_year_fe_cluster_state,mean_years_18_24,0.3057351051769234,3.3883890073134535,189,youth homicides per 100k residents per school year,"association, not causal; youth deaths use all-resident denominator",27.0
