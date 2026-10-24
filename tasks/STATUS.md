@@ -44,6 +44,11 @@
 
 ## Branch consolidation notes
 
+- **2026-10-24: `codex/brazil-a1-a4` merged into `main` (PR #1) and deleted**, both locally and on
+  `origin`, after the D2 fix / D4 diagnostics / E1 dashboard / E2 report / academic-paper commit
+  (`59f691d`) landed on it. `main` now holds the full task history described in this file; rows
+  above that still name `codex/brazil-a1-a4` as their branch refer to work that is now on `main`,
+  not a separate branch to look up.
 - The A1 and A2 commits are combined on `codex/brazil-a1-a4` so both outputs and raw sources are present together.
 - Concurrent Claude edits to `AGENTS.md`, `PLAN_BRAZIL.md`, and `config/scenarios.yaml` were present in the checkout when work resumed and are preserved unchanged here.
 - IMF October 2026 WEO workbook and DataMapper API, and the OECD SDMX API, each returned HTTP 403 from this environment. A4 therefore uses the existing World Bank indicator and labels its central-government-only scope in the output files.
