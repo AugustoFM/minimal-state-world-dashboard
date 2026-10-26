@@ -1,0 +1,674 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---------------------------------------------------------------------------
+% Packages (mirrors the main manuscript's preamble)
+% ---------------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[british]{babel}
+\usepackage{microtype}
+\usepackage[a4paper,margin=2.6cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage[authoryear,round]{natbib}
+\makeatletter
+\let\NAT@force@numbers\relax
+\makeatother
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black,bookmarksnumbered=true]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{titlesec}
+
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\bfseries}{\thesubsection}{1em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{Online supplementary material: Reducing, Holding and Expanding the Size of the State}}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+
+\setstretch{1.04}
+
+\newcommand{\pp}{\,pp}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+\title{\textbf{Online Supplementary Material for \\
+``Reducing, Holding and Expanding the Size of the State: \\
+A Modular Stochastic Framework for Evaluating Fiscal Reform Scenarios in Brazil, with an Application to the 2026 Presidential Programmes''}}
+
+\author{Flaviano A.\ Moreira\thanks{Independent research; no institutional affiliation. Correspondence: \texttt{flaviano.a.moreira@gmail.com}. ORCID: \href{https://orcid.org/0009-0009-0783-5477}{0009-0009-0783-5477}.}}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\noindent This document collects, in full, the extended literature review and the off-by-default diagnostic extensions summarised in the main manuscript. Section and table labels here are internal to this supplementary document; the main manuscript refers to this material descriptively rather than by number, since the two documents are typeset and paginated separately.
+
+\appendix
+\section{Extended literature review}
+\label{app:lit}
+% ===========================================================================
+
+\noindent This appendix gives the full discussion summarised in the main manuscript's literature-review section, moving from the broad macro-fiscal debates that motivate the model's overall design to the narrow, often Brazil-specific estimates that calibrate individual blocks. Four of the citations below (\citealp{levyyeyatisturzenegger2023,lagopenasetal2024,hanousekkocenda2011,balladaresgarciamiralles2026}) were themselves published in \textit{Fiscal Studies}, one of several applied public-finance journals whose recent work bears directly on this paper's own sub-literatures.
+
+\subsection{The composition of fiscal consolidation}
+
+A long empirical literature asks whether fiscal consolidations differ in their output cost according to whether they are achieved through spending restraint or revenue increases. \citet{alesinaardagna2010} and the subsequent plan-based approach of \citet{alesinafaverogiavazzi2015,alesinabarbierofaverogiavazzipardisi2015} find that multi-year adjustment plans built mainly from spending cuts produce markedly milder and shorter output losses than plans built mainly from tax increases, a gap concentrated in private investment rather than consumption, and robust to whether the economy enters the adjustment in recession \citep{alesinaazzalinietal2017}. This finding is contested: \citet{guajardoleighpescatori2014} use Blanchard--Perotti-style narrative identification of exogenous consolidation shocks to reject the Alesina--Ardagna ``expansionary austerity'' hypothesis more broadly, finding both spending- and tax-based consolidations contractionary once endogenous and anticipated fiscal actions are stripped out, with any residual composition asymmetry a secondary rather than central finding of their design; \citet{perotti2013} and \citet{jordaetal2013} likewise caution that composition effects in the Alesina--Favero--Giavazzi tradition may partly reflect omitted monetary accommodation and the specific European sample. The present model does not take a position in this debate: it inherits whatever composition the user specifies, pension indexation, subsidies, administrative efficiency, public investment, or means-tested transfers, and reports the growth, debt and distributional consequences of that composition using Brazil-specific multipliers, rather than importing a foreign average effect.
+
+\subsection{Fiscal multipliers: size, state-dependence and emerging-market evidence}
+\label{sec:lit-multipliers}
+
+A logically prior question to the composition debate is how large a fiscal multiplier is in the first place, and whether it varies with the state of the economy. \citet{auerbachgorodnichenko2012} develop the regime-switching methodology that established multipliers are substantially larger in recessions than expansions in advanced economies. \citet{rameyzubairy2018} partially qualify that result on a longer US historical sample, finding multipliers below unity regardless of the degree of slack once defence-spending identification and a longer sample are used, while \citet{ramey2011,ramey2019} survey the resulting range, broadly 0.8 to 1.5, and the post-2008 renaissance in multiplier estimation more generally. The closest cross-country precedent to this model's own package-specific approach is \citet{ilzetzkimendozavegh2013}, who show multipliers vary systematically with exchange-rate regime, trade openness, public debt and the level of development, with emerging, relatively closed, high-debt economies such as Brazil tending towards the lower end of the range. European growth-forecast errors during 2010--2011 austerity, \citet{blanchardleigh2013} show, are consistent with multipliers considerably larger than the then-standard 0.5 assumption, a finding with obvious relevance to the persistent-versus-transitory multiplier distinction drawn throughout this paper; \citet{nakamurasteinsson2014} supply the leading regional-multiplier identification strategy as a cross-check on these aggregate time-series estimates. Two IMF working papers estimate multipliers specifically for Latin American and Caribbean economies: \citet{carriereswallowdavidleigh2018} and \citet{restrepo2020} both find multipliers below one, with Restrepo's country-by-country estimates also revealing substantial heterogeneity even within the region, a caution against assuming Brazil's multiplier resembles its neighbours' any more closely than it resembles an advanced-economy average. \citet{bornmullerpfeifer2020} connect multiplier state-dependence to the sovereign-risk-premium channel used in the main manuscript's discussion of the sovereign-risk-premium channel, showing that whether austerity narrows or widens spreads depends on the fiscal starting position. Two Brazil-specific estimates beyond \citet{sanches2026} and \citet{carvalhosanches2019} corroborate the order of magnitude used here: \citet{pires2014} estimates a Markov-switching, regime-dependent multiplier for Brazil using IPEA-affiliated methods, and \citet{resendepires2021} find a low aggregate multiplier but markedly higher public-investment and targeted-transfer multipliers, consistent with this model's category-specific rather than single-number approach.
+
+\subsection{Stochastic and probabilistic debt-sustainability analysis}
+\label{sec:lit-dsa}
+
+The deterministic debt-sustainability exercises conducted by the IMF and finance ministries have long been criticised for reporting a single central path with no account of the uncertainty around growth, interest rates and the primary balance \citep{imf2003dsa}. \citet{celasundebrunostry2007} proposed replacing the deterministic path with a stochastic simulation, in which a vector autoregression on the macro-fiscal block generates a joint distribution of shocks that is then propagated through the debt-accumulation identity to produce fan charts of future debt ratios. An important direct antecedent applies closely related risk-management machinery to Brazilian sovereign debt specifically: \citet{garciarigobon2004} show that a debt path can look sustainable at its central projection while still carrying a non-trivial probability of an unsustainable path once the full joint distribution of shocks is considered, precisely the distinction this paper's own Tier~1/Tier~2 gate (the main manuscript's back-testing section) is built to respect. \citet{karamhostland2005,karamhostland2006} and \citet{mendozaoviedo2004}, the latter applying a probabilistic fiscal-solvency framework to Brazil, Colombia, Costa Rica and Mexico directly, are the other principal stochastic-DSA antecedents. This approach, and its descendants in the IMF's Debt Sustainability Framework \citep{imf2013mac} and Sovereign Risk and Debt Sustainability Framework \citep{imf2022srdsf}, is the direct ancestor of the Monte Carlo design used here. Closer to the present, \citet{levyyeyatisturzenegger2023} reformulate the same underlying question as a balance-sheet solvency exercise rather than a flow-based fan chart, valuing a government's assets and liabilities directly; the two approaches are complementary rather than competing, and a balance-sheet cross-check of this paper's own debt projections is a natural extension we have not undertaken.
+
+More recent work has moved from fan charts around a single mean path towards full conditional-distribution estimation. \citet{prasadetal2019growthatrisk} introduce growth-at-risk quantile methodology into IMF country surveillance; \citet{lianpresbiterowiriadinata2020} extend it to the interest-growth differential itself, and \citet{furcerietal2025debtrisk} extend it further into an explicit ``debt-at-risk'' quantile framework. This is the natural next step for a model such as this one, which currently reports percentiles of a resampled distribution rather than a true conditional quantile regression (a limitation the main manuscript's discussion section returns to). \citet{kaffomelouetal2014} show both the portability and the limits of the fan-chart approach by applying it outside its original emerging-market sample, to post-HIPC low-income countries, a useful caution against assuming any stochastic-DSA machinery transfers mechanically across very different debt and institutional contexts. Our implementation differs from all of the above by sampling structural parameters (multipliers, elasticities, growth-accounting inputs) directly from triangular or uniform ranges drawn from named studies, rather than estimating a reduced-form shock covariance matrix; this trades statistical efficiency for interpretability, since every sampled draw can be traced back to a specific coefficient and its source. \citet{bohn1998} provides the foundational fiscal-reaction-function literature against which any debt-sustainability exercise should eventually be checked. Section~\ref{sec:lit-brazil} reports what that check looks like for Brazil specifically, and Appendix~\ref{app:d4} reports the diagnostic this model now runs against it.
+
+\subsection{Debt thresholds, nonlinearity and the interest-growth differential}
+\label{sec:lit-threshold}
+
+\citet{reinhartrogoff2010} and its contested 90\%-of-GDP growth-threshold claim, together with the spreadsheet-error and sample-selection correction of \citet{herndonashpollin2014}, is the cautionary precedent this paper has in mind whenever it is tempted to summarise a debt path with a single threshold rather than a distribution. \citet{egert2015} shows why directly: the apparent threshold, where it is detectable at all, is highly sensitive to country and period coverage and typically falls well below 90\% once outliers and reverse causality are handled. \citet{pescatorisandrisimon2014} find no evidence of any specific debt level beyond which medium-term growth collapses, arguing instead that the debt \emph{trajectory}, rising or falling, matters more than the level; \citet{panizzapresbitero2014} go further still, using an instrumental-variables strategy built on valuation effects to argue that the negative debt--growth correlation largely disappears once reverse causality is properly addressed, so that no robust causal effect of debt on growth survives. \citet{chudiketal2017} reach a related conclusion using dynamic heterogeneous-panel methods across forty countries: no single threshold applies across countries, but a high-debt country on a falling trajectory can grow as fast as a lower-debt peer. \citet{wookumar2015}, by contrast, find a more conventional, if modest, negative panel association operating mainly through slower productivity growth. For Brazil specifically, the only threshold-autoregressive estimate of a Brazilian fiscal reaction trigger we are aware of is \citet{simonassilima2005}, who find that stabilisation is activated only once the deficit crosses an estimated threshold near 1.7\% of GDP. That is a different quantity from the debt-level thresholds discussed above, but it is the closest Brazil-specific evidence that fiscal responses themselves may be nonlinear, and it bears directly on the nonlinear risk-premium diagnostic introduced in Appendix~\ref{app:d4}.
+
+A separate literature, arguably more consequential for a country with Brazil's interest-growth gap, asks not whether a debt \emph{level} is dangerous but whether the interest-growth differential itself is structurally favourable or unfavourable. In his 2019 AEA presidential address, \citet{blanchard2019} argues that historically $r<g$ has been closer to the norm than the exception for the United States, so that debt rollover under such conditions carries limited welfare cost. \citet{furmansummers2020} propose real interest payments relative to GDP, rather than the debt ratio itself, as the more informative fiscal-space metric, precisely because it is this differential, not the stock, that drives accumulation; \citet{rachelsummers2019} trace the decline in neutral real rates to deeper secular-stagnation forces. \citet{mianstraubsufi2021,mianstraubsufi2025} formalise how indebted demand depresses the natural rate and, in a model with a zero lower bound, can make the relationship between the interest-growth gap and sustainable fiscal space considerably more complicated than a simple threshold; we take this as a defensible extrapolation of their secular-stagnation argument rather than a result they estimate directly. This literature directly motivates the finding, reported in the main manuscript's headline-results section, that the interest-growth differential rather than the primary balance is the dominant source of Brazil's own projected status-quo debt accumulation.
+
+\subsection{Distributional and social consequences of adjustment}
+\label{sec:lit-distributional}
+
+\citet{ballfurcerilleighlloungani2013} use a sample of advanced-economy consolidation episodes identified through the Devries et al.\ narrative approach to show that fiscal consolidation raises the Gini coefficient, lowers the wage share and raises long-term unemployment, with effects that persist for several years after the initial shock. \citet{woobovakindazhang2017} extend this to a wider advanced- and emerging-market panel plus country case studies, confirming that spending-based consolidations tend to be more regressive than tax-based ones, though progressive design (protecting targeted transfers, as the present model's default package composition does) can materially offset the distributional cost. \citet{agnellosousa2014,agnellosousa2012b} reach a broadly similar conclusion for eighteen industrialised economies over three decades; \citet{mulasgranados2005,mulasgranados2006book} is the earlier European-adjustment-episode precedent on which much of this literature, including \citet{ballfurcerilleighlloungani2013}, draws for its policy-trade-off framing. More recent work refines the dynamics. Using local-projection methods across seventeen OECD countries, \citet{heimberger2020} shows the Gini effect builds from around 0.4 points on impact to 0.6 points at medium horizons and is larger for spending-based and post-crisis consolidations, a time profile qualitatively similar to the one our own household microsimulation produces mechanically. \citet{brincaetal2021} offer a useful complement running in the opposite causal direction, showing that \emph{higher} initial income inequality itself amplifies the output cost of a given consolidation, a channel this model does not yet capture since its inequality-to-growth feedback (the main manuscript's model-architecture section) remains switched off pending a wired Gini path. \citet{leventimatsaganis2013} use the EUROMOD microsimulation model to separate the distributional effects of fiscal consolidation from those of the accompanying recession in Greece, a methodological strategy close in spirit to this paper's own comparative-statics design. A complementary political-economy perspective comes from \citet{lagopenasetal2024}, who show in a survey of Spanish voters that tolerance for austerity depends sharply on its financing instrument and the respondent's own ideology, a reminder that the distributional incidence this model computes mechanically is also, separately, a political variable the model does not attempt to capture. The elasticity our household microsimulation recovers for a comparable Brazilian package, a 0.9-point Gini increase at year eight for an approximately 1\% of GDP consolidation, is of the same order of magnitude as this literature's central estimates, though it is produced mechanically from PNAD cash components and a labour-market pass-through rather than estimated from cross-country consolidation episodes, so the agreement is suggestive rather than a validation.
+
+On the health side, \citet{szkloclarkerocha2024} estimate the elasticity of infant mortality to public health spending around Brazil's EC~29/2000 constitutional amendment using a difference-in-differences design across municipalities, finding a central elasticity of $-0.126$, while \citet{gallet2017} provide a meta-regression elasticity of life expectancy to total health spending of 0.04. These Brazilian and cross-country estimates should be read against a standing scepticism: \citet{filmerpritchett1999} find that cross-national public health spending alone explains remarkably little of the variation in child mortality once income and female education are controlled for, which is why this model applies its elasticity only to Brazil's own within-country variation rather than extrapolating a cross-country average. \citet{bokharigaigottret2007} and \citet{morenoserrasmith2012,morenoserrasmith2015} find the mortality-reducing association of public health spending and coverage expansion is in fact stronger in developing- than in advanced-economy samples, at least broadly consistent with a Brazilian elasticity of the magnitude \citet{szkloclarkerocha2024} estimate. The strongest Brazil-specific evidence that a targeted transfer programme causally reduces child mortality comes from \citet{rasellaetal2013}, whose study of Bolsa Fam\'ilia finds effects concentrated in poverty- and malnutrition-related deaths, a useful complement to this model's health-spending channel since it operates through a different, income-side mechanism the household microsimulation only partially captures. \citet{litschig2013,litschig2012} identify the effect of municipal spending on schooling outcomes in Brazil using a close-election and a royalty-windfall design respectively, and are the source of this model's schooling elasticity. \citet{hanushekwoessmann2012} provide the leading causal, immigrant difference-in-differences evidence that schooling \emph{quality}, not years of schooling alone, drives the human-capital-to-growth channel; \citet{card1999} remains the standard reference for the likely downward bias of ordinary-least-squares returns-to-schooling estimates relative to instrumental-variables ones. Finally, \citet{acemoglujohnson2007} and \citet{bloomcanningsevilla2001} offer opposing readings of the health-to-growth channel, the former finding a limited long-run output effect from large historical mortality declines and the latter a sizeable one from cross-country panel estimates, which is why the present model samples this coefficient from a wide uniform range rather than adopting either point estimate.
+
+\subsection{Household microsimulation and fiscal-incidence methodology}
+\label{sec:lit-microsim}
+
+The household-microsimulation block's comparative-statics design follows a long methodological tradition. \citet{bourguignonspadaro2006} set out the case for static microsimulation as a transparent, auditable tool for evaluating redistribution policy, precisely because every household's exposure to a policy change can be traced, at the cost of foregoing any behavioural response; \citet{immervollodonoghue2009} and \citet{figaripaulussutherland2015} extend this into the design and validation lessons of large multi-country tax-benefit microsimulation models such as EUROMOD \citep{sutherlandfigari2013}. The closest methodological relative to this paper's distributional block among Latin-American-focused work is the Commitment to Equity (CEQ) project, summarised in \citet{lustig2018ceq}'s handbook and applied to Brazil directly by \citet{higginspereira2014}, who find that regressive consumption taxation offsets much of the redistributive gain from Brazil's direct taxes and transfers, a finding this model's own instrument-specific incidence variants (the main manuscript's model-architecture section) are built to let a user reproduce or contest rather than assume away. \citet{higginslustig2016} introduce the complementary concept of ``fiscal impoverishment'': a progressive, inequality-reducing tax-and-transfer system can still leave some households worse off in absolute terms, a distinction this model's poverty-headcount outputs do not yet report separately from its Gini and top-share outputs, a gap worth closing in future work. \citet{lustigpessinoscott2014} frame the wider Latin American CEQ comparison within which the Brazilian application sits, and \citet{bourguignonferreiralustig2004} is the earlier World Bank volume applying microsimulation and decomposition methods to income-distribution dynamics across Brazil and its neighbours. Closest to the present in method, \citet{balladaresgarciamiralles2026} use administrative tax-record microsimulation to quantify fiscal drag in Spain, a recent demonstration that static, auditable microsimulation of exactly this kind remains a live and publishable way to answer a current policy question, which is the standard this paper's own household block aspires to.
+
+\subsection{Sovereign risk premia and fiscal fatigue}
+\label{sec:lit-premium}
+
+The model's debt-dependent risk-premium channel (the main manuscript's model-architecture section) draws its central coefficient from \citet{baldaccikumar2010}, but the wider literature on how debt and fiscal fundamentals feed through to sovereign borrowing costs is considerably richer. \citet{edwards1984,edwards1986} provide the foundational empirical link between debt and debt-service ratios and the spread charged on developing-country borrowing. A similar relationship holds for a modern panel using EMBI-type spreads: \citet{akitobystratmann2008} find debt-financed spending raises spreads more than tax-financed spending of the same size, a composition effect this model's revenue-elasticity channel (the main manuscript's model-architecture section) is built to let the user explore. \citet{ardagnacasellilane2007} find the debt effect on long-term rates in OECD economies is concentrated in periods when debt is \emph{above} its own historical average, an empirical analogue, well short of a structural model, of a nonlinear or threshold-dependent premium. The explicitly nonlinear theoretical case is made most directly by two papers: \citet{ghoshkimmendozaostryqureshi2013}'s ``fiscal fatigue'' framework models a primary-balance reaction function that flattens as debt rises, producing an endogenous fiscal limit, while \citet{bi2012} derives a stochastic fiscal limit from a dynamic Laffer curve along which risk premia rise nonlinearly once debt passes a country-specific threshold. These two papers are the direct theoretical basis for the nonlinear, fiscal-fatigue-style risk-premium diagnostic introduced in Appendix~\ref{app:d4}. \citet{reinhartrogoffsavastano2003}'s concept of ``debt intolerance'', the finding that safe debt thresholds are far lower, and more history-dependent, for emerging markets than for advanced economies, further motivates treating any single premium coefficient as provisional rather than structural; \citet{mendozayue2012} provide the leading general-equilibrium unification of sovereign default and the business cycle, a theoretical benchmark against which this model's reduced-form premium channel is a deliberately modest approximation. For Brazil and its emerging-market peers specifically, \citet{guptamatibaldacci2008} find fiscal consolidation narrows spreads especially for countries with a default history, and \citet{camposcysne2021} estimate country-specific rather than common debt limits for eighteen emerging economies, rejecting a single threshold in a manner consistent with \citet{egert2015}'s growth-threshold finding above. \citet{ornelas2017} and \citet{rochamoreira2012}, both Brazilian-institution-authored, provide the closest direct estimates of the debt-to-spread elasticity for Brazil and comparable emerging markets, broadly consistent with, if somewhat larger than, the \citet{baldaccikumar2010} coefficient this model currently uses as its central case.
+
+\subsection{Governance, corruption and public-spending leakage}
+\label{sec:lit-corruption}
+
+A distinct but related literature asks how much of public spending is diverted before it reaches its intended beneficiaries, and how this interacts with fiscal policy. \citet{ferrazfinanmoreira2012} use random federal audits of Brazilian municipal education transfers to estimate that corruption is found in roughly a third of audited municipalities, diverting around 8\% of audited education resources on average. Using the same audit programme, \citet{avisferrazfinan2018} show that a past audit visit reduces subsequently measured corruption by about 8\% across nearly two thousand municipalities, evidence this model uses as a lower bound on how much a credible anti-corruption programme could remove. \citet{litschigzamboni2018} extend this audit literature with a randomised increase in audit risk across Brazilian municipalities and find procurement corruption falls by 10--15 percentage points, though health- and cash-transfer-programme compliance is unaffected, a useful caution that the leakage parameter's effectiveness may be programme-specific rather than uniform (a simplification the present model's single leakage share does not yet relax). \citet{colonnelliprem2022} and the companion firm/worker-level study of \citet{colonnellietal2022jfe} use the same Brazilian federal audit programme, the Controladoria-Geral da Uni\~ao (CGU), to show audits raise firm entry and growth in government-dependent sectors while penalising politically connected firms, rejecting a ``grease the wheels'' reading of corruption. Using discontinuities in Brazilian federal transfers, \citet{brollonanicciniperottitabellini2013} show that larger unearned fiscal windfalls themselves raise measured municipal corruption and lower the quality of elected candidates, a result directly relevant to any scenario, such as a commodity-revenue boom, in which this model's external block delivers an unusually large fiscal windfall. \citet{bobonisetal2016} provide a contrasting Puerto Rican result: pre-election audits reduce corruption and raise reelection chances, but the deterrent effect does not persist into later, non-electoral audit rounds, a caution against assuming the Brazilian audit evidence this model relies on implies a permanent, rather than temporary, leakage reduction.
+
+\citet{mauro1995} established the cross-country association between perceived corruption and lower investment and growth that motivates treating corruption as a growth-relevant variable at all. \citet{mauro1998} extends this, showing corruption systematically skews public spending away from education and towards more easily diverted categories, a composition effect related to, but distinct from, the leakage-share mechanism used here; \citet{tanzidavoodi1997} similarly find corruption raises the \emph{volume} of public investment while lowering its productivity and the revenue available to finance it, a quantity-versus-quality distinction this model's single leakage parameter does not yet separate. \citet{grundlerpotrafke2019} provide a more recent panel estimate of the long-run output effect of an improvement in the Transparency International Corruption Perceptions Index, which we hold off by default pending verification of a cross-country standard-deviation input. \citet{hanousekkocenda2011} close the loop most directly for this paper's purposes, linking corruption and regulatory quality to public investment, deficits and debt across the new EU member states, and finding that lower corruption is associated with better fiscal outcomes on both margins, a structural pairing of governance and debt dynamics that this model keeps as two formally separate blocks (G1/G2 and the debt identity) rather than one estimated relationship. The benchmark for the difficulty of measuring leakage directly, rather than through perceptions, is \citet{olken2007}'s missing-expenditure approach on Indonesian road projects. A closely related finding is \citet{reinikkasvensson2004}'s ``local capture'' result, that only around 13\% of an Ugandan school capitation grant reached its intended schools on average, and \citet{fismansvensson2007}, who show using Ugandan firm-level data that bribery has roughly three times the negative effect on firm growth of the statutory tax rate, supporting a ``corruption as tax'' framing. \citet{goldenpicci2005} propose inferring corruption objectively from the gap between reported infrastructure spending and the physical infrastructure actually delivered, a methodological contrast to the survey-based perception indices this model explicitly avoids using as a model input (the main manuscript's model-architecture section). Our leakage parameter is calibrated on the comparable Brazilian audit evidence rather than attempting a similar missing-expenditure exercise, which the available Brazilian audit microdata does not support at the scale required.
+
+\subsection{Fiscal rules and the political economy of public debt}
+\label{sec:lit-rules}
+
+Both 2026 candidate programmes modelled in the main manuscript's scenario-design section are, formally, fiscal rules (an expenditure rule and a balance-targeting rule), and so inherit a large, separate literature on fiscal-rule design that the model's own machinery is agnostic to but that any reader evaluating the two programmes' relative merits should have in view. \citet{kopitssymansky1998} provide the foundational IMF taxonomy of rule types, balanced-budget, debt, expenditure and revenue rules, and the credibility-versus-flexibility trade-off between them. Using a dataset spanning eighty-one countries, \citet{schaechteretal2012} document that post-2008 rules increasingly combine several rule types with escape clauses, a description that fits Brazil's own layered combination of the constitutional spending ceiling (Complementary Law 200/2023) and the pre-existing ``golden rule'' (Article 167, assessed directly for Brazil by \citealp{pires2019reggraouro}) reasonably well. \citet{cordesetal2015} is the closest empirical comparator to the incumbent's programme specifically, evaluating the compliance record and investment effects of thirty-three expenditure rules worldwide. The standard real-world evaluation of an operating expenditure-ceiling-type rule is \citet{feldkirchgassner2008}'s study of the Swiss debt brake, which finds it durably reduced deficits without the escape-clause erosion some critics predicted, a useful, if institutionally distant, comparator for assessing whether Brazil's own ceiling is likely to bind. \citet{lopezvillavicencio2025} offer a timely, directly comparable recent finding for the European Union, that only compliance with a binding deficit or debt rule, not an expenditure rule considered alone, robustly improves subsequent fiscal outcomes, which is worth weighing against the Brazilian ceiling's own design. \citet{debrunkumar2007} and \citet{wyplosz2018} examine the complementary role of independent fiscal councils in making numerical rules credible, relevant to Brazil's own Independent Fiscal Institution (IFI), whose most recent technical assessment of the 2023 spending framework we draw on directly in the main manuscript's scenario-design section \citep{ifi2023raf76}; \citet{debrunhaunerkumar2009} survey the wider international evidence on independent fiscal agencies. At a more foundational level, \citet{alesinatabellini1990} and \citet{alesinapassalacqua2016}'s handbook survey model why governments with divergent political preferences over-borrow relative to a social optimum, a channel that operates independently of whichever numerical rule is nominally in force, while \citet{vonhagenharden1995} and \citet{perssontabellini1999} are the classic references connecting budget-process centralisation and electoral-system design to fiscal discipline more broadly. None of this literature is wired into the model; it is offered here as the frame within which a reader should situate the two 2026 programmes' chosen closure rules, which this paper deliberately declines to rank (the main manuscript's scenario-design section).
+
+\subsection{Stock-flow adjustments, quasi-fiscal operations and fiscal transparency}
+\label{sec:lit-sfa}
+
+The model's single most consequential finding is that its debt-level back-test fails specifically because of discretionary, non-forecastable ``stock-flow adjustment'' operations (the main manuscript's back-testing section), and this sits within a literature that has independently documented the same phenomenon across many countries. Using 163 countries over three decades, \citet{weber2012sfa} shows stock-flow adjustments are a large and persistent, not merely occasional, source of debt accumulation worldwide, only partly explained by observable balance-sheet effects and contingent liabilities, and systematically smaller in more fiscally transparent countries, directly consistent with this paper's own finding that Brazil's residual bears no relationship to any observable macroeconomic covariate. \citet{seiferling2013} refines this using government balance-sheet data directly, arguing that complete financial reporting, not a transparency \emph{score} per se, is what narrows the gap. The closest empirical analogue to this paper's own 3.9-percentage-point single-year residual is \citet{jaramilloetal2017}'s examination of 179 historical debt-spike episodes: spikes are driven primarily by stock-flow adjustments rather than by primary deficits or weak growth, and a large stock-flow adjustment predicts debt subsequently \emph{failing} to decline, a genuinely alarming precedent for interpreting Brazil's own recent experience. \citet{andrianetal2024sfa} extend this to a hazard-model framework across 172 countries, finding a one-percentage-point rise in the stock-flow adjustment raises the probability of a debt surge by roughly fifteen per cent. \citet{afonsojalles2019sfa} show that stronger fiscal-rule frameworks moderate the stock-flow-adjustment channel, while \citet{casalinetal2023} show that in many countries stock-flow adjustments function as a hidden, debt-management-driven component of the true cost of debt service, a framing that fits the Brazilian Treasury-to-BNDES lending and Central Bank result-transfer operations this paper identifies as the dominant residual unusually well. The foundational IMF treatment of \emph{why} such operations occur at all is \citet{mackenziestella1996}: public financial institutions and central banks routinely run ``quasi-fiscal'' activities that shift genuine fiscal costs off the conventional budget, a description that applies directly to BNDES's role in the Brazilian episode. \citet{bovaetal2016contingent} assemble the first systematic cross-country dataset of realised contingent-liability costs, finding an average fiscal cost of around six per cent of GDP, far higher for financial-sector bailouts, that clusters in crises and is, like this paper's own SFA residual, poorly predicted by observable covariates. \citet{alesinapratitabellini1989} provide the classic theoretical link between debt-management choices, such as maturity structure and market confidence, and self-fulfilling crisis risk. Finally, the European Commission's own recurring statistical reporting on member-state stock-flow adjustments \citep{eurostat2024sfa} documents magnitudes of a similar order, up to two to three per cent of GDP, even among countries operating under a far more codified fiscal-transparency regime than Brazil's, suggesting the phenomenon this paper documents is a structural feature of sovereign debt accounting rather than a peculiarly Brazilian failing. No peer-reviewed economics-journal article appears to model Brazil's own 2015--2016 \emph{``pedaladas fiscais''} episode specifically as a stock-flow-adjustment event; the closest institutional treatment, which we draw on directly instead, is \citet{gobettiorair2017}'s reconstruction of Brazil's above-the-line fiscal accounts net of the same operations (Section~\ref{sec:lit-brazil}).
+
+\subsection{Brazilian macro-fiscal evidence}
+\label{sec:lit-brazil}
+
+\citet{sanches2026} update Brazilian federal fiscal multiplier estimates by spending and revenue instrument using a structural approach over federal accounts from 1997 to 2023, and \citet{carvalhosanches2019} is the antecedent study on which the present model's package-specific multipliers draw. \citet{gruss2014} estimates how strongly Latin American and Caribbean output responds to commodity terms-of-trade shocks and finds, in an input this model inherits directly, that Brazil's response is markedly smaller than its regional peers; our own back-test (the main manuscript's back-testing section) suggests this may understate the 2003--2010 commodity-boom experience once capital inflows and valuation effects are considered. \citet{bomligthart2014} provide the meta-analytic range for the output elasticity of public capital that this model uses, pending the Brazilian public-capital stock data needed to activate that channel, and \citet{ostrybergtsangarides2014} is the IMF staff discussion note on redistribution, inequality and growth that motivates an inequality-to-growth feedback the model specifies but, pending a wired Gini path, does not yet activate.
+
+Two further bodies of Brazil-specific evidence bear directly on this paper's own findings. First, on the fiscal reaction function Section~\ref{sec:lit-dsa} flagged as the natural check on any debt-sustainability exercise: \citet{demello2008} estimates a conventional, Bohn-style reaction function for Brazil across three levels of government (1995--2004) and finds the primary surplus responds positively and significantly to debt, in line with the typical emerging-market panel result; \citet{mendoncasantossachsida2009} refine this with a Markov-switching specification and find a structural break around 2000, with a strong reaction pre-2000 and a weak-to-absent one thereafter. Both estimates are of the \emph{conventional} sign, the opposite of the small, negative Brazilian-specific coefficient this paper's own D3 debt-panel review finds over 2000--2024 (Appendix~\ref{app:d4}), a discrepancy we read not as a contradiction but as evidence that Brazil's fiscal reaction has itself shifted, plausibly again, since the mid-2000s sample these two papers cover, an open question this paper does not resolve. Second, on the stock-flow-adjustment residual at the centre of this paper's own back-test failure: \citet{gobettiorair2017} reconstruct Brazil's above-the-line fiscal accounts net of the same discretionary operations (Treasury-to-BNDES lending, Central Bank result transfers, and the broader \emph{pedaladas fiscais} episode) that this paper's own residual isolates, the closest peer-reviewed treatment of that phenomenon available; \citet{orairgobetti2017} provide the companion narrative of Brazilian fiscal policy's swing from 2005--2010 expansion through 2011--2014 tax cuts to post-2015 austerity, useful context for interpreting why the residual is concentrated in that period. \citet{bevilaquagarcia2002} and \citet{vivianmendonca2008} cover Brazilian public-debt management strategy more broadly; \citet{nunesetal2020} show how Central Bank profit transfers have themselves been used to help satisfy the constitutional golden rule even as public investment has lagged debt growth, a fiscal-rule-gaming concern directly relevant to Section~\ref{sec:lit-rules}; and the Brazilian Senate's own Independent Fiscal Institution provides the most current technical evaluation of the 2023 spending framework modelled in the main manuscript's scenario-design section, flagging its reliance on uncertain, court-dependent revenue \citep{ifi2023raf76}, a companion technical note on integrating the golden rule and the spending ceiling into one coherent architecture \citep{enaptesouro2019}. Finally, \citet{alstonmelomuellerpereira2013} frame Brazil's post-1985 fiscal and institutional trajectory as a slow change in beliefs about the social contract itself, a political-economy lens worth bearing in mind whenever two candidate programmes are described, as this paper describes them, as formally interchangeable closure rules for the same debt-accumulation identity.
+
+% ===========================================================================
+\section{Diagnostic extensions: how much would a reaction, or a nonlinear premium, change the picture?}
+\label{app:d4}
+% ===========================================================================
+
+\noindent This appendix gives the full detail summarised in the main manuscript's summary of these diagnostics. Tier~2's failure (the main manuscript's back-testing section) leaves open a question the back-test itself cannot answer: how much of the headline status-quo debt path is an artefact of the model's deliberately simple, no-policy-reaction specification, and how much would a more behaviourally realistic government, or a more aggressively nonlinear market response, change it? Rather than fold a speculative answer into the headline results, we report it as a clearly labelled, off-by-default diagnostic, run only against the status-quo baseline (\textsc{S0}) itself, never differenced against or compared with the policy scenarios of the main manuscript's scenario-design section, and excluded from every published Monte Carlo summary. Three hundred draws (central draw plus 299 sampled, seed 20261020, an RNG stream independent of every other Monte Carlo channel) are used throughout. Every absolute debt figure in this appendix, breach probabilities, debt levels, the fiscal gap, inherits the same Tier~2 bias documented in the main manuscript's back-testing section: the model's own seven-year recursion overshoots observed debt by 12.5--16.1~pp of GDP even after the best available correction, and nothing here adjusts for that overshoot. We flag this once, at the top, rather than repeat it after every number, but it applies with equal force throughout, including to the breach probabilities below, which should be read as upper bounds conditional on an uncorrected model rather than as calibrated risk estimates.
+
+First, an EC/IFI-style probability-of-breach and fiscal-gap statement replaces the bare median debt path with a distribution. Table~\ref{tab:d4breach} reports the probability that \textsc{S0}'s debt ratio exceeds 90\%, 100\% and 120\% of GDP at each horizon, with and without the stochastic stock-flow-adjustment term of the main manuscript's back-testing section; Table~\ref{tab:d4gap} reports the primary balance that would stabilise debt at each horizon's own implied interest-growth differential (in the spirit of the European Commission's S1/S2 fiscal-gap indicators), against \textsc{S0}'s actual projected primary balance. One feature of Table~\ref{tab:d4breach} is worth flagging rather than smoothing over: adding the (demeaned) stock-flow-adjustment term slightly \emph{lowers} the five-year breach probability (78.6\% to 73.6\%) before the usual pattern of added uncertainty raising breach probabilities reasserts itself at longer horizons. We attribute this to the interaction between the bootstrapped adjustment and the debt-dependent risk-premium feedback channel of the main manuscript's model-architecture section, which can make a mean-preserving spread shift probability mass in either direction around a fixed threshold depending on where the threshold sits in the resulting distribution; we have not fully decomposed this interaction and report the counter-intuitive short-horizon result rather than suppress it.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Probability that \textsc{S0} debt/GDP exceeds stated thresholds, by horizon (300 draws).}
+\label{tab:d4breach}
+\begin{tabular}{lrrrr}
+\toprule
+Horizon & $P(>90\%)$, no SFA & $P(>90\%)$, SFA & $P(>100\%)$, SFA & $P(>120\%)$, SFA \\
+\midrule
+5 years & 78.6\% & 73.6\% & 35.8\% & 0.7\% \\
+10 years & 97.7\% & 95.0\% & 86.3\% & 61.5\% \\
+15 years & 100.0\% & 99.7\% & 98.0\% & 89.0\% \\
+20 years & 100.0\% & 100.0\% & 100.0\% & 98.3\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering\small
+\caption{Stabilising primary balance and fiscal gap, \textsc{S0}, pp of GDP. Median [p10, p90] across 300 draws.}
+\label{tab:d4gap}
+\begin{tabular}{lrrr}
+\toprule
+Horizon & Stabilising primary balance & Actual projected primary balance & Fiscal gap \\
+\midrule
+5 years & $+2.60$ $[-0.22,+4.84]$ & $-2.39$ $[-2.44,-2.22]$ & $+4.85$ $[+2.11,+7.16]$ \\
+10 years & $+3.60$ $[-0.14,+7.16]$ & $-4.04$ $[-4.17,-3.68]$ & $+7.42$ $[+3.74,+11.13]$ \\
+20 years & $+7.95$ $[+0.65,+17.26]$ & $-7.68$ $[-8.45,-6.80]$ & $+15.63$ $[+8.06,+25.10]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Second, we report two off-the-side variants of \textsc{S0} itself, holding its own interest-growth path fixed and changing only the primary-balance rule or the risk-premium shape, so that each isolates a single mechanism. \texttt{frf\_emerging} recomputes the primary balance each year as $pb_t = pb_{S0,t} + \rho\,(d_{t-1}-d_{2025})$ using the typical emerging-market panel's estimated long-run fiscal-reaction coefficient ($\rho=0.0334$). Brazil's own estimated coefficient over 2000--2024, an in-house estimate produced for this project's own debt-panel review, not an independently peer-reviewed figure, and reported here with that provenance made explicit, is small and of the \emph{opposite} sign ($-0.037$), in contrast to the conventional, positive, peer-reviewed coefficients \citet{demello2008} and \citet{mendoncasantossachsida2009} estimate for Brazil over earlier, pre-2005 samples (Section~\ref{sec:lit-brazil}); we therefore also report \texttt{frf\_brazil\_robustness}, which applies this in-house coefficient instead, read as a robustness check on an internal estimate rather than as a published external finding. \texttt{premium\_nonlinear} replaces the linear, capped risk-premium channel of the main manuscript's model-architecture section with the fiscal-fatigue-style shape theorised by \citet{ghoshkimmendozaostryqureshi2013} and \citet{bi2012} (Section~\ref{sec:lit-premium}): zero below a historical threshold debt level (119.6\% of GDP, the 95th percentile of a fifty-country comparator panel) and rising with the square of the excess above it, capped at 2,000 basis points to avoid the numerical explosion an uncapped quadratic specification produces. Table~\ref{tab:d4variants} reports all three alongside plain \textsc{S0}, where ``plain \textsc{S0}'' is the \emph{median across the 299 sampled draws}, not the single deterministic central-parameter projection reported in the main manuscript's model-architecture and headline-results sections (145.5\% of GDP at this horizon). The two are different statistics and need not coincide: the median of a resampled, compounding debt-path distribution is not generally equal to the same path evaluated at the sampled parameters' own central values, since the debt identity compounds multiplicatively and the sampled distribution is right-skewed. We report both, rather than letting one stand in for the other, precisely because conflating them would overstate how tightly the two exercises agree.
+
+\begin{table}[htbp]
+\centering\small
+\caption{\textsc{S0} debt/GDP (\%) under diagnostic reaction and premium variants. Median [p10, p90] across 299 sampled draws throughout, including the ``plain \textsc{S0}'' column (distinct from the main manuscript's own 145.5\%-at-ten-years deterministic central projection; see text).}
+\label{tab:d4variants}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrr}
+\toprule
+Horizon & Plain \textsc{S0} (sampled median) & \texttt{frf\_emerging} & \texttt{frf\_brazil\_robustness} & \texttt{premium\_nonlinear} \\
+\midrule
+10 years & 130.4 & 124.0 $[99.3,145.6]$ & 138.9 $[104.8,168.8]$ & 130.5 $[101.7,157.1]$ \\
+20 years & 245.5 & 206.7 $[146.4,270.9]$ & 308.8 $[184.8,441.8]$ & 487.8 $[165.8,1080.0]$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Three readings of these tables deserve emphasis, each a direct application of the literature surveyed in Sections~\ref{sec:lit-dsa}--\ref{sec:lit-brazil}. First, under the model's own preferred specification (including the stochastic stock-flow-adjustment term), the probability of breaching even a comparatively undemanding 90\% of GDP threshold is already 73.6\% at five years and 95.0\% by ten (Table~\ref{tab:d4breach}'s ``SFA'' columns, not the more optimistic ``no SFA'' columns), a statement the main manuscript's headline-results table's paired differences cannot make on their own, and precisely the kind of risk statement \citet{garciarigobon2004} and the growth-at-risk literature \citep{prasadetal2019growthatrisk,lianpresbiterowiriadinata2020,furcerietal2025debtrisk} argue a central path alone obscures. Second, the \texttt{frf\_brazil\_robustness} variant, using Brazil's own, historically estimated reaction coefficient rather than the emerging-market average, produces a \emph{higher}, not lower, debt path than plain \textsc{S0}, the arithmetic consequence of that coefficient's counter-intuitive sign; we are careful to present this only as a robustness check on what Brazil's own history implies, following \citet{simonassilima2005}'s related finding that Brazilian fiscal reaction may itself be regime-dependent, and explicitly not as a forecast that Brazilian fiscal policy will behave this way going forward. Third, the nonlinear premium variant is flat and close to the linear specification below the historical threshold but diverges sharply above it, reaching a 90th-percentile debt ratio of 1,080\% of GDP at twenty years, a number we report not as a plausible outcome but as a crisis-territory flag in the sense \citet{ghoshkimmendozaostryqureshi2013} and \citet{bi2012} intend: once a fiscal-fatigue-style premium is allowed to operate, paths that cross the historical threshold do not approach a new equilibrium, they explode, which is itself the theoretical point. None of the three variants alters any other published Monte Carlo output, and none is a forecast: each isolates a single mechanism against an otherwise unchanged baseline, in the same spirit as the channel-by-channel attribution already used for the long-run feedback block (the main manuscript's model-architecture section).
+
+% ===========================================================================
+\section{Diagnostic extensions, part II: robustness checks on the business cycle, monetary policy, the exchange rate and interest-income incidence}
+\label{app:reviewer}
+% ===========================================================================
+
+\noindent A natural sanity check on the model's own completeness (summarised in the main manuscript's discussion section) is whether it is acyclical, monetary-policy-blind and currency-blind, and whether this quietly biases the finding that expansion scenarios lower the Gini coefficient (the main manuscript's headline-results table) in favour of expansion, because the model never prices the channels a sustained, debt-financed expansion would plausibly trigger: a Selic hike, a weaker real, and interest income accruing disproportionately to bondholders concentrated at the top of the income distribution. This appendix reports, in full, six off-by-default diagnostics built to test exactly this, each isolating one mechanism against the unchanged baseline, in the same spirit as Appendix~\ref{app:d4}. None is folded into the main manuscript's headline-results table or any other published Monte Carlo summary; each uses 300 draws (central draw plus 299 sampled, seed 20261026, independent RNG streams) unless stated otherwise. Section~\ref{sec:mr1-historical} adds a seventh, different in kind from the other six: not a Monte Carlo diagnostic at all, but a direct test of whether MR1's reactive-Selic mechanism, used as a stand-in for the model's own fixed-rate assumption, actually improves the fit to Brazil's observed fiscal history.
+
+\subsection{Does the model consider the business cycle?}
+
+This sanity check's starting diagnosis is correct, and independently confirmed twice over. First, this model's own deterministic growth trend has no cyclical fluctuation whatsoever: under the central draw with no external shocks, \textsc{S0}'s year-on-year real GDP growth decelerates smoothly and monotonically from 1.18\% in 2026 to 0.94\% by 2035, with no booms or slowdowns at all. Second, a historical fiscal-timing diagnostic against Brazil's own 2000--2024 record (gross domestic product growth against its own trailing five-year mean, and the year-on-year change in the primary balance) finds fiscal policy was predominantly \emph{countercyclical} over the period, not procyclical: 2009 and 2020--2021 are both clearly countercyclical, and only two years in the whole sample, 2006 and 2023, classify as procyclical-expansionary. The specific 2011--2014 period, sometimes singled out in qualitative accounts of this episode, is mixed rather than uniformly procyclical: 2011 is procyclical-contractionary, but 2012--2014 are all countercyclical on this measure, a finding that partly complicates, rather than confirms, the common qualitative reading of that episode.
+
+Reintroducing genuine cyclical variation via the model's existing stochastic external-shock bootstrap (the main manuscript's model-architecture section) and rescaling the fiscal multiplier by a sampled recession/expansion ratio (low 1.0, central 1.5, high 2.5, reflecting \citet{auerbachgorodnichenko2012}'s qualitative finding of larger multipliers in recessions and \citet{ramey2019,rameyzubairy2018}'s more sceptical reading of the same literature; \citet{pires2014}, cited elsewhere in this paper for Brazilian multiplier estimation generally, is not used for this specific ratio, since a secondary source suggests its own positive finding concerns a volatility-regime split rather than a business-cycle-phase split) moves \textsc{R\_amb}'s median ten-year GDP cost from $-0.80\%$ under the model's fixed multiplier to $-1.08\%$ once state-dependence is reintroduced, roughly 35\% larger, consistent with the standard state-dependent-multiplier intuition that ignoring state-dependence understates the true cost of a sustained contraction.
+
+\subsection{Debt composition and the exchange rate}
+
+The debt identity (the main manuscript's model-architecture section) applies one interest rate to an undifferentiated stock and revalues foreign-currency-linked debt only indirectly, through inflation pass-through, never as a direct stock revaluation. The main manuscript's discussion section already reports why this channel is structurally small for Brazil specifically (a stable 3.7--4.4\% foreign-exchange-linked share of federal debt, \citealp{tesourormd2026}); this appendix quantifies it. Table~\ref{tab:dc1} revalues that FX-linked share directly by the model's own bootstrapped BRL/USD path (common to every scenario, as in the main manuscript's model-architecture section). The effect is indeed small at the paper's main ten-year horizon, as the main manuscript's discussion section's framing expects, but grows to a no-longer-negligible median 5--17~pp of GDP by twenty years, because the small FX-linked tranche is revalued by \emph{cumulative} depreciation, and Brazil's own 2000--2024 BRL/USD history includes twenty-year windows with well over 100\% cumulative depreciation; this remains modest relative to the already very wide uncertainty band on total debt/GDP at that horizon, but the ``second order, do not worry about it'' framing should not be extended to the twenty-year horizon without this qualification.
+
+\begin{table}[htbp]
+\centering\small
+\caption{FX-linked debt revaluation: additional debt/GDP (pp) from revaluing the FX-linked tranche by the common bootstrapped BRL/USD path. Median [p10, p90], 300 draws.}
+\label{tab:dc1}
+\begin{tabular}{lrr}
+\toprule
+Scenario & 10 years & 20 years \\
+\midrule
+\textsc{S0} & $+3.21$ $[-0.48,+10.39]$ & $+16.93$ $[+1.84,+47.50]$ \\
+\textsc{R\_mod} & $+2.92$ $[-0.43,+9.44]$ & $+13.46$ $[+1.38,+37.54]$ \\
+\textsc{R\_amb} & $+2.63$ $[-0.39,+8.46]$ & $+9.79$ $[+0.94,+28.46]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Separately, FX1 asks whether the exchange rate should itself respond to a scenario's own fiscal stress, rather than only to the common, policy-blind path above. Rather than fit a new debt-to-FX regression --- this paper's own external-sector block already tried the closest analogue, a debt-to-sovereign-spread relationship for Brazil (fit 2000--2014, tested 2015--2024), and found it not supported out of sample --- FX1 chains the model's own already-estimated debt-to-risk-premium parameter \citep{baldaccikumar2010} to a sampled, not fitted, spread-to-depreciation elasticity anchored on uncovered interest parity, with its upper bound informed only qualitatively by \citet{banerjeemehrotrazampolli2023}'s finding that the fiscal-to-exchange-rate channel is markedly stronger in emerging than advanced economies. A first implementation routed this extra, stress-induced depreciation through the same inflation-pass-through channel as the common path above and found an \emph{exactly zero} debt/GDP effect at every draw: in this model's Fisher-consistent debt identity, the nominal interest rate and nominal GDP growth both reprice by the same inflation factor, so a pure inflation shock with no real-economy effect cannot move the debt/GDP ratio at all, by construction --- an independently confirming structural fact about the model, in the same spirit as the acyclical growth core reported above. FX1 therefore revalues the same FX-linked tranche as Table~\ref{tab:dc1}, but by the scenario's own stress-induced depreciation rather than the common path. Table~\ref{tab:fx1} shows this is, on its own, a small effect for the paper's expansion scenarios, confirming that the FX-linked channel stays small specifically because the underlying FX-linked share of debt is small, not because fiscal stress fails to move the exchange rate.
+
+\begin{table}[htbp]
+\centering\small
+\caption{FX1: additional debt/GDP (pp) from a stress-induced, scenario-specific depreciation revaluing the FX-linked tranche. Median [p10, p90], 300 draws.}
+\label{tab:fx1}
+\begin{tabular}{lrr}
+\toprule
+Scenario & 10 years & 20 years \\
+\midrule
+\textsc{E\_mod} & $+0.18$ $[+0.06,+0.36]$ & $+0.42$ $[+0.16,+0.83]$ \\
+\textsc{E\_amb} & $+0.21$ $[+0.08,+0.40]$ & $+0.47$ $[+0.18,+0.93]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Interest income and the inflation tax}
+
+The most direct distributional question this sanity check raises is whether higher government interest expense accrues disproportionately to bondholders at the top of the income distribution, and whether an inflation tax falls hardest on poor households' non-indexed transfers --- neither of which the household microsimulation (the main manuscript's model-architecture section) had any mechanism to represent, since the underlying survey has no capital-income field. IY1 derives a scenario's change in government interest expense directly from the debt identity (the previous year's debt/GDP times that year's nominal interest rate), allocates it across the simulated population using the concentration of declared capital and financial income among Receita Federal's own tax centiles \citep{receitafederal2024} (the top 1\% of declarants hold 68.3\% of declared capital/financial income; the top 10\% hold 90.7\%), and separately erodes each household's baseline Bolsa Fam\'ilia amount by that scenario-year's cumulative extra inflation. Table~\ref{tab:iy1} reports the resulting shift in the Gini coefficient against the published, IY1-off figure, for the two debt-financed expansion scenarios this check is specifically about.
+
+\begin{table}[htbp]
+\centering\small
+\caption{IY1: shift in the Gini coefficient (points) from switching on the interest-income and inflation-tax channels, against the published figure. Median [p10, p90], 300 draws.}
+\label{tab:iy1}
+\begin{tabular}{lrr}
+\toprule
+Scenario & 10 years & 20 years \\
+\midrule
+\textsc{E\_mod} & $+0.76$ $[+0.41,+1.16]$ & $+3.13$ $[+1.60,+4.56]$ \\
+\textsc{E\_amb} & $+1.31$ $[+0.72,+1.98]$ & $+5.02$ $[+2.48,+7.19]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Poverty (the R\$218 line) barely moves anywhere in this table (well under one percentage point throughout), which confirms the capital-income windfall, not the inflation-tax erosion of Bolsa Fam\'ilia, is the dominant channel here: poverty is measured at the bottom of the distribution, and the windfall is concentrated at the top. The direction is exactly what a bondholder-concentration channel would predict, and the magnitude is not negligible against the published figure it is being compared with, which we turn to directly in Section~\ref{sec:discussion-reviewer-synthesis} below.
+
+\subsection{A reactive Selic}
+
+A further sanity check concerns whether the model has any monetary-policy reaction function at all: the real interest rate is a fixed input regardless of inflation or the output gap a scenario itself creates. Rather than make this shared rate-determination function itself state-dependent, which would touch every scenario, every other diagnostic in this appendix, and the published Monte Carlo at once, MR1 re-runs each scenario's debt path afterwards, substituting a textbook Taylor rule \citep{taylor1993} for the fixed rate in an otherwise identical re-run of the debt identity. Because this model's inflation input does not vary by scenario, only the output-gap term differentiates a scenario's Selic path from \textsc{S0}'s. The Brazil-specific Taylor-rule literature we could locate (several studies spanning 2001--2025) consistently reports a positive, significant Selic response to both the inflation and output gap, but only qualitatively (``smaller than advanced economies,'' ``varying over time''); rather than use an unverified point estimate, the coefficient is sampled as a discount (low 0.3, central 0.6, high 1.0) on Taylor's own classic 0.5 coefficient. Table~\ref{tab:mr1} reports the resulting incremental debt/GDP, on top of the already-reported fixed-rate baseline differential (the main manuscript's headline-results table).
+
+\begin{table}[htbp]
+\centering\small
+\caption{MR1: incremental debt/GDP (pp) from a reactive Selic, on top of the fixed-rate baseline differential vs.\ \textsc{S0}. Median [p10, p90], 300 draws.}
+\label{tab:mr1}
+\begin{tabular}{lrr}
+\toprule
+Scenario & 10 years & 20 years \\
+\midrule
+\textsc{E\_mod} & $+1.46$ $[+0.83,+2.39]$ & $+5.45$ $[+2.92,+10.26]$ \\
+\textsc{E\_amb} & $+3.02$ $[+1.71,+4.95]$ & $+6.32$ $[+3.28,+12.66]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Testing MR1 against Brazil's own fiscal history}
+\label{sec:mr1-historical}
+
+MR1 above answers one question: within a Monte Carlo draw, how would a reactive Selic change a scenario's debt path relative to \textsc{S0}? A different and harder question is whether MR1's mechanism, used not as an add-on to a scenario comparison but as a direct replacement for the model's own fixed real-rate assumption, actually describes Brazil's observed 2000--2024 fiscal history better than the fixed rate it would replace. This is the same distinction the main manuscript's back-testing section already draws for the published model's own back-test, Tier 1 (differences) against Tier 2 (absolute levels): a mechanism can be defensible for one purpose and not the other, and the two tests need not agree.
+
+We built a separate historical reconstruction, outside any Monte Carlo draw: starting from Brazil's own observed general-government debt/GDP in 2006, the debt identity is recursed annually through 2024 using the actually observed primary balance and real GDP growth every year, but \emph{generating}, not observing, the interest rate under two candidate mechanisms --- the model's existing fixed real rate (5.05\%, itself the historical median real rate the model already uses, not an arbitrary flat guess) and MR1's Taylor rule, reacting each year to that year's own observed inflation and a real-time output-gap proxy identical to the one Appendix~\ref{app:d4}'s PCY1 diagnostic already uses. Two debt-level tests compare each mechanism's resulting path to the actually observed one: a cumulative reconstruction from the single 2006 anchor, which the main manuscript's back-testing section already documents as dominated by stock-flow-adjustment noise unrelated to any rate mechanism, and a one-step reconstruction re-anchored on the observed lagged debt every year, which isolates rate-mechanism fit from that noise and is accordingly the test we treat as decisive. A third test compares each mechanism's own implied nominal rate directly to the actually observed Selic.
+
+Table~\ref{tab:mr1-historical} reports the result, confirmed against two independently constructed nominal-growth series (a CPI-and-real-growth approximation, and Brazil's own SIDRA current-price GDP series, used elsewhere in this paper's growth-block back-test). The two tests disagree, and we report that disagreement plainly rather than resolve it in either direction: the Taylor rule's own implied rate tracks the actually observed Selic more closely than the fixed-rate assumption does, but feeding that same generated rate through the debt identity produces a \emph{worse} one-step reconstruction of the observed debt path than the fixed-rate assumption. We read this as a category error our own design would have invited, not a contradiction: the fixed rate is calibrated to the government's effective, blended rate across its whole diversified debt stock (Selic-linked, inflation-linked and fixed-rate instruments alike, the main manuscript's discussion section), not the Selic policy rate itself, and a rule built to track Selic is accordingly the wrong direct stand-in for it. We therefore do not adopt MR1's mechanism as a replacement for the fixed-rate assumption, in the published Monte Carlo or elsewhere; Table~\ref{tab:mr1}'s own incremental figures remain exactly what they already were, a Tier-1-style scenario-difference diagnostic, not a claim that the underlying mechanism is a validated improvement on the model's historical fit. Nominal GDP growth in the CPI-based series is a Fisher approximation (real growth compounded with CPI inflation) rather than a directly observed nominal series; this affects both mechanisms' reconstructions equally and so does not bias the comparison between them, which is the comparison this test exists to make. A wider benchmark of this project's own validation practice against the literature (Appendix~\ref{app:benchmark}) found the European Stability Mechanism's own operational fan-chart methodology reports a calibrated coverage statistic rather than a single pass/fail verdict; applied here, at no new estimation cost, using the model's own already-published low/high real-rate corners to bound the one-step reconstruction rather than a single central line, the actually observed debt/GDP fell inside that band in 9 of the 14 reconstructed years (64\%), missing in 2011, 2012, 2014, 2015 and 2022 --- a second, complementary way of reading the same Tier-2 shortfall the main manuscript's back-testing section already reports, not a contradiction of it.
+
+\begin{table}[htbp]
+\centering\small
+\caption{MR1 against history: one-step debt/GDP reconstruction error and nominal-Selic tracking error, fixed-rate vs.\ Taylor-rule mechanism, 2000--2024 (RMSE, percentage points).}
+\label{tab:mr1-historical}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrr}
+\toprule
+Mechanism & Debt/GDP, one-step (CPI-based) & Debt/GDP, one-step (SIDRA-based) & Nominal Selic \\
+\midrule
+Fixed rate & 3.69 & 3.23 & 3.87 \\
+Taylor rule & 4.25 & 3.88 & 3.35 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\subsection{Putting it together: does the omitted-channel bias hold up?}
+\label{sec:discussion-reviewer-synthesis}
+
+The hypothesis under test is that the Gini and debt findings of the main manuscript's headline-results table are probably biased in favour of expansion. Combining each diagnostic's own median effect with the corresponding published figure --- a simple addition of two separately-run statistics, not a single re-integrated Monte Carlo, since medians of compounding, nonlinear quantities do not generally add linearly, so this is indicative rather than a recomputed joint distribution --- gives a direct answer for the two channels large enough to matter at the paper's main ten-year horizon.
+
+On distribution: the published finding is that \textsc{E\_mod} lowers the Gini coefficient by a median 0.10 points and \textsc{E\_amb} by 0.16 points at ten years (the main manuscript's headline-results table). Adding IY1's own median shift (Table~\ref{tab:iy1}) gives a combined $-0.10+0.76=+0.65$ points for \textsc{E\_mod} and $-0.16+1.31=+1.15$ points for \textsc{E\_amb}: the median effect does not merely shrink, it \emph{reverses sign}. On this reading, the hypothesis is not just plausible but directionally confirmed: once interest income is distributed the way Receita Federal's own data says capital income actually is, the model's central estimate is that these expansions make the Gini coefficient worse, not better, at the median. On debt: adding MR1's and FX1's own median effects (Tables~\ref{tab:mr1} and~\ref{tab:fx1}) to the published differential raises \textsc{E\_mod}'s ten-year debt cost from $+11.6$ to roughly $+13.3$~pp of GDP and \textsc{E\_amb}'s from $+23.3$ to roughly $+26.5$~pp, about 13--14\% larger in each case --- a real, quantified addition, though one that changes the \emph{size} of the debt cost rather than its sign.
+
+We think this is the honest answer our own stated methodological standard demands, stated plainly rather than hedged: the distributional claim this paper previously reported without these channels does not survive their inclusion at the median, and the debt claim, while directionally unchanged, is understated by a magnitude worth citing rather than waving away. We did not set out to find this; PCY1 and FX1, by contrast, \emph{complicate} rather than confirm parts of this hypothesis (fiscal policy's own history is predominantly countercyclical, and the FX-linked debt channel is genuinely small once isolated from the common external path), and CYC1's and DC1's findings are each real but, at the ten-year horizon that is this paper's main reference point, modest. The net reading is neither ``the hypothesis is simply right'' nor ``the original paper's finding stands'': it is that the specific channel we pressed hardest on testing, interest income flowing disproportionately to the already-wealthy, is large enough to reverse a headline distributional finding once it is actually quantified, and that is precisely the kind of result an honest accounting exercise exists to surface, whichever way it comes out.
+
+% ===========================================================================
+\section{Diagnostic extensions, part III: a wider methodology sanity check}
+\label{app:benchmark}
+% ===========================================================================
+
+\noindent A self-administered benchmark of this project's own debt-sustainability methodology against the wider literature, undertaken before submission, surfaced two further sanity checks worth running directly against this model, reported here in the same off-by-default, never-folded-into-the-headline-results spirit as Appendices~\ref{app:d4} and~\ref{app:reviewer}.
+
+\subsection{Does joint shock correlation widen the model's own uncertainty bands?}
+\label{sec:cor1}
+
+The published Monte Carlo samples its structural parameters (growth, the interest rate, multipliers) independently per draw. Two recent institutional debt-sustainability exercises outside this project --- a Bayesian and frequentist VAR analysis of France's debt trajectory \citep{baretbeccochard2025} and the European Stability Mechanism's own operational euro-area fan-chart methodology \citep{hitajzavallonizigraiova2025} --- instead draw growth, inflation, the interest rate and the primary balance as a single, jointly-correlated shock, and both report this produces \emph{wider}, not narrower, uncertainty bands than independent or frequentist-only sampling. We test the same question against Brazil's own 2002--2024 history directly: a joint three-year block bootstrap of growth, inflation, the primary balance and the exchange rate together (preserving whatever correlation they actually had in a given historical window, the same block-bootstrap convention, at the same block length, already used for this paper's own stock-flow-adjustment term in the main manuscript's back-testing section), compared against the published Monte Carlo's own band width at the same scenario and horizon. A fitted vector autoregression was deliberately not used: the overlapping annual window for all four series is only 23 years, too thin to estimate a multi-variable VAR with any confidence distinguishable from noise.
+
+Table~\ref{tab:cor1} reports the result. The correlated-shock band is wider than the published Monte Carlo's own band in 16 of 20 scenario-horizon cells checked, by a wide margin at longer horizons --- roughly double the published band's width at twenty years for the ambitious scenarios. Brazil's own historical experience is consistent with the same pattern found elsewhere: treating growth, inflation, the primary balance and the exchange rate as independently drawn, as the published Monte Carlo currently does, plausibly understates the true joint tail risk around the headline debt path. We do not adopt this correlated-shock structure as a replacement for the published sampling scheme --- that would be a larger redesign than a single diagnostic justifies --- but report it as evidence the published bands are, if anything, too narrow rather than too wide.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Band width (p90$-$p10 of debt/GDP vs.\ \textsc{S0}, pp): published Monte Carlo vs.\ the jointly-correlated-shock diagnostic, 300 draws.}
+\label{tab:cor1}
+\begin{tabular}{lrrrr}
+\toprule
+ & \multicolumn{2}{c}{10 years} & \multicolumn{2}{c}{20 years} \\
+Scenario & Published & Correlated & Published & Correlated \\
+\midrule
+\textsc{R\_mod} & 1.69 & 2.86 & 17.21 & 36.08 \\
+\textsc{R\_amb} & 3.38 & 5.73 & 34.77 & 72.69 \\
+\textsc{E\_mod} & 1.69 & 2.87 & 17.22 & 36.09 \\
+\textsc{E\_amb} & 3.38 & 5.74 & 33.60 & 69.71 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{A climate/natural-disaster tail-shock channel}
+\label{sec:dis1}
+
+The debt-sustainability literature has, in the last two years, institutionalised climate and natural-disaster shocks into standard debt-sustainability toolkits, calibrating a tail shock to real growth and the primary balance together at a severe historical percentile \citep{draganicetal2025}. This model already has a structurally close analogue for a different tail risk: the governance layer's major-corruption-shock process (the main manuscript's model-architecture section), a stochastic annual event with a triangularly-distributed magnitude and a build-up/decay GDP-level path, applied identically to every scenario within a draw. We reuse that exact machinery for a climate/disaster shock instead of building a new one, adding the one genuine extension the comparator toolkits call for: a shared-draw, direct primary-balance hit (emergency relief spending), since a disaster shock is not GDP-level-only the way the corruption shock is.
+
+No general-purpose, Brazil-specific disaster-fiscal-cost dataset was identified; the standard international disaster database is independently documented to understate Brazilian disaster losses by roughly an order of magnitude relative to Brazil's own national disaster-registry system. Rather than adopt an uncalibrated cross-country figure, the magnitude is anchored on a single, large, well-documented federal-level event: the 2024 Rio Grande do Sul floods, whose federal fiscal cost is reported at R\$7.7--13.4~billion, approximately 0.07--0.12\% of GDP. This is one severe event, not an estimated distribution, and the sampled low/central/high range brackets it with a proportionate, judgemental band, in the same spirit already applied elsewhere in this paper to a single-estimate-anchored coefficient (CYC1's state-dependence ratio, FX1's depreciation elasticity).
+
+Table~\ref{tab:dis1} reports the resulting additional debt/GDP. The median effect is small at every horizon checked (under a quarter of a percentage point of GDP at twenty years for every scenario), but the right tail is not: the 90th percentile reaches 2--4.5~pp of GDP by twenty years, a genuine, if low-probability, addition to the uncertainty this model's published bands do not currently carry.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Additional debt/GDP (pp) from the climate/disaster-shock diagnostic, median [p10, p90], 300 draws.}
+\label{tab:dis1}
+\begin{tabular}{lrr}
+\toprule
+Scenario & 10 years & 20 years \\
+\midrule
+\textsc{S0} & $+0.12$ $[0.00,+1.58]$ & $+0.15$ $[0.00,+3.43]$ \\
+\textsc{R\_mod} & $+0.11$ $[0.00,+1.44]$ & $+0.11$ $[0.00,+2.76]$ \\
+\textsc{R\_amb} & $+0.10$ $[0.00,+1.29]$ & $+0.08$ $[0.00,+2.19]$ \\
+\textsc{E\_mod} & $+0.13$ $[0.00,+1.72]$ & $+0.18$ $[0.00,+4.05]$ \\
+\textsc{E\_amb} & $+0.14$ $[0.00,+1.86]$ & $+0.21$ $[0.00,+4.50]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\bibliographystyle{plainnat}
+\begin{thebibliography}{153}
+\bibitem[Acemoglu and Johnson, 2007]{acemoglujohnson2007} Acemoglu, D. and Johnson, S. (2007). Disease and Development: The Effect of Life Expectancy on Economic Growth. \textit{Journal of Political Economy}, 115(6), 925--985.
+
+\bibitem[Afonso and Jalles, 2019]{afonsojalles2019sfa} Afonso, A.\ and Jalles, J.T.\ (2019). Stock-Flow Adjustments in Sovereign Debt Dynamics: The Role of Fiscal Frameworks. \textit{EconPol Working Paper} 20/2019, ifo Institute (also ISEG REM Working Paper 066/2019).
+
+\bibitem[Agnello and Sousa, 2012]{agnellosousa2012b} Agnello, L.\ and Sousa, R.M.\ (2012). Fiscal Adjustments and Income Inequality: A First Assessment. \textit{Applied Economics Letters}, 19(16), 1627--1632.
+
+\bibitem[Agnello and Sousa, 2014]{agnellosousa2014} Agnello, L.\ and Sousa, R.M.\ (2014). How Does Fiscal Consolidation Impact on Income Inequality? \textit{Review of Income and Wealth}, 60(4), 702--726.
+
+\bibitem[Akitoby and Stratmann, 2008]{akitobystratmann2008} Akitoby, B.\ and Stratmann, T.\ (2008). Fiscal Policy and Financial Markets. \textit{Economic Journal}, 118(533), 1971--1985.
+
+\bibitem[Alesina and Ardagna, 2010]{alesinaardagna2010} Alesina, A. and Ardagna, S. (2010). Large Changes in Fiscal Policy: Taxes versus Spending. \textit{Tax Policy and the Economy}, 24(1), 35--68.
+
+\bibitem[Alesina and Passalacqua, 2016]{alesinapassalacqua2016} Alesina, A.\ and Passalacqua, A.\ (2016). The Political Economy of Government Debt. In J.B.\ Taylor and H.\ Uhlig (eds.), \textit{Handbook of Macroeconomics}, Vol.\ 2. Elsevier.
+
+\bibitem[Alesina and Tabellini, 1990]{alesinatabellini1990} Alesina, A.\ and Tabellini, G.\ (1990). A Positive Theory of Fiscal Deficits and Government Debt. \textit{Review of Economic Studies}, 57(3), 403--414.
+
+\bibitem[Alesina et al., 2015]{alesinafaverogiavazzi2015} Alesina, A., Favero, C. and Giavazzi, F. (2015). The Output Effect of Fiscal Consolidation Plans. \textit{Journal of International Economics}, 96(S1), S19--S42.
+
+\bibitem[Alesina et al., 2015]{alesinabarbierofaverogiavazzipardisi2015} Alesina, A., Barbiero, O., Favero, C., Giavazzi, F. and Paradisi, M. (2015). Austerity in 2009--13. \textit{Economic Policy}, 30(83), 383--437.
+
+\bibitem[Alesina et al., 2017]{alesinaazzalinietal2017} Alesina, A., Azzalini, G., Favero, C., Giavazzi, F. and Miano, A. (2017). Is It the ``How'' or the ``When'' that Matters in Fiscal Adjustments? \textit{NBER Working Paper} No.\ 22863.
+
+\bibitem[Alesina, Prati and Tabellini, 1989]{alesinapratitabellini1989} Alesina, A., Prati, A.\ and Tabellini, G.\ (1989). Public Confidence and Debt Management: A Model and a Case Study of Italy. \textit{NBER Working Paper} No.\ 3135.
+
+\bibitem[Alston et al., 2013]{alstonmelomuellerpereira2013} Alston, L.J., Melo, M.A., Mueller, B.\ and Pereira, C.\ (2013). Changing Social Contracts: Beliefs and Dissipative Inclusion in Brazil. \textit{Journal of Comparative Economics}, 41(1), 48--65.
+
+\bibitem[Andrian, Rodr\'iguez and Valencia, 2024]{andrianetal2024sfa} Andrian, L.G., Rodr\'iguez, C.M.\ and Valencia, O.\ (2024). Surges in the Shadows: Stock-Flow Adjustments and Public Debt Spikes. \textit{IDB Working Paper} 13725 (published in \textit{Emerging Markets Review}, 67, 2025).
+
+\bibitem[Ardagna, Caselli and Lane, 2007]{ardagnacasellilane2007} Ardagna, S., Caselli, F.\ and Lane, T.\ (2007). Fiscal Discipline and the Cost of Public Debt Service: Some Estimates for OECD Countries. \textit{The B.E.\ Journal of Macroeconomics}, 7(1), Article 28.
+
+\bibitem[Auerbach and Gorodnichenko, 2012]{auerbachgorodnichenko2012} Auerbach, A.J.\ and Gorodnichenko, Y.\ (2012). Measuring the Output Responses to Fiscal Policy. \textit{American Economic Journal: Economic Policy}, 4(2), 1--27.
+
+\bibitem[Avis, Ferraz and Finan, 2018]{avisferrazfinan2018} Avis, E., Ferraz, C. and Finan, F. (2018). Do Government Audits Reduce Corruption? Estimating the Impacts of Exposing Corrupt Politicians. \textit{Journal of Political Economy}, 126(5), 1912--1964.
+
+\bibitem[Baldacci and Kumar, 2010]{baldaccikumar2010} Baldacci, E. and Kumar, M.S. (2010). Fiscal Deficits, Public Debt, and Sovereign Bond Yields. \textit{IMF Working Paper} WP/10/184.
+
+\bibitem[Balladares and Garc\'ia-Miralles, 2026]{balladaresgarciamiralles2026} Balladares, S.\ and Garc\'ia-Miralles, E.\ (2026). Fiscal Drag with Microsimulation: Evidence from Spanish Tax Records. \textit{Fiscal Studies}, Early View.
+
+\bibitem[Ball et al., 2013]{ballfurcerilleighlloungani2013} Ball, L., Furceri, D., Leigh, D. and Loungani, P. (2013). The Distributional Effects of Fiscal Consolidation. \textit{IMF Working Paper} WP/13/151.
+
+\bibitem[Banerjee, Mehrotra and Zampolli, 2023]{banerjeemehrotrazampolli2023} Banerjee, R., Mehrotra, A.\ and Zampolli, F.\ (2023). Fiscal Sources of Inflation Risk in EMDEs: The Role of the External Channel. \textit{BIS Working Paper} No.\ 1110.
+
+\bibitem[Baret, Bec and Cochard, 2025]{baretbeccochard2025} Baret, K., Bec, F.\ and Cochard, M.\ (2025). Quantifying Uncertainty in France's Debt Trajectory: A VAR-Based Analysis. \textit{Banque de France Working Paper} No.\ 1019.
+
+\bibitem[Bevilaqua and Garcia, 2002]{bevilaquagarcia2002} Bevilaqua, A.S.\ and Garcia, M.G.P.\ (2002). Debt Management in Brazil: Evaluation of the Real Plan and Challenges Ahead. \textit{International Journal of Finance \& Economics}, 7(1), 15--35.
+
+\bibitem[Bi, 2012]{bi2012} Bi, H.\ (2012). Sovereign Default Risk Premia, Fiscal Limits and Fiscal Policy. \textit{European Economic Review}, 56(3), 389--410.
+
+\bibitem[Blanchard, 2019]{blanchard2019} Blanchard, O.\ (2019). Public Debt and Low Interest Rates. \textit{American Economic Review}, 109(4), 1197--1229.
+
+\bibitem[Blanchard and Leigh, 2013]{blanchardleigh2013} Blanchard, O.\ and Leigh, D.\ (2013). Growth Forecast Errors and Fiscal Multipliers. \textit{IMF Working Paper} WP/13/1.
+
+\bibitem[Bloom, Canning and Sevilla, 2001]{bloomcanningsevilla2001} Bloom, D.E., Canning, D. and Sevilla, J. (2001). The Effect of Health on Economic Growth: Theory and Evidence. \textit{NBER Working Paper} No.\ 8587.
+
+\bibitem[Bobonis, C\'amara Fuertes and Schwabe, 2016]{bobonisetal2016} Bobonis, G.J., C\'amara Fuertes, L.R.\ and Schwabe, R.\ (2016). Monitoring Corruptible Politicians. \textit{American Economic Review}, 106(8), 2371--2405.
+
+\bibitem[Bohn, 1998]{bohn1998} Bohn, H. (1998). The Behavior of U.S.\ Public Debt and Deficits. \textit{Quarterly Journal of Economics}, 113(3), 949--963.
+
+\bibitem[Bokhari, Gai and Gottret, 2007]{bokharigaigottret2007} Bokhari, F.A.S., Gai, Y.\ and Gottret, P.\ (2007). Government Health Expenditures and Health Outcomes. \textit{Health Economics}, 16(3), 257--273.
+
+\bibitem[Bom and Ligthart, 2014]{bomligthart2014} Bom, P.R.D.\ and Ligthart, J.E. (2014). What Have We Learned from Three Decades of Research on the Productivity of Public Capital? \textit{Journal of Economic Surveys}, 28(5), 889--916.
+
+\bibitem[Born, M\"uller and Pfeifer, 2020]{bornmullerpfeifer2020} Born, B., M\"uller, G.J.\ and Pfeifer, J.\ (2020). Does Austerity Pay Off? \textit{Review of Economics and Statistics}, 102(2), 323--338.
+
+\bibitem[Bourguignon, Ferreira and Lustig, 2004]{bourguignonferreiralustig2004} Bourguignon, F., Ferreira, F.H.G.\ and Lustig, N.\ (eds.) (2004). \textit{The Microeconomics of Income Distribution Dynamics in East Asia and Latin America}. World Bank / Oxford University Press.
+
+\bibitem[Bourguignon and Spadaro, 2006]{bourguignonspadaro2006} Bourguignon, F.\ and Spadaro, A.\ (2006). Microsimulation as a Tool for Evaluating Redistribution Policies. \textit{Journal of Economic Inequality}, 4(1), 77--106.
+
+\bibitem[Bova et al., 2016]{bovaetal2016contingent} Bova, E., Ruiz-Arranz, M., Toscani, F.\ and Ture, H.E.\ (2016). The Fiscal Costs of Contingent Liabilities: A New Dataset. \textit{IMF Working Paper} 2016/014.
+
+\bibitem[Brinca et al., 2021]{brincaetal2021} Brinca, P., Ferreira, M.H., Franco, F., Holter, H.A.\ and Malafry, L.\ (2021). Fiscal Consolidation Programs and Income Inequality. \textit{International Economic Review}.
+
+\bibitem[Brollo et al., 2013]{brollonanicciniperottitabellini2013} Brollo, F., Nannicini, T., Perotti, R.\ and Tabellini, G.\ (2013). The Political Resource Curse. \textit{American Economic Review}, 103(5), 1759--1796.
+
+\bibitem[Campos and Cysne, 2021]{camposcysne2021} Campos, E.L.\ and Cysne, R.P.\ (2021). Estimating Debt Limits for Emerging Countries. \textit{International Review of Economics \& Finance}, 76, 836--855.
+
+\bibitem[Card, 1999]{card1999} Card, D.\ (1999). The Causal Effect of Education on Earnings. In O.\ Ashenfelter and D.\ Card (eds.), \textit{Handbook of Labor Economics}, Vol.\ 3A, Ch.\ 30. Elsevier.
+
+\bibitem[Carri\`ere-Swallow, David and Leigh, 2018]{carriereswallowdavidleigh2018} Carri\`ere-Swallow, Y., David, A.C.\ and Leigh, D.\ (2018). The Macroeconomic Effects of Fiscal Consolidation in Emerging Economies: Evidence from Latin America. \textit{IMF Working Paper} WP/18/142.
+
+\bibitem[Carvalho and Sanches, 2019]{carvalhosanches2019} Carvalho, L.\ and Sanches, M.\ (2019). Fiscal Policy Multipliers in Brazil. \textit{Working Paper}.
+
+\bibitem[Casalin, Cerniglia and Dia, 2023]{casalinetal2023} Casalin, F., Cerniglia, F.\ and Dia, E.\ (2023). Stock-Flow Adjustments, Public Debt Management and Interest Costs. \textit{Economic Modelling}, 129, 106531.
+
+\bibitem[Celasun, Debrun and Ostry, 2007]{celasundebrunostry2007} Celasun, O., Debrun, X.\ and Ostry, J.D.\ (2007). Primary Surplus Behavior and Risks to Fiscal Sustainability in Emerging Market Countries: A ``Fan-Chart'' Approach. \textit{IMF Staff Papers}, 53(3), 401--425.
+
+\bibitem[Chudik et al., 2017]{chudiketal2017} Chudik, A., Mohaddes, K., Pesaran, M.H.\ and Raissi, M.\ (2017). Is There a Debt-Threshold Effect on Output Growth? \textit{Review of Economics and Statistics}, 99(1), 135--150.
+
+\bibitem[Colonnelli et al., 2022]{colonnellietal2022jfe} Colonnelli, E., Lagaras, S., Ponticelli, J., Prem, M.\ and Tsoutsoura, M.\ (2022). Revealing Corruption: Firm and Worker Level Evidence from Brazil. \textit{Journal of Financial Economics}, 143(3), 1097--1119.
+
+\bibitem[Colonnelli and Prem, 2022]{colonnelliprem2022} Colonnelli, E.\ and Prem, M.\ (2022). Corruption and Firms. \textit{Review of Economic Studies}, 89(2), 695--732.
+
+\bibitem[Cordes et al., 2015]{cordesetal2015} Cordes, T., Kinda, T., Muthoora, P.\ and Weber, A.\ (2015). Expenditure Rules: Effective Tools for Sound Fiscal Policy? \textit{IMF Working Paper} WP/15/29.
+
+\bibitem[de Mello, 2008]{demello2008} de Mello, L.\ (2008). Estimating a Fiscal Reaction Function: The Case of Debt Sustainability in Brazil. \textit{Applied Economics}, 40(3) (earlier version: OECD Economics Department Working Paper No.\ 423, 2005).
+
+\bibitem[Debrun, Hauner and Kumar, 2009]{debrunhaunerkumar2009} Debrun, X., Hauner, D.\ and Kumar, M.S.\ (2009). Independent Fiscal Agencies. \textit{Journal of Economic Surveys}, 23(1), 44--81.
+
+\bibitem[Debrun and Kumar, 2007]{debrunkumar2007} Debrun, X.\ and Kumar, M.\ (2007). The Discipline-Enhancing Role of Fiscal Institutions: Theory and Empirical Evidence. \textit{IMF Working Paper} WP/07/171.
+
+\bibitem[Draganic, Srdelic and Davila-Fernandez, 2025]{draganicetal2025} Draganic, A., Srdelic, L.\ and Davila-Fernandez, M.J.\ (2025). Earthquakes, Floods, and Fiscal Resilience: Evidence from Croatia and Slovenia. \textit{arXiv preprint} 2511.02973.
+
+\bibitem[Edwards, 1984]{edwards1984} Edwards, S.\ (1984). LDC's Foreign Borrowing and Default Risk: An Empirical Investigation, 1976--1980. \textit{American Economic Review}, 74(4), 726--734.
+
+\bibitem[Edwards, 1986]{edwards1986} Edwards, S.\ (1986). The Pricing of Bonds and Bank Loans in International Markets: An Empirical Analysis of Developing Countries' Foreign Borrowing. \textit{European Economic Review}, 30(3), 565--589.
+
+\bibitem[\'Egert, 2015]{egert2015} \'Egert, B.\ (2015). Public Debt, Economic Growth and Nonlinear Effects: Myth or Reality? \textit{Journal of Macroeconomics}, 43, 226--238.
+
+\bibitem[ENAP / Tesouro Nacional, 2019]{enaptesouro2019} Escola Nacional de Administra\c{c}\~ao P\'ublica / Secretaria do Tesouro Nacional (2019). Regras Fiscais: Uma Proposta de Arcabou\c{c}o Sist\^emico para o Caso Brasileiro. \textit{Texto para Discuss\~ao} No.\ 31.
+
+\bibitem[Eurostat, 2024]{eurostat2024sfa} European Commission, Eurostat (2024). Stock-Flow Adjustment (SFA) for the Member States, the Euro Area and the EU. Excessive Deficit Procedure notification technical note, April 2024.
+
+\bibitem[Feld and Kirchg\"assner, 2008]{feldkirchgassner2008} Feld, L.P.\ and Kirchg\"assner, G.\ (2008). On the Effectiveness of Debt Brakes: The Swiss Experience. \textit{CREMA Working Paper}.
+
+\bibitem[Ferraz, Finan and Moreira, 2012]{ferrazfinanmoreira2012} Ferraz, C., Finan, F.\ and Moreira, D.B.\ (2012). Corrupting Learning: Evidence from Missing Federal Education Funds in Brazil. \textit{Journal of Public Economics}, 96(9--10), 712--726.
+
+\bibitem[Figari, Paulus and Sutherland, 2015]{figaripaulussutherland2015} Figari, F., Paulus, A.\ and Sutherland, H.\ (2015). Microsimulation and Policy Analysis. In A.B.\ Atkinson and F.\ Bourguignon (eds.), \textit{Handbook of Income Distribution}, Vol.\ 2B, Ch.\ 24. Elsevier/North-Holland.
+
+\bibitem[Filmer and Pritchett, 1999]{filmerpritchett1999} Filmer, D.\ and Pritchett, L.\ (1999). The Impact of Public Spending on Health: Does Money Matter? \textit{Social Science \& Medicine}, 49(10), 1309--1323.
+
+\bibitem[Fisman and Svensson, 2007]{fismansvensson2007} Fisman, R.\ and Svensson, J.\ (2007). Are Corruption and Taxation Really Harmful to Growth? Firm-Level Evidence. \textit{Journal of Development Economics}, 83(1), 63--75.
+
+\bibitem[Furceri et al., 2025]{furcerietal2025debtrisk} Furceri, D., Giannone, D., Kisat, F., Lam, W.R.\ and Li, H.\ (2025). Debt-at-Risk. \textit{IMF Working Paper} 25/086.
+
+\bibitem[Furman and Summers, 2020]{furmansummers2020} Furman, J.\ and Summers, L.H.\ (2020). A Reconsideration of Fiscal Policy in the Era of Low Interest Rates. Discussion draft, Brookings Hutchins Center / Peterson Institute for International Economics.
+
+\bibitem[Gallet and Doucouliagos, 2017]{gallet2017} Gallet, C.A.\ and Doucouliagos, H.\ (2017). The Impact of Healthcare Spending on Health Outcomes: A Meta-Regression Analysis. \textit{Social Science \& Medicine}, 179, 9--17.
+
+\bibitem[Garcia and Rigobon, 2004]{garciarigobon2004} Garcia, M.\ and Rigobon, R.\ (2004). A Risk Management Approach to Emerging Market's Sovereign Debt Sustainability with an Application to Brazilian Data. \textit{NBER Working Paper} No.\ 10336.
+
+\bibitem[Ghosh et al., 2013]{ghoshkimmendozaostryqureshi2013} Ghosh, A.R., Kim, J.I., Mendoza, E.G., Ostry, J.D.\ and Qureshi, M.S.\ (2013). Fiscal Fatigue, Fiscal Space and Debt Sustainability in Advanced Economies. \textit{Economic Journal}, 123(566), F4--F30.
+
+\bibitem[Gobetti and Orair, 2017]{gobettiorair2017} Gobetti, S.W.\ and Orair, R.O.\ (2017). Contas P\'ublicas Acima da Linha. \textit{IPEA Texto para Discuss\~ao} No.\ 2288.
+
+\bibitem[Golden and Picci, 2005]{goldenpicci2005} Golden, M.A.\ and Picci, L.\ (2005). Proposal for a New Measure of Corruption, Illustrated with Italian Data. \textit{Economics and Politics}, 17(1), 37--75.
+
+\bibitem[Gr\"undler and Potrafke, 2019]{grundlerpotrafke2019} Gr\"undler, K.\ and Potrafke, N.\ (2019). Corruption and Economic Growth: New Empirical Evidence. \textit{European Journal of Political Economy}, 60, 101810.
+
+\bibitem[Gruss, 2014]{gruss2014} Gruss, B.\ (2014). After the Boom--Commodity Prices and Economic Growth in Latin America and the Caribbean. \textit{IMF Working Paper} WP/14/154.
+
+\bibitem[Guajardo, Leigh and Pescatori, 2014]{guajardoleighpescatori2014} Guajardo, J., Leigh, D.\ and Pescatori, A.\ (2014). Expansionary Austerity? International Evidence. \textit{Journal of the European Economic Association}, 12(4), 949--968.
+
+\bibitem[Gupta, Mati and Baldacci, 2008]{guptamatibaldacci2008} Gupta, S., Mati, A.\ and Baldacci, E.\ (2008). Is It (Still) Mostly Fiscal? Determinants of Sovereign Spreads in Emerging Markets. \textit{IMF Working Paper} 08/259.
+
+\bibitem[Hanousek and Ko\v{c}enda, 2011]{hanousekkocenda2011} Hanousek, J.\ and Ko\v{c}enda, E.\ (2011). Public Investment and Fiscal Performance in the New EU Member States. \textit{Fiscal Studies}, 32(1), 43--71.
+
+\bibitem[Hanushek and Woessmann, 2012]{hanushekwoessmann2012} Hanushek, E.A.\ and Woessmann, L.\ (2012). Do Better Schools Lead to More Growth? Cognitive Skills, Economic Outcomes, and Causation. \textit{Journal of Economic Growth}, 17(4), 267--321.
+
+\bibitem[Heimberger, 2020]{heimberger2020} Heimberger, P.\ (2020). The Dynamic Effects of Fiscal Consolidation Episodes on Income Inequality: Evidence for 17 OECD Countries over 1978--2013. \textit{Empirica}, 47(1), 53--81.
+
+\bibitem[Herndon, Ash and Pollin, 2014]{herndonashpollin2014} Herndon, T., Ash, M.\ and Pollin, R.\ (2014). Does High Public Debt Consistently Stifle Economic Growth? A Critique of Reinhart and Rogoff. \textit{Cambridge Journal of Economics}, 38(2), 257--279.
+
+\bibitem[Higgins and Lustig, 2016]{higginslustig2016} Higgins, S.\ and Lustig, N.\ (2016). Can a Poverty-Reducing and Progressive Tax and Transfer System Hurt the Poor? \textit{Journal of Development Economics}, 122, 63--75.
+
+\bibitem[Hitaj, Zavalloni and Zigraiova, 2025]{hitajzavallonizigraiova2025} Hitaj, E., Zavalloni, L.\ and Zigraiova, D.\ (2025). Debt Sustainability under Uncertainty. \textit{European Stability Mechanism Discussion Paper / Brief} No.\ 5.
+
+\bibitem[Higgins and Pereira, 2014]{higginspereira2014} Higgins, S.\ and Pereira, C.\ (2014). The Effects of Brazil's Taxation and Social Spending on the Distribution of Household Income. \textit{Public Finance Review}, 42(3), 346--367.
+
+\bibitem[Instituição Fiscal Independente, 2023]{ifi2023raf76} Instituição Fiscal Independente, Senado Federal (2023). Relat\'orio de Acompanhamento Fiscal No.\ 76 (maio de 2023).
+
+\bibitem[IMF, 2003]{imf2003dsa} International Monetary Fund (2003). Sustainability Assessments---Review of Application and Methodological Refinements. IMF Policy Paper.
+
+\bibitem[IMF, 2013]{imf2013mac} International Monetary Fund (2013). Staff Guidance Note for Public Debt Sustainability Analysis in Market-Access Countries. IMF Policy Paper.
+
+\bibitem[IMF, 2022]{imf2022srdsf} International Monetary Fund (2022). Staff Guidance Note on the Sovereign Risk and Debt Sustainability Framework for Market Access Countries. IMF Policy Paper.
+
+\bibitem[Ilzetzki, Mendoza and V\'egh, 2013]{ilzetzkimendozavegh2013} Ilzetzki, E., Mendoza, E.G.\ and V\'egh, C.A.\ (2013). How Big (Small?) Are Fiscal Multipliers? \textit{Journal of Monetary Economics}, 60(2), 239--254.
+
+\bibitem[Immervoll and O'Donoghue, 2009]{immervollodonoghue2009} Immervoll, H.\ and O'Donoghue, C.\ (2009). Towards a Multi-Purpose Framework for Tax-Benefit Microsimulation: Lessons from EUROMOD. \textit{International Journal of Microsimulation}, 2(2), 43--54.
+
+\bibitem[Jaramillo, Mulas-Granados and Kimani, 2017]{jaramilloetal2017} Jaramillo, L., Mulas-Granados, C.\ and Kimani, E.\ (2017). Debt Spikes and Stock-Flow Adjustments: Emerging Economies in Perspective. \textit{Journal of Economics and Business}, 94, 1--14.
+
+\bibitem[Jord\`a, Schularick and Taylor, 2013]{jordaetal2013} Jord\`a, \`O., Schularick, M.\ and Taylor, A.M.\ (2013). When Credit Bites Back. \textit{Journal of Money, Credit and Banking}, 45(s2), 3--28.
+
+\bibitem[Kaffo Melou, Sumlinski and Geiregat, 2014]{kaffomelouetal2014} Kaffo Melou, M., Sumlinski, M.A.\ and Geiregat, C.\ (2014). An Application of the ``Fan-Chart Approach'' to Debt Sustainability in Post-HIPC Low-Income Countries. \textit{IMF Working Paper} 14/102.
+
+\bibitem[Karam and Hostland, 2005]{karamhostland2005} Karam, P.D.\ and Hostland, D.\ (2005). Assessing Debt Sustainability in Emerging Market Economies Using Stochastic Simulation Methods. \textit{IMF Working Paper} 05/226.
+
+\bibitem[Karam and Hostland, 2006]{karamhostland2006} Karam, P.D.\ and Hostland, D.\ (2006). Specification of a Stochastic Simulation Model for Assessing Debt Sustainability in Emerging Market Economies. \textit{IMF Working Paper} 06/268.
+
+\bibitem[Kopits and Symansky, 1998]{kopitssymansky1998} Kopits, G.\ and Symansky, S.\ (1998). Fiscal Policy Rules. \textit{IMF Occasional Paper} No.\ 162.
+
+\bibitem[Lago-Pe\~nas, Cadaval-Sampedro and Herrero-Alcalde, 2024]{lagopenasetal2024} Lago-Pe\~nas, S., Cadaval-Sampedro, M.\ and Herrero-Alcalde, A.\ (2024). Fiscal Consolidation and Voting: On the Electoral Costs of Budgetary Stability. \textit{Fiscal Studies}, 45(4), 559--581.
+
+\bibitem[Leventi and Matsaganis, 2013]{leventimatsaganis2013} Leventi, C.\ and Matsaganis, M.\ (2013). Distributional Implications of the Crisis in Greece in 2009--2012. \textit{EUROMOD Working Paper} EM14/13.
+
+\bibitem[Levy Yeyati and Sturzenegger, 2023]{levyyeyatisturzenegger2023} Levy Yeyati, E.\ and Sturzenegger, F.\ (2023). A Balance-Sheet Approach to Fiscal Sustainability. \textit{Fiscal Studies}, 44(1), 61--84.
+
+\bibitem[Lian, Presbitero and Wiriadinata, 2020]{lianpresbiterowiriadinata2020} Lian, W., Presbitero, A.F.\ and Wiriadinata, U.\ (2020). Public Debt and r-g at Risk. \textit{IMF Working Paper} 20/137.
+
+\bibitem[Litschig, 2012]{litschig2012} Litschig, S.\ (2012). Are Rules-Based Government Programs Shielded from Special-Interest Politics? Evidence from Revenue-Sharing Transfers in Brazil. \textit{Journal of Public Economics}, 96(11--12), 1047--1060.
+
+\bibitem[Litschig and Morrison, 2013]{litschig2013} Litschig, S.\ and Morrison, K.M.\ (2013). The Impact of Intergovernmental Transfers on Education Outcomes and Poverty Reduction. \textit{American Economic Journal: Applied Economics}, 5(4), 206--240.
+
+\bibitem[Litschig and Zamboni, 2018]{litschigzamboni2018} Litschig, S.\ and Zamboni, Y.\ (2018). Audit Risk and Rent Extraction: Evidence from a Randomized Evaluation in Brazil. \textit{Journal of Development Economics}, 133, 133--149.
+
+\bibitem[L\'opez-Villavicencio and Zoumenou, 2025]{lopezvillavicencio2025} L\'opez-Villavicencio, A.\ and Zoumenou, D.W.\ (2025). Deficit Bias and the Effectiveness of EU Fiscal Rules. \textit{Journal of Macroeconomics}, 84.
+
+\bibitem[Lustig, 2018]{lustig2018ceq} Lustig, N.\ (ed.) (2018). \textit{Commitment to Equity Handbook: Estimating the Impact of Fiscal Policy on Inequality and Poverty}. Brookings Institution Press / CEQ Institute, Tulane University.
+
+\bibitem[Lustig, Pessino and Scott, 2014]{lustigpessinoscott2014} Lustig, N., Pessino, C.\ and Scott, J.\ (2014). The Impact of Taxes and Social Spending on Inequality and Poverty in Argentina, Bolivia, Brazil, Mexico, Peru, and Uruguay: Introduction to the Special Issue. \textit{Public Finance Review}, 42(3), 287--303.
+
+\bibitem[Mackenzie and Stella, 1996]{mackenziestella1996} Mackenzie, G.A.\ and Stella, P.\ (1996). Quasi-Fiscal Operations of Public Financial Institutions. \textit{IMF Occasional Paper} No.\ 142.
+
+\bibitem[Mauro, 1995]{mauro1995} Mauro, P.\ (1995). Corruption and Growth. \textit{Quarterly Journal of Economics}, 110(3), 681--712.
+
+\bibitem[Mauro, 1998]{mauro1998} Mauro, P.\ (1998). Corruption and the Composition of Government Expenditure. \textit{Journal of Public Economics}, 69(2), 263--279.
+
+\bibitem[Mendon\c{c}a, Santos and Sachsida, 2009]{mendoncasantossachsida2009} Mendon\c{c}a, M.J.C., Santos, C.H.M.\ dos and Sachsida, A.\ (2009). Revisitando a Fun\c{c}\~ao de Rea\c{c}\~ao Fiscal no Brasil P\'os-Real: Uma Abordagem de Mudan\c{c}as de Regime. \textit{Estudos Econ\^omicos}, 39(4), 873--894.
+
+\bibitem[Mendoza and Oviedo, 2004]{mendozaoviedo2004} Mendoza, E.G.\ and Oviedo, P.M.\ (2004). Public Debt, Fiscal Solvency and Macroeconomic Uncertainty in Latin America: The Cases of Brazil, Colombia, Costa Rica and Mexico. \textit{NBER Working Paper} No.\ 10637 (published in \textit{Econom\'ia Mexicana}, Nueva \'Epoca, 18(2), 2009, 133--177).
+
+\bibitem[Mendoza and Yue, 2012]{mendozayue2012} Mendoza, E.G.\ and Yue, V.Z.\ (2012). A General Equilibrium Model of Sovereign Default and Business Cycles. \textit{Quarterly Journal of Economics}, 127(2), 889--946.
+
+\bibitem[Mian, Straub and Sufi, 2021]{mianstraubsufi2021} Mian, A., Straub, L.\ and Sufi, A.\ (2021). Indebted Demand. \textit{Quarterly Journal of Economics}, 136(4), 2243--2307.
+
+\bibitem[Mian, Straub and Sufi, 2025]{mianstraubsufi2025} Mian, A., Straub, L.\ and Sufi, A.\ (2025). A Goldilocks Theory of Fiscal Deficits. \textit{American Economic Review}, 115(12), 4253--4291.
+
+\bibitem[Moreno-Serra and Smith, 2012]{morenoserrasmith2012} Moreno-Serra, R.\ and Smith, P.C.\ (2012). Does Progress Towards Universal Health Coverage Improve Population Health? \textit{The Lancet}, 380(9845), 917--923.
+
+\bibitem[Moreno-Serra and Smith, 2015]{morenoserrasmith2015} Moreno-Serra, R.\ and Smith, P.C.\ (2015). Broader Health Coverage Is Good for the Nation's Health: Evidence from Country-Level Panel Data. \textit{Journal of the Royal Statistical Society: Series A}, 178(1), 101--124.
+
+\bibitem[Mulas-Granados, 2005]{mulasgranados2005} Mulas-Granados, C.\ (2005). Fiscal Adjustments and the Short-Term Trade-off between Economic Growth and Equality. \textit{Hacienda P\'ublica Espa\~nola / Review of Public Economics}, 172(1), 61--92.
+
+\bibitem[Mulas-Granados, 2006]{mulasgranados2006book} Mulas-Granados, C.\ (2006). \textit{Economics, Politics and Budgets: The Political Economy of Fiscal Consolidations in Europe}. Palgrave Macmillan.
+
+\bibitem[Nakamura and Steinsson, 2014]{nakamurasteinsson2014} Nakamura, E.\ and Steinsson, J.\ (2014). Fiscal Stimulus in a Monetary Union: Evidence from US Regions. \textit{American Economic Review}, 104(3), 753--792.
+
+\bibitem[Nunes et al., 2020]{nunesetal2020} Nunes, A.\ et al.\ (2020). O Impacto do Resultado do Banco Central do Brasil para o Cumprimento da Regra de Ouro. \textit{Desenvolvimento em Quest\~ao}, Unijuí.
+
+\bibitem[Olken, 2007]{olken2007} Olken, B.A.\ (2007). Monitoring Corruption: Evidence from a Field Experiment in Indonesia. \textit{Journal of Political Economy}, 115(2), 200--249.
+
+\bibitem[Orair and Gobetti, 2017]{orairgobetti2017} Orair, R.O.\ and Gobetti, S.W.\ (2017). Brazilian Fiscal Policy in Perspective: From Expansion to Austerity. \textit{IPC-IG Working Paper} No.\ 160.
+
+\bibitem[Ornelas, 2017]{ornelas2017} Ornelas, J.R.H.\ (2017). Risco, D\'ivida e Alavancagem Soberana. \textit{Banco Central do Brasil Working Paper} 457.
+
+\bibitem[Ostry, Berg and Tsangarides, 2014]{ostrybergtsangarides2014} Ostry, J.D., Berg, A.\ and Tsangarides, C.G.\ (2014). Redistribution, Inequality, and Growth. \textit{IMF Staff Discussion Note} SDN/14/02.
+
+\bibitem[Panizza and Presbitero, 2014]{panizzapresbitero2014} Panizza, U.\ and Presbitero, A.F.\ (2014). Public Debt and Economic Growth: Is There a Causal Effect? \textit{Journal of Macroeconomics}, 41, 21--41.
+
+\bibitem[Perotti, 2013]{perotti2013} Perotti, R.\ (2013). The Austerity Myth: Gain Without Pain? In A.\ Alesina and F.\ Giavazzi (eds.), \textit{Fiscal Policy after the Financial Crisis}. University of Chicago Press.
+
+\bibitem[Persson and Tabellini, 1999]{perssontabellini1999} Persson, T.\ and Tabellini, G.\ (1999). Political Economics and Macroeconomic Policy. In J.B.\ Taylor and M.\ Woodford (eds.), \textit{Handbook of Macroeconomics}, Vol.\ III. North Holland.
+
+\bibitem[Pescatori, Sandri and Simon, 2014]{pescatorisandrisimon2014} Pescatori, A., Sandri, D.\ and Simon, J.\ (2014). Debt and Growth: Is There a Magic Threshold? \textit{IMF Working Paper} WP/14/34.
+
+\bibitem[Pires, 2014]{pires2014} Pires, M.C.C.\ (2014). Pol\'itica Fiscal e Ciclos Econ\^omicos no Brasil. \textit{Economia Aplicada}, 18(1), 69--90.
+
+\bibitem[Pires, 2019]{pires2019reggraouro} Pires, M.\ (2019). Uma An\'alise da Regra de Ouro no Brasil. \textit{Revista de Economia Pol\'itica}, 39(1).
+
+\bibitem[Prasad et al., 2019]{prasadetal2019growthatrisk} Prasad, A., Elekdag, S., Jeasakul, P., Lafarguette, R., Alter, A., Feng, A.X.\ and Wang, C.\ (2019). Growth at Risk: Concept and Application in IMF Country Surveillance. \textit{IMF Working Paper} 19/036.
+
+\bibitem[Rachel and Summers, 2019]{rachelsummers2019} Rachel, {\L}.\ and Summers, L.H.\ (2019). On Secular Stagnation in the Industrialized World. \textit{Brookings Papers on Economic Activity}, Spring 2019.
+
+\bibitem[Ramey, 2011]{ramey2011} Ramey, V.A.\ (2011). Can Government Purchases Stimulate the Economy? \textit{Journal of Economic Literature}, 49(3), 673--685.
+
+\bibitem[Ramey, 2019]{ramey2019} Ramey, V.A.\ (2019). Ten Years After the Financial Crisis: What Have We Learned from the Renaissance in Fiscal Research? \textit{Journal of Economic Perspectives}, 33(2), 89--114.
+
+\bibitem[Ramey and Zubairy, 2018]{rameyzubairy2018} Ramey, V.A.\ and Zubairy, S.\ (2018). Government Spending Multipliers in Good Times and in Bad: Evidence from US Historical Data. \textit{Journal of Political Economy}, 126(2), 850--901.
+
+\bibitem[Rasella et al., 2013]{rasellaetal2013} Rasella, D., Aquino, R., Santos, C.A.T., Paes-Sousa, R.\ and Barreto, M.L.\ (2013). Effect of a Conditional Cash Transfer Programme on Childhood Mortality: A Nationwide Analysis of Brazilian Municipalities. \textit{The Lancet}, 382(9886), 57--64.
+
+\bibitem[Receita Federal, 2024]{receitafederal2024} Secretaria Especial da Receita Federal do Brasil (2024). Grandes N\'umeros do IRPF, ano-calend\'ario 2024, Tabela V (distribui\c{c}\~ao por centil de Renda Tribut\'avel Bruta). \url{https://www.gov.br/receitafederal}.
+
+\bibitem[Reinhart and Rogoff, 2010]{reinhartrogoff2010} Reinhart, C.M.\ and Rogoff, K.S.\ (2010). Growth in a Time of Debt. \textit{American Economic Review}, 100(2), 573--578.
+
+\bibitem[Reinhart, Rogoff and Savastano, 2003]{reinhartrogoffsavastano2003} Reinhart, C.M., Rogoff, K.S.\ and Savastano, M.S.\ (2003). Debt Intolerance. \textit{Brookings Papers on Economic Activity}, 2003(1), 1--74.
+
+\bibitem[Reinikka and Svensson, 2004]{reinikkasvensson2004} Reinikka, R.\ and Svensson, J.\ (2004). Local Capture: Evidence from a Central Government Transfer Program in Uganda. \textit{Quarterly Journal of Economics}, 119(2), 679--705.
+
+\bibitem[Resende and Pires, 2021]{resendepires2021} Resende, C.T.\ and Pires, M.\ (2021). O Impulso de Multiplicador Fiscal: Implementa\c{c}\~ao e Evid\^encia para o Brasil. \textit{Estudos Econ\^omicos}, 51(2), 213--243.
+
+\bibitem[Restrepo, 2020]{restrepo2020} Restrepo, J.E.\ (2020). How Big are Fiscal Multipliers in Latin America? \textit{IMF Working Paper} WP/20/17.
+
+\bibitem[Rocha and Moreira, 2012]{rochamoreira2012} Rocha, K.\ and Moreira, A.\ (2012). Fiscal Policy and the Quality of Sovereign Risk. \textit{Brazilian Review of Finance}, 10(1), 31--48.
+
+\bibitem[Sanches, 2026]{sanches2026} Sanches, M.\ et al.\ (2026). Adjustment Through Revenue or Spending? Fiscal Adjustment Scenarios Based on Estimated Multiplier Effects. \textit{Estudos Econ\^omicos}, 56.
+
+\bibitem[Schaechter et al., 2012]{schaechteretal2012} Schaechter, A., Kinda, T., Budina, N.\ and Weber, A.\ (2012). Fiscal Rules in Response to the Crisis: Toward the ``Next-Generation'' Rules. A New Dataset. \textit{IMF Working Paper} WP/12/187.
+
+\bibitem[Secretaria do Tesouro Nacional, RMD, 2026]{tesourormd2026} Secretaria do Tesouro Nacional (2026). Relat\'orio Mensal da D\'ivida (RMD), composi\c{c}\~ao por indexador (dezembro de 2025 e agosto de 2026) e Plano Anual de Financiamento (PAF) 2026, faixas revisadas em 26 de agosto de 2026; Selic sensitivity (R\$60.6 billion per 1pp) and domestic-market debt share as reported in Secretaria do Tesouro Nacional press releases reproduced by Ag\^encia Gov and Ag\^encia Brasil, \url{https://agenciagov.ebc.com.br} and \url{https://agenciabrasil.ebc.com.br}, accessed 2026-10-26.
+
+\bibitem[Seiferling, 2013]{seiferling2013} Seiferling, M.\ (2013). Stock-Flow Adjustments, Government's Integrated Balance Sheet, and Fiscal Transparency. \textit{IMF Working Paper} 2013/063.
+
+\bibitem[Simonassi and Lima, 2005]{simonassilima2005} Simonassi, A.G.\ and Lima, L.R.\ (2005). Din\^amica N\~ao-Linear e Sustentabilidade da D\'ivida P\'ublica Brasileira. \textit{FGV/EPGE Working Paper} No.\ 587.
+
+\bibitem[Sutherland and Figari, 2013]{sutherlandfigari2013} Sutherland, H.\ and Figari, F.\ (2013). EUROMOD: The European Union Tax-Benefit Microsimulation Model. \textit{International Journal of Microsimulation}, 6(1), 4--26.
+
+\bibitem[Szklo, Clarke and Rocha, 2024]{szkloclarkerocha2024} Szklo, A., Clarke, D.\ and Rocha, R.\ (2024). Public Health Spending and Infant Mortality: Evidence from Brazil. \textit{IZA Discussion Paper} No.\ 16829.
+
+\bibitem[Tanzi and Davoodi, 1997]{tanzidavoodi1997} Tanzi, V.\ and Davoodi, H.\ (1997). Corruption, Public Investment, and Growth. \textit{IMF Working Paper} WP/97/139.
+
+\bibitem[Taylor, 1993]{taylor1993} Taylor, J.B.\ (1993). Discretion versus Policy Rules in Practice. \textit{Carnegie-Rochester Conference Series on Public Policy}, 39, 195--214.
+
+\bibitem[Vivian and Mendon\c{c}a, 2008]{vivianmendonca2008} Vivian, V.S.\ and Mendon\c{c}a, H.F.\ de (2008). Public-Debt Management: The Brazilian Experience. \textit{CEPAL Review}, No.\ 94, 145--162.
+
+\bibitem[von Hagen and Harden, 1995]{vonhagenharden1995} von Hagen, J.\ and Harden, I.\ (1995). Budget Processes and Commitment to Fiscal Discipline. \textit{European Economic Review}, 39(3--4), 771--779.
+
+\bibitem[Weber, 2012]{weber2012sfa} Weber, A.\ (2012). Stock-Flow Adjustments and Fiscal Transparency: A Cross-Country Comparison. \textit{IMF Working Paper} WP/12/39.
+
+\bibitem[Woo, Bova, Kinda and Zhang, 2017]{woobovakindazhang2017} Woo, J., Bova, E., Kinda, T.\ and Zhang, Y.S.\ (2017). Distributional Consequences of Fiscal Adjustments: What Do the Data Say? \textit{IMF Economic Review}, 65(2), 273--307.
+
+\bibitem[Woo and Kumar, 2015]{wookumar2015} Woo, J.\ and Kumar, M.S.\ (2015). Public Debt and Growth. \textit{Economica}, 82(328), 705--739.
+
+\bibitem[Wyplosz, 2018]{wyplosz2018} Wyplosz, C.\ (2018). Fiscal Councils and Fiscal Rules: Complements or Substitutes? In R.\ Beetsma and X.\ Debrun (eds.), \textit{Independent Fiscal Councils: Watchdogs or Lapdogs?} CEPR Press.
+
+\end{thebibliography}
+
+\end{document}

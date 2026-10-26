@@ -109,6 +109,40 @@ def test_s0_has_zero_feedback_in_every_channel():
         assert (s0[f"{channel}_debt_contribution_pp"].abs() < 1e-12).all()
 
 
+def test_inequality_channel_inert_when_gini_change_is_none():
+    # Default behaviour (gini_change=None, inequality_growth_pp_per_gini=0.0 via kwargs()):
+    # the inequality channel must contribute exactly zero, matching pre-IEQ1 behaviour.
+    result = apply_feedback(corner(), population(), **kwargs())
+    assert (result["inequality_contribution_pct"].abs() < 1e-12).all()
+    assert (result["inequality_debt_contribution_pp"].abs() < 1e-12).all()
+
+
+def test_inequality_channel_activates_with_a_gini_path():
+    source = corner()
+    gini = {
+        (row.year, row.scenario): (2.0 if row.scenario == "R_mod" and row.year > 2025 else 0.0)
+        for row in source.itertuples()
+    }
+    result = apply_feedback(
+        source, population(),
+        **kwargs(gini_change=gini, inequality_growth_pp_per_gini=-0.1),
+    )
+    s0 = result.loc[result["scenario"].eq("S0")]
+    r_mod = result.loc[result["scenario"].eq("R_mod") & result["year"].gt(2025)]
+    # S0's own Gini change vs itself is 0, so the channel stays inert for S0 regardless of the
+    # coefficient being non-zero.
+    assert (s0["inequality_contribution_pct"].abs() < 1e-12).all()
+    # R_mod has a +2-point Gini deviation every year from 2026; a -0.1pp/point coefficient must
+    # produce a real, negative, cumulating (more negative over time) growth contribution.
+    assert (r_mod["inequality_contribution_pct"] < -1e-9).all()
+    assert r_mod["inequality_contribution_pct"].iloc[-1] < r_mod["inequality_contribution_pct"].iloc[0]
+    # Hand-computed first-year effect: cumulative log1p(-0.1 * 2.0 / 100) = log1p(-0.002).
+    first_year = r_mod.sort_values("year").iloc[0]
+    assert first_year["inequality_contribution_pct"] == pytest.approx(
+        (math.exp(math.log1p(-0.002)) - 1) * 100, abs=1e-6,
+    )
+
+
 def test_schooling_cohort_replacement_and_piecewise_phi():
     assert pwt_schooling_phi(9, 0.134, 0.101, 0.068) - pwt_schooling_phi(8, 0.134, 0.101, 0.068) == pytest.approx(0.068)
     result = apply_feedback(

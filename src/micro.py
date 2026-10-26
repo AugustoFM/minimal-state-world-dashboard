@@ -157,6 +157,36 @@ def _component_delta(
     return delta
 
 
+def _weighted_percentile_rank(values: np.ndarray, weights: np.ndarray) -> np.ndarray:
+    """Midpoint weighted percentile rank (0-100) of each observation, ties broken stably."""
+    order = np.argsort(values, kind="mergesort")
+    sorted_weights = weights[order]
+    midpoint_cumulative = np.cumsum(sorted_weights) - 0.5 * sorted_weights
+    rank_sorted = 100.0 * midpoint_cumulative / weights.sum()
+    rank = np.empty_like(rank_sorted)
+    rank[order] = rank_sorted
+    return rank
+
+
+def _allocate_by_income_band(
+    pool_brl: float, band_mask: np.ndarray, household_total: np.ndarray, hh_weight: np.ndarray,
+) -> np.ndarray:
+    """Spread a monetary pool across a band of households, proportional to each
+    household's own weighted economic size within the band (a stylised, explicitly
+    proportional-within-band choice; see IY1's documentation for the reasoning)."""
+    allocation = np.zeros_like(household_total)
+    if pool_brl == 0.0 or not band_mask.any():
+        return allocation
+    denominator = float((household_total[band_mask] * hh_weight[band_mask]).sum())
+    if denominator <= 0:
+        raise ValueError("IY1 capital-income band has no weighted income to allocate against")
+    # Per-household amount, not per-weighted-unit: the hh_weight factor belongs only in the
+    # denominator (the band's aggregate weighted income), so that re-weighting this allocation
+    # by hh_weight and summing reproduces pool_brl exactly, not pool_brl times a weight.
+    allocation[band_mask] = pool_brl * household_total[band_mask] / denominator
+    return allocation
+
+
 def _weighted_random_mask(candidates: np.ndarray, weights: np.ndarray, target: float, seed: int) -> np.ndarray:
     mask = np.zeros(len(candidates), dtype=bool)
     indices = np.flatnonzero(candidates)
@@ -355,11 +385,31 @@ def simulate_household_incomes(
     bpc_follows_pension_indexation: bool = True,
     revenue_change_by_instrument_pp: Mapping[str, float] | None = None,
     pensioner_income_protection_brl_annual: float = 0.0,
+    capital_income_windfall_brl_monthly: float = 0.0,
+    capital_income_top1_share_pct: float | None = None,
+    capital_income_top10_share_pct: float | None = None,
+    transfer_inflation_erosion_pct: float = 0.0,
 ) -> pd.DataFrame:
     """Return one row per IBGE income-unit household after one scenario-year.
 
     Every behavioural setting is explicit so D1 can supply draw-specific values.
     Conditions 17--19 are excluded from both income changes and the denominator.
+
+    IY1 (off by default, both args default to zero/None): `capital_income_windfall_brl_monthly`
+    is a scenario's change in government interest expense vs S0, in monthly BRL, allocated to
+    households as private interest/dividend income using a stylised incidence rule: the top 1%
+    of the per-capita income distribution (ranked exactly as `survey_top_1_income_share_pct`
+    already is) receives `capital_income_top1_share_pct` of it, the next 9% receives the
+    remainder up to `capital_income_top10_share_pct`, and the bottom 90% receives what is left
+    -- both share parameters sourced from Receita Federal's declared-capital-income centiles
+    (`src.iy1_interest_income_distribution.capital_income_shares`), not from this survey, since
+    PNAD has no capital-income field. Within each band the pool is spread proportional to each
+    household's own income (a documented choice, not an estimated incidence). A positive windfall
+    is additional interest income (higher government interest expense); a negative one is income
+    lost by bondholders (lower interest expense). `transfer_inflation_erosion_pct` shrinks each
+    household's baseline Bolsa Familia amount (not its policy-driven delta) by that percentage,
+    modelling the real erosion of a transfer that is not automatically inflation-indexed within
+    the year, from a scenario's extra (above-baseline) inflation.
     """
     prepared = prepare_microdata(persons) if isinstance(persons, pd.DataFrame) else persons
     if pension_variant not in PENSION_VARIANTS:
@@ -420,6 +470,31 @@ def simulate_household_incomes(
     hh_size, hh_weight, base_pc = prepared.household_size, prepared.household_weight, prepared.base_pc
     base_total = base_pc * hh_size
     household_total = np.maximum(0.0, base_total + np.bincount(codes, weights=delta))
+
+    if transfer_inflation_erosion_pct:
+        bolsa_hh = np.bincount(codes, weights=prepared.bolsa, minlength=len(household_total))
+        household_total = np.maximum(0.0, household_total - bolsa_hh * (transfer_inflation_erosion_pct / 100.0))
+
+    if capital_income_windfall_brl_monthly:
+        if capital_income_top1_share_pct is None or capital_income_top10_share_pct is None:
+            raise ValueError("capital_income_windfall_brl_monthly requires both capital-income share args")
+        person_weight_hh = hh_weight * hh_size
+        rank = _weighted_percentile_rank(household_total / hh_size, person_weight_hh)
+        top1 = rank >= 99.0
+        top10 = (rank >= 90.0) & ~top1
+        rest = ~top1 & ~top10
+        pool = float(capital_income_windfall_brl_monthly)
+        windfall = _allocate_by_income_band(
+            pool * capital_income_top1_share_pct / 100.0, top1, household_total, hh_weight,
+        )
+        windfall += _allocate_by_income_band(
+            pool * (capital_income_top10_share_pct - capital_income_top1_share_pct) / 100.0, top10,
+            household_total, hh_weight,
+        )
+        windfall += _allocate_by_income_band(
+            pool * (100.0 - capital_income_top10_share_pct) / 100.0, rest, household_total, hh_weight,
+        )
+        household_total = np.maximum(0.0, household_total + windfall)
 
     if revenue_change_by_instrument_pp is not None:
         household_total = _apply_instrument_taxes(

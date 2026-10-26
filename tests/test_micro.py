@@ -290,3 +290,78 @@ def test_optimised_indicators_and_tax_match_references() -> None:
     old = micro._tax_burden_reference(capacity, score, weights, target)
     new = micro._tax_burden(capacity, score, weights, target)
     np.testing.assert_allclose(new, old, atol=1e-9, rtol=1e-12)
+
+
+# --- IY1: interest-income / inflation-tax distribution channels (off by default) -----------------
+
+def test_iy1_channels_off_by_default() -> None:
+    before = run_toy(toy_persons())
+    after = run_toy(toy_persons(), capital_income_windfall_brl_monthly=0.0, transfer_inflation_erosion_pct=0.0)
+    pd.testing.assert_frame_equal(before, after)
+
+
+def test_iy1_windfall_requires_both_share_args() -> None:
+    with pytest.raises(ValueError, match="capital_income_windfall_brl_monthly requires"):
+        run_toy(toy_persons(), capital_income_windfall_brl_monthly=10.0, capital_income_top1_share_pct=70.0)
+
+
+def test_weighted_percentile_rank_matches_hand_computation() -> None:
+    # Four equally-weighted observations: midpoint rule gives ranks 12.5/37.5/62.5/87.5.
+    rank = micro._weighted_percentile_rank(np.array([100.0, 200.0, 300.0, 400.0]), np.ones(4))
+    np.testing.assert_allclose(rank, [12.5, 37.5, 62.5, 87.5])
+
+
+def test_allocate_by_income_band_conserves_the_pool_and_is_proportional_to_income() -> None:
+    household_total = np.array([100.0, 300.0, 600.0])
+    hh_weight = np.array([2.0, 1.0, 1.0])
+    band_mask = np.array([True, True, False])
+    allocation = micro._allocate_by_income_band(1000.0, band_mask, household_total, hh_weight)
+    assert allocation[2] == 0.0
+    # Re-weighting by hh_weight and summing must reproduce the pool exactly.
+    assert float(np.sum(allocation * hh_weight)) == pytest.approx(1000.0)
+    # Proportional to each household's own income within the band (not to its weight).
+    assert allocation[1] / allocation[0] == pytest.approx(300.0 / 100.0)
+
+
+def test_iy1_windfall_is_conserved_and_concentrated_at_the_top() -> None:
+    rng = np.random.default_rng(3)
+    n = 500
+    persons = pd.DataFrame({
+        "hh_id": [f"h{i}" for i in range(n)],
+        "survey_weight": rng.uniform(1.0, 5.0, n),
+        "household_condition": np.ones(n, dtype=int),
+        "household_income_per_capita_brl": rng.uniform(100.0, 10_000.0, n),
+        "age": np.full(n, 40.0),
+        "education_level": np.ones(n),
+        "employment_status": np.ones(n),
+        "labor_income_nominal_brl": np.zeros(n),
+        "retirement_pension_income_brl": np.zeros(n),
+        "bpc_income_brl": np.zeros(n),
+        "bolsa_familia_income_brl": np.zeros(n),
+    })
+    pool = 50_000.0
+    result = run_toy(
+        persons, capital_income_windfall_brl_monthly=pool,
+        capital_income_top1_share_pct=50.0, capital_income_top10_share_pct=90.0,
+    ).set_index("hh_id")
+    baseline = run_toy(persons).set_index("hh_id")
+    delta = result["household_income_per_capita_brl"] - baseline["household_income_per_capita_brl"]
+    weight = persons.set_index("hh_id")["survey_weight"]
+    assert float((delta * weight).sum()) == pytest.approx(pool, rel=1e-6)
+    richest = baseline["household_income_per_capita_brl"].idxmax()
+    poorest = baseline["household_income_per_capita_brl"].idxmin()
+    assert delta.loc[richest] > delta.loc[poorest]
+
+
+def test_iy1_transfer_inflation_erosion_shrinks_only_bolsa_by_the_given_fraction() -> None:
+    persons = toy_persons()
+    baseline = run_toy(persons).set_index("hh_id")
+    eroded = run_toy(persons, transfer_inflation_erosion_pct=10.0).set_index("hh_id")
+    # Only household d has a Bolsa Familia amount (100.0); erosion removes 10% of it.
+    assert eroded.loc["d", "household_income_per_capita_brl"] == pytest.approx(
+        baseline.loc["d", "household_income_per_capita_brl"] - 10.0
+    )
+    for hh in ("a", "b", "c"):
+        assert eroded.loc[hh, "household_income_per_capita_brl"] == pytest.approx(
+            baseline.loc[hh, "household_income_per_capita_brl"]
+        )

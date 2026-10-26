@@ -79,6 +79,38 @@ macro_modelling_choices:
     rule: "revenue/GDP held at base-year share; revenue moves one-for-one with nominal GDP (elasticity 1)"
     status: choice
 
+multiplier_state_dependence_ratio:
+  # CYC1 (added 2026-10-27, response to an independent reviewer's critique that the model's
+  # multipliers never vary with the business cycle despite citing state-dependence evidence).
+  # Ratio of the recession-regime multiplier to the expansion-regime multiplier (applied as a
+  # scale factor on the existing central accumulated multiplier; 1.0 = no state dependence).
+  # Genuinely contested in the cited literature, so sampled as a range, not a fixed point
+  # estimate, exactly like this model's other disputed coefficients (e.g. the health-to-output
+  # channel sampled between Acemoglu-Johnson and Bloom-Canning-Sevilla):
+  #   - Auerbach & Gorodnichenko (2012), AEJ: Economic Policy 4(2), 1-27: regime-switching
+  #     estimates find spending multipliers "considerably more effective in recessions than
+  #     expansions" (verified from the paper's own abstract; the PDF's numeric tables could not
+  #     be machine-extracted in this environment, so no specific point ratio from this paper is
+  #     used here -- only the qualitative, abstract-level direction and the literature's own
+  #     characterisation of the result as large).
+  #   - Ramey (2019), JEP 33(2), 89-114, and Ramey & Zubairy (2018), JPE 126(2), 850-901 (both
+  #     already cited in this paper's bibliography): survey the same evidence and treat the
+  #     recession/expansion asymmetry as fragile and sensitive to specification, with Ramey &
+  #     Zubairy's own longer-sample US estimates finding multipliers below unity regardless of
+  #     slack -- i.e. a ratio not reliably different from 1.0.
+  #   - Pires (2014), Economia Aplicada 18(1), 69-90, is cited elsewhere in this paper for a
+  #     Brazil-specific Markov-switching multiplier estimate, but its regime split is by
+  #     volatility, not business-cycle phase; we could not verify (PDF text extraction failed in
+  #     this environment, and a secondary source explicitly suggests the opposite) that it finds
+  #     a meaningful recession/expansion difference for Brazil, so it is NOT used as a source for
+  #     this specific ratio, to avoid citing it for a finding it may not actually support.
+  low: 1.0
+  central: 1.5
+  high: 2.5
+  status: "contested in the literature; sampled, not a fitted estimate"
+  range_basis: "low = Ramey/Ramey-Zubairy's sceptical reading (no reliable asymmetry); high = a conservative reading of Auerbach-Gorodnichenko's qualitative 'considerably more effective' finding, deliberately short of the largest ratios sometimes quoted for this paper in secondary literature, since this project could not verify AG2012's own point estimates directly"
+  applies_to: "recession-regime years only (output_gap_proxy_pp < 0 on the PCY1 proxy, src.pcy1_fiscal_timing); expansion-regime years keep the existing fixed multiplier unchanged"
+
 fiscal_multipliers_lac_benchmark:
   # Cross-check only, not used directly.
   expenditure_2yr: {low: 0.5, central: null, high: 1.1, source: "IMF Western Hemisphere REO May 2018, ch. 4", verified: abstract, range_basis: "range stated in source"}
@@ -674,12 +706,113 @@ external_block:
     status: choice
   gaps:
     - "revenue from commodities (oil royalties, special participations) beyond revenue moving with GDP: not yet sourced"
-    - "FX-linked share of public debt (valuation effect of the exchange rate on debt): data to download from BCB"
+    - "FX-linked share of public debt (valuation effect of the exchange rate on debt): partially addressed by DC1 (debt_composition_fx below), a bounded sensitivity using the Treasury's own published share, not a full currency/holder/maturity decomposition"
     - "capital flows / FDI response: not modelled; FDI shown as context only"
 external_block_choices:
   run_as: "dimension 'external' in D1: historical-bootstrap paths sampled per draw, plus fixed 'boom' / 'neutral' / 'bust' reference paths reported separately"
   symmetry: "the same external paths apply to every policy scenario, so external luck is not credited to or blamed on a policy"
   back_test: "D2 must feed observed 2003-2015 and 2017-2022 external paths and report whether the model reproduces actual GDP growth, debt and inflation before any projection is published"
+
+# --- DC1 debt composition / FX-linked revaluation (added 2026-10-26, Claude) ---------------------
+# Reviewer item 5: the debt identity applies one interest rate to an undifferentiated stock and
+# never revalues the foreign-currency-linked share directly when the real depreciates. This models
+# only that one missing channel (a direct stock revaluation of the FX-linked tranche), reusing the
+# already-bootstrapped BRL/USD path (src.external); it is not a full currency/holder/maturity split
+# of the debt stock, which `data/brazil/debt_composition.csv` documents is not available as a clean
+# machine-readable historical series in this environment (Tesouro's own Relatorio Mensal da Divida
+# publishes the series only inside monthly PDF tables, which this environment cannot extract text
+# from -- the same PDF-extraction limitation already hit and documented for CYC1's literature
+# sources). The two point-in-time composition snapshots used here are the ones already fetched,
+# verified and cited in the paper's RV0 limitations paragraph (tesourormd2026), not a new fetch.
+debt_composition_fx:
+  fx_linked_share_pct_of_dpf:
+    low: 3.7
+    central: 4.0
+    high: 4.4
+    unit: "% of federal public debt (DPF), foreign-exchange-linked instruments"
+    source: "Secretaria do Tesouro Nacional, Relatorio Mensal da Divida (RMD) Dec 2025 and Aug 2026, and Plano Anual de Financiamento (PAF) 2026 -- 'a stable 3.7-4.4% of the total' per the same tesourormd2026 citation already used in paper/minimum_state_brazil.tex Section 'Discussion'"
+    verified: full_text
+    status: "point-in-time Treasury-published share, held constant over the projection horizon (the PAF itself keeps this band essentially unchanged year on year); not a fitted trend"
+  data: "data/brazil/debt_composition.csv -- two verified snapshots (Dec 2025, Aug 2026) plus the PAF 2026 target bands for all four indexer categories; explicitly not a multi-decade historical series (see status above)"
+  method: "src/dc1_debt_composition_fx.py: revalues only the fx_linked_share_pct_of_dpf tranche of debt/GDP by the same bootstrapped cumulative BRL/USD path src.external already draws per Monte Carlo draw, additive to (not replacing) the existing inflation-pass-through effect on debt -- a distinct valuation mechanism, not a duplicate of it"
+  gaps:
+    - "no holder (domestic vs external) or maturity split, only the currency-linkage share"
+    - "no sub-split of the fx_linked_share itself by instrument (e.g. direct external debt vs FX swaps); Tesouro's own published aggregate is used as-is"
+
+# --- IY1 interest-income / inflation-tax distribution (added 2026-10-26, Claude) -----------------
+# Reviewer items 6: higher government interest expense accrues disproportionately to bondholders
+# at the top of the income distribution, and an inflation tax falls hardest on poor households'
+# non-indexed transfers -- neither channel existed in src.micro (no capital-income field; no
+# inflation-erosion term). Wired as off-by-default arguments to
+# src.micro.simulate_household_incomes; run as a standalone diagnostic by
+# src/iy1_interest_income_distribution.py against the debt-financed expansion scenarios (E_mod,
+# E_amb), since those are specifically the scenarios behind the paper's "expansions reduce the
+# Gini coefficient" finding the reviewer's bias claim is about.
+iy1_interest_income_distribution:
+  capital_income_concentration:
+    unit: "% of declared capital/financial income (financial-investment income, capital gains, interest-on-equity, exempt dividends) held by the named top group of tax declarants"
+    source: "Receita Federal, Grandes Numeros do IRPF 2024, Table V by centile (data/brazil/micro/tax_centiles_2024.csv), the same table src.micro.tax_data_context already reads in aggregate (RB4)"
+    verified: full_text
+    status: "tax-declarant data, not a PNAD survey-population share -- PNAD has no capital-income field, so this is a proxy for concentration among the population that files tax returns, which already skews higher-income; not re-weighted to the full survey population"
+  interest_expense_derivation:
+    rule: "government interest expense (% GDP) in year t = previous year's debt_gdp_with_external times that year's nominal interest rate (rate-times-stock, the standard national-accounts definition of interest paid, which is what becomes private interest income) -- not the debt identity's own (interest-growth)/(1+growth) net-of-dilution term, a different concept"
+    status: choice
+  transfer_inflation_erosion:
+    rule: "a scenario-year's full cumulative extra (above-baseline) inflation from src.external, applied as a proportional reduction of each household's baseline (survey-observed) Bolsa Familia amount only -- not BPC/pension, which are minimum-wage-linked and annually re-indexed"
+    status: "choice: assumes zero within-year catch-up for Bolsa Familia (not automatically inflation-indexed in Brazilian law); an upper-bound assumption on this one channel, not a fitted erosion rate"
+  within_band_incidence: "the capital-income windfall is split top-1%/next-9%/bottom-90% by the concentration shares above, then spread within each band proportional to each household's own income -- a documented choice, not an estimated incidence (same convention as the existing proportional/consumption-like tax incidence already in src.micro)"
+  gaps:
+    - "no Brazilian survey of bond-holding by income decile exists at this granularity; the incidence rule is a stylised proxy, not a fitted distribution"
+    - "erosion is computed only for the scenario-year itself, not accumulated across a household's full multi-year exposure"
+
+# --- MR1 Taylor-rule monetary reaction function (added 2026-10-26, Claude) -----------------------
+# Reviewer item 3: the model has no monetary-policy reaction function at all -- the real rate is a
+# fixed macro input regardless of inflation or the output gap a scenario itself creates. This adds
+# an off-to-the-side diagnostic (src/mr1_taylor_rule.py, never touching src.macro.run_corner or the
+# default Monte Carlo) that recomputes each scenario's own debt path under a textbook Taylor rule
+# instead of the fixed rate, so the Selic actually rises when a scenario's own output gap or
+# inflation input rises -- directly answering the reviewer's ask, without rewiring the shared
+# rate-determination function every other diagnostic and the published Monte Carlo still depend on.
+mr1_taylor_rule:
+  specification: "i_t = r*_t + pi_t + phi_pi*(pi_t - pi*) + phi_y*y_gap_t (Taylor 1993's classic form); expressed in real-rate terms this model already keeps separate from nominal (src.macro.nominal_rate_from_real), it reduces to r_taylor_t = r*_t + phi_pi*(pi_t - pi*) + phi_y*y_gap_t, where r*_t is the model's own existing real_interest_rate_for_year, pi_t is inflation_with_external_pct, pi* is gdp_deflator_growth.central (3.0%, already the BCB continuous inflation target used elsewhere in this project), and y_gap_t is gdp_level_vs_s0_pct (zero for S0 by construction, so this term is exactly what differentiates a scenario's Selic path from S0's)."
+  discount_vs_taylor_1993:
+    low: 0.3
+    central: 0.6
+    high: 1.0
+    unit: "multiplier applied to Taylor (1993)'s classic 0.5 coefficient on both the inflation gap and the output gap (phi_pi = phi_y = 0.5 * this discount, sampled jointly per draw)"
+    source: "Taylor, J.B. (1993). 'Discretion versus policy rules in practice'. Carnegie-Rochester Conference Series on Public Policy, 39. The widely-cited textbook specification (not a Brazil-specific estimate)."
+    status: "sampled, not fitted. A WebSearch pass found several Brazil-specific Taylor-rule estimates (an undergraduate thesis, UFJF/GV, Fev 2003-Jun 2025, OLS; Evaristo et al., 2001-2024 and 2003-2024; a Tombini-era 2003-2016 study), all reporting a positive, statistically significant Selic response to both the inflation and output gap, but describing the magnitude only qualitatively ('smaller than advanced economies', 'not constant over time') -- their full tables are in PDFs this environment cannot extract text from, the same limitation already documented for CYC1's AG2012/Pires sources, confirmed again here via a direct HTML-page fetch of the UFJF thesis's own repository listing. No Brazil-specific point estimate is therefore used; the sampled range instead spans from a third of Taylor's classic coefficient (low, matching the literature's 'smaller than advanced economies' reading) to the full classic value (high, a textbook advanced-economy-sized response, not ruled out by the literature's own stated time variation)."
+  inflation_target_source: "read at runtime from this file's own macro.gdp_deflator_growth.central (currently 3.0), not duplicated as a separate value here"
+  gaps:
+    - "no Brazil-specific fitted inflation/output-gap coefficients (see status above); no interest-rate smoothing/gradualism term, which several of the papers found above report explicitly for the BCB"
+    - "does not re-run the sovereign-risk-premium feedback channel (src.feedback.py) under the Taylor-adjusted rate; first-order diagnostic only, the same simplification CYC1/DC1 already document"
+
+# --- FX1 endogenous FX response to fiscal stress (added 2026-10-26, Claude) ----------------------
+# Reviewer item 4: the exchange rate is purely exogenous (src.external's bootstrapped BRL/USD path
+# does not respond to a scenario's own debt/fiscal stress at all). A direct debt-to-spread
+# regression was already tried for this project (C7 "channel B", fit 2000-2014, test 2015-2024)
+# and found NOT supported out of sample (external_block.output_channel_c7.not_wired, above) --
+# a direct, in-repo precedent against fitting a new regression here. FX1 is therefore built as an
+# explicitly labelled modelling-choice sensitivity, not a fitted elasticity: it chains the model's
+# own already-verified debt-to-spread parameter (long_run_feedback.sovereign_risk_premium, Baldacci
+# & Kumar 2010, reused via src.feedback.sovereign_risk_premium_path, not re-estimated) to a sampled,
+# theory-anchored (not fitted) spread-to-depreciation elasticity, added on top of (not replacing)
+# the existing bootstrapped FX path.
+fx1_endogenous_fx:
+  spread_to_depreciation_elasticity_pct_per_premium_pp:
+    low: 0.5
+    central: 1.0
+    high: 3.0
+    unit: "% extra BRL/USD depreciation (contemporaneous level effect) per 1 pp of sovereign risk premium (long_run_feedback.sovereign_risk_premium's own output, already in pp)"
+    range_basis: "central = uncovered interest parity (UIP): a sustained risk-premium/spread widening of X pp should correspond to roughly X% of expected annual depreciation under simple arbitrage-free UIP, a standard textbook open-economy-macro relationship, not a fitted estimate; low = a muted, partial-pass-through reading; high = crisis-style overshooting beyond the smooth UIP expectation, informed only qualitatively by Banerjee, Mehrotra & Zampolli (2023), BIS Working Paper 1110, which finds the exchange-rate-to-fiscal-stress channel 'much stronger in emerging markets than in advanced economies' and that depreciation 'goes hand in hand with' sovereign-spread widening in EMDEs"
+    source: "Banerjee, Mehrotra & Zampolli (2023), BIS Working Paper 1110, 'Fiscal sources of inflation risk in EMDEs: the role of the external channel'"
+    url: "https://www.bis.org/publ/work1110.pdf"
+    verified: "abstract/qualitative only -- the paper's own regression tables (a per-unit spread-to-FX elasticity) could not be read in this environment (PDF-extraction limitation, the same one already documented for CYC1's and MR1's literature sources); a second WebSearch pass for a cleaner spread-to-FX elasticity in the wider EM sovereign-spread literature also failed to surface a readable numeric estimate"
+    status: "sampled, not fitted: UIP anchors the central value on a standard theoretical relationship, not a fitted Brazilian or EM-panel coefficient; see C7 channel B's own out-of-sample failure (above) for why a new fitted regression was not attempted instead"
+  method: "src/fx1_endogenous_fx.py: debt deviation from base year (all scenarios, S0 included, same convention as the existing sovereign-risk-premium channel) -> a premium in pp via src.feedback.sovereign_risk_premium_path (reused, not re-derived) -> extra depreciation via the elasticity above -> extra inflation via the existing exchange_rate_pass_through coefficients (unchanged) -> the debt identity re-run once with this added inflation, holding the interest rate at its existing baseline. First-order: driven by the baseline (no-FX1) debt path, not a new circular feedback loop within FX1 itself."
+  gaps:
+    - "no genuinely estimated Brazilian spread-to-FX elasticity; a defensible range anchored in UIP theory and qualitative EM literature, not a point estimate"
+    - "does not model a discrete currency-crisis/overshooting event, only a smooth, contemporaneous level relationship"
 
 # --- Governance / corruption (added 2026-10-20, Claude) ------------------------------------------
 # Party-neutral: corruption enters as leakage of public spending before it becomes services, applied

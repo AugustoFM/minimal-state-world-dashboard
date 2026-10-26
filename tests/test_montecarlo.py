@@ -141,6 +141,45 @@ def test_central_draw_has_no_sfa_noise(context) -> None:
     assert "sfa_debt_adjustment_by_year" not in draw
 
 
+def test_inequality_feedback_off_by_default(context) -> None:
+    # evaluate_draw never reads context["inequality_feedback"] unless main() set it; a context
+    # without that key must behave exactly as before IEQ1 existed.
+    draw = mc.central_draw(context["parameters"], context["inputs"])
+    without_key = mc.evaluate_draw(draw, context)
+    context_off = dict(context, inequality_feedback=False)
+    explicit_off = mc.evaluate_draw(draw, context_off)
+    default_cols = [
+        c for c in without_key.columns
+        if c not in {"draw", "variant", "persistence", "year", "scenario"}
+    ]
+    pd.testing.assert_frame_equal(without_key[default_cols], explicit_off[default_cols])
+
+
+def test_inequality_feedback_activates_only_when_requested(context) -> None:
+    draw = mc.central_draw(context["parameters"], context["inputs"])
+    off = mc.evaluate_draw(draw, dict(context, inequality_feedback=False))
+    on = mc.evaluate_draw(draw, dict(context, inequality_feedback=True))
+
+    def default_transitory(frame: pd.DataFrame, scenario: str) -> pd.DataFrame:
+        return frame.loc[
+            frame["variant"].eq("default") & frame["persistence"].eq("transitory") & frame["scenario"].eq(scenario)
+        ].set_index("year")
+
+    # S0 has zero Gini change versus itself by construction, so the inequality channel must be
+    # inert for S0 regardless of the flag.
+    s0_off, s0_on = default_transitory(off, "S0"), default_transitory(on, "S0")
+    pd.testing.assert_series_equal(
+        s0_off["debt_gdp_with_feedback"], s0_on["debt_gdp_with_feedback"], check_names=False,
+    )
+    # R_amb has a real, nonzero Gini change (Section 2 of the paper: central ~+0.36pp at 10y), so
+    # turning the channel on must move its feedback-adjusted GDP/debt relative to it off.
+    r_off, r_on = default_transitory(off, "R_amb"), default_transitory(on, "R_amb")
+    assert not r_off["gdp_level_vs_s0_pct_with_feedback"].equals(r_on["gdp_level_vs_s0_pct_with_feedback"])
+    # The channels this flag must never touch stay untouched.
+    for column in ("gdp_level_vs_s0_pct", "debt_gdp", "primary_balance_gdp"):
+        pd.testing.assert_series_equal(off[column], on[column], check_names=False)
+
+
 def test_samples_stay_inside_configured_ranges(context) -> None:
     rng = np.random.default_rng(1)
     params, inputs = context["parameters"], context["inputs"]

@@ -724,9 +724,15 @@ def _feedback_defaults(parameters_path: str, scenarios_path: str) -> dict:
 
 def feedback_for_draw(
     corner: pd.DataFrame, life_expectancy: pd.DataFrame, variant_scenarios: Mapping,
-    draw: Mapping, context: Mapping,
+    draw: Mapping, context: Mapping, gini_change: Mapping | None = None,
 ) -> pd.DataFrame:
-    """Apply C5 to one annual C2 corner with this draw's sampled values."""
+    """Apply C5 to one annual C2 corner with this draw's sampled values.
+
+    ``gini_change`` is IEQ1's off-by-default inequality-to-growth input: a
+    ``{(year, scenario): gini_change_vs_s0_points}`` map from a pre-feedback
+    C3 pass, or ``None`` (the default -- byte-identical to pre-IEQ1 behaviour,
+    since ``apply_feedback`` already treats a ``None`` gini_change as inert).
+    """
     shares = variant_scenarios["package_shares"]
     efficiency_share: float | dict = float(shares.get("efficiency_health_education_admin", 0.0))
     investment_share: float | dict = float(shares.get("public_investment", 0.0))
@@ -756,6 +762,7 @@ def feedback_for_draw(
             (int(r.year), r.scenario): float(r.life_expectancy_difference_vs_s0_years)
             for r in life_expectancy.itertuples()
         },
+        gini_change=gini_change,
     )
     education_service_gain = {
         (int(row.year), str(row.scenario)): (
@@ -936,7 +943,31 @@ def evaluate_draw(draw: Mapping, context: Mapping, external_effects: pd.DataFram
                 corner, annual, variant_scenarios, context["parameters"], context["base_inputs"], draw, all_years,
                 context,
             )
-            corner = feedback_for_draw(corner, annual_social, variant_scenarios, draw, context)
+            gini_change_input = None
+            if (
+                context.get("inequality_feedback")
+                and context.get("micro") is not None
+                and variant == MICRO_VARIANT
+            ):
+                # IEQ1: a pre-feedback C3 pass supplies the Gini path C5's inequality-to-growth
+                # channel needs; the normal post-feedback micro_for_draw call below still runs
+                # for the published, feedback-consistent Gini/poverty columns. Off by default
+                # (gini_change_input stays None, apply_feedback's inequality channel inert).
+                pre_feedback_micro = micro_for_draw(corner, variant_scenarios, draw, context)
+                # micro_for_draw does not necessarily emit a row for every (year, scenario) pair
+                # in `corner` (e.g. the base year, where every scenario's gap is zero); default
+                # those to a zero Gini deviation -- an inert inequality-feedback contribution --
+                # rather than let a strict lookup elsewhere raise on a missing combination.
+                gini_change_input = {
+                    (int(row.year), str(row.scenario)): 0.0 for row in corner.itertuples()
+                }
+                gini_change_input.update({
+                    (int(r.year), r.scenario): float(r.gini_change_vs_s0_points)
+                    for r in pre_feedback_micro.itertuples()
+                })
+            corner = feedback_for_draw(
+                corner, annual_social, variant_scenarios, draw, context, gini_change=gini_change_input
+            )
             corner = firm_distress_for_draw(corner, draw)
             corner = corner.loc[corner["year"].isin(target_years)].copy()
             if context.get("w3"):
@@ -1146,6 +1177,13 @@ def run(
     }
     if context.get("real_rate_path") is not None:
         metadata.update(context["real_rate_path"])
+    if context.get("inequality_feedback"):
+        metadata["inequality_feedback"] = (
+            "IEQ1 sensitivity on: C3's pre-feedback Gini path (default-composition variant only) "
+            "wired into C5's inequality-to-growth channel "
+            "(config/parameters.yaml long_run_feedback.inequality_to_growth, central -0.1pp "
+            "annual growth per +1 net Gini point, Ostry, Berg & Tsangarides 2014, off by default)"
+        )
     metadata["micro_outputs"] = (
         "C3 distribution indicators are changes versus S0; poverty outputs include all-person, age 0-14, "
         "age 65+, and people living with a 65+ pension/BPC recipient headcounts for both poverty lines"
@@ -1266,11 +1304,16 @@ def main(argv: list[str] | None = None) -> int:
                         help="W3 anti-corruption sensitivity for the selected programme(s) (default: none)")
     parser.add_argument("--anti-corruption-mapping", choices=("programme", "full"), default="programme",
                         help="W3 programme-text mapping or all four channels (default: programme)")
+    parser.add_argument("--inequality-feedback", action="store_true",
+                        help="IEQ1 sensitivity: wire C3's Gini path into C5's inequality-to-growth "
+                             "channel (config/parameters.yaml long_run_feedback.inequality_to_growth, "
+                             "default off; no effect on any other column when unset)")
     args = parser.parse_args(argv)
     started = time.time()
     context = load_context()
     context["tax_incidence"] = args.tax_incidence
     context["education_sensitivity"] = args.education_sensitivity
+    context["inequality_feedback"] = args.inequality_feedback
     if args.rate_path == "i1":
         source = Path("config/i1_proposed.yaml")
         config = read_yaml(source)
