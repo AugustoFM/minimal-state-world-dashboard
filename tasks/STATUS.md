@@ -481,3 +481,54 @@ Nothing committed or pushed, per standing instruction.
 - IMF October 2026 WEO workbook and DataMapper API, and the OECD SDMX API, each returned HTTP 403 from this environment. A4 therefore uses the existing World Bank indicator and labels its central-government-only scope in the output files.
 - A4 was later refetched from the World Bank API for 1990–2025 into `data/raw/brazil/worldbank_expense_1990_2025.json`; summary episode files were rebuilt from that response.
 - A3 downloads are documentation/layout files only. Full PNAD and POF microdata remain deferred until the exact source mappings are reviewed.
+
+## 2026-10-26: education-capacity/innovation-capacity channels found undocumented in the IMF paper, added
+
+User asked what happened to the "education/competitiveness/new-products/R&D" investment thread and whether
+it is in the Lula scenario. Investigation found: the ED module (`src/education.py`, tasks `ED`/`W2`,
+2026-10-22, commits `38a308b`/`8992c50`) built two GDP-feedback channels -- `education_capacity`
+(university/IF capacity index -> GDP level, elasticity 0/0.02/0.04) and `innovation_capacity` (public R&D
+stock, 15% depreciation, -> GDP, elasticity 0/0.01/0.02) -- that **are** wired into `src/montecarlo.py`
+(`education_for_draw`) and **are** sampled with nonzero elasticities in the exact published 1000-draw run
+(seed 20261020) both paper drafts cite, confirmed via `outputs/runs/run_metadata.json`. Neither paper
+mentioned either channel: the "Long-run feedback channels" subsection described only four channels
+(schooling, health, public capital, risk premium), not six.
+
+Separately, `config/ed_proposed.yaml`'s richer candidate-specific mapping (Lula: Pé-de-Meia, 100 new IF
+campi, the PBIA R$23bn AI/R&D plan; Flávio: current law unless stated) is marked
+`status: proposal_not_monte_carlo_wired` and was never merged into the live Monte Carlo -- it is a separate,
+standalone deterministic report. Its output files did not exist on disk; reran `python -m src.education`
+to regenerate `data/brazil/education_scenarios.csv` and `outputs/education.md` (both git-ignored, local
+only). Result for the two Lula-mapped paths: `P_lula_rule` (strict LC 200/2023 compliance) implies a small
+GDP *loss* from education/R&D by 2060 (central case -0.10%: schooling -0.057, capacity -0.028, innovation
+-0.014), `P_lula_record` (continuing the 2023-2025 spending trend instead) implies a small GDP *gain*
+(+0.11%). Pé-de-Meia, the 100 IF campi and PBIA all register **zero** incremental effect in either path --
+the module treats them as already happening inside S0, so the measurable Lula-vs-status-quo difference
+comes only from the generic fiscal-rule-vs-spending-trend choice, not from the named flagship measures.
+
+**Paper fix** (`paper/minimum_state_brazil_IMF.tex` only, per standing instruction that the Fiscal-Studies
+original stays untouched): added the two missing channels to the "Long-run feedback channels" subsection
+("four" -> "six" channels), with real, independently verified citations found via two research subagents --
+Valero and Van Reenen (2019, *Economics of Education Review* 68) for the capacity elasticity's upper bound;
+Andrews (2023, *AEJ: Economic Policy* 15(2)) for the relocation-haircut reasoning behind the central
+estimate (corrected from an internal note's wrong NBER working-paper number); Alcantara and Kannebley Jr.
+(2024, *Economia Aplicada* 28(1)) for the weak, insignificant Brazilian industrial R&D-to-productivity
+estimate (corrected from a vague "USP dissertations, Lei do Bem" internal note -- the actual paper is an
+industrial-group common-factors panel study, not a Lei do Bem programme evaluation, so described
+accordingly rather than overclaimed); Akerman, Moscona, Pellegrina and Sastry (2025, NBER WP 34213) for
+Embrapa's large aggregate effect; Jones and Williams (1998, *QJE* 113(4)) for the social-returns-exceed-
+private-returns argument behind the positive central case. Also added one sentence to the "2026 run-off
+programmes as scenarios" subsection disclosing the "already in S0, zero incremental effect" finding above,
+without naming either candidate's specific programmes (consistent with the paper's existing
+incumbent/challenger-only convention) and without giving a headline Lula-vs-Flávio number, consistent with
+the paper's existing policy of withholding programme-specific headline comparisons pending the back-test
+validation gate.
+
+Verification: citation/label/brace-balance script clean (zero missing/orphan citations or labels);
+recompiled clean (same two pre-existing sub-10pt overfull-hbox warnings, nothing new); 26 pages (was 25),
+still comfortably under IER's 50-double-spaced-page cap. PDF copied to `paper/minimum_state_brazil_IMF.pdf`.
+`paper/minimum_state_brazil.tex` (Fiscal Studies) and `paper/minimum_state_brazil_IMF_supplement.tex` were
+not touched -- this is core-model documentation, not an off-by-default diagnostic, so it belongs in the main
+manuscript only.
+
+Nothing committed or pushed yet, per standing instruction.
