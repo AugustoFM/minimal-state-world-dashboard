@@ -20,6 +20,14 @@
     <div class="preview-banner">
       <b>Before you vote in the case:</b> play this through once as Lula, once as Fl&aacute;vio Bolsonaro, with whatever year-by-year choices feel closest to how you&rsquo;d expect each of them to actually govern. Then compare.
     </div>
+    <a href="manual.html" class="manual-cta">
+      <span class="manual-cta-icon">&#128214;</span>
+      <span class="manual-cta-text">
+        <span class="manual-cta-title">Read the player manual first</span>
+        <span class="manual-cta-sub">How to play, how to read every indicator, and exactly what the final score does and doesn&rsquo;t mean &mdash; 5 minutes, worth it.</span>
+      </span>
+      <span class="manual-cta-arrow">&rarr;</span>
+    </a>
   </header>
 
   <div class="progress" id="progress">
@@ -78,18 +86,20 @@
     <div class="score-card">
       <div class="score-head">
         <div>
-          <div class="score-label">Composite score vs.&nbsp;doing nothing differently</div>
+          <div class="score-label">Composite score, in percentage points of GDP, vs.&nbsp;doing nothing differently</div>
           <div class="score-value" id="score-value">&ndash;</div>
-          <div class="score-sub">Higher is better. 0&nbsp;=&nbsp;identical to protecting every service and transfer, all four years.</div>
+          <div class="score-sub">Higher is better. 0&nbsp;=&nbsp;identical to protecting every service and transfer, all four years. Three of the five indicators are blended in &mdash; see the breakdown below.</div>
         </div>
       </div>
+      <p class="score-footnote" style="border-top:none; padding-top:0; margin-top:-4px;">This single number adds up three things that are normally measured in different units &mdash; the debt path (already % of GDP), the jobs effect (converted via Brazil&rsquo;s own Okun coefficient), and the lives effect (converted via the slider below) &mdash; onto one common GDP-equivalent scale, so they can be compared directly. <a href="manual.html#understanding-your-score">Full explanation in the manual &rarr;</a></p>
       <div class="vsl-control">
-        <label for="vsl-slider">How much should a child&rsquo;s life be worth in this score?</label>
+        <label for="vsl-slider">How much should <b>avoiding one infant death</b> be worth, in money?</label>
+        <div class="vsl-hint" style="margin-bottom:2px;">This is a &ldquo;value of a statistical life&rdquo; (VSL) &mdash; a standard cost-benefit-analysis technique for weighing a <i>population-level</i> change in death risk against a fiscal number. It is not pricing any individual child.</div>
         <input type="range" id="vsl-slider" min="2.3" max="12" step="0.1" value="5.5">
-        <div class="vsl-readout"><span id="vsl-value">R$5.5M</span> <span class="vsl-hint">per infant death averted &mdash; default from Brazil&rsquo;s own published value-of-life research (IPEA/Stivali 2023, central estimate; range R$2.3M&ndash;R$12M). Move the slider and the score updates live.</span></div>
+        <div class="vsl-readout"><span id="vsl-value">R$5.5M</span> <span class="vsl-hint">per infant death averted &mdash; default from Brazil&rsquo;s own published value-of-life research (IPEA/Stivali 2023, central estimate; range R$2.3M&ndash;R$12M). Move the slider and the breakdown below updates live.</span></div>
         <div class="score-breakdown" id="score-breakdown" style="font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--muted); display:flex; flex-direction:column; gap:3px;"></div>
       </div>
-      <p class="score-footnote">Debt and unemployment convert into this score using the model&rsquo;s own sourced relationships (the debt path directly; unemployment via Brazil&rsquo;s own estimated Okun coefficient). Poverty and the Gini coefficient are shown below but <b>not</b> folded into this score &mdash; there is no agreed, sourced way to monetise them, and pretending otherwise would smuggle in an invented weight exactly where the other two terms don&rsquo;t need one.</p>
+      <p class="score-footnote">Poverty and the Gini coefficient are shown below but <b>not</b> folded into this score &mdash; there is no agreed, sourced way to monetise them, and pretending otherwise would smuggle in an invented weight exactly where the other two terms don&rsquo;t need one.</p>
     </div>
 
     <div class="charts-grid" id="charts-grid"></div>
@@ -101,7 +111,7 @@
   </section>
 
   <div class="footer-note">
-    Companion tool to the teaching case &ldquo;The Vote: Brazil&rsquo;s 2026 Runoff.&rdquo; Built on the same published Monte Carlo fiscal model as the case&rsquo;s own Exhibits, reusing Brazil-specific sourced parameters (demography, fiscal multipliers, the Okun coefficient, household microsimulation). This is not a forecast of what either candidate will do &mdash; it plays out each candidate&rsquo;s own filed programme under choices you make, not a prediction of actual governance. See <a href="MANUAL.md">the player manual</a> for the full method and its honest limits.
+    Companion tool to the teaching case &ldquo;The Vote: Brazil&rsquo;s 2026 Runoff.&rdquo; Built on the same published Monte Carlo fiscal model as the case&rsquo;s own Exhibits, reusing Brazil-specific sourced parameters (demography, fiscal multipliers, the Okun coefficient, household microsimulation). This is not a forecast of what either candidate will do &mdash; it plays out each candidate&rsquo;s own filed programme under choices you make, not a prediction of actual governance. See <a href="manual.html">the player manual</a> for the full method and its honest limits.
   </div>
 </div>
 

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Player Manual &middot; Four Years to Decide</title>
+<meta name="description" content="How to play the Four Years to Decide simulation, how to read every indicator, and exactly what the final score does and doesn't mean.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .manual-wrap{max-width:680px;}
+  .manual-back{display:inline-flex; align-items:center; gap:6px; color:var(--accent-blue); text-decoration:none; font-size:14.5px; font-weight:600; margin-bottom:18px;}
+  .manual-meta{color:var(--muted); font-size:15px; font-style:italic; margin:0 0 28px;}
+  .manual-wrap h2{font-size:23px; margin-top:42px; margin-bottom:14px; padding-top:14px; border-top:1px solid var(--line);}
+  .manual-wrap h2:first-of-type{margin-top:0; padding-top:0; border-top:none;}
+  .manual-wrap p{line-height:1.65; margin:0 0 14px;}
+  .manual-wrap ul, .manual-wrap ol{line-height:1.65; margin:0 0 14px; padding-left:22px;}
+  .manual-wrap li{margin-bottom:10px;}
+  .manual-wrap li::marker{color:var(--accent);}
+  .manual-wrap strong{color:var(--fg);}
+  .manual-wrap em{color:var(--muted);}
+  .callout{
+    background:var(--surface); border:1.5px solid var(--accent); border-left-width:4px; border-radius:10px;
+    padding:16px 18px; margin:0 0 14px; line-height:1.6;
+  }
+  .callout.caution{border-color:var(--bad);}
+  .score-section{background:var(--surface); border:1.5px solid var(--line); border-radius:14px; padding:4px 20px 8px;}
+  .score-section h2{border-top:none; margin-top:14px;}
+</style>
+</head>
+<body>
+<div class="wrap manual-wrap">
+
+  <a class="manual-back" href="index.html">&larr; Back to the simulation</a>
+
+  <header class="hero" style="padding-block:4px 10px;">
+    <div class="eyebrow">Player manual</div>
+    <h1 style="font-size:32px;">Four Years to Decide</h1>
+    <div class="flag-rule"></div>
+  </header>
+  <p class="manual-meta">A decision-support simulation for &ldquo;The Vote: Brazil&rsquo;s 2026 Runoff&rdquo; (companion teaching case). Play time: roughly 15&ndash;20 minutes per candidate.</p>
+
+  <h2>What this is</h2>
+  <p>You are not playing a character. You are a voter trying to decide between two real candidates &mdash; Luiz In&aacute;cio Lula da Silva and Fl&aacute;vio Bolsonaro &mdash; in Brazil&rsquo;s 2026 presidential runoff. This simulation lets you step into a hypothetical four-year presidency under <em>either</em> candidate&rsquo;s own filed government programme, make the fiscal choices that programme implies each year, and watch what happens to five things every voter should care about: the public debt, unemployment, child mortality, poverty, and inequality (the Gini coefficient).</p>
+  <p>Every number the simulation shows you is drawn from a real, published, open-source economic model of Brazil &mdash; the same one behind the companion research paper and case document &mdash; run forward year by year. Nothing here is invented for the game. The model is honest about what it doesn&rsquo;t know: every result is a <em>range</em> (a low, a middle, and a high estimate), not a single confident prediction, because the real economy is uncertain and a model that pretended otherwise would be lying to you.</p>
+  <div class="callout"><strong>Play it twice</strong> &mdash; once as if Lula&rsquo;s programme governs, once as if Fl&aacute;vio&rsquo;s does &mdash; before you answer the case&rsquo;s discussion questions.</div>
+
+  <h2>How to play</h2>
+  <ol>
+    <li><strong>Choose a candidate.</strong> Lula (PT) or Fl&aacute;vio Bolsonaro (PL). You can replay the whole simulation under the other candidate afterwards &mdash; in fact, you should, since the case asks you to compare both.</li>
+    <li><strong>Choose your anti-corruption commitment, once, for the whole four years.</strong> Both candidates&rsquo; programmes mention integrity measures. This choice is a <em>sensitivity test</em>, not a graded promise &mdash; neither candidate&rsquo;s own filed programme puts a number on what their anti-fraud measures would actually save, so the model treats this as something you&rsquo;re testing, not something either candidate has committed to in writing. Choose &ldquo;commits in practice&rdquo; or &ldquo;talk only&rdquo; and move on; you won&rsquo;t be asked again.</li>
+    <li><strong>Play four rounds, one per year of the term.</strong> Each round, you choose <strong>one</strong> of four fiscal paths for that year, grounded directly in what the candidate&rsquo;s own programme says:
+      <ul>
+        <li><strong>Protect services and transfers</strong> &mdash; keep pensions, health, education and means-tested transfers (like Bolsa Fam&iacute;lia) at their planned levels, even if that means less room elsewhere.</li>
+        <li><strong>Administrative efficiency</strong> &mdash; squeeze administrative and discretionary spending rather than services. The model&rsquo;s own evidence says this mostly doesn&rsquo;t cost GDP directly &mdash; but it isn&rsquo;t a free lunch either; efficiency gains are themselves uncertain, not guaranteed.</li>
+        <li><strong>Cut subsidies and discretionary spending</strong> &mdash; a broader, blunter cut than pure administrative efficiency, reaching tax breaks and other current spending too.</li>
+        <li><strong>Adjust pensions and indexation</strong> &mdash; the biggest single lever on the debt, and the one most likely to raise poverty and inequality, especially among older households.</li>
+      </ul>
+      Each round&rsquo;s choice is this year&rsquo;s decision only &mdash; nothing is locked in for future years, and you can choose a different path every year if your strategy changes.
+    </li>
+    <li><strong>See the year&rsquo;s results</strong>, then move to the next round. The debt, unemployment, and other indicators you see are <em>cumulative</em> &mdash; last year&rsquo;s choices carry forward into this year&rsquo;s starting point, exactly as they would in a real presidency. A big spending choice in year 1 changes what&rsquo;s possible in year 4.</li>
+    <li><strong>After year 4, get your score</strong> &mdash; a composite number, plus a four-year chart of everything that happened along the way. See &ldquo;Understanding your score&rdquo; below before you trust it.</li>
+  </ol>
+
+  <h2>Reading the results</h2>
+  <ul>
+    <li><strong>Debt/GDP</strong>: the share of everything Brazil produces in a year that its government already owes. Rising fast is a warning sign; the model&rsquo;s own companion research found that <em>interest costs</em>, not any single spending choice, are usually the biggest driver of this number &mdash; don&rsquo;t expect any one lever to move it dramatically on its own.</li>
+    <li><strong>Unemployment</strong>: how many more or fewer people are out of work than under a current-law, no-change baseline.</li>
+    <li><strong>Child mortality</strong>: deaths per 1,000 live births, relative to that same baseline. This responds slowly &mdash; a cut this year shows up gradually, not all at once, and a later increase takes equally long to reverse. The model applies the same sensitivity to increases and cuts in spending, even though real-world evidence suggests cuts may hurt more than increases help by the same amount &mdash; keep that asymmetry in mind when you&rsquo;re judging a &ldquo;no harm done&rdquo; result.</li>
+    <li><strong>Poverty</strong>: the share of the population below a defined income line, relative to baseline.</li>
+    <li><strong>Gini</strong>: a standard inequality measure (0 = everyone equal, higher = more unequal), relative to baseline.</li>
+    <li><strong>The ranges</strong> (low &ndash; middle &ndash; high) reflect genuine uncertainty in the underlying economic parameters, not a forecast error band. A narrow range means economists broadly agree on the size of an effect; a wide one means they don&rsquo;t &mdash; both are informative.</li>
+  </ul>
+
+  <div class="score-section" id="understanding-your-score">
+  <h2>Understanding your score</h2>
+  <p>The final number is expressed in <strong>&ldquo;percentage points of GDP&rdquo;</strong> &mdash; a common unit everything below gets converted into so three unlike things can be added together into one headline figure. <strong>Higher is better.</strong> Zero means your path performed identically to protecting every service and transfer in every single year (the &ldquo;do nothing differently&rdquo; reference path). Only <strong>three</strong> of the simulation&rsquo;s five indicators feed the score:</p>
+  <ul>
+    <li><strong>Debt/GDP</strong> &mdash; used as-is; it&rsquo;s already measured in the same unit as the score.</li>
+    <li><strong>Unemployment</strong> &mdash; converted into a GDP-equivalent using Brazil&rsquo;s own estimated Okun coefficient (how much output tends to move for every point unemployment moves).</li>
+    <li><strong>&ldquo;Value of a life&rdquo; lever</strong> &mdash; the modeled change in infant deaths (the mortality-rate change times how many babies are actually born that year) is multiplied by a price-per-death-averted you set with a slider, then expressed as a share of GDP.</li>
+  </ul>
+  <p>That slider is not asking you to literally price a child&rsquo;s life. It&rsquo;s a standard economics technique called a <strong>Value of Statistical Life (VSL)</strong> &mdash; used in real cost-benefit analysis by governments and regulators everywhere &mdash; to put a <em>population-level</em> change in death risk onto the same ledger as a fiscal number, so the two can be weighed against each other at all. The R$5.5 million default and the R$2.3M&ndash;R$12M range it can move across come from published Brazilian VSL research (Stivali 2023, IPEA). Move the slider and watch the score&rsquo;s breakdown update &mdash; on most played paths this term stays very small (fractions of a single percentage point of GDP) because Brazil&rsquo;s own modeled infant-mortality effects are themselves small relative to the size of the economy. That smallness is a real finding, not a bug: it tells you fiscal choices move the debt and labour-market numbers far more than they move child mortality in this model.</p>
+  <p><strong>Poverty and the Gini coefficient are deliberately left out of the score.</strong> There&rsquo;s no agreed, sourced way to convert either one into a GDP-equivalent price the way debt, unemployment, and VSL allow &mdash; folding them in would mean inventing a weight exactly where the other three terms don&rsquo;t need one. They&rsquo;re shown next to the score instead, as indicators you weigh for yourself.</p>
+  </div>
+
+  <h2>What this simulation is <em>not</em></h2>
+  <ul>
+    <li>It is <strong>not</strong> a prediction of what will actually happen. It is a disciplined &ldquo;if this, roughly this&rdquo; exercise built from a real model&rsquo;s own sourced assumptions.</li>
+    <li>It does <strong>not</strong> rank the two candidates for you, and it never will. The score at the end tells you how <em>that</em> four-year path performed against the model&rsquo;s own five indicators &mdash; it does not tell you how to vote. That&rsquo;s still your decision.</li>
+    <li>The anti-corruption lever has <strong>no quantified basis in either candidate&rsquo;s own programme</strong> &mdash; it exists so you can see how sensitive the other results are to governance quality, not because either campaign has told you what their integrity measures are actually worth.</li>
+    <li>Fl&aacute;vio&rsquo;s infrastructure plan is mostly financed off-budget (private concessions, PPPs, BNDES) in the real-world programme, and the model reflects that &mdash; it does <strong>not</strong> carry the contingent fiscal risk those structures can create if they go wrong, because that isn&rsquo;t quantified anywhere in his filed plan either.</li>
+    <li>Neither candidate&rsquo;s programme includes a precisely costed minimum-wage rule change &mdash; the pension/indexation lever moves pensions and similar benefits, but it does not simulate a new minimum-wage law, because neither programme proposes one with enough detail to model.</li>
+  </ul>
+
+  <h2>A tip before you start</h2>
+  <p>Play the <em>same</em> sequence of choices (say, protect services every year) under both candidates first, so you can see how much of the difference in outcomes comes from the two fiscal philosophies themselves, versus how much comes from your own strategy. Then try varying your own choices year to year and see how much that changes the final score. Both comparisons are useful &mdash; the case asks you to be ready to explain what actually drove your conclusion, not just report a final number.</p>
+
+  <p style="font-style:italic; color:var(--muted); margin-top:32px;">Questions about the model itself, not the game? See the companion research paper and its online supplementary material in this same repository &mdash; the economics behind every lever here is fully documented and open-source.</p>
+
+  <a class="manual-back" href="index.html" style="margin-top:20px;">&larr; Back to the simulation</a>
+
+</div>
+</body>
+</html>

@@ -51,9 +51,8 @@ answer the case's discussion questions.
    indicators you see are *cumulative* — last year's choices carry forward into this year's
    starting point, exactly as they would in a real presidency. A big spending choice in year 1
    changes what's possible in year 4.
-5. **After year 4, get your score** — a single headline number blending the debt trajectory,
-   growth, and the four social indicators, plus a four-year chart of everything that happened
-   along the way.
+5. **After year 4, get your score** — a composite number, plus a four-year chart of everything
+   that happened along the way. See "Understanding your score" below before you trust it.
 
 ## Reading the results
 
@@ -74,6 +73,37 @@ answer the case's discussion questions.
 - **The ranges** (low – middle – high) reflect genuine uncertainty in the underlying economic
   parameters, not a forecast error band. A narrow range means economists broadly agree on the
   size of an effect; a wide one means they don't — both are informative.
+
+## Understanding your score
+
+The final number is expressed in **"percentage points of GDP"** — a common unit everything below
+gets converted into so three unlike things can be added together into one headline figure.
+**Higher is better.** Zero means your path performed identically to protecting every service and
+transfer in every single year (the "do nothing differently" reference path). Only **three** of the
+simulation's five indicators feed the score:
+
+- **Debt/GDP** — used as-is; it's already measured in the same unit as the score.
+- **Unemployment** — converted into a GDP-equivalent using Brazil's own estimated Okun coefficient
+  (how much output tends to move for every point unemployment moves).
+- **"Value of a life" lever** — the modeled change in infant deaths (the mortality-rate change
+  times how many babies are actually born that year) is multiplied by a price-per-death-averted
+  you set with a slider, then expressed as a share of GDP.
+
+That slider is not asking you to literally price a child's life. It's a standard economics
+technique called a **Value of Statistical Life (VSL)** — used in real cost-benefit analysis by
+governments and regulators everywhere — to put a *population-level* change in death risk onto the
+same ledger as a fiscal number, so the two can be weighed against each other at all. The R$5.5
+million default and the R$2.3M–R$12M range it can move across come from published Brazilian VSL
+research (Stivali 2023, IPEA). Move the slider and watch the score's breakdown update — on most
+played paths this term stays very small (fractions of a single percentage point of GDP) because
+Brazil's own modeled infant-mortality effects are themselves small relative to the size of the
+economy. That smallness is a real finding, not a bug: it tells you fiscal choices move the debt and
+labour-market numbers far more than they move child mortality in this model.
+
+**Poverty and the Gini coefficient are deliberately left out of the score.** There's no agreed,
+sourced way to convert either one into a GDP-equivalent price the way debt, unemployment, and VSL
+allow — folding them in would mean inventing a weight exactly where the other three terms don't
+need one. They're shown next to the score instead, as indicators you weigh for yourself.
 
 ## What this simulation is *not*
 
