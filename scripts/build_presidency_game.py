@@ -30,38 +30,36 @@ def _path_key(sequence: tuple[str, ...]) -> str:
 def build(draws: int, seed: int) -> dict:
     validate_action_mappings()
     adapter = PresidencyGameAdapter()
-    sequences = list(itertools.product(PRIMARY_ACTIONS, repeat=4))
+    sequences_by_candidate = {
+        candidate: list(itertools.product(PRIMARY_ACTIONS[candidate], repeat=4))
+        for candidate in CANDIDATES
+    }
     samples: dict[tuple[str, str], list] = {}
-    # The candidates are intentionally symmetric in the approved architecture.
-    # Evaluate each model path once, then label the identical result for both
-    # candidates; this is not a candidate-specific shortcut or a second model.
     work = [
-        (integrity, sequence, draw_number)
-        for integrity in INTEGRITY_VARIANTS
-        for sequence in sequences
+        (candidate, sequence, draw_number)
+        for candidate in CANDIDATES
+        for sequence in sequences_by_candidate[candidate]
         for draw_number in range(draws)
     ]
     def evaluate(item):
-        integrity, sequence, draw_number = item
+        candidate, sequence, draw_number = item
         draw = adapter.draw(seed + draw_number, draw_number)
-        return integrity, _path_key(sequence), adapter.run_path("Lula", sequence, integrity=integrity, draw=draw)
+        frames = [
+            adapter.run_path(candidate, sequence, integrity=integrity, draw=draw)
+            for integrity in INTEGRITY_VARIANTS
+        ]
+        return candidate, _path_key(sequence), frames
     with ThreadPoolExecutor(max_workers=16) as pool:
-        for integrity, key, frame in pool.map(evaluate, work):
-            samples.setdefault(("Lula", integrity, key), []).append(frame)
-    for integrity in INTEGRITY_VARIANTS:
-        for sequence in sequences:
-            key = _path_key(sequence)
-            samples["Flavio", integrity, key] = [
-                frame.assign(candidate="Flavio")
-                for frame in samples["Lula", integrity, key]
-            ]
+        for candidate, key, frames in pool.map(evaluate, work):
+            for integrity, frame in zip(INTEGRITY_VARIANTS, frames):
+                samples.setdefault((candidate, integrity, key), []).append(frame)
 
     paths = {}
     for candidate in CANDIDATES:
         paths[candidate] = {}
         for integrity in INTEGRITY_VARIANTS:
             paths[candidate][integrity] = {}
-            for sequence in sequences:
+            for sequence in sequences_by_candidate[candidate]:
                 key = _path_key(sequence)
                 frames = samples[candidate, integrity, key]
                 by_percentile = {}
@@ -85,7 +83,7 @@ def build(draws: int, seed: int) -> dict:
         "years": [adapter.base_year + i for i in range(1, 5)],
         "indicators": {name: {"unit": unit, "source_column": column} for name, (unit, column) in INDICATORS.items()},
         "actions": {
-            "primary": list(PRIMARY_ACTIONS),
+            "primary": {candidate: list(PRIMARY_ACTIONS[candidate]) for candidate in CANDIDATES},
             "integrity": list(INTEGRITY_VARIANTS),
         },
         "paths": paths,
@@ -97,6 +95,13 @@ def build(draws: int, seed: int) -> dict:
             "path_schema": "paths[candidate][integrity_choice][action_sequence][percentile]",
             "integrity_variants_in_library": list(INTEGRITY_VARIANTS),
             "action_to_parameter_mappings": "config/presidency_game.yaml",
+            "action_definitions": {
+                candidate: {
+                    action: {key: definition[key] for key in ("label", "description", "source_items")}
+                    for action, definition in definitions.items()
+                }
+                for candidate, definitions in adapter.game_config["primary_actions"].items()
+            },
             "units": {name: unit for name, (unit, _) in INDICATORS.items()},
             "generated_date": date.today().isoformat(),
             "approx_live_births_by_year": adapter.approx_live_births_by_year,

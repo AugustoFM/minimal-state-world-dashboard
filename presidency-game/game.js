@@ -5,39 +5,36 @@
 // sequence sharing the same first N actions (the underlying model is a
 // forward-only annual recursion -- verified directly against the data before
 // writing this file), so a partial choice is looked up by padding the
-// undecided remaining rounds with FILLER_ACTION. This needs no new data: it
+// undecided remaining rounds with a filler action. This needs no new data: it
 // relies on forward-causality, not on guessing future rounds correctly.
-const FILLER_ACTION = 'protect_services_transfers';
-const REFERENCE_SEQUENCE_KEY = [FILLER_ACTION, FILLER_ACTION, FILLER_ACTION, FILLER_ACTION].join('+');
+//
+// Lula and Flávio now have their own distinct, candidate-specific 4-action
+// menus (config/programs_2026.yaml), not a shared symmetric one -- so the
+// filler action used to pad an unfinished sequence is per candidate, and
+// labels/descriptions are read from game_data.json's own sourced
+// metadata.action_definitions rather than duplicated here. "Hold the fiscal
+// rule" (Lula's current-law action) reproduces Brazil's S0 baseline exactly
+// (zero deltas, flat infant mortality -- verified directly against the data),
+// so it is used as the single reference path for "vs. doing nothing
+// differently" comparisons for BOTH candidates: that baseline is the macro
+// model's own status quo, not specific to either candidate's programme.
+const FILLER_ACTION_BY_CANDIDATE = { Lula: 'fiscal_rule', Flavio: 'tesourao_light_cuts' };
+const REFERENCE_CANDIDATE = 'Lula';
+const REFERENCE_SEQUENCE_KEY = 'fiscal_rule+fiscal_rule+fiscal_rule+fiscal_rule';
 const PERCENTILE = '50'; // central estimate; p10/p90 shown as the uncertainty range alongside it
 
-const ACTION_INFO = {
-  protect_services_transfers: {
-    label: 'Protect services and transfers',
-    blurb: 'Keep pensions, health, education and means-tested transfers (like Bolsa Família) at their planned levels this year, even if that means less room elsewhere.',
-  },
-  administrative_efficiency: {
-    label: 'Administrative efficiency',
-    blurb: 'Squeeze administrative and discretionary spending rather than services. The model’s own central assumption is that efficiency gains have zero output effect on average — not a guaranteed free lunch.',
-  },
-  cut_subsidies_discretionary: {
-    label: 'Cut subsidies and discretionary spending',
-    blurb: 'A broader, blunter cut reaching tax breaks and other current spending too.',
-  },
-  pension_indexation_adjustment: {
-    label: 'Pension and indexation adjustment',
-    blurb: 'The biggest single lever on the debt, and the one most likely to raise poverty and inequality, especially among older households.',
-  },
-};
+// Populated from game_data.json's metadata.action_definitions in init() --
+// {candidate: {action_id: {label, blurb}}}. See ACTION_INFO's fill-in below.
+const ACTION_INFO = { Lula: null, Flavio: null };
 
 const CANDIDATE_INFO = {
   Lula: {
     name: 'Luiz Inácio Lula da Silva', party: 'PT',
-    blurb: 'Keeps the existing constitutional spending-growth rule; protects pensions and means-tested transfers; raises some taxes on high incomes and tax expenditures.',
+    blurb: 'Four of his own filed programme’s levers: hold the existing spending-growth rule, expand transfers and investment, raise revenue from high incomes and tax expenditures, or continue the pace of his first term.',
   },
   Flavio: {
     name: 'Flávio Bolsonaro', party: 'PL',
-    blurb: 'Proposes a debt-stabilising primary-balance rule; administrative spending cuts (the “Tesourão”); tax cuts on consumption and energy; resumed privatisation.',
+    blurb: 'Four of his own filed programme’s levers: light or deeper administrative cuts (the “Tesourão”), tax cuts on consumption and energy, or resumed privatisation.',
   },
 };
 
@@ -64,6 +61,13 @@ const App = (() => {
     DATA = await res.json();
     hasIntegrityVariants = Array.isArray(DATA.metadata && DATA.metadata.integrity_variants_in_library)
       && DATA.metadata.integrity_variants_in_library.length > 1;
+    const defs = (DATA.metadata && DATA.metadata.action_definitions) || {};
+    for (const cand of ['Lula', 'Flavio']) {
+      ACTION_INFO[cand] = {};
+      for (const [id, def] of Object.entries(defs[cand] || {})) {
+        ACTION_INFO[cand][id] = { label: def.label, blurb: def.description };
+      }
+    }
     renderCandidates();
     document.querySelectorAll('.toggle-btn[data-choice]').forEach((btn) => {
       btn.onclick = () => setIntegrity(btn.dataset.choice);
@@ -137,8 +141,8 @@ const App = (() => {
       : `Last year ended where you saw it. Choose this year's path -- you can change strategy at any point.`;
     const grid = document.getElementById('action-grid');
     grid.innerHTML = '';
-    for (const id of Object.keys(ACTION_INFO)) {
-      const info = ACTION_INFO[id];
+    for (const id of Object.keys(ACTION_INFO[state.candidate])) {
+      const info = ACTION_INFO[state.candidate][id];
       const btn = document.createElement('button');
       btn.className = 'action-card';
       btn.innerHTML = `<div class="box"></div><div class="txt"><b>${info.label}</b><p>${info.blurb}</p></div>`;
@@ -165,21 +169,29 @@ const App = (() => {
     // restore the previous selection visually
     const prevAction = state.actions[state.round - 1];
     if (prevAction) {
-      const idx = Object.keys(ACTION_INFO).indexOf(prevAction);
+      const idx = Object.keys(ACTION_INFO[state.candidate]).indexOf(prevAction);
       const card = document.querySelectorAll('.action-card')[idx];
       if (card) selectAction(prevAction, card);
     }
   }
 
-  function lookupPath(actionsSoFar) {
-    const padded = actionsSoFar.concat(Array(4 - actionsSoFar.length).fill(FILLER_ACTION));
+  function lookupPath(actionsSoFar, candidate) {
+    const cand = candidate || state.candidate;
+    const filler = FILLER_ACTION_BY_CANDIDATE[cand];
+    const padded = actionsSoFar.concat(Array(4 - actionsSoFar.length).fill(filler));
     const key = padded.join('+');
-    const byIntegrity = hasIntegrityVariants ? DATA.paths[state.candidate][state.integrity] : DATA.paths[state.candidate];
+    const byIntegrity = hasIntegrityVariants ? DATA.paths[cand][state.integrity] : DATA.paths[cand];
     return byIntegrity[key];
   }
 
+  // The reference ("vs. doing nothing differently") is always Lula's "hold
+  // the fiscal rule" path -- it reproduces the model's own S0 status-quo
+  // baseline exactly, which is candidate-agnostic, so the same reference
+  // applies whichever candidate you're playing.
   function referencePath() {
-    const byIntegrity = hasIntegrityVariants ? DATA.paths[state.candidate][state.integrity] : DATA.paths[state.candidate];
+    const byIntegrity = hasIntegrityVariants
+      ? DATA.paths[REFERENCE_CANDIDATE][state.integrity]
+      : DATA.paths[REFERENCE_CANDIDATE];
     return byIntegrity[REFERENCE_SEQUENCE_KEY];
   }
 
@@ -196,7 +208,7 @@ const App = (() => {
     const roundHi = path['90'].rounds[state.round - 1];
     const ref = referencePath()[PERCENTILE].rounds[state.round - 1];
 
-    document.getElementById('reveal-title').textContent = `Year ${state.round}: ${ACTION_INFO[state.pendingAction].label}`;
+    document.getElementById('reveal-title').textContent = `Year ${state.round}: ${ACTION_INFO[state.candidate][state.pendingAction].label}`;
     document.getElementById('reveal-meta').innerHTML = `<b>${CANDIDATE_INFO[state.candidate].name}</b> &middot; ${round.year}`;
 
     const grid = document.getElementById('reveal-grid');
@@ -215,7 +227,7 @@ const App = (() => {
         <div class="label">${info.label}</div>
         <div class="val ${deltaVsRef === 0 ? '' : (isGood ? 'good' : 'bad')}">${displayVal} <span style="font-size:13px;color:var(--muted);">${info.unit}</span></div>
         <div class="range">range across uncertainty: ${lo.toFixed(info.decimals)} to ${hi.toFixed(info.decimals)}</div>
-        ${info.absolute ? `<div class="range">vs. protecting everything every year: ${fmt(deltaVsRef, info.decimals)} ${info.unit}</div>` : ''}
+        ${info.absolute ? `<div class="range">vs. holding the current-law fiscal rule: ${fmt(deltaVsRef, info.decimals)} ${info.unit}</div>` : ''}
       `;
       grid.appendChild(tile);
     }
@@ -236,7 +248,7 @@ const App = (() => {
 
   function renderFinal() {
     document.getElementById('final-sub').textContent =
-      `${CANDIDATE_INFO[state.candidate].name}'s term, as you played it: ${state.actions.map((a) => ACTION_INFO[a].label).join(' → ')}.`;
+      `${CANDIDATE_INFO[state.candidate].name}'s term, as you played it: ${state.actions.map((a) => ACTION_INFO[state.candidate][a].label).join(' → ')}.`;
     renderCharts();
     const slider = document.getElementById('vsl-slider');
     slider.value = DEFAULT_VSL_BRL_MILLION;

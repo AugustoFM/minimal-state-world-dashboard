@@ -20,7 +20,7 @@ def adapter() -> PresidencyGameAdapter:
 
 
 def test_action_sequence_is_deterministic(adapter: PresidencyGameAdapter) -> None:
-    sequence = (PRIMARY_ACTIONS[0],) * 4
+    sequence = (PRIMARY_ACTIONS["Lula"][0],) * 4
     first = adapter.run_path("Lula", sequence, draw=adapter.draw(17))
     second = adapter.run_path("Lula", sequence, draw=adapter.draw(17))
     pd.testing.assert_frame_equal(first, second)
@@ -28,15 +28,15 @@ def test_action_sequence_is_deterministic(adapter: PresidencyGameAdapter) -> Non
 
 
 def test_every_sequence_has_four_rounds() -> None:
-    assert len(PRIMARY_ACTIONS) ** 4 == 256
+    assert all(len(actions) ** 4 == 256 for actions in PRIMARY_ACTIONS.values())
     adapter = PresidencyGameAdapter()
-    gaps = adapter.scenario_for_sequence((PRIMARY_ACTIONS[0],) * 4)["package_gaps_by_year"]
+    gaps = adapter.scenario_for_sequence((PRIMARY_ACTIONS["Lula"][0],) * 4, "Lula")["package_gaps_by_year"]
     assert all(value == 0.0 for path in gaps.values() for value in path.values())
 
 
 def test_debt_is_carried_and_early_action_changes_later_debt(adapter: PresidencyGameAdapter) -> None:
-    protected = adapter.run_path("Lula", (PRIMARY_ACTIONS[0],) * 4, draw=adapter.draw(19))
-    changed = adapter.run_path("Lula", (PRIMARY_ACTIONS[2],) * 4, draw=adapter.draw(19))
+    protected = adapter.run_path("Lula", (PRIMARY_ACTIONS["Lula"][0],) * 4, draw=adapter.draw(19))
+    changed = adapter.run_path("Lula", (PRIMARY_ACTIONS["Lula"][1],) * 4, draw=adapter.draw(19))
     assert changed.loc[changed["round"].eq(1), "debt_gdp"].iloc[0] != protected.loc[protected["round"].eq(1), "debt_gdp"].iloc[0]
     assert changed.loc[changed["round"].eq(4), "debt_gdp"].iloc[0] != protected.loc[protected["round"].eq(4), "debt_gdp"].iloc[0]
 
@@ -57,12 +57,15 @@ def test_generated_percentiles_and_units() -> None:
                         assert values[10][index][indicator] <= values[50][index][indicator] + 1e-12
                         assert values[50][index][indicator] <= values[90][index][indicator] + 1e-12
 
-    sequence = "+".join([PRIMARY_ACTIONS[0]] * 4)
+    sequence = "+".join([PRIMARY_ACTIONS["Lula"][0]] * 4)
     current = data["paths"]["Lula"]["current_controls"][sequence]["50"]["rounds"]
     sensitive = data["paths"]["Lula"]["integrity_sensitivity"][sequence]["50"]["rounds"]
     assert any(current[index][indicator] != sensitive[index][indicator] for index in range(4) for indicator in INDICATORS)
     assert data["metadata"]["integrity_variants_in_library"] == ["current_controls", "integrity_sensitivity"]
     assert "integrity_selected_for_library" not in data["actions"]
+    assert set(data["metadata"]["action_definitions"]) == {"Lula", "Flavio"}
+    assert set(data["metadata"]["action_definitions"]["Lula"]) == set(PRIMARY_ACTIONS["Lula"])
+    assert set(data["metadata"]["action_definitions"]["Flavio"]) == set(PRIMARY_ACTIONS["Flavio"])
 
 
 def test_generated_birth_proxy_metadata_is_derived_from_population() -> None:
@@ -86,9 +89,15 @@ def test_action_mappings_exist() -> None:
     validate_action_mappings()
 
 
+def test_candidate_actions_diverge(adapter: PresidencyGameAdapter) -> None:
+    lula = adapter.run_path("Lula", ("expand_transfers_investment",) * 4, draw=adapter.draw(31))
+    flavio = adapter.run_path("Flavio", ("tesourao_light_cuts",) * 4, draw=adapter.draw(31))
+    assert not lula.equals(flavio)
+
+
 def test_no_deviation_reproduces_current_law_s0(adapter: PresidencyGameAdapter) -> None:
     draw = montecarlo.central_draw(adapter.context["parameters"], adapter.context["inputs"])
-    actual = adapter.run_path("Lula", (PRIMARY_ACTIONS[0],) * 4, draw=draw)
+    actual = adapter.run_path("Lula", ("fiscal_rule",) * 4, draw=draw)
     annual = adapter.context["grid"][(draw["profile_year"], draw["pension_gdp_per_worker_weight"])]
     annual = annual.loc[annual["year"].le(adapter.base_year + 4)]
     expected = run_corner(

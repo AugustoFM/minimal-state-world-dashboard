@@ -1,27 +1,61 @@
-schema_version: 1
+schema_version: 2
 base_scenario: S0
 rounds: 4
 primary_actions:
-  protect_services_transfers:
-    label: Protect services and transfers
-    source_parameters:
-      deviation: config/scenarios.yaml:scenarios.S0
-      package_mapping: config/scenarios.yaml:package_shares
-  administrative_efficiency:
-    label: Administrative efficiency
-    source_parameters:
-      deviation: config/scenarios.yaml:scenarios.R_mod.pace_pp_gdp_per_year_below_S0
-      package_mapping: config/scenarios.yaml:variant_definitions.efficiency_only
-  cut_subsidies_discretionary:
-    label: Cut subsidies and discretionary spending
-    source_parameters:
-      deviation: config/scenarios.yaml:scenarios.R_mod.pace_pp_gdp_per_year_below_S0
-      package_mapping: config/scenarios.yaml:package_shares
-  pension_indexation_adjustment:
-    label: Pension and indexation adjustment
-    source_parameters:
-      deviation: config/scenarios.yaml:scenarios.R_mod.pace_pp_gdp_per_year_below_S0
-      package_mapping: config/scenarios.yaml:variant_definitions.pension_only
+  Lula:
+    fiscal_rule:
+      label: Hold the fiscal rule
+      description: Hold to LC 200/2023 current-law federal spending path.
+      source_items: [L1_fiscal_rule]
+      source_parameters:
+        model: config/programs_2026.yaml:model_parameters.lc200_rule
+    expand_transfers_investment:
+      label: Expand transfers and investment
+      description: Expand Bolsa Família, Pé-de-Meia, Farmácia Popular and Gás do Povo while protecting PAC investment.
+      source_items: [L3_transfers, L4_public_investment]
+      source_parameters:
+        range: config/programs_2026.yaml:programmes.lula_pt.items.L3_transfers.range_pp_gdp
+        package: config/programs_2026.yaml:programmes.lula_pt.items.L3_transfers.mechanism
+    tax_justice_revenue:
+      label: Tax justice revenue
+      description: Raise revenue from top incomes and tax expenditures.
+      source_items: [L5_tax]
+      source_parameters:
+        range: config/programs_2026.yaml:programmes.lula_pt.items.L5_tax.range_pp_gdp
+        incidence: config/programs_2026.yaml:programmes.lula_pt.items.L5_tax.incidence_shares
+    continue_record_trend:
+      label: Continue the record trend
+      description: Continue the sourced 2022-2025 spending and tax-revenue trends for this round.
+      source_items: [L2_minimum_wage, L3_transfers, L4_public_investment, L5_tax, L6_pensions, L7_floors]
+      source_parameters:
+        model: config/programs_2026.yaml:model_parameters.lula_record_trend
+  Flavio:
+    tesourao_light_cuts:
+      label: Light Tesourão cuts
+      description: Apply the low-intensity sourced Tesourão spending-cut composition.
+      source_items: [F2_spending_cuts]
+      source_parameters:
+        model: config/programs_2026.yaml:model_parameters.flavio_cut_scenarios.low
+    deeper_cuts:
+      label: Deeper cuts
+      description: Apply the mid-intensity sourced spending-cut composition.
+      source_items: [F2_spending_cuts]
+      source_parameters:
+        model: config/programs_2026.yaml:model_parameters.flavio_cut_scenarios.mid
+    brasil_mais_barato_tax_cuts:
+      label: Brasil Mais Barato tax cuts
+      description: Cut consumption, energy, fuel, payroll and business-capital taxes.
+      source_items: [F3_tax_cuts]
+      source_parameters:
+        range: config/programs_2026.yaml:programmes.flavio_bolsonaro_pl.items.F3_tax_cuts.range_pp_gdp
+        incidence: config/programs_2026.yaml:programmes.flavio_bolsonaro_pl.items.F3_tax_cuts.incidence_shares
+    resume_privatisation:
+      label: Resume privatisation
+      description: Resume the National Privatisation Programme case by case, with central sale proceeds spread across sale years.
+      source_items: [F5_privatisation]
+      source_parameters:
+        range: config/programs_2026.yaml:programmes.flavio_bolsonaro_pl.items.F5_privatisation.range_pp_gdp
+        model: config/programs_2026.yaml:model_parameters.privatisation_packages.f5
 integrity_choices:
   current_controls:
     label: Current integrity controls
@@ -35,4 +69,5 @@ integrity_choices:
 model:
   fiscal_scale_source: config/scenarios.yaml:scenarios.R_mod.pace_pp_gdp_per_year_below_S0
   persistence: transitory
-  candidate_symmetry: Both candidates use the same action mappings and model machinery.
+  candidate_symmetry: false
+  action_mechanics: Candidate-specific programme mappings from config/programs_2026.yaml; central range midpoints only.

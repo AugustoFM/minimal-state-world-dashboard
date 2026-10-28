@@ -550,3 +550,18 @@ Added `metadata.approx_live_births_by_year` to the presidency-game builder and g
 Updated `scripts/build_presidency_game.py` and regenerated `presidency-game/game_data.json` so both `current_controls` and `integrity_sensitivity` are stored for all 256 action sequences per candidate. The schema is now version 2 with paths keyed as `paths[candidate][integrity_choice][action_sequence][percentile]`; metadata records `integrity_variants_in_library` and removes the obsolete single-selection field. Rounds, indicators, and units are unchanged.
 
 Verification: builder completed with three draws; generated JSON has 256 paths under each integrity variant and at least one differing result between variants. `python -m pytest -q tests/test_presidency_game.py` passed 7 tests (one pre-existing pytest cache warning). No unrelated files were edited.
+
+## 2026-10-28: presidency game candidate-specific policy menus (Codex)
+
+Rebuilt `src/presidency_game.py` and `config/presidency_game.yaml` so Lula and Flavio each have
+four sourced, candidate-specific actions. Lula now exposes `fiscal_rule`, `expand_transfers_investment`,
+`tax_justice_revenue`, and `continue_record_trend`; Flavio exposes `tesourao_light_cuts`, `deeper_cuts`,
+`brasil_mais_barato_tax_cuts`, and `resume_privatisation`. The adapter now assembles package, tax-revenue,
+revenue-instrument, debt-adjustment, and non-tax-revenue paths using the existing central programme
+midpoints and signs from `config/programs_2026.yaml`; the central F5 path has no sourced lost-dividend
+estimate, so its non-tax path remains explicitly zero rather than inventing a value.
+
+Updated the builder for 256 candidate-specific sequences per integrity variant and added
+`metadata.action_definitions` for the front end. Tests now guard candidate divergence and verify Lula's
+`fiscal_rule` reproduces current-law S0. The independent regeneration was launched in the background;
+it is materially slower than the prior symmetric build because candidate paths are evaluated independently.

@@ -34,19 +34,33 @@ answer the case's discussion questions.
    something either candidate has committed to in writing. Choose "commits in practice" or
    "talk only" and move on; you won't be asked again.
 3. **Play four rounds, one per year of the term.** Each round, you choose **one** of four fiscal
-   paths for that year, grounded directly in what the candidate's own programme says:
-   - **Protect services and transfers** — keep pensions, health, education and means-tested
-     transfers (like Bolsa Família) at their planned levels, even if that means less room
-     elsewhere.
-   - **Administrative efficiency** — squeeze administrative and discretionary spending rather
-     than services. The model's own evidence says this mostly doesn't cost GDP directly — but it
-     isn't a free lunch either; efficiency gains are themselves uncertain, not guaranteed.
-   - **Cut subsidies and discretionary spending** — a broader, blunter cut than pure
-     administrative efficiency, reaching tax breaks and other current spending too.
-   - **Adjust pensions and indexation** — the biggest single lever on the debt, and the one most
-     likely to raise poverty and inequality, especially among older households.
-   Each round's choice is this year's decision only — nothing is locked in for future years,
-   and you can choose a different path every year if your strategy changes.
+   paths for that year. The two candidates do **not** share a menu — each one's four choices are
+   drawn directly from *that candidate's own* TSE-filed 2026 programme:
+
+   **If you're playing Lula:**
+   - **Hold the fiscal rule** — stay on the existing LC 200/2023 constitutional spending-growth
+     path. This exactly reproduces the model's own current-law baseline — it's the "do nothing
+     differently" reference every result in this game is measured against, for both candidates.
+   - **Expand transfers and investment** — grow Bolsa Família, Pé-de-Meia, Farmácia Popular and
+     Gás do Povo, while protecting PAC infrastructure investment.
+   - **Tax justice revenue** — raise revenue from high incomes and tax expenditures.
+   - **Continue the record trend** — keep spending and raising tax revenue at the same pace his
+     government actually ran at in 2022–2025.
+
+   **If you're playing Flávio Bolsonaro:**
+   - **Light Tesourão cuts** — the lower-intensity version of his administrative/discretionary
+     spending-cut package.
+   - **Deeper cuts** — the higher-intensity version of the same cut package, reaching further
+     into pensions and indexation.
+   - **Brasil Mais Barato tax cuts** — cut consumption, fuel/energy, payroll and business-capital
+     taxes.
+   - **Resume privatisation** — resume the National Privatisation Programme, case by case; sale
+     proceeds reduce gross debt.
+
+   Each round's choice is this year's decision only — nothing is locked in for future years, and
+   you can choose a different path every year if your strategy changes. Every lever's size and
+   composition traces to a specific, cited item in each candidate's own filed programme — nothing
+   here is invented for the game.
 4. **See the year's results**, then move to the next round. The debt, unemployment, and other
    indicators you see are *cumulative* — last year's choices carry forward into this year's
    starting point, exactly as they would in a real presidency. A big spending choice in year 1
@@ -78,9 +92,10 @@ answer the case's discussion questions.
 
 The final number is expressed in **"percentage points of GDP"** — a common unit everything below
 gets converted into so three unlike things can be added together into one headline figure.
-**Higher is better.** Zero means your path performed identically to protecting every service and
-transfer in every single year (the "do nothing differently" reference path). Only **three** of the
-simulation's five indicators feed the score:
+**Higher is better.** Zero means your path performed identically to holding the current-law fiscal
+rule in every single year — the same "do nothing differently" baseline for both candidates (it's
+Lula's own "Hold the fiscal rule" choice, since that's the one that reproduces it exactly). Only
+**three** of the simulation's five indicators feed the score:
 
 - **Debt/GDP** — used as-is; it's already measured in the same unit as the score.
 - **Unemployment** — converted into a GDP-equivalent using Brazil's own estimated Okun coefficient
@@ -119,18 +134,23 @@ need one. They're shown next to the score instead, as indicators you weigh for y
   in the real-world programme, and the model reflects that — it does **not** carry the
   contingent fiscal risk those structures can create if they go wrong, because that isn't
   quantified anywhere in his filed plan either.
-- Neither candidate's programme includes a precisely costed minimum-wage rule change — the
-  pension/indexation lever moves pensions and similar benefits, but it does not simulate a new
-  minimum-wage law, because neither programme proposes one with enough detail to model.
+- Neither candidate's programme includes a precisely costed minimum-wage rule change — Flávio's
+  "Deeper cuts" option does move pensions and similar benefits as part of its composition, but
+  neither programme proposes a new minimum-wage law with enough detail to model.
+- "Resume privatisation" only models the debt-reducing side of asset sales (the proceeds). The
+  foregone-dividend side (government income lost once a state-owned company is sold) has no
+  sourced central estimate in Flávio's filed plan, so it is left at zero rather than guessed —
+  this slightly favours that option in the score, and is disclosed here rather than hidden.
 
 ## A tip before you start
 
-Play the *same* sequence of choices (say, protect services every year) under both candidates
-first, so you can see how much of the difference in outcomes comes from the two fiscal
-philosophies themselves, versus how much comes from your own strategy. Then try varying your own
-choices year to year and see how much that changes the final score. Both comparisons are useful —
-the case asks you to be ready to explain what actually drove your conclusion, not just report a
-final number.
+Since the two candidates don't share a menu, there's no single sequence you can replay identically
+for both. Instead, try each candidate's own "steadiest" option every year first (Lula: hold the
+fiscal rule; Flávio: light Tesourão cuts) before varying your choices — that isolates how much of
+the difference in outcomes comes from each candidate's baseline fiscal philosophy, versus how much
+comes from the more aggressive options on their own menu. Both comparisons are useful — the case
+asks you to be ready to explain what actually drove your conclusion, not just report a final
+number.
 
 *Questions about the model itself, not the game? See the companion research paper and its online
 supplementary material in this same repository — the economics behind every lever here is fully
