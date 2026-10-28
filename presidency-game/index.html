@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Four Years to Decide &middot; Brazil 2026</title>
+<meta name="description" content="Play out a hypothetical four-year presidency under either 2026 Brazilian runoff candidate's own filed programme, built on a real published economic model.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">Decision-support simulation &middot; companion to &ldquo;The Vote: Brazil&rsquo;s 2026 Runoff&rdquo;</div>
+    <h1>Four Years to Decide</h1>
+    <div class="flag-rule"></div>
+    <p class="lede">Play out a hypothetical four-year presidency under either candidate&rsquo;s own filed government programme, one year at a time. Every number comes from a real, published, open-source model of the Brazilian economy &mdash; nothing here is invented for the game.</p>
+    <div class="preview-banner">
+      <b>Before you vote in the case:</b> play this through once as Lula, once as Fl&aacute;vio Bolsonaro, with whatever year-by-year choices feel closest to how you&rsquo;d expect each of them to actually govern. Then compare.
+    </div>
+  </header>
+
+  <div class="progress" id="progress">
+    <span data-dot="0" class="active"></span><span data-dot="1"></span><span data-dot="2"></span>
+    <span data-dot="3"></span><span data-dot="4"></span><span data-dot="5"></span>
+  </div>
+
+  <!-- STEP 0: candidate + integrity -->
+  <section class="step" data-step="setup">
+    <h2>Whose presidency are you playing?</h2>
+    <p class="sub">Both candidates use the identical model and the identical five outcomes. Nothing is tilted toward either one.</p>
+    <div class="candidate-grid" id="candidate-grid"></div>
+
+    <div class="integrity-card" id="integrity-card" hidden>
+      <h3>One choice for the whole four years: integrity</h3>
+      <p class="sub">Neither candidate&rsquo;s own filed programme puts a number on its anti-fraud promises. This is a <b>model sensitivity</b>, not a costed estimate &mdash; it tests how much the other results would change if governance quality improved, not what either candidate has actually committed to.</p>
+      <div class="toggle-row">
+        <button class="toggle-btn" id="btn-integrity-current" data-choice="current_controls">Current integrity controls</button>
+        <button class="toggle-btn" id="btn-integrity-sensitivity" data-choice="integrity_sensitivity">Test an integrity improvement</button>
+      </div>
+      <div class="nav-row"><button class="ghost" onclick="App.backToCandidates()">Back</button><button class="primary" id="btn-start-rounds" disabled onclick="App.startRounds()">Begin year 1</button></div>
+    </div>
+  </section>
+
+  <!-- STEP: round N -->
+  <section class="step" data-step="round" hidden>
+    <div class="round-badge" id="round-badge"></div>
+    <h2 id="round-title">Year <span id="round-number"></span> of 4</h2>
+    <p class="sub" id="round-sub"></p>
+    <div class="action-grid" id="action-grid"></div>
+    <div class="nav-row">
+      <button class="ghost" id="btn-round-back" onclick="App.roundBack()">Back</button>
+      <button class="primary" id="btn-round-continue" disabled onclick="App.revealRound()">See what happens</button>
+    </div>
+  </section>
+
+  <!-- STEP: reveal for one round -->
+  <section class="step" data-step="reveal" hidden>
+    <div class="reveal-wrap">
+      <h2 id="reveal-title" style="font-size:22px;"></h2>
+      <p class="result-meta" id="reveal-meta"></p>
+      <div class="grid5" id="reveal-grid"></div>
+      <p class="result-meta" style="max-width:56ch;">Ranges are the model&rsquo;s own 10th&ndash;90th percentile across sampled parameters &mdash; genuine uncertainty in the assumptions, not a forecast error band.</p>
+      <div class="nav-row" style="width:100%;">
+        <button class="ghost" onclick="App.goStep('round')">Reconsider this year</button>
+        <button class="primary" onclick="App.nextRoundOrFinish()" id="btn-reveal-continue"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP: final summary -->
+  <section class="step" data-step="final" hidden>
+    <h2>Four years, in full</h2>
+    <p class="sub" id="final-sub"></p>
+
+    <div class="score-card">
+      <div class="score-head">
+        <div>
+          <div class="score-label">Composite score vs.&nbsp;doing nothing differently</div>
+          <div class="score-value" id="score-value">&ndash;</div>
+          <div class="score-sub">Higher is better. 0&nbsp;=&nbsp;identical to protecting every service and transfer, all four years.</div>
+        </div>
+      </div>
+      <div class="vsl-control">
+        <label for="vsl-slider">How much should a child&rsquo;s life be worth in this score?</label>
+        <input type="range" id="vsl-slider" min="2.3" max="12" step="0.1" value="5.5">
+        <div class="vsl-readout"><span id="vsl-value">R$5.5M</span> <span class="vsl-hint">per infant death averted &mdash; default from Brazil&rsquo;s own published value-of-life research (IPEA/Stivali 2023, central estimate; range R$2.3M&ndash;R$12M). Move the slider and the score updates live.</span></div>
+        <div class="score-breakdown" id="score-breakdown" style="font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--muted); display:flex; flex-direction:column; gap:3px;"></div>
+      </div>
+      <p class="score-footnote">Debt and unemployment convert into this score using the model&rsquo;s own sourced relationships (the debt path directly; unemployment via Brazil&rsquo;s own estimated Okun coefficient). Poverty and the Gini coefficient are shown below but <b>not</b> folded into this score &mdash; there is no agreed, sourced way to monetise them, and pretending otherwise would smuggle in an invented weight exactly where the other two terms don&rsquo;t need one.</p>
+    </div>
+
+    <div class="charts-grid" id="charts-grid"></div>
+
+    <div class="nav-row" style="width:100%;">
+      <button class="ghost" onclick="App.resetAll()">Play again</button>
+      <button class="primary" onclick="App.switchCandidate()">Now try the other candidate</button>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    Companion tool to the teaching case &ldquo;The Vote: Brazil&rsquo;s 2026 Runoff.&rdquo; Built on the same published Monte Carlo fiscal model as the case&rsquo;s own Exhibits, reusing Brazil-specific sourced parameters (demography, fiscal multipliers, the Okun coefficient, household microsimulation). This is not a forecast of what either candidate will do &mdash; it plays out each candidate&rsquo;s own filed programme under choices you make, not a prediction of actual governance. See <a href="MANUAL.md">the player manual</a> for the full method and its honest limits.
+  </div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>

@@ -532,3 +532,21 @@ not touched -- this is core-model documentation, not an off-by-default diagnosti
 manuscript only.
 
 Nothing committed or pushed yet, per standing instruction.
+
+## 2026-10-28: presidency policy-simulation game engine (Codex)
+
+Built the four-round offline presidency game adapter, configuration mappings, builder, generated transition library, and tests. The adapter evaluates one coherent four-year action sequence through the existing `macro.run_corner` -> `montecarlo.social_for_draw` -> `montecarlo.micro_for_draw` chain; debt is carried through the annual recursion and the PNAD household distribution is reused for poverty/Gini. Lula and Flavio use identical symmetric mechanics. The builder generated 256 primary action paths for each candidate with three fixed-seed representative draws and p10/p50/p90 annual outputs.
+
+The integrity menu is documented as the existing W3 leakage-reduction sensitivity, not a candidate-specific estimate. The voter-facing “subsidies and discretionary” label maps to the existing full `config/scenarios.yaml` package shares because the full model does not isolate a sourced subsidy-only coefficient; this simplification is recorded in code comments and metadata. `final_score` is intentionally null because combining unlike indicators would require unsourced weights.
+
+Verification: `tests/test_presidency_game.py` passed 6 tests. Full suite reached 328 passed and 4 setup errors, all pre-existing/environmental `PermissionError` failures while pytest attempted to scan `C:\Users\H\AppData\Local\Temp\pytest-of-Flaviano` in `tests/test_microdata.py`, `tests/test_paper_figures.py`, and `tests/test_pcy1_fiscal_timing.py`. No unrelated files were edited.
+
+## 2026-10-28: presidency game live-birth metadata (Codex)
+
+Added `metadata.approx_live_births_by_year` to the presidency-game builder and generated data. Values use Brazil's age-0 population in `data/brazil/population.csv` for the four game years, with `Ambos` totals preferred and sex-specific rows as fallback; this is documented as an approximation rather than an exact birth registry count. Added focused coverage to `tests/test_presidency_game.py`.
+
+## 2026-10-28: presidency game integrity variants (Codex)
+
+Updated `scripts/build_presidency_game.py` and regenerated `presidency-game/game_data.json` so both `current_controls` and `integrity_sensitivity` are stored for all 256 action sequences per candidate. The schema is now version 2 with paths keyed as `paths[candidate][integrity_choice][action_sequence][percentile]`; metadata records `integrity_variants_in_library` and removes the obsolete single-selection field. Rounds, indicators, and units are unchanged.
+
+Verification: builder completed with three draws; generated JSON has 256 paths under each integrity variant and at least one differing result between variants. `python -m pytest -q tests/test_presidency_game.py` passed 7 tests (one pre-existing pytest cache warning). No unrelated files were edited.

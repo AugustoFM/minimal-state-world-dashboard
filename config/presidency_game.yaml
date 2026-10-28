@@ -1,0 +1,38 @@
+schema_version: 1
+base_scenario: S0
+rounds: 4
+primary_actions:
+  protect_services_transfers:
+    label: Protect services and transfers
+    source_parameters:
+      deviation: config/scenarios.yaml:scenarios.S0
+      package_mapping: config/scenarios.yaml:package_shares
+  administrative_efficiency:
+    label: Administrative efficiency
+    source_parameters:
+      deviation: config/scenarios.yaml:scenarios.R_mod.pace_pp_gdp_per_year_below_S0
+      package_mapping: config/scenarios.yaml:variant_definitions.efficiency_only
+  cut_subsidies_discretionary:
+    label: Cut subsidies and discretionary spending
+    source_parameters:
+      deviation: config/scenarios.yaml:scenarios.R_mod.pace_pp_gdp_per_year_below_S0
+      package_mapping: config/scenarios.yaml:package_shares
+  pension_indexation_adjustment:
+    label: Pension and indexation adjustment
+    source_parameters:
+      deviation: config/scenarios.yaml:scenarios.R_mod.pace_pp_gdp_per_year_below_S0
+      package_mapping: config/scenarios.yaml:variant_definitions.pension_only
+integrity_choices:
+  current_controls:
+    label: Current integrity controls
+    source_parameters:
+      effect: none
+  integrity_sensitivity:
+    label: Integrity improvement (sensitivity)
+    source_parameters:
+      effect: config/w3_anticorruption.yaml:channels.leakage_reduction.fraction_removed
+    caveat: Qualitative integrity promises have no quantified candidate-specific basis; this is the existing model sensitivity, not an estimate.
+model:
+  fiscal_scale_source: config/scenarios.yaml:scenarios.R_mod.pace_pp_gdp_per_year_below_S0
+  persistence: transitory
+  candidate_symmetry: Both candidates use the same action mappings and model machinery.

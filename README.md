@@ -8,6 +8,7 @@ Companion to the report "O Estado Mínimo: conceito, história e peso da iniciat
 
 - [World dashboard](https://augustofm.github.io/minimal-state-world-dashboard/dashboard/index.html) — the cross-country minimal-state map and scores above.
 - [Brazil fiscal-scenario dashboard](https://augustofm.github.io/minimal-state-world-dashboard/dashboard/brazil.html) — Monte Carlo comparison of reduction/expansion scenarios vs the status-quo baseline, with the back-test gate verdict attached.
+- [Four Years to Decide](https://augustofm.github.io/minimal-state-world-dashboard/presidency-game/index.html) — decision-support simulation companion to the teaching case "The Vote: Brazil's 2026 Runoff," playing either runoff candidate's own filed programme one year at a time against the same published model. See `presidency-game/MANUAL.md`.
 
 ## Quick start
 ```
